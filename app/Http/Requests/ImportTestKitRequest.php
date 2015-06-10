@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\Section;
+//use App\Models\County;
 
-class SectionRequest extends Request {
+class ImportTestKitRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,16 +24,15 @@ class SectionRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:sections,name,'.$id,
+            'data-manager'   => 'required',
+            
         ];
+	}
+	public function ingnoreId(){
+		
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
-	public function ingnoreId(){
-		$id = $this->route('section');
-		$name = $this->input('name');
-		return Section::where(compact('id', 'name'))->exists() ? $id : '';
-	}
-
+	
 }

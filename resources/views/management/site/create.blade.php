@@ -10,13 +10,8 @@
         </ol>
     </div>
 </div>
-
-@if(Session::has('message'))
-<div class="alert alert-info">{{Session::get('message')}}</div>
-@endif
-
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-facility', '1') }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.create-new-site', '1') }}</div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -26,46 +21,61 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::model($facility, array('route' => array('facility.update', $facility->id), 
-        'method' => 'PUT', 'id' => 'form-edit-facility', 'class' => 'form-horizontal')) !!}
+            {!! Form::open(array('route' => 'site.store', 'id' => 'form-add-new-site', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-                <!-- ./ csrf token -->
-                <div class="form-group">
-                    {!! Form::label('code', Lang::choice('messages.code', 1), array('class' => 'col-sm-4 control-label')) !!}
+               <div class="form-group">
+                    {!! Form::label('facility_id', Lang::choice('messages.reporting-to-facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('code', Input::old('code'), array('class' => 'form-control')) !!}
+                        {!! Form::select('facility', array(''=>trans('messages.select-facility')),'', 
+                            array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('name', Lang::choice('messages.name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('site_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('site_id', Input::old('site_id'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('facility_type_id', Lang::choice('messages.facility-type', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('site_name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('facility_type', array(''=>trans('messages.select-facility-type'))+$facilityTypes,
-                            old('facilityType') ? old('facilityType') : $facilityType, 
-                            array('class' => 'form-control', 'id' => 'facility_type')) !!}
+                        {!! Form::text('site_name', Input::old('site_name'), array('class' => 'form-control')) !!}
+                    </div>
+                </div>
+                 <div class="form-group">
+                    {!! Form::label('site_type_id', Lang::choice('messages.site-type', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::select('site_type', array(''=>trans('messages.select-site-type')),'', 
+                            array('class' => 'form-control', 'id' => 'site_type')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('facility_owner_id', Lang::choice('messages.facility-owner', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('address', Lang::choice('messages.address', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('facility_owner', array(''=>trans('messages.select-facility-owner'))+$facilityOwners,
-                            old('facilityOwner') ? old('facilityOwner') : $facilityOwner, 
-                            array('class' => 'form-control', 'id' => 'facility_owner')) !!}
+                        {!! Form::textarea('address', Input::old('address'), 
+                            array('class' => 'form-control', 'rows' => '3')) !!}
                     </div>
                 </div>
-                
-                <div class="form-group">
+                 <div class="form-group">
                     {!! Form::label('nearest_town', Lang::choice('messages.nearest-town', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::text('nearest_town', Input::old('nearest_town'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
+            <div class="form-group">
+                    {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::select('county', array(''=>trans('messages.select-county')),'', 
+                            array('class' => 'form-control', 'id' => 'county')) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('department', Lang::choice('messages.department', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::text('department', Input::old('department'), array('class' => 'form-control')) !!}
+                    </div>
+                </div>           
                 <div class="form-group">
                     {!! Form::label('landline', Lang::choice('messages.landline', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
@@ -84,31 +94,11 @@
                         {!! Form::text('email', Input::old('email'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
-                <div class="form-group">
-                    {!! Form::label('address', Lang::choice('messages.address', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::textarea('address', Input::old('address'), 
-                            array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
+                
                 <div class="form-group">
                     {!! Form::label('in_charge', Lang::choice('messages.in-charge', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::text('in_charge', Input::old('in_charge'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                 <div class="form-group">
-                    {!! Form::label('reporting_to', Lang::choice('messages.reporting_to', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::text('reporting_to', Input::old('reporting_to'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('operational_status', Lang::choice('messages.operational-status', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('operational_status', array('0' => 'Not Operational', '1' => 'Operational'),
-                            old('status') ? old('status') : $status, 
-                            array('class' => 'form-control', 'id' => 'operational_status')) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -123,6 +113,7 @@
                        {!! Form::text('longitude', Input::old('longitude'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
+              
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
                     {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 

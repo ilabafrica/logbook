@@ -29,6 +29,61 @@ return [
 	'custom-report'	=>	'Custom Report',
 	'home'	=>	'Home',
 
+	/* HIV Logbook */
+	'import-dataset-form-other-facility'	=>	'Import Dataset form other Facility',
+	'data-manager'	=>	'Data Manager',
+	'facility-name'	=>	'Facility Name',
+	'reporting-period'	=>	'Reporting Period',
+	'reference-info'	=>	'Reference Information',
+	'upload-file'	=>	'Upload File',
+	'import-new-test-kit'	=>	'Import New Test Kit',
+	'test-kit-name'	=>	'Test Kit Full Name',
+	'kit-name'	=>	'Kit Name',
+	'select-kit-name'	=>	'Select Kit Name',
+	'manufacturer'	=>	'Manufacturer',
+	'approval-status'	=>	'Approval Status',
+	'select-approval-status'	=>	'Select Approval Status',
+	'approval-agency'	=>	'Approval Agency',
+	'select-approval-agency'	=>	'Select Approval Agency',
+	'incountry-approval'	=>	'Incountry Approval',
+	'select-incountry-approval'	=>	'Select Incountry Approval',
+	'reporting-to'	=>	'Reporting To',
+	'longitude'	=>	'Longitude(degrees)',
+	'latitude'	=>	'Latitude(degrees)',
+	'create-new-site'	=>	'Create New Site',
+	'site-id'	=>	'Local Site ID',
+	'reporting-to-facility'	=>	'Reporting To Facility',
+	'department'	=>	'Department',
+	'site-type'	=>	'Site Type',
+	'select-site-type'	=>	'Select Site Type',
+	'site-management'	=>	'Site Management',
+	'site-name'	=>	'Site Name',
+	'select-site-name'	=>	'Select Site Name',
+	'create-new-test-kit'	=>	'Create New Test Kit',
+	'add-new-test-kit'	=>	'Add New Test Kit',
+	'lot-no'	=>	'Lot Number',
+	'expiry-date'	=>	'Expiry Date',
+	'comments'	=>	'Comments',
+	'stock-avl'	=>	'Stock Availability',
+	'testkit-management'	=>	'Test Kit Management',
+	'result-management'	=>	'Result Management',
+	'algo'	=>	'Algo',
+	'test1'	=>	'Test 1',
+	'test2'	=>	'Test 2',
+	'test3'	=>	'Test 3',
+	'start-date'	=>	'Start Date',
+	'end-date'	=>	'End Date',
+	
+
+
+	
+	
+	
+	
+
+
+	
+
 
 
 	

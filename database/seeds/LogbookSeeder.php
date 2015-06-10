@@ -29,7 +29,7 @@ class LogbookSeeder extends Seeder
     	$usersData = array(
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@hivlogbook.org",
-                "name" => "Kitsao Emmanuel", "gender" => "0", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
+                "name" => "Lucy Mbugua", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
             ),
         );
 
@@ -38,37 +38,7 @@ class LogbookSeeder extends Seeder
             $users[] = User::create($user);
         }
         $this->command->info('Users table seeded');
-    	/* Permissions table */
-        $permissions = array(
-            array("name" => "all", "display_name" => "All"),
-            array("name" => "create-audit", "display_name" => "Can create audit"),
-
-            array("name" => "edit-audit", "display_name" => "Can edit audit"),
-            array("name" => "create-lab", "display_name" => "Can create lab"),
-            array("name" => "edit-lab", "display_name" => "Can edit lab"),
-            array("name" => "create-user", "display_name" => "Can create user"),
-            array("name" => "edit-user", "display_name" => "Can edit user"),
-            array("name" => "complete-audit", "display_name" => "Can complete audit"),
-            array("name" => "approve-audit", "display_name" => "Can approve audit"),
-            array("name" => "export-excel", "display_name" => "Can export to excel"),
-            array("name" => "export-audit", "display_name" => "Can export audit"),
-            array("name" => "export-data", "display_name" => "Can export audit data"),
-            array("name" => "import-data", "display_name" => "Can import audit data"),
-
-            //managing permissions
-            array("name" => "manage-facilities", "display_name" => "Can manage facilities"),
-            array("name" => "manage-labs", "display_name" => "Can manage labs"),
-            array("name" => "manage-users", "display_name" => "Can manage users"),
-            array("name" => "manage-audit-config", "display_name" => "Can manage audit configuration"),
-            array("name" => "manage-audits", "display_name" => "Can manage audits"),
-            array("name" => "manage-access-controls", "display_name" => "Can manage access controls"),
-            array("name" => "view-reports", "display_name" => "Can view reports")
-        );
-        foreach ($permissions as $permission) {
-            Permission::create($permission);
-        }
-        $this->command->info('Permissions table seeded');
-
+    	
         /* Roles table */
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
@@ -206,75 +176,18 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Constituencies table seeded');
        
-        /* Titles table */
-        $titles = array(
-            array("name" => "Nursing Officer in Charge", "user_id" => "1"),
-            array("name" => "Clinical Officer", "user_id" => "1"),
-            array("name" => "Doctor In Charge", "user_id" => "1"),
-            array("name" => "Hospital Director", "user_id" => "1"),
-            array("name" => "Doctor In Charge", "user_id" => "1"),
-            array("name" => "Medical Superintendant", "user_id" => "1")
-        );
-        foreach ($titles as $title) {
-            Title::create($title);
-        }
-        $this->command->info('Job titles table seeded');
-        /* Lab Levels */
-        $labLevels = array(
-            array("name" => "National", "user_id" => "1"),
-            array("name" => "County Referral", "user_id" => "1"),
-            array("name" => "Referral", "user_id" => "1"),
-            array("name" => "Regional", "user_id" => "1"),
-            array("name" => "Zonal", "user_id" => "1")
-        );
-        foreach ($labLevels as $labLevel) {
-            LabLevel::create($labLevel);
-        }
-        $this->command->info('Lab levels table seeded');
-        /* Lab Affiliations */
-        $labAffiliations = array(
-            array("name" => "G.O.K.", "user_id" => "1"),
-            array("name" => "Private", "user_id" => "1"),
-            array("name" => "Research", "user_id" => "1")
-        );
-        foreach ($labAffiliations as $labAffiliation) {
-            LabAffiliation::create($labAffiliation);
-        }
-        $this->command->info('Lab affiliations table seeded');
-        /*  Lab Types */
-        $labTypes = array(
-            array("name" => "National", "user_id" => "1"),
-            array("name" => "Non-Governmental Organization", "user_id" => "1"),
-            array("name" => "Faith-based", "user_id" => "1")
-        );
-        foreach ($labTypes as $labType) {
-            LabType::create($labType);
-        }
-        $this->command->info('SLMTA lab types table seeded');
-
-        /* Facilities table */
+         /* Facilities table */
         $facilities = array(
-            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "description"=> "Situated within Captain township 4km from olkalou town towards NRB","nearest_town" => "Captain","landline" => " ","fax" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48", "town_id" => "1", "in_charge" => "Eliud Mwangi Kithaka", "title_id" => "1", "operational_status" => "1", "user_id" => "1"),
-            array("code" => "10039", "name" => "ACK Tumaini Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "description"=> " ","nearest_town" => "Gatundu town","landline" => " ","fax" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 84", "town_id" => "3", "in_charge" => "Assumpta", "title_id" => "1", "operational_status" => "1", "user_id" => "1"),
-            array("code" => "17473", "name" => "ASPE Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "description"=> " ","nearest_town" => "Nyeri town","landline" => " ","fax" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 229", "town_id" => "3", "in_charge" => "Jane Mwaita", "title_id" => "1", "operational_status" => "1", "user_id" => "1"),
-            array("code" => "11195", "name" => "Acode Medical Clinic Maungu", "facility_type_id" => "13", "facility_owner_id" => "3", "description"=> " ","nearest_town" => "Maungu town","landline" => " ","fax" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 18", "town_id" => "2", "in_charge" => "Sr  Kameru", "title_id" => "1", "operational_status" => "1", "user_id" => "1"),
-        );
+            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_to"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+            );
         foreach ($facilities as $facility) {
             Facility::create($facility);
         }
         $this->command->info('Facilities table seeded');
 
         
-        /* Laboratories */
-        $labs = array(
-            array("facility_id" => "3", "lab_type_id" => "1", "lab_level_id" => "3", "lab_affiliation_id" => "1", "user_id" => "1")
-        );
-        foreach ($labs as $lab) {
-            Lab::create($lab);
-        }
-        $this->command->info('Laboratories table seeded');
-
-                /* Answers */
+        
+                /* Answers 
         $answer_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
         $answer_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
         $answer_na = Answer::create(array("name" => "Not Applicable", "description" => "N/A", "user_id" => "1"));
@@ -284,7 +197,7 @@ class LogbookSeeder extends Seeder
         $answer_everyRun = Answer::create(array("name" => "W/Every Run", "description" => "With Every Run", "user_id" => "1"));
         
         $this->command->info('Answers table seeded');
-
+        */
         
     }
 }

@@ -50,9 +50,9 @@
                             <ul class="nav nav-second-level collapse">
                                 <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.admin', 2) }}</a>
                                 	<ul class="nav nav-third-level collapse">
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-facility-data', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-test-kit', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.create-test-kit', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('importfacilitydata')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-facility-data', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('importtestkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-test-kit', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('testkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.create-test-kit', 3) }}</a></li>
                                 	</ul>
                                 </li>
                             </ul>
@@ -71,9 +71,9 @@
 							</li>
 						</ul>
 									<ul class="nav nav-third-level collapse">
-                                	<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.site-management', 3) }}</a></li>
-                                	<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.test-kit-management', 3) }}</a></li>
-                                	<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.result-management', 3) }}</a></li>
+                                	<li><a href="{{ URL::to('site')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.site-management', 3) }}</a></li>
+                                	<li><a href="{{ URL::to('managetestkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.test-kit-management', 3) }}</a></li>
+                                	<li><a href="{{ URL::to('result')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.result-management', 3) }}</a></li>
                                 	</ul>	
                                 </li>
                              </ul>  

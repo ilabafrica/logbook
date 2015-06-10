@@ -63,16 +63,6 @@ Route::get("/facilityOwner/{id}/delete", array(
     "uses" => "FacilityOwnerController@delete"
 ));
 
-
-//	Job titles controller
-Route::resource('title', 'TitleController');
-Route::get("/title/{id}/delete", array(
-    "as"   => "title.delete",
-    "uses" => "TitleController@delete"
-));
-
-
-
 //	County controller
 Route::resource('county', 'CountyController');
 Route::get("/county/{id}/delete", array(
@@ -88,21 +78,26 @@ Route::get("/constituency/{id}/delete", array(
     "uses" => "ConstituencyController@delete"
 ));
 
+//	ImportFacilityData
+Route::resource('importfacilitydata', 'ImportFacilityDataController');
+//ImportTestKit
+Route::resource('importtestkit', 'ImportTestKitController');
+//testkit
+Route::resource('testkit', 'TestKitController');
+//site
+Route::resource('site', 'SiteController');
+//managetestkit
+Route::resource('managetestkit', 'ManageTestKitController');
+//result
+Route::resource('result', 'ResultController');
 
 
-//	Towns controller
-Route::resource('town', 'TownController');
-Route::get("/town/{id}/delete", array(
-    "as"   => "town.delete",
-    "uses" => "TownController@delete"
-));
 
-//	Lab Levels controller
-Route::resource('labLevel', 'LabLevelController');
-Route::get("/labLevel/{id}/delete", array(
-    "as"   => "labLevel.delete",
-    "uses" => "LabLevelController@delete"
-));
+
+
+
+
+
 
 
 

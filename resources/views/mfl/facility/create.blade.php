@@ -51,14 +51,7 @@
                             array('class' => 'form-control', 'id' => 'facility_owner')) !!}
                     </div>
                 </div>
-                <div class="form-group">
-                    {!! Form::label('description', Lang::choice('messages.description', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::textarea('description', Input::old('description'), 
-                            array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
+                   <div class="form-group">
                     {!! Form::label('nearest_town', Lang::choice('messages.nearest-town', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::text('nearest_town', Input::old('nearest_town'), array('class' => 'form-control')) !!}
@@ -95,6 +88,12 @@
                         {!! Form::text('in_charge', Input::old('in_charge'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
+                <div class="form-group">
+                    {!! Form::label('reporting_to', Lang::choice('messages.reporting_to', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::text('reporting_to', Input::old('reporting_to'), array('class' => 'form-control')) !!}
+                    </div>
+                </div>
                  <div class="form-group">
                     {!! Form::label('operational_status', Lang::choice('messages.operational-status', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
@@ -102,6 +101,19 @@
                             array('class' => 'form-control', 'id' => 'operational_status')) !!}
                     </div>
                 </div>
+                  <div class="form-group">
+                    {!! Form::label('latitude', Lang::choice('messages.latitude', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                         {!! Form::text('latitude', Input::old('latitude'), array('class' => 'form-control')) !!}
+                   </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('longitude', Lang::choice('messages.longitude', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                       {!! Form::text('longitude', Input::old('longitude'), array('class' => 'form-control')) !!}
+                    </div>
+                </div>
+              
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
                     {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 

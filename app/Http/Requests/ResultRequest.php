@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\LabLevel;
+use App\Models\Facility;
 
-class LabLevelRequest extends Request {
+class ResultRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,16 +24,17 @@ class LabLevelRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:lab_levels,name,'.$id,
+		
+		
+		
+		
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('labLevel');
-		$name = $this->input('name');
-		return LabLevel::where(compact('id', 'name'))->exists() ? $id : '';
+		
 	}
 
 }

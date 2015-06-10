@@ -36,10 +36,6 @@
         </h5>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.description', 1) }}:</strong> <span> {{ $facility->description }}</span>
-        </h5>
-        <hr>
-        <h5 class="no-margn">
           <strong>{{ Lang::choice('messages.nearest-town', 1) }}:</strong> <span> {{ $facility->nearest_town }}</span>
         </h5>
         <hr>
@@ -47,11 +43,7 @@
           <strong>{{ Lang::choice('messages.landline', 1) }}:</strong> <span> {{ $facility->landline }}</span>
         </h5>
         <hr>
-        <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.fax', 1) }}:</strong> <span> {{ $facility->fax }}</span>
-        </h5>
-        <hr>
-        <h5 class="no-margn">
+         <h5 class="no-margn">
           <strong>{{ Lang::choice('messages.mobile', 1) }}:</strong> <span> {{ $facility->mobile }}</span>
         </h5>
         <hr>
@@ -64,15 +56,11 @@
         </h5>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.town', 1) }}:</strong> <span> {{ $facility->town->name }}</span>
-        </h5>
-        <hr>
-        <h5 class="no-margn">
           <strong>{{ Lang::choice('messages.in-charge', 1) }}:</strong> <span> {{ $facility->in_charge }}</span>
         </h5>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.title', 1) }}:</strong> <span> {{ $facility->title->name }}</span>
+          <strong>{{ Lang::choice('messages.reporting_to', 1) }}:</strong> <span> {{ $facility->reporting_to }}</span>
         </h5>
         <hr>
         <h5 class="no-margn">

@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\Answer;
 
-class AnswerRequest extends Request {
+
+class ManageTestKitRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,16 +24,17 @@ class AnswerRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:answers,name,'.$id,
+		
+		'site-name'=> 'required',
+		
+		
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('answer');
-		$name = $this->input('name');
-		return Answer::where(compact('id', 'name'))->exists() ? $id : '';
+		
 	}
 
 }

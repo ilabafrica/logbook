@@ -1,9 +1,11 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\Assessment;
+use App\Models\FacilityOwner;
+use App\Models\FacilityType;
+use App\Models\Facility;
 
-class AssessmentRequest extends Request {
+class SiteRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,16 +26,17 @@ class AssessmentRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:assessments,name,'.$id,
+		
+		'site-name'=> 'required',
+		
+		
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('assessment');
-		$name = $this->input('name');
-		return Assessment::where(compact('id', 'name'))->exists() ? $id : '';
+		
 	}
 
 }

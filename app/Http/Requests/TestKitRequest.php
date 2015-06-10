@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\Review;
+//use App\Models\County;
 
-class ReviewRequest extends Request {
+class TestKitRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -22,8 +22,17 @@ class ReviewRequest extends Request {
 	 */
 	public function rules()
 	{
+		$id = $this->ingnoreId();
 		return [
+            'kit-name'   => 'required',
+            
         ];
 	}
-
+	public function ingnoreId(){
+		
+	}
+	/**
+	* @return \Illuminate\Routing\Route|null|string
+	*/
+	
 }

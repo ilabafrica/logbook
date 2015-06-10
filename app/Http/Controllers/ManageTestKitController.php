@@ -2,19 +2,15 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
-use App\Http\Requests\FacilityRequest;
+use App\Http\Requests\ManageTestKitRequest;
 use App\Models\Facility;
 use App\Models\FacilityType;
-use App\Models\FacilityOwner;
-use App\Models\Town;
-use App\Models\Title;
+use App\Models\County;
 use Response;
 use Auth;
 
-class FacilityController extends Controller {
+class ManageTestKitController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -23,9 +19,8 @@ class FacilityController extends Controller {
 	 */
 	public function index()
 	{
-		//	Get all facilities
-		$facilities = Facility::all();
-		return view('mfl.facility.index', compact('facilities'));
+		
+		return view('management.testkit.index');
 	}
 
 	/**
@@ -35,12 +30,9 @@ class FacilityController extends Controller {
 	 */
 	public function create()
 	{
-		//	Get all facility types
-		$facilityTypes = FacilityType::lists('name', 'id');
-		//	Get all facility owners
-		$facilityOwners = FacilityOwner::lists('name', 'id');
 		
-		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners'));
+		
+		return view('management.testkit.create');
 	}
 
 	/**
@@ -48,9 +40,9 @@ class FacilityController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(FacilityRequest $request)
+	public function store(SiteRequest $request)
 	{
-		$town = new Facility;
+		$town = new Site;
 		$town->code = $request->code;
         $town->name = $request->name;
         $town->facility_type_id = $request->facility_type;
@@ -68,7 +60,7 @@ class FacilityController extends Controller {
         $town->user_id = Auth::user()->id;;
         $town->save();
 
-        return redirect('facility')->with('message', 'Facility created successfully.');
+        return redirect('site')->with('message', 'Site created successfully.');
         
 
         
@@ -83,9 +75,9 @@ class FacilityController extends Controller {
 	public function show($id)
 	{
 		//show a facility
-		$facility = Facility::find($id);
+		$site = Site::find($id);
 		//show the view and pass the $town to it
-		return view('mfl.facility.show', compact('facility'));
+		return view('management.site.show', compact('site'));
 	}
 
 	/**
@@ -103,13 +95,13 @@ class FacilityController extends Controller {
 		//	Get initial facility type
 		$facilityType = $facility->facility_type_id;
 		//	Get all facility owners
-		$facilityOwners = FacilityOwner::lists('name', 'id');
+		$counties = County::lists('name', 'id');
 		//	Get initial facility owner
-		$facilityOwner = $facility->facility_owner_id;
+		$county = $county->county_id;
 		
-		$status = $facility->operational_status;
+		
 
-        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'facilityOwners','facilityType', 'facilityOwner', 'town', 'title', 'status'));
+        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'counties','facilityType', 'county'));
 	}
 
 	/**
@@ -120,7 +112,7 @@ class FacilityController extends Controller {
 	 */
 	public function update(FacilityRequest $request, $id)
 	{
-		$town = Facility::findOrFail($id);;
+		$town = Site::findOrFail($id);;
         $town->code = $request->code;
         $town->name = $request->name;
         $town->facility_type_id = $request->facility_type;
@@ -138,7 +130,7 @@ class FacilityController extends Controller {
         $town->user_id = Auth::user()->id;;
         $town->save();
 
-        return redirect('facility')->with('message', 'Facility updated successfully.');
+        return redirect('site')->with('message', 'Site updated successfully.');
        
 	}
 
@@ -151,9 +143,9 @@ class FacilityController extends Controller {
 
 		public function delete($id)
 	{
-		$facility= Facility::find($id);
-		$facility->delete();
-		return redirect('facility')->with('message', 'Facility deleted successfully.');
+		$site= Site::find($id);
+		$site->delete();
+		return redirect('site')->with('message', 'Site deleted successfully.');
 	}
 
 	public function destroy($id)
