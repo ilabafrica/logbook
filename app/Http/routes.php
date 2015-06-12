@@ -90,6 +90,16 @@ Route::resource('site', 'SiteController');
 Route::resource('managetestkit', 'ManageTestKitController');
 //result
 Route::resource('result', 'ResultController');
+//logbookdata
+Route::resource('logbookdata', 'LogbookDataController');
+//trendreport
+Route::resource('trendreport', 'TrendReportController');
+//trendreport
+Route::resource('testkituse', 'TestkitUseController');
+//invalidresults
+Route::resource('invalidresults', 'InvalidResultsController');
+//customreport
+Route::resource('customreport', 'CustomReportController');
 
 
 

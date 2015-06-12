@@ -88,11 +88,11 @@
                              <ul class="nav nav-second-level collapse">
                                  <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.report', 2) }}</a>
                                 	<ul class="nav nav-third-level collapse">
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.logbook-data', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.trend-report', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.testkit-use', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.invalid-results', 3) }}</a></li>
-                                		<li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.custom-report', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('logbookdata')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.logbook-data', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('trendreport')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.trend-report', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('testkituse')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.testkit-use', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('invalidresults')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.invalid-results', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('customreport')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.custom-report', 3) }}</a></li>
                                 	</ul>	
                                 </li>
                              </ul>   

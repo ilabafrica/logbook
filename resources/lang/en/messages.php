@@ -73,6 +73,26 @@ return [
 	'test3'	=>	'Test 3',
 	'start-date'	=>	'Start Date',
 	'end-date'	=>	'End Date',
+	'logbook-data'	=>	'Logbook Data',
+	'report-start-date'	=>	'Report Start Date',
+	'report-end-date'	=>	'Report End Date',
+	'facility'	=>	'Facility',
+	'test-site'	=>	'Test Site',
+	'testing-algorithm'	=>	'Testing Algorithm',
+	'overall-agreement'	=>	'Overall Agreement',
+	'select'	=>	'Select',
+	'trend-report'	=>	'Trend Report',
+	'report-frequency'	=>	'Report Frequency',
+	'select-frequency'	=>	'Select Frequency',
+	'testkit-use'	=>	'Test Kit Use',
+	'invalid-results'	=>	'Invalid Results',
+	'custom-report'	=>	'Custom Report',
+	'select-report'	=>	'Select Report',
+	
+
+	
+	
+
 	
 
 
