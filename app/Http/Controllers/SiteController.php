@@ -2,13 +2,12 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests\SiteRequest;
 use App\Models\Facility;
-use App\Models\FacilityType;
+use App\Models\SiteType;
 use App\Models\County;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -21,8 +20,9 @@ class SiteController extends Controller {
 	 */
 	public function index()
 	{
-		
-		return view('management.site.index');
+		//	Get all sites
+		$sites = Site::all();
+		return view('management.site.index', compact('sites'));
 	}
 
 	/**
@@ -33,13 +33,13 @@ class SiteController extends Controller {
 	public function create()
 	{
 		//	Get all facilities
-		$facilities = Facility::all();
-		//	Get all facility types
-		$facilityTypes = FacilityType::lists('name', 'id');
-		//	Get all facilities
-		$counties = County::all();
+		$facilities = Facility::lists('name', 'id');
+		//	Get all site types
+		$siteTypes = SiteType::lists('name', 'id');
+		//	Get all counties
+		$counties = County::lists('name', 'id');
 		
-		return view('management.site.create', compact('facilities','facilityTypes', 'counties'));
+		return view('management.site.create', compact('facilities','siteTypes', 'counties'));
 	}
 
 	/**
@@ -50,18 +50,18 @@ class SiteController extends Controller {
 	public function store(SiteRequest $request)
 	{
 		$town = new Site;
-		$town->code = $request->code;
-        $town->name = $request->name;
-        $town->facility_type_id = $request->facility_type;
-        $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
+		$town->facility_id = $request->facility;
+        $town->site_id = $request->site_id;
+        $town->site_name = $request->site_name;
+        $town->site_type_id = $request->site_type;
+        $town->address = $request->address;
         $town->nearest_town = $request->nearest_town;
+        $town->county_id = $request->county;
+        $town->department = $request->department;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
         $town->email = $request->email;
-        $town->address = $request->address;
         $town->in_charge = $request->in_charge;
-        $town->operational_status = $request->operational_status;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
         $town->user_id = Auth::user()->id;;
@@ -95,12 +95,14 @@ class SiteController extends Controller {
 	 */
 	public function edit($id)
 	{
+		//sites
+		$site = Site::find($id);
 		//	Get facility
 		$facility = Facility::find($id);
-		//	Get all facility types
-		$facilityTypes = FacilityType::lists('name', 'id');
+		//	Get all site types
+		$siteTypes = SiteType::lists('name', 'id');
 		//	Get initial facility type
-		$facilityType = $facility->facility_type_id;
+		$siteType = $facility->site_type_id;
 		//	Get all facility owners
 		$counties = County::lists('name', 'id');
 		//	Get initial facility owner
@@ -108,7 +110,7 @@ class SiteController extends Controller {
 		
 		
 
-        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'counties','facilityType', 'county'));
+        return view('management.site.edit', compact('site','facility', 'siteTypes', 'counties','siteType', 'county'));
 	}
 
 	/**
@@ -119,20 +121,20 @@ class SiteController extends Controller {
 	 */
 	public function update(FacilityRequest $request, $id)
 	{
-		$town = Site::findOrFail($id);;
-        $town->code = $request->code;
-        $town->name = $request->name;
-        $town->facility_type_id = $request->facility_type;
-        $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
+		$town = Site::findOrFail($id);
+        $town->facility_id = $request->facility_id;
+        $town->site_id = $request->site_id;
+        $town->site_name = $request->site_name;
+        $town->site_type_id = $request->site_type_id;
+        $town->address = $request->address;
         $town->nearest_town = $request->nearest_town;
+        $town->county_id = $request->county_id;
+        $town->department = $request->department;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
         $town->email = $request->email;
-        $town->address = $request->address;
         $town->in_charge = $request->in_charge;
-        $town->operational_status = $request->operational_status;
-         $town->latitude = $request->latitude;
+        $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
         $town->user_id = Auth::user()->id;;
         $town->save();

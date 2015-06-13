@@ -40,13 +40,17 @@ class TestKitController extends Controller {
 	 */
 	public function store(TestKitRequest $request)
 	{
-		/*$county = new County;
-        $county->name = $request->name;
-        $county->hq = $request->hq;
-        $county->user_id = Auth::user()->id;;
+		$county = new TestKit;
+        $county->full_testkit_name = $request->full_testkit_name;
+        $county->kit_name = $request->kit_name;
+        $county->manufacturer = $request->manufacturer;
+		$county->approval_status = $request->approval_status;
+		$county->approval_agency = $request->approval_agency;
+		$county->incountry_approval = $request->incountry_approval;
+        $county->user_id = Auth::user()->id;
         $county->save();
 
-        return redirect('county')->with('message', 'Data saved successfully.');*/
+        return redirect('testkit')->with('message', 'Test kit saved successfully.');
 	}
 
 

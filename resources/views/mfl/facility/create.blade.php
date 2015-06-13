@@ -89,9 +89,9 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('reporting_to', Lang::choice('messages.reporting_to', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('reporting_site', Lang::choice('messages.reporting-site', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('reporting_to', Input::old('reporting_to'), array('class' => 'form-control')) !!}
+                        {!! Form::text('reporting_site', Input::old('reporting_site'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                  <div class="form-group">

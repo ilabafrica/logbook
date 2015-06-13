@@ -17,7 +17,7 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.testkit-management', 2) }} <span class="panel-btn">
-      <a class="btn btn-sm btn-info" href="{{ URL::to("managetestkit/create") }}" >
+      <a class="btn btn-sm btn-info" href="{{ URL::to("assigntestkit/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.add-new-test-kit') }}
           </a>

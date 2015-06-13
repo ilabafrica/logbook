@@ -60,7 +60,7 @@
         </h5>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.reporting_to', 1) }}:</strong> <span> {{ $facility->reporting_to }}</span>
+          <strong>{{ Lang::choice('messages.reporting-site', 1) }}:</strong> <span> {{ $facility->reporting_to }}</span>
         </h5>
         <hr>
         <h5 class="no-margn">

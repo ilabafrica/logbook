@@ -58,7 +58,7 @@
                             </ul>
                             <ul class="nav nav-second-level collapse">
                                  <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.management', 2) }}</a>
-                                	<ul class="nav nav-third-level collapse">
+                            <ul class="nav nav-third-level collapse">
                             <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.facility-management', 3) }}</a>
                                	<ul class="nav nav-fourth-level collapse">
                                 <li><a href="{{ URL::to('facility')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.facility', 4) }}</a></li>
@@ -70,11 +70,31 @@
                             </ul>
 							</li>
 						</ul>
-									<ul class="nav nav-third-level collapse">
-                                	<li><a href="{{ URL::to('site')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.site-management', 3) }}</a></li>
-                                	<li><a href="{{ URL::to('managetestkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.test-kit-management', 3) }}</a></li>
-                                	<li><a href="{{ URL::to('result')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.result-management', 3) }}</a></li>
-                                	</ul>	
+								<ul class="nav nav-third-level collapse">
+                                <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.site-management', 3) }}</a>
+                                <ul class="nav nav-fourth-level collapse">
+                                <li><a href="{{ URL::to('site')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.site', 4) }}</a></li>
+                                <li><a href="{{ URL::to('siteType')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.site-type', 4) }} </a></li>
+                                </ul>
+                                </li>
+                             </ul>
+
+
+                                    <ul class="nav nav-third-level collapse">
+                                     <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.test-kit-management', 3) }}</a>
+                                	<ul class="nav nav-fourth-level collapse">
+                                <li><a href="{{ URL::to('assigntestkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.assign-test-kit', 4) }}</a></li>
+                                </ul>
+                                </li>
+                             </ul>
+                                    <ul class="nav nav-third-level collapse">
+                                    <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.result-management', 3) }}</a>
+                                	<ul class="nav nav-fourth-level collapse">
+                                <li><a href="{{ URL::to('result')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.results', 4) }}</a></li>
+                                
+                                </ul>
+                                </li>
+                             </ul>	
                                 </li>
                              </ul>  
                               <ul class="nav nav-second-level collapse">

@@ -27,7 +27,7 @@
                <div class="form-group">
                     {!! Form::label('facility_id', Lang::choice('messages.reporting-to-facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('facility', array(''=>trans('messages.select-facility')),'', 
+                       {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'', 
                             array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                  <div class="form-group">
                     {!! Form::label('site_type_id', Lang::choice('messages.site-type', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('site_type', array(''=>trans('messages.select-site-type')),'', 
+                           {!! Form::select('site_type', array(''=>trans('messages.select-site-type'))+$siteTypes,'', 
                             array('class' => 'form-control', 'id' => 'site_type')) !!}
                     </div>
                 </div>
@@ -64,9 +64,9 @@
                     </div>
                 </div>
             <div class="form-group">
-                    {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('county', array(''=>trans('messages.select-county')),'', 
+                        {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties,'', 
                             array('class' => 'form-control', 'id' => 'county')) !!}
                     </div>
                 </div>

@@ -1,12 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\County;
-use App\Models\SiteType;
 use App\Models\Facility;
-use App\Models\Site;
 
-class SiteRequest extends Request {
+class CustomReportRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -28,7 +25,7 @@ class SiteRequest extends Request {
 		$id = $this->ingnoreId();
 		return [
 		
-		'site_name'=> 'required',
+		'report'=> 'required',
 		
 		
         ];

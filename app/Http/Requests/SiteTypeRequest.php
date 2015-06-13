@@ -1,12 +1,8 @@
 <?php namespace App\Http\Requests;
-
 use App\Http\Requests\Request;
-use App\Models\County;
 use App\Models\SiteType;
-use App\Models\Facility;
-use App\Models\Site;
 
-class SiteRequest extends Request {
+class SiteTypeRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -27,17 +23,16 @@ class SiteRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-		
-		'site_name'=> 'required',
-		
-		
+            'name'   => 'required|unique:site_types,name,'.$id,
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		
+		$id = $this->route('siteType');
+		$name = $this->input('name');
+		return SiteType::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 
 }

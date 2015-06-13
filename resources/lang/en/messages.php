@@ -39,6 +39,9 @@ return [
 	'import-new-test-kit'	=>	'Import New Test Kit',
 	'test-kit-name'	=>	'Test Kit Full Name',
 	'kit-name'	=>	'Kit Name',
+	'assign-test-kit'	=>	'Assign Test Kit',
+	'create-kit-name'	=>	'Create Test Kit Name',
+	'edit-kit-name'	=>	'Edit Kit Name',
 	'select-kit-name'	=>	'Select Kit Name',
 	'manufacturer'	=>	'Manufacturer',
 	'approval-status'	=>	'Approval Status',
@@ -48,6 +51,7 @@ return [
 	'incountry-approval'	=>	'Incountry Approval',
 	'select-incountry-approval'	=>	'Select Incountry Approval',
 	'reporting-to'	=>	'Reporting To',
+	'reporting-site'	=>	'Reporting Site',
 	'longitude'	=>	'Longitude(degrees)',
 	'latitude'	=>	'Latitude(degrees)',
 	'create-new-site'	=>	'Create New Site',
@@ -88,6 +92,11 @@ return [
 	'invalid-results'	=>	'Invalid Results',
 	'custom-report'	=>	'Custom Report',
 	'select-report'	=>	'Select Report',
+	'site'	=>	'Site',
+	'site-type'	=>	'Site Type',
+	'create-site-type'	=>	'Create Site Type',
+	'test-kit'	=>	'Test Kit',
+	'results'	=>	'Results',
 	
 
 	

@@ -35,7 +35,7 @@
                             <th>{{ Lang::choice('messages.facility-type', 1) }}</th>
                             <th>{{ Lang::choice('messages.landline', 1) }}</th>
                             <th>{{ Lang::choice('messages.email', 1) }}</th>
-                            <th>{{ Lang::choice('messages.reporting_to', 1) }}</th>
+                            <th>{{ Lang::choice('messages.reporting-site', 1) }}</th>
                            
                             <th></th>
                         </tr>
@@ -49,7 +49,7 @@
                             <td>{{ $facility->facilityType->name }}</td>
                             <td>{{ $facility->landline }}</td>
                             <td>{{ $facility->email }}</td>
-                            <td>{{ $facility->reporting_to }}</td>
+                            <td>{{ $facility->reporting_site }}</td>
                           
                             <td>
                               <a href="{{ URL::to("facility/" . $facility->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>

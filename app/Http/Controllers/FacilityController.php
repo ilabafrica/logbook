@@ -55,7 +55,7 @@ class FacilityController extends Controller {
         $town->name = $request->name;
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
+        $town->reporting_site = $request->reporting_site;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
@@ -65,7 +65,7 @@ class FacilityController extends Controller {
         $town->operational_status = $request->operational_status;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('facility')->with('message', 'Facility created successfully.');
@@ -121,11 +121,11 @@ class FacilityController extends Controller {
 	public function update(FacilityRequest $request, $id)
 	{
 		$town = Facility::findOrFail($id);;
-        $town->code = $request->code;
+       $town->code = $request->code;
         $town->name = $request->name;
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
+        $town->reporting_site = $request->reporting_site;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
@@ -133,9 +133,9 @@ class FacilityController extends Controller {
         $town->address = $request->address;
         $town->in_charge = $request->in_charge;
         $town->operational_status = $request->operational_status;
-         $town->latitude = $request->latitude;
+        $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+      //  $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('facility')->with('message', 'Facility updated successfully.');

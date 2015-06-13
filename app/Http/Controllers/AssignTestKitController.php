@@ -3,14 +3,14 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\ManageTestKitRequest;
+use App\Http\Requests\AssignTestKitRequest;
 use App\Models\Facility;
 use App\Models\FacilityType;
 use App\Models\County;
 use Response;
 use Auth;
 
-class ManageTestKitController extends Controller {
+class AssignTestKitController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -20,7 +20,7 @@ class ManageTestKitController extends Controller {
 	public function index()
 	{
 		
-		return view('management.testkit.index');
+		return view('management.assigntestkit.index');
 	}
 
 	/**
@@ -32,7 +32,7 @@ class ManageTestKitController extends Controller {
 	{
 		
 		
-		return view('management.testkit.create');
+		return view('management.assigntestkit.create');
 	}
 
 	/**
@@ -40,7 +40,7 @@ class ManageTestKitController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(SiteRequest $request)
+	public function store(AssignTestKitRequest $request)
 	{
 		$town = new Site;
 		$town->code = $request->code;
@@ -49,14 +49,7 @@ class ManageTestKitController extends Controller {
         $town->facility_owner_id = $request->facility_owner;
         $town->reporting_to = $request->reporting_to;
         $town->nearest_town = $request->nearest_town;
-        $town->landline = $request->landline;
-        $town->mobile = $request->mobile;
-        $town->email = $request->email;
-        $town->address = $request->address;
-        $town->in_charge = $request->in_charge;
-        $town->operational_status = $request->operational_status;
-        $town->latitude = $request->latitude;
-        $town->longitude = $request->longitude;
+       
         $town->user_id = Auth::user()->id;;
         $town->save();
 
@@ -77,7 +70,7 @@ class ManageTestKitController extends Controller {
 		//show a facility
 		$site = Site::find($id);
 		//show the view and pass the $town to it
-		return view('management.site.show', compact('site'));
+		return view('management.assigntestkit.show', compact('site'));
 	}
 
 	/**
@@ -101,7 +94,7 @@ class ManageTestKitController extends Controller {
 		
 		
 
-        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'counties','facilityType', 'county'));
+        return view('management.assigntestkit.edit', compact('facility', 'facilityTypes', 'counties','facilityType', 'county'));
 	}
 
 	/**

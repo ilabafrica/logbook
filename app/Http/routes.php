@@ -86,8 +86,8 @@ Route::resource('importtestkit', 'ImportTestKitController');
 Route::resource('testkit', 'TestKitController');
 //site
 Route::resource('site', 'SiteController');
-//managetestkit
-Route::resource('managetestkit', 'ManageTestKitController');
+//assigntestkit
+Route::resource('assigntestkit', 'AssignTestKitController');
 //result
 Route::resource('result', 'ResultController');
 //logbookdata
@@ -101,7 +101,13 @@ Route::resource('invalidresults', 'InvalidResultsController');
 //customreport
 Route::resource('customreport', 'CustomReportController');
 
+//  Site Types controller
+Route::resource('siteType', 'SiteTypeController');
 
+Route::get("/siteType/{id}/delete", array(
+    "as"   => "siteType.delete",
+    "uses" => "SiteTypeController@delete"
+));
 
 
 

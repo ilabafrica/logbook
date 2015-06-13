@@ -178,26 +178,24 @@ class LogbookSeeder extends Seeder
        
          /* Facilities table */
         $facilities = array(
-            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_to"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
             );
         foreach ($facilities as $facility) {
             Facility::create($facility);
         }
         $this->command->info('Facilities table seeded');
 
-        
-        
-                /* Answers 
-        $answer_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
-        $answer_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
-        $answer_na = Answer::create(array("name" => "Not Applicable", "description" => "N/A", "user_id" => "1"));
-        $answer_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
-        $answer_daily = Answer::create(array("name" => "Daily", "description" => "", "user_id" => "1"));
-        $answer_weekly = Answer::create(array("name" => "Weekly", "description" => "", "user_id" => "1"));
-        $answer_everyRun = Answer::create(array("name" => "W/Every Run", "description" => "With Every Run", "user_id" => "1"));
-        
-        $this->command->info('Answers table seeded');
-        */
-        
+        /* Approval Agencies table */
+        $agencies = array(
+            array("name" => "NA", "description" => "", "user_id" => "1"),
+            array("name" => "USAID", "description" => "", "user_id" => "1"),
+            array("name" => "WHO and National", "description" => "", "user_id" => "1"),
+            array("name" => "Other", "description" => "", "user_id" => "1"),
+        );
+        foreach ($agencies as $agency) {
+            Agency::create($agency);
+        }
+        $this->command->info('Agency table seeded');
+
     }
 }

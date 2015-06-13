@@ -26,15 +26,15 @@
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
                 <div class="form-group">
-                    {!! Form::label('test-kit-name', Lang::choice('messages.test-kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('full_testkit_name', Lang::choice('messages.test-kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('test-kit-name', Input::old('test-kit-name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('full_testkit_name', Input::old('full_testkit_name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('kit-name', Lang::choice('messages.kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('kit_name', Lang::choice('messages.kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('kit-name', Input::old('kit-name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('kit_name', Input::old('kit_name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                    <div class="form-group">
@@ -45,24 +45,24 @@
                 </div>
                              
                 <div class="form-group">
-                    {!! Form::label('approval-status', Lang::choice('messages.approval-status', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('approval_status', Lang::choice('messages.approval-status', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                       {!! Form::select('approval-status', array(''=>trans('messages.select-approval-status')),'', 
-                            array('class' => 'form-control', 'id' => 'approval-status')) !!}
+                         {!! Form::select('approval_status', array('0' => 'Not Approved', '1' => 'Approved',  '2' => 'Pending', '3' => 'Not Known'),'', 
+                            array('class' => 'form-control', 'id' => 'approval_status')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('approval-agency', Lang::choice('messages.approval-agency', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('approval_agency', Lang::choice('messages.approval-agency', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                       {!! Form::select('approval-agency', array(''=>trans('messages.select-approval-agency')),'', 
-                            array('class' => 'form-control', 'id' => 'approval-agency')) !!}
+                       {!! Form::select('approval_agency', array(''=>trans('messages.select-approval-agency')),'', 
+                            array('class' => 'form-control', 'id' => 'approval_agency')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('incountry-approval', Lang::choice('messages.incountry-approval', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('incountry_approval', Lang::choice('messages.incountry-approval', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                       {!! Form::select('incountry-approval', array(''=>trans('messages.select-incountry-approval')),'', 
-                            array('class' => 'form-control', 'id' => 'incountry-approval')) !!}
+                     {!! Form::select('incountry_approval', array('0' => 'No', '1' => 'Yes',  '2' => 'NA'),'', 
+                            array('class' => 'form-control', 'id' => 'incountry_approval')) !!}
                     </div>
                 </div>
                 
