@@ -52,7 +52,8 @@
                                 	<ul class="nav nav-third-level collapse">
                                 		<li><a href="{{ URL::to('importfacilitydata')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-facility-data', 3) }}</a></li>
                                 		<li><a href="{{ URL::to('importtestkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.import-test-kit', 3) }}</a></li>
-                                		<li><a href="{{ URL::to('testkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.create-test-kit', 3) }}</a></li>
+                                		<li><a href="{{ URL::to('testkit')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.test-kit', 3) }}</a></li>
+                                        <li><a href="{{ URL::to('agency')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.agency', 3) }}</a></li>
                                 	</ul>
                                 </li>
                             </ul>

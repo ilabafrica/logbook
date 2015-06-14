@@ -24,7 +24,8 @@ class TestKitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'kit-name'   => 'required',
+		   'full_testkit_name'=> 'required',
+            'kit_name'   => 'required',
             
         ];
 	}

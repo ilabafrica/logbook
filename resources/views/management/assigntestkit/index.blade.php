@@ -16,10 +16,10 @@
 @endif
 
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.testkit-management', 2) }} <span class="panel-btn">
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.test-kit', 2) }} <span class="panel-btn">
       <a class="btn btn-sm btn-info" href="{{ URL::to("assigntestkit/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
-            {{ trans('messages.add-new-test-kit') }}
+            {{ trans('messages.assign-test-kit') }}
           </a>
         </span>
     </div>
@@ -35,17 +35,34 @@
                             <th>{{ Lang::choice('messages.expiry-date', 1) }}</th>
                             <th>{{ Lang::choice('messages.comments', 1) }}</th>
                             <th>{{ Lang::choice('messages.stock-avl', 1) }}</th>
-                                                       
+
+                           
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody>
-
-                      
+                     <tbody>
+                        @forelse($assigntestkits as $assigntestkit)
+                        <tr>
+                            <td>{{ $assigntestkit->site_name_id }}</td>
+                            <td>{{ $assigntestkit->kit_name_id }}</td>
+                            <td>{{ $assigntestkit->lot_no}}</td>
+                            <td>{{ $assigntestkit->expiry_date }}</td>
+                            <td>{{ $assigntestkit->comments }}</td>                            
+                            <td>{{ $assigntestkit->stock_avl }}</td>
+                            
+                          
+                            <td>
+                              <a href="{{ url("assigntestkit/" . $assigntestkit->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              <a href="{{ URL::to("assigntestkit/" . $assigntestkit->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                              <a href="{{ URL::to("assigntestkit/" . $assigntestkit->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
+                              
+                            </td>
+                        </tr>
+                        @empty
                         <tr>
                           <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
-                       
+                        @endforelse
                     </tbody>
                 </table>
             </div>

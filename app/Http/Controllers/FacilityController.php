@@ -120,7 +120,7 @@ class FacilityController extends Controller {
 	 */
 	public function update(FacilityRequest $request, $id)
 	{
-		$town = Facility::findOrFail($id);;
+		$town = Facility::findOrFail($id);
        $town->code = $request->code;
         $town->name = $request->name;
         $town->facility_type_id = $request->facility_type;

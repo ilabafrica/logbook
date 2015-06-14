@@ -145,7 +145,7 @@ class CreateMflTables extends Migration {
 			$table->string('kit_name', 100);
 			$table->string('manufacturer', 100);
 			$table->string('approval_status')->unsigned();
-			$table->string('approval_agency', 100);
+			$table->string('approval_agency_id')->unsigned();
 			$table->string('incountry_approval')->unsigned();
 			$table->integer('user_id')->unsigned();
 
@@ -167,7 +167,25 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+		//	assign_testkits
+		Schema::create('assign_testkits', function(Blueprint $table)
+		{
+			$table->increments('site_name_id')->unsigned();
+			$table->string('kit_name_id ')->unsigned();
+			$table->string('lot_no', 100);
+			$table->dateTime('expiry_date')->nullable();
+			$table->string('comments', 100);
+			$table->string('stock_avl')->unsigned();
+			$table->integer('user_id')->unsigned();
 
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('site_name_id')->references('id')->on('sites');
+            $table->foreign('kit_name_id ')->references('id')->on('test_kits');
+
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
 		
 	}
 	/**

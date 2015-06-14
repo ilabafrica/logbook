@@ -5,13 +5,16 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}
+                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', '1') }}
             </li>
         </ol>
     </div>
 </div>
+@if(Session::has('message'))
+<div class="alert alert-info">{{Session::get('message')}}</div>
+@endif
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.create-new-test-kit', '1') }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-test-kit', '1') }}</div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -21,11 +24,12 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::open(array('route' => 'testkit.store', 'id' => 'form-create-test-kit', 'class' => 'form-horizontal')) !!}
+            {!! Form::model($testkit, array('route' => array('testkit.update', $testkit->id), 
+        'method' => 'PUT', 'id' => 'form-edit-testkit', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
-                <div class="form-group">
+                                <div class="form-group">
                     {!! Form::label('full_testkit_name', Lang::choice('messages.test-kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::text('full_testkit_name', Input::old('full_testkit_name'), array('class' => 'form-control')) !!}
@@ -65,7 +69,6 @@
                             array('class' => 'form-control', 'id' => 'incountry_approval')) !!}
                     </div>
                 </div>
-                
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
                     {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 

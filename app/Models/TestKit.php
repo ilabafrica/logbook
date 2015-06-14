@@ -1,4 +1,3 @@
-
 <?php namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -18,16 +17,6 @@ class TestKit extends Model {
 	const PENDING = 2;
 	const NOTKNOWN = 3;
 	
-
-	/**
-	* APPROVAL AGENCY
-	*/
-	const NA = 1;
-	const USAID = 2;
-	const WHOANDNATIONAL = 3;
-	const OTHER = 4;
-
-
 	/**
 	* INCOUNTRY APROVAL
 	*/
@@ -36,5 +25,12 @@ class TestKit extends Model {
 	const NO = 0;
 	const NA = 2;
 	
+	/**
+	* Relationship with agency
+	*/
+	public function agency()
+	{
+	 return $this->belongsTo('App\Models\Agency');
+	}
 	
 }

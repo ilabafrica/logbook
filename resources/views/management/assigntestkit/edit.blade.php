@@ -10,8 +10,13 @@
         </ol>
     </div>
 </div>
+
+@if(Session::has('message'))
+<div class="alert alert-info">{{Session::get('message')}}</div>
+@endif
+
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.assign-test-kit', '1') }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-testkit-assigned', '1') }}</div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -21,10 +26,15 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::open(array('route' => 'assigntestkit.store', 'id' => 'form-assign-testkit', 'class' => 'form-horizontal')) !!}
+            {!! Form::model($assigntestkit, array('route' => array('assigntestkit.update', $assigntestkit->id), 
+        'method' => 'PUT', 'id' => 'form-edit-testkit-assigned', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
-               <div class="form-group">
+                <!-- ./ csrf token -->
+               
+
+
+                <div class="form-group">
                     {!! Form::label('site_name_id', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                        {!! Form::select('site_name', array(''=>trans('messages.select-site-name'))+$sites,'', 
@@ -58,13 +68,14 @@
                    </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('stock_avl', Lang::choice('messages.stock-avl', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('stock_avl', Lang::choice('messages.stock-availability', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                            {!! Form::select('stock_avl', array('0' => 'Stock Not Available', '1' => 'Stock Available'),'', 
+                        {!! Form::select('stock_avl', array('0' => 'Stock Not Available', '1' => 'Stock Available'),
+                            old('status') ? old('status') : $status, 
                             array('class' => 'form-control', 'id' => 'stock_avl')) !!}
                     </div>
                 </div>
-              
+                
                 <div class="form-group">
                     <div class="col-sm-offset-4 col-sm-8">
                     {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 

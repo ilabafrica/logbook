@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
+use App\Models\Agency;
 
-
-class AssigntestkitRequest extends Request {
+class AgencyRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,17 +24,16 @@ class AssigntestkitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-		
-		'expiry_date'=> 'required',
-		
-		
+            'name'   => 'required|unique:facility_types,name,'.$id,
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		
+		$id = $this->route('agency');
+		$name = $this->input('name');
+		return Agency::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 
 }

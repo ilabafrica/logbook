@@ -4,9 +4,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\AssignTestKitRequest;
-use App\Models\Facility;
-use App\Models\FacilityType;
-use App\Models\County;
+//use App\Models\Facility;
+use App\Models\TestKit;
+use App\Models\Site;
+use App\Models\AssignTestKit;
 use Response;
 use Auth;
 
@@ -19,8 +20,10 @@ class AssignTestKitController extends Controller {
 	 */
 	public function index()
 	{
+		//	Get all sites
+		$assigntestkits = AssignTestKit::all();
+		return view('management.assigntestkit.index', compact('assigntestkits'));
 		
-		return view('management.assigntestkit.index');
 	}
 
 	/**
@@ -30,9 +33,12 @@ class AssignTestKitController extends Controller {
 	 */
 	public function create()
 	{
+		//	Get all facility types
+		$testkits = TestKit::lists('kit_name', 'id');
+		//	Get all test sites
+		$sites = Site::lists('site_name', 'id');
 		
-		
-		return view('management.assigntestkit.create');
+		return view('management.assigntestkit.create', compact('testkits','sites'));
 	}
 
 	/**
@@ -42,18 +48,18 @@ class AssignTestKitController extends Controller {
 	 */
 	public function store(AssignTestKitRequest $request)
 	{
-		$town = new Site;
-		$town->code = $request->code;
-        $town->name = $request->name;
-        $town->facility_type_id = $request->facility_type;
-        $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
-        $town->nearest_town = $request->nearest_town;
+		$town = new AssignTestKit;
+		$town->site_name_id = $request->site_name;
+        $town->kit_name_id = $request->kit_name;
+        $town->lot_no = $request->lot_no;
+        $town->expiry_date = $request->expiry_date;
+        $town->comments = $request->comments;
+        $town->stock_avl = $request->stock_avl;
        
-        $town->user_id = Auth::user()->id;;
+      //  $town->user_id = Auth::user()->id;
         $town->save();
 
-        return redirect('site')->with('message', 'Site created successfully.');
+        return redirect('assigntestkit')->with('message', 'Test Kit assigned successfully.');
         
 
         
@@ -68,9 +74,9 @@ class AssignTestKitController extends Controller {
 	public function show($id)
 	{
 		//show a facility
-		$site = Site::find($id);
+		$assigntestkit = AssignTestKit::find($id);
 		//show the view and pass the $town to it
-		return view('management.assigntestkit.show', compact('site'));
+		return view('management.assigntestkit.show', compact('assigntestkit'));
 	}
 
 	/**
@@ -81,20 +87,21 @@ class AssignTestKitController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//	Get facility
-		$facility = Facility::find($id);
-		//	Get all facility types
-		$facilityTypes = FacilityType::lists('name', 'id');
-		//	Get initial facility type
-		$facilityType = $facility->facility_type_id;
-		//	Get all facility owners
-		$counties = County::lists('name', 'id');
-		//	Get initial facility owner
-		$county = $county->county_id;
+		//	Get testkit
+		$assigntestkit = AssignTestKit::find($id);
+
+		//	Get all testkits
+		$testkits = TestKit::lists('kit_name', 'id');
+		//	Get testkit
+		$testkit = $assigntestkit->kit_name_id;
+		//	Get all sites
+		$sites = Site::lists('site_name', 'id');
+		//	Get initial site
+		$site = $sites->site_name_id;
 		
 		
 
-        return view('management.assigntestkit.edit', compact('facility', 'facilityTypes', 'counties','facilityType', 'county'));
+        return view('management.assigntestkit.edit', compact('assigntestkit', 'testkits', 'testkit','sites', 'site'));
 	}
 
 	/**
@@ -103,27 +110,19 @@ class AssignTestKitController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(FacilityRequest $request, $id)
+	public function update(AssignTestKitRequest $request, $id)
 	{
 		$town = Site::findOrFail($id);;
-        $town->code = $request->code;
-        $town->name = $request->name;
-        $town->facility_type_id = $request->facility_type;
-        $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
-        $town->nearest_town = $request->nearest_town;
-        $town->landline = $request->landline;
-        $town->mobile = $request->mobile;
-        $town->email = $request->email;
-        $town->address = $request->address;
-        $town->in_charge = $request->in_charge;
-        $town->operational_status = $request->operational_status;
-         $town->latitude = $request->latitude;
-        $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+        $town->site_name_id = $request->site_name;
+        $town->kit_name_id = $request->kit_name;
+        $town->lot_no = $request->lot_no;
+        $town->expiry_date = $request->expiry_date;
+        $town->comments = $request->comments;
+        $town->stock_avl = $request->stock_avl;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
-        return redirect('site')->with('message', 'Site updated successfully.');
+        return redirect('assigntestkit')->with('message', 'Testkit updated successfully.');
        
 	}
 
@@ -136,9 +135,9 @@ class AssignTestKitController extends Controller {
 
 		public function delete($id)
 	{
-		$site= Site::find($id);
+		$site= AssignTestKit::find($id);
 		$site->delete();
-		return redirect('site')->with('message', 'Site deleted successfully.');
+		return redirect('assigntestkit')->with('message', 'Site deleted successfully.');
 	}
 
 	public function destroy($id)

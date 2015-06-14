@@ -1,4 +1,4 @@
-extends("layout")
+@extends("layout")
 @section("content")
 <br />
 <div class="row">
@@ -26,7 +26,7 @@ extends("layout")
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-bordered table-hover{!! count($sites)>0?' search-table':'' !!}">
+                <table class="table table-striped table-bordered table-hover search-table">
                     <thead>
                         <tr>
                             <th>{{ Lang::choice('messages.site-name', 1) }}</th>

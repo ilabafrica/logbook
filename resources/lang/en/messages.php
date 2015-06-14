@@ -97,6 +97,13 @@ return [
 	'create-site-type'	=>	'Create Site Type',
 	'test-kit'	=>	'Test Kit',
 	'results'	=>	'Results',
+	'agency'	=>	'Agency',
+	'create-agency'	=>	'Create Agency',
+	'edit-agency'	=>	'Edit Agency',
+	'edit-test-kit'	=>	'Edit Test Kit',
+	'edit-testkit-assigned'	=>	'Edit Assigned Test Kit',
+	'edit-site'	=>	'Edit Site',
+
 	
 
 	

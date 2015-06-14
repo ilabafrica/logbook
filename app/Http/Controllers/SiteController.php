@@ -22,7 +22,7 @@ class SiteController extends Controller {
 	{
 		//	Get all sites
 		$sites = Site::all();
-		return view('management.site.index', compact('sites'));
+		return view('management.site.site.index', compact('sites'));
 	}
 
 	/**
@@ -39,7 +39,7 @@ class SiteController extends Controller {
 		//	Get all counties
 		$counties = County::lists('name', 'id');
 		
-		return view('management.site.create', compact('facilities','siteTypes', 'counties'));
+		return view('management.site.site.create', compact('facilities','siteTypes', 'counties'));
 	}
 
 	/**
@@ -64,7 +64,7 @@ class SiteController extends Controller {
         $town->in_charge = $request->in_charge;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+        //$town->user_id = Auth::user()->id;;
         $town->save();
 
         return redirect('site')->with('message', 'Site created successfully.');
