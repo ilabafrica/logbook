@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\InvalidResultsRequest;
 use App\Models\Facility;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -17,10 +18,11 @@ class InvalidResultsController extends Controller {
 	 */
 	public function index()
 	{
-		
-		return view('report.invalidresults.index');
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('site_name', 'id');
+		return view('report.invalidresults.index', compact('facilities', 'sites'));
 	}
-
+		
 	/**
 	 * Show the form for creating a new resource.
 	 *

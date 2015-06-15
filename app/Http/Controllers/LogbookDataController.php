@@ -2,11 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests\LogbookDataRequest;
 use App\Models\Facility;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -19,8 +18,10 @@ class LogbookDataController extends Controller {
 	 */
 	public function index()
 	{
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('site_name', 'id');
+		return view('report.logbookdata.index', compact('facilities', 'sites'));
 		
-		return view('report.logbookdata.index');
 	}
 
 	/**

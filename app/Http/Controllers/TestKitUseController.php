@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestKitRequest;
 use App\Models\Facility;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -17,8 +18,10 @@ class TestKitUseController extends Controller {
 	 */
 	public function index()
 	{
-		
-		return view('report.testkituse.index');
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('site_name', 'id');
+		return view('report.testkituse.index', compact('facilities', 'sites'));
+	
 	}
 
 	/**

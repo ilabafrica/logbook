@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\TrendReportRequest;
 use App\Models\Facility;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -17,8 +18,9 @@ class TrendReportController extends Controller {
 	 */
 	public function index()
 	{
-		
-		return view('report.trendreport.index');
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('site_name', 'id');
+		return view('report.trendreport.index', compact('facilities', 'sites'));
 	}
 
 	/**

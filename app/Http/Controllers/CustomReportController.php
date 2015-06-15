@@ -5,6 +5,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\CustomReportRequest;
 use App\Models\Report;
+use App\Models\Facility;
+use App\Models\SiteType;
+use App\Models\Site;
 use Response;
 use Auth;
 
@@ -17,8 +20,11 @@ class CustomReportController extends Controller {
 	 */
 	public function index()
 	{
+		$facilities= Facility::lists('name', 'id');
+		$siteTypes= SiteType::lists('name', 'id');
+		$sites= Site::lists('site_name', 'id');
+		return view('report.customreport.index', compact('facilities', 'siteTypes', 'sites'));
 		
-		return view('report.customreport.index');
 	}
 
 	/**

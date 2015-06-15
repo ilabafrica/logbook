@@ -204,6 +204,7 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('sites');
 		Schema::dropIfExists('test_kits');
 		Schema::dropIfExists('agencies');
+		Schema::dropIfExists('assign_testkits');
 		
 	}
 

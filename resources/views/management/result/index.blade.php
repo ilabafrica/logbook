@@ -11,6 +11,22 @@
     </div>
 </div>
 
+{!! Form::open(array('route' => 'result.index', 'id' => 'form-result', 'class' => 'form-horizontal')) !!}
+  
+            <div class="form-group">
+                    {!! Form::label('facility_id', Lang::choice('messages.facility-name', 1), array('class' => 'col-sm-2 control-label')) !!}
+                    <div class="col-sm-2">
+                        {!! Form::select('facility', array(''=>trans('messages.select-facility')),'', 
+                            array('class' => 'form-control', 'id' => 'facility')) !!}
+                    </div>
+                    {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.submit', 1), 
+                          array('class' => 'btn btn-success', 'onclick' => 'submit()')) !!}
+                     </div>
+         
+ {!! Form::close() !!} 
+<br />
+
+
 @if(Session::has('message'))
 <div class="alert alert-info">{{Session::get('message')}}</div>
 @endif
@@ -25,7 +41,7 @@
                     <thead>
                         <tr>
                             <th>{{ Lang::choice('messages.facility-name', 1) }}</th>
-                            <th>{{ Lang::choice('messages.site-name', 1) }}</th>
+                            <th>{{ Lang::choice('messages.site', 1) }}</th>
                             <th>{{ Lang::choice('messages.algo', 1) }}</th>
                             <th>{{ Lang::choice('messages.start-date', 1) }}</th>
                             <th>{{ Lang::choice('messages.end-date', 1) }}</th>
