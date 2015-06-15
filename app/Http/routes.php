@@ -94,11 +94,15 @@ Route::resource('site', 'SiteController');
 Route::resource('assigntestkit', 'AssignTestKitController');
 //result
 Route::resource('result', 'ResultController');
+//serial
+Route::resource('serial', 'SerialController');
+//parallel
+Route::resource('parallel', 'ParallelController');
 //logbookdata
 Route::resource('logbookdata', 'LogbookDataController');
 //trendreport
 Route::resource('trendreport', 'TrendReportController');
-//trendreport
+//testkituse
 Route::resource('testkituse', 'TestkitUseController');
 //invalidresults
 Route::resource('invalidresults', 'InvalidResultsController');

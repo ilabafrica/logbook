@@ -117,6 +117,21 @@ return [
 	'select-site'	=>	'Select Site',
 	'reporting-period'	=>	'Reporting Period',
 	'total-tests'	=>	'Total Tests',
+	'page-summary-data-entry-serial-algorithm'	=>	'Page Summary Data Entry-Serial Algorithm',
+	'page-summary-data-entry-parallel-algorithm'	=>	'Page Summary Data Entry-Parallel Algorithm',
+	'book-no'	=>	'Book No.',
+	'page-no'	=>	'Page No.',
+	'test-kit1'	=>	'TestKit1',
+	'test-kit2'	=>	'TestKit2',
+	'test-kit3'	=>	'TestKit3',
+	'R'	=>	'R',
+	'NR'	=>	'NR',
+	'Inv'	=>	'Inv',
+	'final-result'	=>	'Result',
+	'positive'	=>	'Positive',
+	'negative'	=>	'Negative',
+	'indeterminate'	=>	'Indeterminate',
+	
 	
 
 
