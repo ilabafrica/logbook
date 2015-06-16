@@ -26,7 +26,7 @@ class SerialRequest extends Request {
 		$id = $this->ingnoreId();
 		return [
 		
-		'test_site'=> 'required',
+		'book_no'=> 'required',
 		
 		
         ];

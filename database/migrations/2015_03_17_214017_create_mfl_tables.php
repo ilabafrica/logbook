@@ -186,6 +186,72 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+		//	serials
+		Schema::create('serials', function(Blueprint $table)
+		{
+			$table->increments('test_site_id')->unsigned();
+			$table->string('book_no')->unsigned();
+			$table->string('page_no')->unsigned();
+			$table->dateTime('start_date')->nullable();
+			$table->dateTime('end_date')->nullable();
+			$table->string('test_kit1_id')->unsigned();
+			$table->string('test_kit2_id')->unsigned();
+			$table->string('test_kit3_id')->unsigned();			
+			$table->string('test_kit1R')->unsigned();
+			$table->string('test_kit1NR')->unsigned();
+			$table->string('test_kit1Inv')->unsigned();
+			$table->string('test_kit2R')->unsigned();
+			$table->string('test_kit2NR')->unsigned();
+			$table->string('test_kit2Inv')->unsigned();
+			$table->string('test_kit3R')->unsigned();
+			$table->string('test_kit3NR')->unsigned();
+			$table->string('test_kit3Inv')->unsigned();
+			$table->string('positive')->unsigned();
+			$table->string('negative')->unsigned();
+			$table->string('indeterminate')->unsigned();
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('test_site_id')->references('id')->on('sites');
+            $table->foreign('test_kit1_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit2_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit3_id ')->references('id')->on('test_kits');
+            $table->softDeletes();
+			$table->timestamps();
+		});
+//	serials
+		Schema::create('parallels', function(Blueprint $table)
+		{
+			$table->increments('test_site_id')->unsigned();
+			$table->string('book_no')->unsigned();
+			$table->string('page_no')->unsigned();
+			$table->dateTime('start_date')->nullable();
+			$table->dateTime('end_date')->nullable();
+			$table->string('test_kit1_id')->unsigned();
+			$table->string('test_kit2_id')->unsigned();
+			$table->string('test_kit3_id')->unsigned();			
+			$table->string('test_kit1R')->unsigned();
+			$table->string('test_kit1NR')->unsigned();
+			$table->string('test_kit1Inv')->unsigned();
+			$table->string('test_kit2R')->unsigned();
+			$table->string('test_kit2NR')->unsigned();
+			$table->string('test_kit2Inv')->unsigned();
+			$table->string('test_kit3R')->unsigned();
+			$table->string('test_kit3NR')->unsigned();
+			$table->string('test_kit3Inv')->unsigned();
+			$table->string('positive')->unsigned();
+			$table->string('negative')->unsigned();
+			$table->string('indeterminate')->unsigned();
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('test_site_id')->references('id')->on('sites');
+            $table->foreign('test_kit1_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit2_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit3_id ')->references('id')->on('test_kits');
+            $table->softDeletes();
+			$table->timestamps();
+		});
 		
 	}
 	/**
@@ -205,6 +271,8 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('test_kits');
 		Schema::dropIfExists('agencies');
 		Schema::dropIfExists('assign_testkits');
+		Schema::dropIfExists('serials');
+		Schema::dropIfExists('parallels');
 		
 	}
 

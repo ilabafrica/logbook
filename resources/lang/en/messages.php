@@ -21,6 +21,8 @@ return [
 	'data-entry'	=>	'Data Entry',
 	'page-summary-serial'	=>	'Page Summary-Serial',
 	'page-summary-parallel'	=>	'Page Summary-Parallel',
+	'data-entry-serial-algorithm'	=>	'Data Entry-Serial Algorithm',
+	'data-entry-parallel-algorithm'	=>	'Data Entry-Parallel Algorithm',
 	'report'	=>	'Report',
 	'logbook-data'	=>	'Logbook Data',
 	'trend-report'	=>	'Trend Report',

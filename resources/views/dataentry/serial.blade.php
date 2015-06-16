@@ -5,23 +5,29 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.data-entry', 1) }}
+                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.data-entry-serial-algorithm', 1) }}
             </li>
         </ol>
     </div>
 </div>
 
 {!! Form::open(array('route' => 'serial.store', 'id' => 'form-serial', 'class' => 'form-horizontal')) !!}
+@if($errors->all())
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
+                {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
+            </div>
+            @endif
 
 <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <div class="row">
                 <div class="col-md-2">
-                   {!! Form::label('test_site', Lang::choice('messages.test-site', 1)) !!}
+                   {!! Form::label('test_site_id', Lang::choice('messages.test-site', 1)) !!}
                 </div>
                 <div class="col-md-8">
-                    {!! Form::select('site', array(''=>trans('messages.select-site'))+$sites,'', 
-                            array('class' => 'form-control', 'id' => 'site')) !!}
+                    {!! Form::select('test_site', array(''=>trans('messages.select-site'))+$sites,'', 
+                            array('class' => 'form-control', 'id' => 'test_site')) !!}
                 </div>
             </div>
         </div>
@@ -45,26 +51,26 @@
                 </div>
             </div>
         </div>
-         <div class="col-md-2">
+         <div class="col-md-3">
             <div class="row">
-                <div class="col-md-3">
-                    {!! Form::label('start_date', Lang::choice('messages.start-date', 1)) !!}  
-                     </div>
-                <div class="col-md-5">
-                    {!! Form::text('start_date', Input::old('start_date'), array('class' => 'form-control')) !!} 
-                </div>
+               {!! Form::label('start_date', Lang::choice('messages.start-date', 1), array('class' => 'col-md-2 control-label')) !!}
+                    <div class=" input-group input-append date datepicker" id="date-of-birth" >
+                        {!! Form::text('start_date', Input::old('start_date'), array('class' => 'form-control')) !!}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                    
             </div>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-3">
             <div class="row">
-                <div class="col-md-3">
-                    {!! Form::label('end_date', Lang::choice('messages.end-date', 1)) !!}  
-                     </div>
-                <div class="col-md-5">
-                    {!! Form::text('end_date', Input::old('end_date'), array('class' => 'form-control')) !!} 
-                </div>
+               {!! Form::label('end_date', Lang::choice('messages.end-date', 1), array('class' => 'col-md-2 control-label')) !!}
+                    <div class=" input-group input-append date datepicker" id="date-of-birth" >
+                        {!! Form::text('end_date', Input::old('end_date'), array('class' => 'form-control')) !!}
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                    
             </div>
-        </div>       
+        </div>
     </div>
 
 
@@ -72,10 +78,10 @@
             <div class="col-md-4">
             <div class="row">
                 <div class="col-md-5">
-                 {!! Form::label('test_kit1', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
+                 {!! Form::label('test_kit1_id', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-5">
-                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$sites,'', 
+                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$testkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit1')) !!}
                 </div>
                 </div>
@@ -83,10 +89,10 @@
             <div class="col-md-4">
             <div class="row">
                 <div class="col-md-5">
-                 {!! Form::label('test_kit2', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
+                 {!! Form::label('test_kit2_id', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$sites,'', 
+                    {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$testkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit2')) !!}
                 </div>
                 </div>
@@ -94,10 +100,10 @@
             <div class="col-md-4">
             <div class="row">
                 <div class="col-md-5">
-                 {!! Form::label('test_kit3', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
+                 {!! Form::label('test_kit3_id', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$sites,'', 
+                    {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$testkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit3')) !!}
                 </div>
                 </div>
@@ -277,7 +283,7 @@
     <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-bordered table-hover search-table">
+                <table class="table table-striped table-bordered table-hover ">
                     <thead>
                         <tr>
                             
@@ -285,7 +291,7 @@
                             <th>{{ Lang::choice('messages.start-date', 1) }}</th>
                             <th>{{ Lang::choice('messages.end-date', 1) }}</th>
                             <th>{{ Lang::choice('messages.total-tests', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test1', 1) }}</th>
+                            <th colspan='3'>{{ Lang::choice('messages.test1', 1) }}</th>
                              <th>{{ Lang::choice('messages.test2', 1) }}</th>
                             <th>{{ Lang::choice('messages.test3', 1) }}</th>
                             <th>{{ Lang::choice('messages.%pos', 1) }}</th>
@@ -295,12 +301,29 @@
                         </tr>
                     </thead>
                     <tbody>
-
-                      
+                            @forelse($serials as $serial)
+                            <tr>
+                            <td>{{ $serial->test_site_id }}</td>
+                            <td>{{ $serial->start_date }}</td>
+                            <td>{{ $serial->end_date }}</td>
+                            <!-- <td>{{ $serial->total_tests }}</td>
+                            <td>{{ $serial->serialType->name }}</td>
+                            <td>{{ $serial->landline }}</td>
+                            <td>{{ $serial->email }}</td>
+                            <td>{{ $serial->reporting_site }}</td>
+                          
+                            <td>
+                              <a href="{{ URL::to("serial/" . $serial->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              <a href="{{ URL::to("serial/" . $serial->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                              <a href="{{URL::to("serial/" . $serial->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
+                              
+                            </td>-->
+                        </tr>
+                        @empty
                         <tr>
                           <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
-                       
+                        @endforelse
                     </tbody>
                 </table>
             </div>
