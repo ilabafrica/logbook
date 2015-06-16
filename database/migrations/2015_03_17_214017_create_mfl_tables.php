@@ -146,7 +146,7 @@ class CreateMflTables extends Migration {
 			$table->string('manufacturer', 100);
 			$table->integer('approval_status')->unsigned();
 			$table->integer('approval_agency_id')->unsigned();
-			$table->integer'incountry_approval')->unsigned();
+			$table->integer('incountry_approval')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');

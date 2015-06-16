@@ -148,6 +148,20 @@
                 </li>
 
              </ul>   
+              <ul class="nav navbar-top-links navbar-right">
+                    <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{ Auth::user()->name }} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{!! url('user/'.Auth::user()->id.'/edit') !!}"><span class="glyphicon glyphicon-user"></span> {{ Lang::choice('messages.user-profile', 1) }}</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li><a href="{!! url('/auth/logout') !!}"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::choice('messages.sign-out', 1) }}</a>
+                        </li>
+                    </ul>
+                    <!-- /.dropdown-user -->
+                </li>
+                <!-- /.dropdown -->
+            </ul>
            
             <!-- /.navbar-top-links -->
 <div class="navbar-default sidebar" role="navigation">
