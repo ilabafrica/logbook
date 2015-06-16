@@ -115,10 +115,10 @@ class CreateMflTables extends Migration {
 			$table->integer('facility_id')->unsigned();
 			$table->string('site_id', 100);
 			$table->string('site_name', 100);
-			$table->string('site_type_id')->unsigned();
+			$table->integer('site_type_id')->unsigned();
 			$table->string('address', 50);
 			$table->string('nearest_town', 50);
-			$table->string('county_id')->unsigned();
+			$table->integer('county_id')->unsigned();
 			$table->string('department', 50);
 			$table->string('landline', 50);
 			$table->string('mobile', 50);
@@ -144,9 +144,9 @@ class CreateMflTables extends Migration {
 			$table->string('full_testkit_name', 100);
 			$table->string('kit_name', 100);
 			$table->string('manufacturer', 100);
-			$table->string('approval_status')->unsigned();
-			$table->string('approval_agency_id')->unsigned();
-			$table->string('incountry_approval')->unsigned();
+			$table->integer('approval_status')->unsigned();
+			$table->integer('approval_agency_id')->unsigned();
+			$table->integer'incountry_approval')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -171,11 +171,11 @@ class CreateMflTables extends Migration {
 		Schema::create('assign_testkits', function(Blueprint $table)
 		{
 			$table->increments('site_name_id')->unsigned();
-			$table->string('kit_name_id ')->unsigned();
+			$table->integer('kit_name_id ')->unsigned();
 			$table->string('lot_no', 100);
 			$table->dateTime('expiry_date')->nullable();
 			$table->string('comments', 100);
-			$table->string('stock_avl')->unsigned();
+			$table->integer('stock_avl')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -190,25 +190,25 @@ class CreateMflTables extends Migration {
 		Schema::create('serials', function(Blueprint $table)
 		{
 			$table->increments('test_site_id')->unsigned();
-			$table->string('book_no')->unsigned();
-			$table->string('page_no')->unsigned();
+			$table->integer('book_no')->unsigned();
+			$table->integer('page_no')->unsigned();
 			$table->dateTime('start_date')->nullable();
 			$table->dateTime('end_date')->nullable();
-			$table->string('test_kit1_id')->unsigned();
-			$table->string('test_kit2_id')->unsigned();
-			$table->string('test_kit3_id')->unsigned();			
-			$table->string('test_kit1R')->unsigned();
-			$table->string('test_kit1NR')->unsigned();
-			$table->string('test_kit1Inv')->unsigned();
-			$table->string('test_kit2R')->unsigned();
-			$table->string('test_kit2NR')->unsigned();
-			$table->string('test_kit2Inv')->unsigned();
-			$table->string('test_kit3R')->unsigned();
-			$table->string('test_kit3NR')->unsigned();
-			$table->string('test_kit3Inv')->unsigned();
-			$table->string('positive')->unsigned();
-			$table->string('negative')->unsigned();
-			$table->string('indeterminate')->unsigned();
+			$table->integer('test_kit1_id')->unsigned();
+			$table->integer('test_kit2_id')->unsigned();
+			$table->integer('test_kit3_id')->unsigned();			
+			$table->integer('test_kit1R')->unsigned();
+			$table->integer('test_kit1NR')->unsigned();
+			$table->integer('test_kit1Inv')->unsigned();
+			$table->integer('test_kit2R')->unsigned();
+			$table->integer('test_kit2NR')->unsigned();
+			$table->integer('test_kit2Inv')->unsigned();
+			$table->integer('test_kit3R')->unsigned();
+			$table->integer('test_kit3NR')->unsigned();
+			$table->integer('test_kit3Inv')->unsigned();
+			$table->integer('positive')->unsigned();
+			$table->integer('negative')->unsigned();
+			$table->integer('indeterminate')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -223,25 +223,25 @@ class CreateMflTables extends Migration {
 		Schema::create('parallels', function(Blueprint $table)
 		{
 			$table->increments('test_site_id')->unsigned();
-			$table->string('book_no')->unsigned();
-			$table->string('page_no')->unsigned();
+			$table->integer('book_no')->unsigned();
+			$table->integer('page_no')->unsigned();
 			$table->dateTime('start_date')->nullable();
 			$table->dateTime('end_date')->nullable();
-			$table->string('test_kit1_id')->unsigned();
-			$table->string('test_kit2_id')->unsigned();
-			$table->string('test_kit3_id')->unsigned();			
-			$table->string('test_kit1R')->unsigned();
-			$table->string('test_kit1NR')->unsigned();
-			$table->string('test_kit1Inv')->unsigned();
-			$table->string('test_kit2R')->unsigned();
-			$table->string('test_kit2NR')->unsigned();
-			$table->string('test_kit2Inv')->unsigned();
-			$table->string('test_kit3R')->unsigned();
-			$table->string('test_kit3NR')->unsigned();
-			$table->string('test_kit3Inv')->unsigned();
-			$table->string('positive')->unsigned();
-			$table->string('negative')->unsigned();
-			$table->string('indeterminate')->unsigned();
+			$table->integer('test_kit1_id')->unsigned();
+			$table->integer('test_kit2_id')->unsigned();
+			$table->integer('test_kit3_id')->unsigned();			
+			$table->integer('test_kit1R')->unsigned();
+			$table->integer('test_kit1NR')->unsigned();
+			$table->integer('test_kit1Inv')->unsigned();
+			$table->integer('test_kit2R')->unsigned();
+			$table->integer('test_kit2NR')->unsigned();
+			$table->integer('test_kit2Inv')->unsigned();
+			$table->integer('test_kit3R')->unsigned();
+			$table->integer('test_kit3NR')->unsigned();
+			$table->integer('test_kit3Inv')->unsigned();
+			$table->integer('positive')->unsigned();
+			$table->integer('negative')->unsigned();
+			$table->integer('indeterminate')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
