@@ -21,6 +21,7 @@ use App\Models\Question;
 use App\Models\Answer;
 use App\Models\Note;
 use App\Models\Lab;
+use App\Models\Agency;
 class LogbookSeeder extends Seeder
 {
     public function run()

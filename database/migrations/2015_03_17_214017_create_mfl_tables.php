@@ -180,7 +180,7 @@ class CreateMflTables extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('site_name_id')->references('id')->on('sites');
-            $table->foreign('kit_name_id ')->references('id')->on('test_kits');
+            $table->foreign('kit_name_id')->references('id')->on('test_kits');
 
 
             $table->softDeletes();
@@ -213,9 +213,9 @@ class CreateMflTables extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('test_site_id')->references('id')->on('sites');
-            $table->foreign('test_kit1_id ')->references('id')->on('test_kits');
-            $table->foreign('test_kit2_id ')->references('id')->on('test_kits');
-            $table->foreign('test_kit3_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit1_id')->references('id')->on('test_kits');
+            $table->foreign('test_kit2_id')->references('id')->on('test_kits');
+            $table->foreign('test_kit3_id')->references('id')->on('test_kits');
             $table->softDeletes();
 			$table->timestamps();
 		});
@@ -246,9 +246,9 @@ class CreateMflTables extends Migration {
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('test_site_id')->references('id')->on('sites');
-            $table->foreign('test_kit1_id ')->references('id')->on('test_kits');
-            $table->foreign('test_kit2_id ')->references('id')->on('test_kits');
-            $table->foreign('test_kit3_id ')->references('id')->on('test_kits');
+            $table->foreign('test_kit1_id')->references('id')->on('test_kits');
+            $table->foreign('test_kit2_id')->references('id')->on('test_kits');
+            $table->foreign('test_kit3_id')->references('id')->on('test_kits');
             $table->softDeletes();
 			$table->timestamps();
 		});
