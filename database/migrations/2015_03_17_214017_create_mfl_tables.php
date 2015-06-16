@@ -171,7 +171,7 @@ class CreateMflTables extends Migration {
 		Schema::create('assign_testkits', function(Blueprint $table)
 		{
 			$table->increments('site_name_id')->unsigned();
-			$table->integer('kit_name_id ')->unsigned();
+			$table->integer('kit_name_id')->unsigned();
 			$table->string('lot_no', 100);
 			$table->dateTime('expiry_date')->nullable();
 			$table->string('comments', 100);
