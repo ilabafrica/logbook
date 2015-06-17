@@ -100,12 +100,14 @@ Route::resource('dataentry', 'DataEntryController');
 Route::resource('serial', 'SerialController');
 //summaryserial
 Route::resource('summaryserial', 'SummarySerialController');
-Route::get("/summaryserial/{id}/indx", array(
+Route::get("/summaryserial/{id}/index", array(
     "as"   => "summaryserial.delete",
     "uses" => "SummarySerialController@index"
 ));
 //parallel
 Route::resource('parallel', 'ParallelController');
+//summaryparallel
+Route::resource('summaryparallel', 'SummaryParallelController');
 //logbookdata
 Route::resource('logbookdata', 'LogbookDataController');
 //trendreport

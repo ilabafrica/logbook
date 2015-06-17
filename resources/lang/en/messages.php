@@ -144,6 +144,7 @@ return [
 	'test3NR'	=>	'Test3 NR',
 	'test3Inv'	=>	'Test3 Inv',
 	'facilities'	=>	'Facilities',
+	'page-summary'	=>	'Page Summary',
 	
 	
 

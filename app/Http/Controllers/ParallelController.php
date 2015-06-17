@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ParallelRequest;
-use App\Models\TestKit;
+use App\Models\AssignTestKit;
 use App\Models\Site;
 use Response;
 use Auth;
@@ -18,7 +18,7 @@ class ParallelController extends Controller {
 	 */
 	public function index()
 	{
-		$testkits= TestKit::lists('full_testkit_name', 'id');
+		$testkits= AssignTestKit::lists('kit_name_id', 'id');
 		$sites= Site::lists('site_name', 'id');
 		return view('dataentry.parallel', compact('testkits', 'sites'));
 	}

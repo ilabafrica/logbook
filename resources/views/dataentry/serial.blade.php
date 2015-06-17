@@ -88,7 +88,7 @@
                  {!! Form::label('test_kit1_id', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-5">
-                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$testkits,'', 
+                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit1')) !!}
                 </div>
                 </div>
@@ -99,7 +99,7 @@
                  {!! Form::label('test_kit2_id', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$testkits,'', 
+                    {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit2')) !!}
                 </div>
                 </div>
@@ -110,7 +110,7 @@
                  {!! Form::label('test_kit3_id', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$testkits,'', 
+                    {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit3')) !!}
                 </div>
                 </div>

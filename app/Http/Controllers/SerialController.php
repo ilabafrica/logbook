@@ -4,7 +4,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\SerialRequest;
-use App\Models\TestKit;
+use App\Models\AssignTestKit;
 use App\Models\Site;
 use App\Models\Serial;
 use Response;
@@ -20,11 +20,11 @@ class SerialController extends Controller {
 	public function index()
 	{
 		
-		$testkits= TestKit::lists('full_testkit_name', 'id');
+		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
 		$sites= Site::lists('site_name', 'id');
 		
 		
-		return view('dataentry.serial', compact('testkits', 'sites'));
+		return view('dataentry.serial', compact('assignedtestkits', 'sites'));
 		//return view('dataentry.serial', compact('testkits', 'sites'));
 	}
 
@@ -89,10 +89,9 @@ class SerialController extends Controller {
 	 */
 	public function show($id)
 	{
-		//show a facility
-		$site = Site::find($id);
+		
 		//show the view and pass the $town to it
-		return view('dataentry.serial', compact('site'));
+		return view('dataentry.serial', compact('serials'));
 	}
 
 	/**

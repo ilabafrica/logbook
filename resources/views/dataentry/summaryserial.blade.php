@@ -62,7 +62,11 @@
                             <td>{{ $serial->test_site_id }}</td>
                             <td>{{ $serial->start_date }}</td>
                             <td>{{ $serial->end_date }}</td>
-                            <td></td>
+                            <td>
+                                {{($serial->test_kit1R + $serial->test_kit1NR + $serial->test_kit1Inv +
+                                          $serial->test_kit2R +$serial->test_kit2NR + $serial->test_kit2Inv +
+                                          $serial->test_kit3R + $serial->test_kit3NR +$serial->test_kit3Inv)}}</td>
+                            </td>
                             <td>{{ $serial->test_kit1R }}</td>
                             <td>{{ $serial->test_kit1NR }}</td>
                             <td>{{ $serial->test_kit1Inv }}</td>
@@ -72,11 +76,19 @@
                             <td>{{ $serial->test_kit3R }}</td>
                             <td>{{ $serial->test_kit3NR }}</td>
                             <td>{{ $serial->test_kit3Inv }}</td>
-                            <td>{{ $serial->positive}}</td>
-                            <td>{{ $serial->positive }}</td>
-                            <td>{{ $serial->positive }}</td>
+                            <td>{{round($serial->positive / ( $serial->test_kit1R + $serial->test_kit1NR + $serial->test_kit1Inv +
+                                                              $serial->test_kit2R + $serial->test_kit2NR + $serial->test_kit2Inv +
+                                                              $serial->test_kit3R + $serial->test_kit3NR + $serial->test_kit3Inv)*100,2)}}</td>
+                            <td>@if($serial->test_kit1R >0){{round(($serial->test_kit2R/$serial->test_kit1R)*100,2) }}
+                            @else
+                            @endif</td>
+                            <td>{{round((($serial->test_kit2R + $serial->test_kit1NR)/($serial->test_kit1R  + $serial->test_kit1NR + $serial->test_kit1Inv)- $serial->test_kit1Inv)*100,2) }}
+                            </td>
                            
-                          
+                           <td>
+                              <a href="" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                             
+                            </td>
                         </tr>
                         @empty
                         <tr>
