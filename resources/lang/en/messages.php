@@ -133,7 +133,7 @@ return [
 	'positive'	=>	'Positive',
 	'negative'	=>	'Negative',
 	'indeterminate'	=>	'Indeterminate',
-
+	'positive-agreement'	=>	'Positive Agreement',
 	'test1R'	=>	'Test1 R',
 	'test1NR'	=>	'Test1 NR',
 	'test1Inv'	=>	'Test1 Inv',
@@ -145,6 +145,9 @@ return [
 	'test3Inv'	=>	'Test3 Inv',
 	'facilities'	=>	'Facilities',
 	'page-summary'	=>	'Page Summary',
+	'test-results'	=>	'Test Results',
+	'no-of-tests'	=>	'No. of Tests',
+	
 	
 	
 

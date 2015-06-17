@@ -22,30 +22,111 @@
             <div class="col-sm-12">
                 <table class="table table-striped table-bordered table-hover ">
                     <thead>
-                        <tr>
-                            
-                            <th>{{ Lang::choice('messages.site', 1) }}</th>                        
-                            <th>{{ Lang::choice('messages.start-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.end-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.total-tests', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test1Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test2Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test3Inv', 1) }}</th>
-                            <th>{{ Lang::choice('messages.%pos', 1) }}</th>
-                            <th>{{ Lang::choice('messages.positive-agr', 1) }}</th>
-                            <th>{{ Lang::choice('messages.overall-agr', 1) }}</th>
-                            
+                        <tr>                          
+                            <th>{{ Lang::choice('messages.facility', 1) }}:</th>                        
+                            <th>{{ Lang::choice('messages.site-name', 1) }}:{{ $serial->test_site_id}}</th>
+                            <th>{{ Lang::choice('messages.algorithm', 1)}}:Serial</th>
+                                                     
                         </tr>
-                    </thead>
-                   
+                    </thead>                                     
+                </table>
+                <table  class="table table-striped table-bordered table-hover">
+
+                <thead>
+                        <tr>                          
+                            <th> {{ Lang::choice('messages.test', 1) }}</th>                         
+                            <th>{{ Lang::choice('messages.test1', 1) }}</th>                        
+                            <th>{{ Lang::choice('messages.test2', 1)}}</th>
+                            <th>{{ Lang::choice('messages.test3', 1)}}</th>
+                                                     
+                        </tr>
+                    </thead>   
+                 <tbody>
+                     <tr>                          
+                            <td>{{ Lang::choice('messages.kit-name', 1) }}</td>                        
+                            <td>{{ $serial->test_kit1_id}}</td>
+                            <td>{{ $serial->test_kit2_id}}</td>
+                            <td>{{ $serial->test_kit3_id}}</td>
+                                                     
+                        </tr>
+                         <tr>                          
+                            <td>{{ Lang::choice('messages.lot-no', 1) }}</td>                        
+                            <td>{{ $serial->test_kit1_id}}</td>
+                            <td>{{ $serial->test_kit2_id}}</td>
+                            <td>{{ $serial->test_kit3_id}}</td>
+                                                     
+                        </tr>
+                        <tr>                          
+                            <td>{{ Lang::choice('messages.expiry-date', 1) }}</td>                        
+                            <td>{{ $serial->test_kit1_id}}</td>
+                            <td>{{ $serial->test_kit2_id}}</td>
+                            <td>{{ $serial->test_kit3_id}}</td>
+                                                     
+                        </tr>
+                         <tr>                          
+                            <td>{{ Lang::choice('messages.test-results', 1) }}</td> 
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">R</td>
+                            <td style= "width:100px">NR</td>
+                            <td style= "width:100px">Inv</td></table></td>
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">R</td>
+                            <td style= "width:100px">NR</td>
+                            <td style= "width:100px">Inv</td></table></td>
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">R</td>
+                            <td style= "width:100px">NR</td>
+                            <td style= "width:100px">Inv</td></table></td>
+                                                    
+                        </tr>
+                        <tr>                          
+                            <td>{{ Lang::choice('messages.no-of-tests', 1) }}
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">{{ $serial->test_kit1R }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit1NR }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit1Inv }}</td>
+                            </table></td>
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">{{ $serial->test_kit2R }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit2NR }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit2Inv }}</td></table></td>
+                            <td><table  class="table  table-bordered ">                      
+                            <td style= "width:100px">{{ $serial->test_kit3R }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit3NR }}</td>
+                            <td style= "width:100px">{{ $serial->test_kit3Inv }}</td></table></td></td>  
+                                                    
+                        </tr>
+                    </tbody></table>
+                     <table class="table table-striped table-bordered table-hover ">
+                    <thead>
+                    <tr><th colspan="5">Final Result</th></tr>
+                        <tr>                          
+                            <th>{{ Lang::choice('messages.positive', 1) }}</th>                        
+                            <th>{{ Lang::choice('messages.negative', 1) }}</th>
+                            <th>{{ Lang::choice('messages.indeterminate', 1)}}</th>
+                            <th>{{ Lang::choice('messages.overall-agreement', 1)}}</th>
+                            <th>{{ Lang::choice('messages.positive-agreement', 1)}}</th>
+                                                     
+                        </tr>
+                    </thead>   
+                    <tbody>
+                        <tr>                          
+                            <td>{{ $serial->positive }}</td>                        
+                            <td>{{ $serial->negative }}</td>
+                            <td>{{ $serial->indeterminate}}</td>
+                            <td>{{round((($serial->test_kit2R + $serial->test_kit1NR)/($serial->test_kit1R  + $serial->test_kit1NR + $serial->test_kit1Inv)- $serial->test_kit1Inv)*100,2) }}
+                            </td>
+                          <td>@if($serial->test_kit1R >0){{round(($serial->test_kit2R/$serial->test_kit1R)*100,2) }}
+                            @else
+                            @endif</td>
+                                                     
+                        </tr>
+                    </tbody>                                  
                 </table>
             </div>
+           
+           
+               
             {{ Session::put('SOURCE_URL', URL::full()) }}
         </div>
       </div>

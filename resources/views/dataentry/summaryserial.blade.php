@@ -86,7 +86,7 @@
                             </td>
                            
                            <td>
-                              <a href="" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                             <a href="{{ URL::to("summaryserial/" . $serial->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
                              
                             </td>
                         </tr>

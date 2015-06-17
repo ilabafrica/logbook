@@ -63,10 +63,11 @@ class SummarySerialController extends Controller {
 	 */
 	public function show($id)
 	{
-		//show a facility
-		$site = Site::find($id);
-		//show the view and pass the $town to it
-		return view('dataentry.serial', compact('site'));
+		//show a serial
+		$serial = Serial::find($id);
+	
+		return view('dataentry.showserial', compact('serial'));
+
 	}
 
 	/**
