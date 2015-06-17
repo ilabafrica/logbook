@@ -19,10 +19,8 @@ class ResultController extends Controller {
 	 */
 	public function index()
 	{
-		
 		$facilities= Facility::lists('name', 'id');
 		return view('management.result.index', compact('facilities'));
-	
 	}
 
 	/**

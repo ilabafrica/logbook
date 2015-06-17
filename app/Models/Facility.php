@@ -40,7 +40,5 @@ class Facility extends Model {
 	public function county()
 	{
 	 return $this->belongsTo('App\Models\County');
-	}
-	
-	
+	}	
 }

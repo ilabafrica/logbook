@@ -16,7 +16,7 @@
             <div class="form-group">
                     {!! Form::label('facility_id', Lang::choice('messages.facility-name', 1), array('class' => 'col-sm-2 control-label')) !!}
                     <div class="col-sm-2">
-                        {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'', 
+                        {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'',
                             array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
                     {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.submit', 1), 

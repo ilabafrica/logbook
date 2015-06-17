@@ -9,14 +9,13 @@ class County extends Model {
 	protected $table = 'counties';
 
 
-/**
-* Relationship with constituencies
-*/
-public function constituencies()
-{
+	/**
+	* Relationship with constituencies
+	*/
+	public function constituencies()
+	{
 
- return $this->hasMany('constituencies');
+	 return $this->hasMany('constituencies');
 
-}
-
+	}
 }
