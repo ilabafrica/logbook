@@ -35,18 +35,12 @@ class Facility extends Model {
 	 return $this->belongsTo('App\Models\Town');
 	}
 	/**
-	* Relationship with laboratories
+	* Relationship with county
 	*/
-	public function lab()
+	public function county()
 	{
-	 return $this->hasMany('App\Models\Lab');
+	 return $this->belongsTo('App\Models\County');
 	}
-	/**
-	* Relationship with job title
-	*/
-	public function title()
-	{
-	 return $this->belongsTo('App\Models\Title');
-	}
+	
 	
 }

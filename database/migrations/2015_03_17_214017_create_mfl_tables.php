@@ -73,6 +73,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->string('code', 20);
 			$table->string('name', 100);
+			$table->integer('county_id')->unsigned();
 			$table->integer('facility_type_id')->unsigned();
 			$table->integer('facility_owner_id')->unsigned();
 			$table->string('reporting_site', 100);
@@ -89,6 +90,7 @@ class CreateMflTables extends Migration {
 
             $table->foreign('facility_type_id')->references('id')->on('facility_types');
             $table->foreign('facility_owner_id')->references('id')->on('facility_owners');
+            $table->foreign('county_id')->references('id')->on('counties');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
@@ -169,11 +171,12 @@ class CreateMflTables extends Migration {
 		});
 		//	assign_testkits
 		Schema::create('assign_testkits', function(Blueprint $table)
-		{
-			$table->increments('site_name_id')->unsigned();
+			{
+			$table->increments('id')->unsigned();
+			$table->integer('site_name_id')->unsigned();
 			$table->integer('kit_name_id')->unsigned();
 			$table->string('lot_no', 100);
-			$table->dateTime('expiry_date')->nullable();
+			$table->date('expiry_date')->nullable();
 			$table->string('comments', 100);
 			$table->integer('stock_avl')->unsigned();
 			$table->integer('user_id')->unsigned();
@@ -189,11 +192,12 @@ class CreateMflTables extends Migration {
 		//	serials
 		Schema::create('serials', function(Blueprint $table)
 		{
-			$table->increments('test_site_id')->unsigned();
+			$table->increments('id')->unsigned();
+			$table->integer('test_site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
 			$table->integer('page_no')->unsigned();
-			$table->dateTime('start_date')->nullable();
-			$table->dateTime('end_date')->nullable();
+			$table->date('start_date')->nullable();
+			$table->date('end_date')->nullable();
 			$table->integer('test_kit1_id')->unsigned();
 			$table->integer('test_kit2_id')->unsigned();
 			$table->integer('test_kit3_id')->unsigned();			
@@ -222,11 +226,12 @@ class CreateMflTables extends Migration {
 //	serials
 		Schema::create('parallels', function(Blueprint $table)
 		{
-			$table->increments('test_site_id')->unsigned();
+			$table->increments('id')->unsigned();
+			$table->integer('test_site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
 			$table->integer('page_no')->unsigned();
-			$table->dateTime('start_date')->nullable();
-			$table->dateTime('end_date')->nullable();
+			$table->date('start_date')->nullable();
+			$table->date('end_date')->nullable();
 			$table->integer('test_kit1_id')->unsigned();
 			$table->integer('test_kit2_id')->unsigned();
 			$table->integer('test_kit3_id')->unsigned();			

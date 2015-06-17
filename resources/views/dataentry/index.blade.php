@@ -5,7 +5,7 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
-                <a href="#"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}</a>
+                <a href="#"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.data-entry', 1) }}</a>
             </li>
         </ol>
     </div>
@@ -16,12 +16,9 @@
 @endif
 
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.facility', 2) }} <span class="panel-btn">
-      <a class="btn btn-sm btn-info" href="{{ URL::to("facility/create") }}" >
-        <span class="glyphicon glyphicon-plus-sign"></span>
-            {{ trans('messages.create-facility') }}
-          </a>
-        </span>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.facility', 2) }} 
+
+
     </div>
     <div class="panel-body">
         <div class="row">
@@ -33,9 +30,6 @@
                             <th>{{ Lang::choice('messages.name', 1) }}</th>
                             <th>{{ Lang::choice('messages.county', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility-type', 1) }}</th>
-                            <th>{{ Lang::choice('messages.landline', 1) }}</th>
-                            <th>{{ Lang::choice('messages.email', 1) }}</th>
-                            <th>{{ Lang::choice('messages.reporting-site', 1) }}</th>
                            
                             <th></th>
                         </tr>
@@ -45,16 +39,15 @@
                         <tr>
                             <td>{{ $facility->code }}</td>
                             <td>{{ $facility->name }}</td>
-                            <td>{{ $facility->county->name}}</td>
+                            <td>{{ $facility->county->name}}</td>                          
                             <td>{{ $facility->facilityType->name }}</td>
-                            <td>{{ $facility->landline }}</td>
-                            <td>{{ $facility->email }}</td>
-                            <td>{{ $facility->reporting_site }}</td>
                           
                             <td>
-                              <a href="{{ URL::to("facility/" . $facility->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
-                              <a href="{{ URL::to("facility/" . $facility->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
-                              <a href="{{URL::to("facility/" . $facility->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
+                            <a href="{{ URL::to('serial')}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i><span> Serial</span></a>
+                            <a href="{{ URL::to('summaryserial')}}"class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span>  Serial Summary</span></a>
+                             <a href="{{ URL::to('parallel')}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i><span> Parallel</span></a>
+                            <a href="{{ URL::to('summaryparallel')}}"class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span>  Parallel Summary</span></a>
+                             
                               
                             </td>
                         </tr>

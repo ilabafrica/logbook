@@ -133,6 +133,17 @@ return [
 	'positive'	=>	'Positive',
 	'negative'	=>	'Negative',
 	'indeterminate'	=>	'Indeterminate',
+
+	'test1R'	=>	'Test1 R',
+	'test1NR'	=>	'Test1 NR',
+	'test1Inv'	=>	'Test1 Inv',
+	'test2R'	=>	'Test2 R',
+	'test2NR'	=>	'Test2 NR',
+	'test2Inv'	=>	'Test2 Inv',
+	'test3R'	=>	'Test3 R',
+	'test3NR'	=>	'Test3 NR',
+	'test3Inv'	=>	'Test3 Inv',
+	'facilities'	=>	'Facilities',
 	
 	
 

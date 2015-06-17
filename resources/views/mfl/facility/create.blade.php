@@ -51,6 +51,13 @@
                             array('class' => 'form-control', 'id' => 'facility_owner')) !!}
                     </div>
                 </div>
+                 <div class="form-group">
+                    {!! Form::label('county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties,'', 
+                            array('class' => 'form-control', 'id' => 'county')) !!}
+                    </div>
+                </div>
                    <div class="form-group">
                     {!! Form::label('nearest_town', Lang::choice('messages.nearest-town', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">

@@ -51,7 +51,7 @@ class TestKitController extends Controller {
 		$county->approval_status = $request->approval_status;
 		$county->approval_agency_id = $request->approval_agency;
 		$county->incountry_approval = $request->incountry_approval;
-        //$county->user_id = Auth::user()->id;
+        $county->user_id = Auth::user()->id;
         $county->save();
 
         return redirect('testkit')->with('message', 'Test kit saved successfully.');

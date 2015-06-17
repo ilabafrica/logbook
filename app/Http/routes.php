@@ -94,8 +94,16 @@ Route::resource('site', 'SiteController');
 Route::resource('assigntestkit', 'AssignTestKitController');
 //result
 Route::resource('result', 'ResultController');
+//dataentry
+Route::resource('dataentry', 'DataEntryController');
 //serial
 Route::resource('serial', 'SerialController');
+//summaryserial
+Route::resource('summaryserial', 'SummarySerialController');
+Route::get("/summaryserial/{id}/indx", array(
+    "as"   => "summaryserial.delete",
+    "uses" => "SummarySerialController@index"
+));
 //parallel
 Route::resource('parallel', 'ParallelController');
 //logbookdata

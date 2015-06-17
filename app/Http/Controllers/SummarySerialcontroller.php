@@ -3,14 +3,15 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\ResultRequest;
+use App\Http\Requests\SerialRequest;
 use App\Models\Facility;
-use App\Models\FacilityType;
-use App\Models\County;
+use App\Models\TestKit;
+use App\Models\Site;
+use App\Models\Serial;
 use Response;
 use Auth;
 
-class ResultController extends Controller {
+class SummarySerialController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -18,11 +19,14 @@ class ResultController extends Controller {
 	 * @return Response
 	 */
 	public function index()
-	{
+	{	$facilities= Facility::lists('name', 'id');
+		$serials= Serial::all();
+		$testkits= TestKit::lists('full_testkit_name', 'id');
+		$sites= Site::lists('site_name', 'id');
 		
-		$facilities= Facility::lists('name', 'id');
-		return view('management.result.index', compact('facilities'));
-	
+		
+		return view('dataentry.summaryserial', compact('testkits', 'sites', 'serials', 'facilities'));
+		//return view('dataentry.serial', compact('testkits', 'sites'));
 	}
 
 	/**
@@ -40,9 +44,14 @@ class ResultController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(ResultRequest $request)
+	public function store(SerialRequest $request)
 	{
 		
+		
+
+
+        
+
         
 	}
 
@@ -54,7 +63,10 @@ class ResultController extends Controller {
 	 */
 	public function show($id)
 	{
-		
+		//show a facility
+		$site = Site::find($id);
+		//show the view and pass the $town to it
+		return view('dataentry.serial', compact('site'));
 	}
 
 	/**
@@ -65,6 +77,7 @@ class ResultController extends Controller {
 	 */
 	public function edit($id)
 	{
+
 		
 	}
 
@@ -74,10 +87,9 @@ class ResultController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(ResultRequest $request, $id)
+	public function update(SerialRequest $request, $id)
 	{
 		
-       
 	}
 
 	/**
@@ -89,12 +101,14 @@ class ResultController extends Controller {
 
 		public function delete($id)
 	{
-		
+		//$site= Site::find($id);
+		//$site->delete();
+		//return redirect('site')->with('message', 'Site deleted successfully.');
 	}
 
 	public function destroy($id)
 	{
-		
+		//
 	}
 
 }

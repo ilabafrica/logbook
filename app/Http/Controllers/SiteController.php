@@ -64,7 +64,7 @@ class SiteController extends Controller {
         $town->in_charge = $request->in_charge;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-        //$town->user_id = Auth::user()->id;;
+        $town->user_id = Auth::user()->id;;
         $town->save();
 
         return redirect('site')->with('message', 'Site created successfully.');
@@ -136,7 +136,7 @@ class SiteController extends Controller {
         $town->in_charge = $request->in_charge;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('site')->with('message', 'Site updated successfully.');

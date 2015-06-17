@@ -19,11 +19,13 @@ class SerialController extends Controller {
 	 */
 	public function index()
 	{
+		
 		$testkits= TestKit::lists('full_testkit_name', 'id');
 		$sites= Site::lists('site_name', 'id');
-		$serials= Serial::all();
-		dd($serials);
-		return view('dataentry.serial', compact('testkits', 'sites', 'serials'));
+		
+		
+		return view('dataentry.serial', compact('testkits', 'sites'));
+		//return view('dataentry.serial', compact('testkits', 'sites'));
 	}
 
 	/**
@@ -64,7 +66,7 @@ class SerialController extends Controller {
         $town->positive = $request->positive;
         $town->negative = $request->negative;
         $town->indeterminate = $request->indeterminate;
-        //$town->user_id = Auth::user()->id;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         $testkits= TestKit::lists('full_testkit_name', 'id');

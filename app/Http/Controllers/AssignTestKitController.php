@@ -55,8 +55,7 @@ class AssignTestKitController extends Controller {
         $town->expiry_date = $request->expiry_date;
         $town->comments = $request->comments;
         $town->stock_avl = $request->stock_avl;
-       
-      //  $town->user_id = Auth::user()->id;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('assigntestkit')->with('message', 'Test Kit assigned successfully.');

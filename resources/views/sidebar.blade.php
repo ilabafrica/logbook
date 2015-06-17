@@ -101,8 +101,7 @@
                               <ul class="nav nav-second-level collapse">
                                  <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.data-entry', 2) }}</a>
                                 	<ul class="nav nav-third-level collapse">
-                                		<li><a href="{{ URL::to('serial')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.page-summary-serial', 2) }}</a></li>
-                                		<li><a href="{{ URL::to('parallel')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.page-summary-parallel', 2) }}</a></li>
+                                		<li><a href="{{ URL::to('dataentry')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.facilities', 2) }}</a></li>
                                 		</ul>	
                                 </li>
                              </ul> 

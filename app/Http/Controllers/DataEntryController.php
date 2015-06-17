@@ -5,9 +5,8 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests\FacilityRequest;
+//use App\Http\Requests\FacilityRequest;
 use App\Models\Facility;
-use App\Models\County;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
 use App\Models\Town;
@@ -15,7 +14,7 @@ use App\Models\Title;
 use Response;
 use Auth;
 
-class FacilityController extends Controller {
+class DataEntryController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -26,7 +25,7 @@ class FacilityController extends Controller {
 	{
 		//	Get all facilities
 		$facilities = Facility::all();
-		return view('mfl.facility.index', compact('facilities'));
+		return view('dataentry.index', compact('facilities'));
 	}
 
 	/**
@@ -40,9 +39,8 @@ class FacilityController extends Controller {
 		$facilityTypes = FacilityType::lists('name', 'id');
 		//	Get all facility owners
 		$facilityOwners = FacilityOwner::lists('name', 'id');
-		$counties = County::lists('name', 'id');
 		
-		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners', 'counties'));
+		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners'));
 	}
 
 	/**
