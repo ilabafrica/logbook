@@ -147,17 +147,11 @@ return [
 	'page-summary'	=>	'Page Summary',
 	'test-results'	=>	'Test Results',
 	'no-of-tests'	=>	'No. of Tests',
+	'final-pos'	=>	'Final Pos',
+	'approved'	=>	'Approved',
+	'not-approved'	=>	'Not Approved',
 	
 	
-	
-
-
-
-	
-
-	
-	
-
 	
 	'reports'	=>	'Reports',
 	'access-controls'	=>	'Access Controls',

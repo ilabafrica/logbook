@@ -3,7 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\SerialRequest;
+use App\Http\Requests\SummarySerialRequest;
 use App\Models\Facility;
 use App\Models\TestKit;
 use App\Models\Site;
@@ -18,9 +18,12 @@ class SummarySerialController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{	$facilities= Facility::lists('name', 'id');
-		$serials= Serial::all();
+	public function index(SummarySerialRequest $request)
+	{	
+		$siteId = $request->input('site');
+
+		$facilities= Facility::lists('name', 'id');
+		$serials= Serial::where('test_site_id','=',$siteId);
 		$testkits= TestKit::lists('full_testkit_name', 'id');
 		$sites= Site::lists('site_name', 'id');
 		
@@ -44,15 +47,19 @@ class SummarySerialController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(SerialRequest $request)
+	public function store(SummarySerialRequest $request)
 	{
-		
-		
-
-
-        
-
-        
+				
+		$siteId = $request->input('sites');
+		$facilities= Facility::lists('name', 'id');
+		$serials= Serial::where('test_site_id', $siteId)->get();
+		//dd($serials);
+		$testkits= TestKit::lists('full_testkit_name', 'id');
+		$sites= Site::lists('site_name', 'id');
+				
+		return view('dataentry.summaryserial', compact('testkits', 'sites', 'serials', 'facilities'));
+		//return view('dataentry.serial', compact('testkits', 'sites'));
+     
 	}
 
 	/**

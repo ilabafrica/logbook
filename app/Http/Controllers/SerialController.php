@@ -18,11 +18,14 @@ class SerialController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($id)
 	{
-		
-		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
-		$sites= Site::lists('site_name', 'id');
+		$assignedtestkits = [];
+		$assigneds= AssignTestKit::with('testkit')->get();
+		foreach ($assigneds as $key => $assignedtestkit) {
+			$assignedtestkits[$assignedtestkit->id] = $assignedtestkit->testkit->kit_name;
+		}
+		$sites= Site::where('facility_id', $id)->lists('site_name', 'id');
 		
 		
 		return view('dataentry.serial', compact('assignedtestkits', 'sites'));

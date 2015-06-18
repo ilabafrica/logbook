@@ -37,23 +37,30 @@
                     <thead>
                         <tr>
                             
-                            <th>{{ Lang::choice('messages.site', 1) }}</th>                        
-                            <th>{{ Lang::choice('messages.start-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.end-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.total-tests', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test1Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test2Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test3Inv', 1) }}</th>
-                            <th>{{ Lang::choice('messages.%pos', 1) }}</th>
-                            <th>{{ Lang::choice('messages.positive-agr', 1) }}</th>
-                            <th>{{ Lang::choice('messages.overall-agr', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th>                        
+                            <th rowspan="2">{{ Lang::choice('messages.start-date', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.end-date', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>
+                            <th rowspan="1" colspan="3">{{ Lang::choice('messages.test1', 1) }}</th>
+                            <th rowspan="1" colspan="3" >{{ Lang::choice('messages.test2', 1) }}</th>
+                            <th rowspan="1" colspan="3">{{ Lang::choice('messages.test3', 1) }}</th>                                                                              
+                            <th rowspan="2">{{ Lang::choice('messages.%pos', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.positive-agr', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.overall-agr', 1) }}</th>
+                            <th rowspan="2"></th>
                             
+                        </tr>
+                         <tr>
+                            <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                             <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                             <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                           
                         </tr>
                     </thead>
                     <tbody>

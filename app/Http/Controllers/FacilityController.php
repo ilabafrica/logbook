@@ -58,6 +58,7 @@ class FacilityController extends Controller {
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
         $town->reporting_site = $request->reporting_site;
+        $town->county_id = $request->county;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
@@ -128,6 +129,7 @@ class FacilityController extends Controller {
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
         $town->reporting_site = $request->reporting_site;
+        $town->county_id = $request->county;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;

@@ -5,6 +5,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\TrendReportRequest;
 use App\Models\Facility;
+use App\Models\Serial;
+use App\Models\Parallel;
 use App\Models\Site;
 use Response;
 use Auth;
@@ -20,7 +22,9 @@ class TrendReportController extends Controller {
 	{
 		$facilities= Facility::lists('name', 'id');
 		$sites= Site::lists('site_name', 'id');
-		return view('report.trendreport.index', compact('facilities', 'sites'));
+		$serials= Serial::all();
+		$parallels= Parallel::all();
+		return view('report.trendreport.index', compact('facilities', 'sites', 'serials', 'parallels'));
 	}
 
 	/**
