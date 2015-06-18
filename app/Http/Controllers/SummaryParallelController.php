@@ -3,7 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\SerialRequest;
+use App\Http\Requests\SummaryParallelRequest;
 use App\Models\Facility;
 use App\Models\TestKit;
 use App\Models\Site;
@@ -18,15 +18,18 @@ class SummaryParallelController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
-	{	$facilities= Facility::lists('name', 'id');
-		$parallels= Parallel::all();
+	public function index(SummaryParallelRequest $request)
+	{	
+		$siteId = $request->input('site');
+
+		$facilities= Facility::lists('name', 'id');
+		$parallels= Parallel::where('test_site_id','=',$siteId);
 		$testkits= TestKit::lists('full_testkit_name', 'id');
 		$sites= Site::lists('site_name', 'id');
 		
 		
 		return view('dataentry.summaryparallel', compact('testkits', 'sites', 'parallels', 'facilities'));
-		//return view('dataentry.serial', compact('testkits', 'sites'));
+		//return view('dataentry.parallel', compact('testkits', 'sites'));
 	}
 
 	/**
@@ -44,29 +47,34 @@ class SummaryParallelController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(SerialRequest $request)
+	public function store(SummaryParallelRequest $request)
 	{
-		
-		
-
-
-        
-
-        
+				
+		$siteId = $request->input('sites');
+		$facilities= Facility::lists('name', 'id');
+		$parallels= Parallel::where('test_site_id', $siteId)->get();
+		//dd($parallels);
+		$testkits= TestKit::lists('full_testkit_name', 'id');
+		$sites= Site::lists('site_name', 'id');
+				
+		return view('dataentry.summaryparallel', compact('testkits', 'sites', 'parallels', 'facilities'));
+		//return view('dataentry.parallel', compact('testkits', 'sites'));
+     
 	}
 
 	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id
-	 * @return Response
+	 * @rparalleleturn Response
 	 */
 	public function show($id)
 	{
-		//show a facility
-		$site = Site::find($id);
-		//show the view and pass the $town to it
-		return view('dataentry.parallel', compact('site'));
+		//show a parallel
+		$parallel = Parallel::find($id);
+	
+		return view('dataentry.showparallel', compact('parallel'));
+
 	}
 
 	/**
@@ -87,7 +95,7 @@ class SummaryParallelController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(ParallelRequest $request, $id)
+	public function update(parallelRequest $request, $id)
 	{
 		
 	}

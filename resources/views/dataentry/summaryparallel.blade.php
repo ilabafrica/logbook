@@ -12,7 +12,7 @@
 </div>
 {!! Form::open(array('route' => 'summaryparallel.index', 'id' => 'form-result', 'class' => 'form-horizontal')) !!}
   
-            <div class="form-group">
+             <div class="form-group">
                     {!! Form::label('site_id', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-2 control-label')) !!}
                     <div class="col-sm-2">
                         {!! Form::select('sites', array(''=>trans('messages.select-site'))+$sites,'', 
@@ -35,25 +35,31 @@
             <div class="col-sm-12">
                 <table class="table table-striped table-bordered table-hover ">
                     <thead>
-                        <tr>
+                         <tr>
                             
-                            <th>{{ Lang::choice('messages.site', 1) }}</th>                        
-                            <th>{{ Lang::choice('messages.start-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.end-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.total-tests', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test1NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test1Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test2NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test2Inv', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3R', 1) }}</th>
-                            <th >{{ Lang::choice('messages.test3NR', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test3Inv', 1) }}</th>
-                            <th>{{ Lang::choice('messages.%pos', 1) }}</th>
-                            <th>{{ Lang::choice('messages.positive-agr', 1) }}</th>
-                            <th>{{ Lang::choice('messages.overall-agr', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th>                        
+                            <th rowspan="2">{{ Lang::choice('messages.start-date', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.end-date', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>
+                            <th rowspan="1" colspan="3">{{ Lang::choice('messages.test1', 1) }}</th>
+                            <th rowspan="1" colspan="3" >{{ Lang::choice('messages.test2', 1) }}</th>
+                            <th rowspan="1" colspan="3">{{ Lang::choice('messages.test3', 1) }}</th>                                                                              
+                            <th rowspan="2">{{ Lang::choice('messages.%pos', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.positive-agr', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.overall-agr', 1) }}</th>
                             
+                        </tr>
+                         <tr>
+                            <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                             <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                             <th>R </th>
+                            <th> NR</th>
+                            <th>Inv </th>
+                           
                         </tr>
                     </thead>
                     <tbody>
@@ -62,7 +68,11 @@
                             <td>{{ $parallel->test_site_id }}</td>
                             <td>{{ $parallel->start_date }}</td>
                             <td>{{ $parallel->end_date }}</td>
-                            <td></td>
+                            <td>
+                                {{($parallel->test_kit1R + $parallel->test_kit1NR + $parallel->test_kit1Inv +
+                                          $parallel->test_kit2R +$parallel->test_kit2NR + $parallel->test_kit2Inv +
+                                          $parallel->test_kit3R + $parallel->test_kit3NR +$parallel->test_kit3Inv)}}</td>
+                            </td>
                             <td>{{ $parallel->test_kit1R }}</td>
                             <td>{{ $parallel->test_kit1NR }}</td>
                             <td>{{ $parallel->test_kit1Inv }}</td>
@@ -72,11 +82,19 @@
                             <td>{{ $parallel->test_kit3R }}</td>
                             <td>{{ $parallel->test_kit3NR }}</td>
                             <td>{{ $parallel->test_kit3Inv }}</td>
-                            <td>{{ $parallel->positive}}</td>
-                            <td>{{ $parallel->positive }}</td>
-                            <td>{{ $parallel->positive }}</td>
+                            <td>{{round($parallel->positive / ( $parallel->test_kit1R + $parallel->test_kit1NR + $parallel->test_kit1Inv +
+                                                              $parallel->test_kit2R + $parallel->test_kit2NR + $parallel->test_kit2Inv +
+                                                              $parallel->test_kit3R + $parallel->test_kit3NR + $parallel->test_kit3Inv)*100,2)}}</td>
+                            <td>@if($parallel->test_kit1R >0){{round(($parallel->test_kit2R/$parallel->test_kit1R)*100,2) }}
+                            @else
+                            @endif</td>
+                            <td>{{round((($parallel->test_kit2R + $parallel->test_kit1NR)/($parallel->test_kit1R  + $parallel->test_kit1NR + $parallel->test_kit1Inv)- $parallel->test_kit1Inv)*100,2) }}
+                            </td>
                            
-                          
+                           <td>
+                             <a href="{{ URL::to("summaryparallel/" . $parallel->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                             
+                            </td>
                         </tr>
                         @empty
                         <tr>

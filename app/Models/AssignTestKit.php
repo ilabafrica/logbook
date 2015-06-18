@@ -26,7 +26,7 @@ class AssignTestKit extends Model {
 	*/
 	public function testkit()
 	{
-	 return $this->belongsTo('App\Models\TestKit');
+	 return $this->belongsTo('App\Models\TestKit', 'kit_name_id');
 	}
 
 }

@@ -7,6 +7,8 @@ use App\Http\Requests\ResultRequest;
 use App\Models\Facility;
 use App\Models\FacilityType;
 use App\Models\County;
+use App\Models\Serial;
+use App\Models\Parallel;
 use Response;
 use Auth;
 
@@ -21,7 +23,9 @@ class ResultController extends Controller {
 	{
 		
 		$facilities= Facility::lists('name', 'id');
-		return view('management.result.index', compact('facilities'));
+		$serials= Serial::all();
+		$parallels= Parallel::all();
+		return view('management.result.index', compact('facilities', 'serials', 'parallels'));
 	
 	}
 
