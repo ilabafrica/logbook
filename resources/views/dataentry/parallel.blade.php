@@ -5,11 +5,13 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
+
                 <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}
             </li>
         </ol>
     </div>
 </div>
+
  <br/>
 
 <div class="panel panel-primary">
@@ -86,6 +88,7 @@
                  {!! Form::label('test_kit1_id', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-5">
+
                     {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit1')) !!}
                 </div>
@@ -97,6 +100,7 @@
                  {!! Form::label('test_kit2_id', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
+
                     {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit2')) !!}
                 </div>
@@ -108,6 +112,7 @@
                  {!! Form::label('test_kit3_id', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
+
                     {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit3')) !!}
                 </div>
@@ -281,6 +286,7 @@
     </div>
 
  {!! Form::close() !!} 
+
       </div>
 </div>
 @stop

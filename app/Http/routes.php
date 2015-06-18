@@ -94,6 +94,7 @@ Route::resource('site', 'SiteController');
 Route::resource('assigntestkit', 'AssignTestKitController');
 //result
 Route::resource('result', 'ResultController');
+
 //dataentry
 Route::resource('dataentry', 'DataEntryController');
 //serial
@@ -111,10 +112,9 @@ Route::get("/parallel/{id}/index", array(
     "as"   => "parallel.index",
     "uses" => "ParallelController@index"));
 
-
-
 //summaryparallel
 Route::resource('summaryparallel', 'SummaryParallelController');
+
 //logbookdata
 Route::resource('logbookdata', 'LogbookDataController');
 //trendreport

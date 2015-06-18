@@ -133,6 +133,7 @@ return [
 	'positive'	=>	'Positive',
 	'negative'	=>	'Negative',
 	'indeterminate'	=>	'Indeterminate',
+
 	'positive-agreement'	=>	'Positive Agreement',
 	'test1R'	=>	'Test1 R',
 	'test1NR'	=>	'Test1 NR',
@@ -150,8 +151,6 @@ return [
 	'final-pos'	=>	'Final Pos',
 	'approved'	=>	'Approved',
 	'not-approved'	=>	'Not Approved',
-	
-	
 	
 	'reports'	=>	'Reports',
 	'access-controls'	=>	'Access Controls',
@@ -257,7 +256,5 @@ return [
 	'operational-status' =>	'Operational Status',
 	'select-facility' =>	'Select Facility',
 	'testing-month' =>	'Month',
-
-	
 	
 ];

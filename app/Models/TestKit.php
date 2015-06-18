@@ -30,7 +30,9 @@ class TestKit extends Model {
 	*/
 	public function agency()
 	{
+
 	 return $this->belongsTo('App\Models\Agency', 'approval_agency_id');
+
 	}
 	
 }

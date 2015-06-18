@@ -45,6 +45,7 @@
                             <td>{{ $testkit->approval_status== App\Models\Testkit::NOTAPPROVED? Lang::choice('messages.not-approved',1):Lang::choice('messages.approved', 1) }}</td>
                             <td>{{ $testkit->agency->name}}</td>
                             <td>{{ $testkit->incountry_approval == App\Models\Testkit::YES? Lang::choice('messages.yes',1):Lang::choice('messages.no', 1) }}</td>
+
                             <td>
                               <a href="{{ URL::to("testkit/" . $testkit->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
                               <a href="{{ URL::to("testkit/" . $testkit->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>

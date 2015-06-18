@@ -18,5 +18,4 @@ public function constituencies()
  return $this->hasMany('constituencies');
 
 }
-
 }

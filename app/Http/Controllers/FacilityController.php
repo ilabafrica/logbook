@@ -2,9 +2,7 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests\FacilityRequest;
 use App\Models\Facility;
 use App\Models\County;
@@ -40,9 +38,10 @@ class FacilityController extends Controller {
 		$facilityTypes = FacilityType::lists('name', 'id');
 		//	Get all facility owners
 		$facilityOwners = FacilityOwner::lists('name', 'id');
+
 		$counties = County::lists('name', 'id');
-		
 		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners', 'counties'));
+
 	}
 
 	/**
@@ -139,7 +138,7 @@ class FacilityController extends Controller {
         $town->operational_status = $request->operational_status;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-      //  $town->user_id = Auth::user()->id;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('facility')->with('message', 'Facility updated successfully.');

@@ -18,6 +18,7 @@ class SerialController extends Controller {
 	 *
 	 * @return Response
 	 */
+
 	public function index($id)
 	{
 		$assignedtestkits = [];
@@ -76,14 +77,8 @@ class SerialController extends Controller {
         $assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
 		$sites= Site::lists('site_name', 'id');
 
-
 		return view('dataentry.serial', compact('assignedtestkits', 'sites'))->with('message', 'Successfully Saved.');
-		
-
-
-        
-
-        
+  
 	}
 
 	/**
@@ -94,9 +89,10 @@ class SerialController extends Controller {
 	 */
 	public function show($id)
 	{
-		
+	
 		//show the view and pass the $town to it
 		return view('dataentry.serial', compact('serials'));
+
 	}
 
 	/**
@@ -108,6 +104,7 @@ class SerialController extends Controller {
 	public function edit($id)
 	{
 
+
 		//	Get serial
 		$serial = Serial::find($id);
 		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
@@ -118,7 +115,6 @@ class SerialController extends Controller {
 		$site= $serial->test_site_id;
 		 return view('dataentry.editserial', compact('serial', 'assignedtestkits','assignedtestkit1','assignedtestkit2','assignedtestkit3', 'sites', 'site'));
 	
-
 	}
 
 	/**
@@ -129,6 +125,7 @@ class SerialController extends Controller {
 	 */
 	public function update(SerialRequest $request, $id)
 	{
+
 		$town = new Serial;
 		$town->test_site_id = $request->test_site;
         $town->book_no = $request->book_no;
@@ -154,7 +151,7 @@ class SerialController extends Controller {
         $town->save();
 
         return redirect('result')->with('message', 'Updated successfully.');
-       
+
 	}
 
 	/**

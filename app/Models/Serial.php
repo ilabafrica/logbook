@@ -9,8 +9,6 @@ class Serial extends Model {
     protected $dates = ['deleted_at'];
 	protected $table = 'serials';
 
-
-
 /**
 	* Relationship with testkits
 	*/
@@ -18,7 +16,6 @@ class Serial extends Model {
 	{
 	 return $this->hasMany('App\Models\Site', 'test_site_id');
 	}
-
 
 }
 

@@ -171,6 +171,7 @@ class CreateMflTables extends Migration {
 		});
 		//	assign_testkits
 		Schema::create('assign_testkits', function(Blueprint $table)
+
 			{
 			$table->increments('id')->unsigned();
 			$table->integer('site_name_id')->unsigned();
@@ -192,6 +193,7 @@ class CreateMflTables extends Migration {
 		//	serials
 		Schema::create('serials', function(Blueprint $table)
 		{
+
 			$table->increments('id')->unsigned();
 			$table->integer('test_site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
@@ -226,6 +228,7 @@ class CreateMflTables extends Migration {
 //	serials
 		Schema::create('parallels', function(Blueprint $table)
 		{
+
 			$table->increments('id')->unsigned();
 			$table->integer('test_site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
@@ -248,7 +251,6 @@ class CreateMflTables extends Migration {
 			$table->integer('negative')->unsigned();
 			$table->integer('indeterminate')->unsigned();
 			$table->integer('user_id')->unsigned();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('test_site_id')->references('id')->on('sites');
             $table->foreign('test_kit1_id')->references('id')->on('test_kits');

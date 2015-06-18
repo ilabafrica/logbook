@@ -179,6 +179,7 @@ class LogbookSeeder extends Seeder
        
          /* Facilities table */
         $facilities = array(
+
             array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "county_id" => "13",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
             );
         foreach ($facilities as $facility) {

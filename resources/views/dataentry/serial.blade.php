@@ -5,11 +5,14 @@
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li class="active">
+
                 <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}
+
             </li>
         </ol>
     </div>
 </div>
+
 
 
  <br/>
@@ -18,11 +21,13 @@
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.page-summary-data-entry-serial-algorithm', '1') }}</div>
     <div class="panel-body">
     @if($errors->all())
+
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
+
         {!! Form::open(array('route' => 'serial.store', 'id' => 'form-serial', 'class' => 'form-horizontal')) !!}
          
 
@@ -88,6 +93,7 @@
                  {!! Form::label('test_kit1_id', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-5">
+
                     {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit1')) !!}
                 </div>
@@ -99,6 +105,7 @@
                  {!! Form::label('test_kit2_id', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
+
                     {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit2')) !!}
                 </div>
@@ -110,6 +117,7 @@
                  {!! Form::label('test_kit3_id', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
+
                     {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$assignedtestkits,'', 
                             array('class' => 'form-control', 'id' => 'test_kit3')) !!}
                 </div>
@@ -283,6 +291,8 @@
     </div>
 
  {!! Form::close() !!} 
+
+ 
       </div>
 </div>
 @stop

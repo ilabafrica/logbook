@@ -77,6 +77,7 @@
                 <table class="table table-striped table-bordered table-hover search-table">
                     <thead>
                         <tr>
+
                             
                             <th rowspan="2">{{ Lang::choice('messages.algorithm', 1) }}</th>
                             <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>

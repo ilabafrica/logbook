@@ -16,6 +16,7 @@
             <div class="form-group">
                     {!! Form::label('facility_id', Lang::choice('messages.facility-name', 1), array('class' => 'col-sm-2 control-label')) !!}
                     <div class="col-sm-2">
+
                         {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'', 
                             array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
@@ -40,6 +41,7 @@
                 <table class="table table-striped table-bordered table-hover search-table">
                     <thead>
                         <tr>
+<<<<<<< HEAD
                            
                             <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th>
                             <th rowspan="2">{{ Lang::choice('messages.algo', 1) }}</th>
@@ -116,6 +118,27 @@
                           <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
                         @endforelse
+=======
+                            <th>{{ Lang::choice('messages.facility-name', 1) }}</th>
+                            <th>{{ Lang::choice('messages.site', 1) }}</th>
+                            <th>{{ Lang::choice('messages.algo', 1) }}</th>
+                            <th>{{ Lang::choice('messages.start-date', 1) }}</th>
+                            <th>{{ Lang::choice('messages.end-date', 1) }}</th>
+                            <th>{{ Lang::choice('messages.test1', 1) }}</th>
+                             <th>{{ Lang::choice('messages.test2', 1) }}</th>
+                              <th>{{ Lang::choice('messages.test3', 1) }}</th>
+                                                       
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                      
+                        <tr>
+                          <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
+                        </tr>
+                       
+>>>>>>> master
                     </tbody>
                 </table>
             </div>

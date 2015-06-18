@@ -18,6 +18,7 @@ class ParallelController extends Controller {
 	 *
 	 * @return Response
 	 */
+
 	public function index($id)
 	{
 		$assignedtestkits = [];
@@ -30,6 +31,7 @@ class ParallelController extends Controller {
 		
 		return view('dataentry.parallel', compact('assignedtestkits', 'sites'));
 		//return view('dataentry.parallel', compact('testkits', 'sites'));
+
 	}
 
 	/**
@@ -49,6 +51,7 @@ class ParallelController extends Controller {
 	 */
 	public function store(ParallelRequest $request)
 	{
+
 		$town = new Parallel;
 		$town->test_site_id = $request->test_site;
         $town->book_no = $request->book_no;
@@ -78,12 +81,7 @@ class ParallelController extends Controller {
 
 
 		return view('dataentry.parallel', compact('assignedtestkits', 'sites'))->with('message', 'Successfully Saved.');
-		
-
-
-        
-
-        
+		  
 	}
 
 	/**
@@ -97,6 +95,7 @@ class ParallelController extends Controller {
 		
 		//show the view and pass the $town to it
 		return view('dataentry.parallel', compact('parallels'));
+
 	}
 
 	/**
@@ -107,7 +106,6 @@ class ParallelController extends Controller {
 	 */
 	public function edit($id)
 	{
-
 		//	Get parallel
 		$parallel = Parallel::find($id);
 		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
@@ -127,6 +125,7 @@ class ParallelController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
+
 	public function update(ParallelRequest $request, $id)
 	{
 		$town = new Parallel;
@@ -154,6 +153,7 @@ class ParallelController extends Controller {
         $town->save();
 
         return redirect('result')->with('message', 'Updated successfully.');
+
        
 	}
 

@@ -26,7 +26,7 @@ class ResultController extends Controller {
 		$serials= Serial::all();
 		$parallels= Parallel::all();
 		return view('management.result.index', compact('facilities', 'serials', 'parallels'));
-	
+
 	}
 
 	/**

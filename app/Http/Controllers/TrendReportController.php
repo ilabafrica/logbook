@@ -25,6 +25,7 @@ class TrendReportController extends Controller {
 		$serials= Serial::all();
 		$parallels= Parallel::all();
 		return view('report.trendreport.index', compact('facilities', 'sites', 'serials', 'parallels'));
+
 	}
 
 	/**

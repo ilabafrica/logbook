@@ -101,7 +101,9 @@
                               <ul class="nav nav-second-level collapse">
                                  <li><a href=""><i class="fa fa-tag"></i> {{ Lang::choice('messages.data-entry', 2) }}</a>
                                 	<ul class="nav nav-third-level collapse">
+
                                 		<li><a href="{{ URL::to('dataentry')}}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.facilities', 2) }}</a></li>
+
                                 		</ul>	
                                 </li>
                              </ul> 
