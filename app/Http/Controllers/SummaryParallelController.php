@@ -3,7 +3,7 @@
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\SerialRequest;
+use App\Http\Requests\ParallelRequest;
 use App\Models\Facility;
 use App\Models\TestKit;
 use App\Models\Site;
@@ -26,7 +26,7 @@ class SummaryParallelController extends Controller {
 		
 		
 		return view('dataentry.summaryparallel', compact('testkits', 'sites', 'parallels', 'facilities'));
-		//return view('dataentry.serial', compact('testkits', 'sites'));
+		//return view('dataentry.parallel', compact('testkits', 'sites'));
 	}
 
 	/**
@@ -44,7 +44,7 @@ class SummaryParallelController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store(SerialRequest $request)
+	public function store(parallelRequest $request)
 	{
 		
 		
@@ -63,10 +63,11 @@ class SummaryParallelController extends Controller {
 	 */
 	public function show($id)
 	{
-		//show a facility
-		$site = Site::find($id);
-		//show the view and pass the $town to it
-		return view('dataentry.parallel', compact('site'));
+		//show a parallel
+		$parallel = Parallel::find($id);
+	
+		return view('dataentry.showparallel', compact('parallel'));
+
 	}
 
 	/**
@@ -87,7 +88,7 @@ class SummaryParallelController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(ParallelRequest $request, $id)
+	public function update(parallelRequest $request, $id)
 	{
 		
 	}

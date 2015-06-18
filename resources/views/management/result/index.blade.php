@@ -40,25 +40,76 @@
                 <table class="table table-striped table-bordered table-hover search-table">
                     <thead>
                         <tr>
-                            <th>{{ Lang::choice('messages.facility-name', 1) }}</th>
+                           
                             <th>{{ Lang::choice('messages.site', 1) }}</th>
                             <th>{{ Lang::choice('messages.algo', 1) }}</th>
                             <th>{{ Lang::choice('messages.start-date', 1) }}</th>
                             <th>{{ Lang::choice('messages.end-date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.test1', 1) }}</th>
-                             <th>{{ Lang::choice('messages.test2', 1) }}</th>
-                              <th>{{ Lang::choice('messages.test3', 1) }}</th>
-                                                       
+                             <th >{{ Lang::choice('messages.test1R', 1) }}</th>
+                            <th >{{ Lang::choice('messages.test1NR', 1) }}</th>
+                            <th>{{ Lang::choice('messages.test1Inv', 1) }}</th>
+                            <th >{{ Lang::choice('messages.test2R', 1) }}</th>
+                            <th >{{ Lang::choice('messages.test2NR', 1) }}</th>
+                            <th>{{ Lang::choice('messages.test2Inv', 1) }}</th>
+                            <th >{{ Lang::choice('messages.test3R', 1) }}</th>
+                            <th >{{ Lang::choice('messages.test3NR', 1) }}</th>
+                            <th>{{ Lang::choice('messages.test3Inv', 1) }}</th>                                                      
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-
-                      
+                            @forelse($serials as $serial)
+                            <tr>
+                            <td>{{ $serial->test_site_id }}</td>
+                            <td>Serial</td>
+                            <td>{{ $serial->start_date }}</td>
+                            <td>{{ $serial->end_date }}</td>
+                            <td>{{ $serial->test_kit1R }}</td>
+                            <td>{{ $serial->test_kit1NR }}</td>
+                            <td>{{ $serial->test_kit1Inv }}</td>
+                            <td>{{ $serial->test_kit2R }}</td>
+                            <td>{{ $serial->test_kit2NR }}</td>
+                            <td>{{ $serial->test_kit2Inv }}</td>
+                            <td>{{ $serial->test_kit3R }}</td>
+                            <td>{{ $serial->test_kit3NR }}</td>
+                            <td>{{ $serial->test_kit3Inv }}</td>
+                            
+                           <td>
+                            <a href="{{ URL::to("serial/" . $serial->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                             
+                            </td>
+                        </tr>
+                        @empty
                         <tr>
                           <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
-                       
+                        @endforelse
+                         @forelse($parallels as $parallel)
+                            <tr>
+                            <td>{{ $parallel->test_site_id }}</td>
+                            <td>Parallel</td>
+                            <td>{{ $parallel->start_date }}</td>
+                            <td>{{ $parallel->end_date }}</td>
+                            <td>{{ $parallel->test_kit1R }}</td>
+                            <td>{{ $parallel->test_kit1NR }}</td>
+                            <td>{{ $parallel->test_kit1Inv }}</td>
+                            <td>{{ $parallel->test_kit2R }}</td>
+                            <td>{{ $parallel->test_kit2NR }}</td>
+                            <td>{{ $parallel->test_kit2Inv }}</td>
+                            <td>{{ $parallel->test_kit3R }}</td>
+                            <td>{{ $parallel->test_kit3NR }}</td>
+                            <td>{{ $parallel->test_kit3Inv }}</td>
+                            
+                           <td>
+                             <a href="{{ URL::to("parallel/" . $parallel->id . "/edit") }}" class="btn btn-success btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                             
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                          <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
+                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

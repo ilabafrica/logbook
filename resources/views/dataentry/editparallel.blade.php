@@ -10,6 +10,8 @@
         </ol>
     </div>
 </div>
+
+
  <br/>
 
 <div class="panel panel-primary">
@@ -21,18 +23,22 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-{!! Form::open(array('route' => 'parallel.store', 'id' => 'form-parallel', 'class' => 'form-horizontal')) !!}
+        {!! Form::model($parallel, array('route' => array('parallel.update', $parallel->id), 
+        'method' => 'PUT', 'id' => 'form-edit-parallel', 'class' => 'form-horizontal')) !!}
+         
 
-
-   <div class="row">
+        <div class="row">
         <div class="col-md-2">
             <div class="row">
                 <div class="col-md-2">
                    {!! Form::label('test_site_id', Lang::choice('messages.test-site', 1)) !!}
                 </div>
                 <div class="col-md-8">
-                    {!! Form::select('test_site', array(''=>trans('messages.select-site'))+$sites,'', 
-                            array('class' => 'form-control', 'id' => 'test_site')) !!}
+                    {!! Form::select('test_site', array(''=>trans('messages.select-site'))+$sites, 
+                    old('test_site') ? old('test_site') : $site, 
+                            array('class' => 'form-control', 'id' => 'test_site_id')) !!}
+
+                
                 </div>
             </div>
         </div>
@@ -86,8 +92,11 @@
                  {!! Form::label('test_kit1_id', Lang::choice('messages.test-kit1', 1), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-5">
-                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$assignedtestkits,'', 
+                    {!! Form::select('test_kit1', array(''=>trans('messages.test-kit1'))+$assignedtestkits, 
+                        old('test_kit1') ? old('test_kit1') : $assignedtestkit1, 
                             array('class' => 'form-control', 'id' => 'test_kit1')) !!}
+
+                           
                 </div>
                 </div>
             </div>
@@ -97,7 +106,8 @@
                  {!! Form::label('test_kit2_id', Lang::choice('messages.test-kit2', 2), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$assignedtestkits,'', 
+                     {!! Form::select('test_kit2', array(''=>trans('messages.test-kit2'))+$assignedtestkits, 
+                        old('test_kit2') ? old('test_kit1') : $assignedtestkit2, 
                             array('class' => 'form-control', 'id' => 'test_kit2')) !!}
                 </div>
                 </div>
@@ -108,7 +118,8 @@
                  {!! Form::label('test_kit3_id', Lang::choice('messages.test-kit3', 3), array('class' => 'control-label')) !!}
                 </div>
                 <div class="col-md-6">
-                    {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$assignedtestkits,'', 
+                      {!! Form::select('test_kit3', array(''=>trans('messages.test-kit3'))+$assignedtestkits, 
+                        old('test_kit3') ? old('test_kit3') : $assignedtestkit3, 
                             array('class' => 'form-control', 'id' => 'test_kit3')) !!}
                 </div>
                 </div>

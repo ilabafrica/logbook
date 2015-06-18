@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\SerialRequest;
 use App\Models\AssignTestKit;
+use App\Models\TestKit;
 use App\Models\Site;
 use App\Models\Serial;
 use Response;
@@ -69,10 +70,11 @@ class SerialController extends Controller {
         $town->user_id = Auth::user()->id;
         $town->save();
 
-        $testkits= TestKit::lists('full_testkit_name', 'id');
+        $assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
 		$sites= Site::lists('site_name', 'id');
 
-		return view('dataentry.serial', compact('testkits', 'sites'))->with('message', 'Successfully Saved.');
+
+		return view('dataentry.serial', compact('assignedtestkits', 'sites'))->with('message', 'Successfully Saved.');
 		
 
 
@@ -103,7 +105,17 @@ class SerialController extends Controller {
 	public function edit($id)
 	{
 
-		
+		//	Get serial
+		$serial = Serial::find($id);
+		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
+		$assignedtestkit1=$serial->test_kit1_id;
+		$assignedtestkit2=$serial->test_kit2_id;
+		$assignedtestkit3=$serial->test_kit3_id;
+		$sites= Site::lists('site_name', 'id');
+		$site= $serial->test_site_id;
+		 return view('dataentry.editserial', compact('serial', 'assignedtestkits','assignedtestkit1','assignedtestkit2','assignedtestkit3', 'sites', 'site'));
+	
+
 	}
 
 	/**
@@ -114,25 +126,31 @@ class SerialController extends Controller {
 	 */
 	public function update(SerialRequest $request, $id)
 	{
-		$town = Site::findOrFail($id);;
-        $town->code = $request->code;
-        $town->name = $request->name;
-        $town->facility_type_id = $request->facility_type;
-        $town->facility_owner_id = $request->facility_owner;
-        $town->reporting_to = $request->reporting_to;
-        $town->nearest_town = $request->nearest_town;
-        $town->landline = $request->landline;
-        $town->mobile = $request->mobile;
-        $town->email = $request->email;
-        $town->address = $request->address;
-        $town->in_charge = $request->in_charge;
-        $town->operational_status = $request->operational_status;
-         $town->latitude = $request->latitude;
-        $town->longitude = $request->longitude;
-        $town->user_id = Auth::user()->id;;
+		$town = new Serial;
+		$town->test_site_id = $request->test_site;
+        $town->book_no = $request->book_no;
+        $town->page_no = $request->page_no;
+        $town->start_date = $request->start_date;
+        $town->end_date = $request->end_date;
+        $town->test_kit1_id = $request->test_kit1;
+        $town->test_kit2_id = $request->test_kit2;
+        $town->test_kit3_id = $request->test_kit3;
+        $town->test_kit1R = $request->test_kit1R;
+        $town->test_kit1NR = $request->test_kit1NR;
+        $town->test_kit1Inv = $request->test_kit1Inv;
+        $town->test_kit2R = $request->test_kit2R;
+        $town->test_kit2NR = $request->test_kit2NR;
+        $town->test_kit2Inv = $request->test_kit2Inv;
+        $town->test_kit3R = $request->test_kit3R;
+        $town->test_kit3NR = $request->test_kit3NR;
+        $town->test_kit3Inv = $request->test_kit3Inv;
+        $town->positive = $request->positive;
+        $town->negative = $request->negative;
+        $town->indeterminate = $request->indeterminate;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
-        return redirect('site')->with('message', 'Site updated successfully.');
+        return redirect('result')->with('message', 'Updated successfully.');
        
 	}
 
