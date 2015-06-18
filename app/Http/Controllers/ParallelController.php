@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\ParallelRequest;
 use App\Models\AssignTestKit;
-//use App\Models\TestKit;
+use App\Models\TestKit;
 use App\Models\Site;
 use App\Models\Parallel;
 use Response;
@@ -18,11 +18,14 @@ class ParallelController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($id)
 	{
-		
-		$assignedtestkits= AssignTestKit::lists('kit_name_id', 'id');
-		$sites= Site::lists('site_name', 'id');
+		$assignedtestkits = [];
+		$assigneds= AssignTestKit::with('testkit')->get();
+		foreach ($assigneds as $key => $assignedtestkit) {
+			$assignedtestkits[$assignedtestkit->id] = $assignedtestkit->testkit->kit_name;
+		}
+		$sites= Site::where('facility_id', $id)->lists('site_name', 'id');
 		
 		
 		return view('dataentry.parallel', compact('assignedtestkits', 'sites'));
@@ -93,7 +96,7 @@ class ParallelController extends Controller {
 	{
 		
 		//show the view and pass the $town to it
-		return view('dataentry.parallel', compact('parallel'));
+		return view('dataentry.parallel', compact('parallels'));
 	}
 
 	/**
@@ -163,7 +166,9 @@ class ParallelController extends Controller {
 
 		public function delete($id)
 	{
-		
+		$site= Site::find($id);
+		$site->delete();
+		return redirect('site')->with('message', 'Site deleted successfully.');
 	}
 
 	public function destroy($id)

@@ -66,7 +66,7 @@
                     <tbody>
                             @forelse($serials as $serial)
                             <tr>
-                            <td>{{ $serial->test_site_id }}</td>
+                            <td>{{ $serial->site->site_name}}</td>
                             <td>Serial</td>
                             <td>{{ $serial->start_date }}</td>
                             <td>{{ $serial->end_date }}</td>

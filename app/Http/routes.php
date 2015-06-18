@@ -107,6 +107,12 @@ Route::resource('summaryserial', 'SummarySerialController');
 
 //parallel
 Route::resource('parallel', 'ParallelController');
+Route::get("/parallel/{id}/index", array(
+    "as"   => "parallel.index",
+    "uses" => "ParallelController@index"));
+
+
+
 //summaryparallel
 Route::resource('summaryparallel', 'SummaryParallelController');
 //logbookdata

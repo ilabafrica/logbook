@@ -45,7 +45,7 @@
                             <td>
                             <a href="{{ URL::to('serial/'.$facility->id.'/index')}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i><span> Serial</span></a>
                             <a href="{{ URL::to('summaryserial')}}"class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span>  Serial Summary</span></a>
-                             <a href="{{ URL::to('parallel')}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i><span> Parallel</span></a>
+                             <a href="{{ URL::to('parallel/'.$facility->id.'/index')}}" class="btn btn-info btn-sm"><i class="fa fa-eye"></i><span> Parallel</span></a>
                             <a href="{{ URL::to('summaryparallel')}}"class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span>  Parallel Summary</span></a>
                              
                               
