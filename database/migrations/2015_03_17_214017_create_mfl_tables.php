@@ -64,9 +64,7 @@ class CreateMflTables extends Migration {
 
             $table->softDeletes();
 			$table->timestamps();
-		});
-		
-		
+		});		
 		//	Facilities
 		Schema::create('facilities', function(Blueprint $table)
 		{
@@ -96,7 +94,6 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
-
 		//	Site Types
 		Schema::create('site_types', function(Blueprint $table)
 		{
@@ -115,48 +112,23 @@ class CreateMflTables extends Migration {
 		{
 			$table->increments('id')->unsigned();
 			$table->integer('facility_id')->unsigned();
-			$table->string('site_id', 100);
-			$table->string('site_name', 100);
 			$table->integer('site_type_id')->unsigned();
-			$table->string('address', 50);
-			$table->string('nearest_town', 50);
-			$table->integer('county_id')->unsigned();
+			$table->string('local_id', 100);
+			$table->string('name', 100);
 			$table->string('department', 50);
-			$table->string('landline', 50);
 			$table->string('mobile', 50);
 			$table->string('email', 50);
 			$table->string('in_charge', 50);
-			$table->integer('longitude')->unsigned();
-			$table->integer('latitude')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('facility_id')->references('id')->on('facilities');
             $table->foreign('site_type_id')->references('id')->on('site_types');
-            $table->foreign('county_id')->references('id')->on('counties');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
 			$table->timestamps();
 		});
-
-		//	kitnames
-		Schema::create('test_kits', function(Blueprint $table)
-		{
-			$table->increments('id')->unsigned();
-			$table->string('full_testkit_name', 100);
-			$table->string('kit_name', 100);
-			$table->string('manufacturer', 100);
-			$table->integer('approval_status')->unsigned();
-			$table->integer('approval_agency_id')->unsigned();
-			$table->integer('incountry_approval')->unsigned();
-			$table->integer('user_id')->unsigned();
-
-            $table->foreign('user_id')->references('id')->on('users');
-
-            $table->softDeletes();
-			$table->timestamps();
-		});
-		//	Site Types
+		//	Approval agencies
 		Schema::create('agencies', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();
@@ -169,52 +141,58 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
-		//	assign_testkits
-		Schema::create('assign_testkits', function(Blueprint $table)
+		//	Test kits
+		Schema::create('test_kits', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('full_name', 100);
+			$table->string('short_name', 100);
+			$table->string('manufacturer', 100);
+			$table->integer('approval_status')->unsigned();
+			$table->integer('approval_agency_id')->unsigned();
+			$table->tinyInteger('incountry_approval');
+			$table->integer('user_id')->unsigned();
+
+			$table->foreign('approval_agency_id')->references('id')->on('agencies');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});		
+		//	Site test kits
+		Schema::create('site_test_kits', function(Blueprint $table)
 
 			{
 			$table->increments('id')->unsigned();
-			$table->integer('site_name_id')->unsigned();
-			$table->integer('kit_name_id')->unsigned();
+			$table->integer('site_id')->unsigned();
+			$table->integer('kit_id')->unsigned();
 			$table->string('lot_no', 100);
 			$table->date('expiry_date')->nullable();
 			$table->string('comments', 100);
-			$table->integer('stock_avl')->unsigned();
+			$table->tinyInteger('stock_available')->unsigned();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('site_name_id')->references('id')->on('sites');
-            $table->foreign('kit_name_id')->references('id')->on('test_kits');
+            $table->foreign('site_id')->references('id')->on('sites');
+            $table->foreign('test_kit_id')->references('id')->on('test_kits');
 
 
             $table->softDeletes();
 			$table->timestamps();
 		});
-		//	serials
-		Schema::create('serials', function(Blueprint $table)
+		//	Algorithm data
+		Schema::create('htc', function(Blueprint $table)
 		{
 
 			$table->increments('id')->unsigned();
-			$table->integer('test_site_id')->unsigned();
+			$table->integer('site_test_kit_id')->unsigned();
 			$table->integer('book_no')->unsigned();
 			$table->integer('page_no')->unsigned();
 			$table->date('start_date')->nullable();
 			$table->date('end_date')->nullable();
-			$table->integer('test_kit1_id')->unsigned();
-			$table->integer('test_kit2_id')->unsigned();
-			$table->integer('test_kit3_id')->unsigned();			
-			$table->integer('test_kit1R')->unsigned();
-			$table->integer('test_kit1NR')->unsigned();
-			$table->integer('test_kit1Inv')->unsigned();
-			$table->integer('test_kit2R')->unsigned();
-			$table->integer('test_kit2NR')->unsigned();
-			$table->integer('test_kit2Inv')->unsigned();
-			$table->integer('test_kit3R')->unsigned();
-			$table->integer('test_kit3NR')->unsigned();
-			$table->integer('test_kit3Inv')->unsigned();
-			$table->integer('positive')->unsigned();
-			$table->integer('negative')->unsigned();
-			$table->integer('indeterminate')->unsigned();
+			$table->integer('reactive')->unsigned();
+			$table->integer('non_reactive')->unsigned();
+			$table->tinyInteger('test_kit_no');
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -225,41 +203,21 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
-//	serials
-		Schema::create('parallels', function(Blueprint $table)
+		//	Totals as counted by data officer
+		Schema::create('totals', function(Blueprint $table)
 		{
 
 			$table->increments('id')->unsigned();
-			$table->integer('test_site_id')->unsigned();
-			$table->integer('book_no')->unsigned();
-			$table->integer('page_no')->unsigned();
-			$table->date('start_date')->nullable();
-			$table->date('end_date')->nullable();
-			$table->integer('test_kit1_id')->unsigned();
-			$table->integer('test_kit2_id')->unsigned();
-			$table->integer('test_kit3_id')->unsigned();			
-			$table->integer('test_kit1R')->unsigned();
-			$table->integer('test_kit1NR')->unsigned();
-			$table->integer('test_kit1Inv')->unsigned();
-			$table->integer('test_kit2R')->unsigned();
-			$table->integer('test_kit2NR')->unsigned();
-			$table->integer('test_kit2Inv')->unsigned();
-			$table->integer('test_kit3R')->unsigned();
-			$table->integer('test_kit3NR')->unsigned();
-			$table->integer('test_kit3Inv')->unsigned();
-			$table->integer('positive')->unsigned();
-			$table->integer('negative')->unsigned();
-			$table->integer('indeterminate')->unsigned();
+			$table->string('htcs', 10);
+			$table->integer('positive');
+			$table->integer('negative');
+			$table->integer('indeterminate');
 			$table->integer('user_id')->unsigned();
+
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('test_site_id')->references('id')->on('sites');
-            $table->foreign('test_kit1_id')->references('id')->on('test_kits');
-            $table->foreign('test_kit2_id')->references('id')->on('test_kits');
-            $table->foreign('test_kit3_id')->references('id')->on('test_kits');
             $table->softDeletes();
 			$table->timestamps();
-		});
-		
+		});		
 	}
 	/**
 	 * Reverse the migrations.
@@ -277,10 +235,8 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('sites');
 		Schema::dropIfExists('test_kits');
 		Schema::dropIfExists('agencies');
-		Schema::dropIfExists('assign_testkits');
-		Schema::dropIfExists('serials');
-		Schema::dropIfExists('parallels');
-		
+		Schema::dropIfExists('site_test_kits');
+		Schema::dropIfExists('htc');
+		Schema::dropIfExists('totals');
 	}
-
 }

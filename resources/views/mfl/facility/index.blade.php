@@ -45,7 +45,6 @@
                         <tr>
                             <td>{{ $facility->code }}</td>
                             <td>{{ $facility->name }}</td>
-                            <td>{{ $facility->county->name}}</td>
                             <td>{{ $facility->facilityType->name }}</td>
                             <td>{{ $facility->landline }}</td>
                             <td>{{ $facility->email }}</td>
