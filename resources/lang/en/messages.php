@@ -6,7 +6,7 @@ return [
 
 
 	/* HIV Logbook */
-	'hiv-logbook'	=>	'HIV Logbook',
+	'hiv-logbook'	=>	'HTC Lab Register',
 	'spi-rt'	=>	'SPI-RT',
 	'm&e'	=>	'M & E',
 	'admin'	=>	'Admin',
