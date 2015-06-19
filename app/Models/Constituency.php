@@ -15,6 +15,6 @@ class Constituency extends Model {
 	*/
 	public function county()
 	{
-	 return $this->belongsTo('App\Models\County');
+		return $this->belongsTo('App\Models\County');
 	}
 }

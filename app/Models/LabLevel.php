@@ -8,5 +8,4 @@ class LabLevel extends Model {
      protected $dates = ['deleted_at'];
 
 	protected $table = 'lab_levels';
-
 }

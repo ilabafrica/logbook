@@ -14,22 +14,20 @@ class Site extends Model {
 	*/
 	public function siteType()
 	{
-	 return $this->belongsTo('App\Models\SiteType');
+		return $this->belongsTo('App\Models\SiteType');
 	}
 	/**
 	* Relationship with facility
 	*/
 	public function facility()
 	{
-	 return $this->belongsTo('App\Models\Facility');
+		return $this->belongsTo('App\Models\Facility');
 	}
 	/**
 	* Relationship with county
 	*/
 	public function county()
 	{
-	 return $this->belongsTo('App\Models\County');
+		return $this->belongsTo('App\Models\County');
 	}
-	
-	
 }

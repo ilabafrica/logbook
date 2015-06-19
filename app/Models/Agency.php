@@ -7,7 +7,4 @@ class Agency extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'agencies';
-
-
-
 }

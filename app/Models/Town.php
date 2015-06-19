@@ -7,13 +7,11 @@ class Town extends Model {
 	use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'towns';
-
-
-/**
-* Relationship with constituency
-*/
-public function constituency()
-{
- return $this->belongsTo('App\Models\Constituency');
-}
+	/**
+	* Relationship with constituency
+	*/
+	public function constituency()
+	{
+		return $this->belongsTo('App\Models\Constituency');
+	}
 }

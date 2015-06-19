@@ -9,13 +9,11 @@ class Serial extends Model {
     protected $dates = ['deleted_at'];
 	protected $table = 'serials';
 
-/**
+	/**
 	* Relationship with testkits
 	*/
 	public function site()
 	{
-	 return $this->hasMany('App\Models\Site', 'test_site_id');
+		return $this->hasMany('App\Models\Site', 'test_site_id');
 	}
-
 }
-
