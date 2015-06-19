@@ -22,7 +22,7 @@ class SiteController extends Controller {
 	{
 		//	Get all sites
 		$sites = Site::all();
-		return view('management.site.site.index', compact('sites'));
+		return view('site.site.index', compact('sites'));
 	}
 
 	/**
@@ -39,7 +39,7 @@ class SiteController extends Controller {
 		//	Get all sub-counties
 		$subCounties = SubCounty::lists('name', 'id');
 		
-		return view('management.site.site.create', compact('facilities','siteTypes', 'subCounties'));
+		return view('site.site.create', compact('facilities','siteTypes', 'subCounties'));
 	}
 
 	/**
@@ -78,7 +78,7 @@ class SiteController extends Controller {
 		//show a facility
 		$site = Site::find($id);
 		//show the view and pass the $site to it
-		return view('management.site.site.show', compact('site'));
+		return view('site.site.show', compact('site'));
 	}
 
 	/**
@@ -100,7 +100,7 @@ class SiteController extends Controller {
 		//	Get initial facility type
 		$siteType = $site->site_type_id;
 
-        return view('management.site.site.edit', compact('site','facilities','facility', 'siteTypes','siteType'));
+        return view('site.site.edit', compact('site','facilities','facility', 'siteTypes','siteType'));
 	}
 
 	/**

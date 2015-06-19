@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TestKit extends Model {
 	use SoftDeletes;
  	protected $dates = ['deleted_at'];
- 	protected $table = 'test_kits';
+ 	protected $table = 'kits';
 
 	/**
 	* approval status
