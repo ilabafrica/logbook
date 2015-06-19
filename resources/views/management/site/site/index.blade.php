@@ -31,25 +31,22 @@
                         <tr>
                             <th>{{ Lang::choice('messages.site-name', 1) }}</th>
                             <th>{{ Lang::choice('messages.site-type', 1) }}</th>
-                            <th>{{ Lang::choice('messages.county', 1) }}</th>
                             <th>{{ Lang::choice('messages.department', 1) }}</th>
                             <th>{{ Lang::choice('messages.reporting-to-facility', 1) }}</th>
                             <th>{{ Lang::choice('messages.in-charge', 1) }}</th>
                             <th>{{ Lang::choice('messages.email', 1) }}</th>
-                            <th>{{ Lang::choice('messages.mobile', 1) }}</th>
-                           
+                            <th>{{ Lang::choice('messages.mobile', 1) }}</th>                           
                             <th></th>
                         </tr>
                     </thead>
                      <tbody>
                         @forelse($sites as $site)
                         <tr>
-                            <td>{{ $site->site_name }}</td>
+                            <td>{{ $site->name }}</td>
                             <td>{{ $site->siteType->name }}</td>
-                            <td>{{ $site->county->name }}</td>
                             <td>{{ $site->department }}</td>
                             <td>{{ $site->facility->name }}</td>                            
-                            <td>{{ $site->incharge }}</td>
+                            <td>{{ $site->in_charge }}</td>
                             <td>{{ $site->email }}</td>
                             <td>{{ $site->mobile }}</td>
                           
@@ -62,7 +59,7 @@
                         </tr>
                         @empty
                         <tr>
-                          <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
+                          <td colspan="8">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
                         @endforelse
                     </tbody>

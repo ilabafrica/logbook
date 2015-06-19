@@ -53,7 +53,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">{{ Config::get('logbook.name') }}</a>
+                <a class="navbar-brand" href="#">{!! Config::get('logbook.name') !!}</a>
                 <a class="navbar-brand" id="menu-toggle" href="#"><i class="fa fa-exchange"></i></a>
             </div>
             <!-- /.navbar-header -->
@@ -62,45 +62,45 @@
 
                  <li class="dropdown">
                         <a href="" role="button" aria-expanded="false">
-                        <span class="fa fa-clipboard"></span> {{ Lang::choice('messages.home', 2) }}
+                        <span class="fa fa-clipboard"></span> {!! Lang::choice('messages.home', 2) !!}
                     </a>
                     
                 </li>
                    <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {{ Lang::choice('messages.admin', 1) }}  <span class="caret"></span>
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.admin', 1) !!}  <span class="caret"></span>
                     </a>
                    
                     <ul class="dropdown-menu">
                         
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.import-facility-data', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.import-facility-data', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.import-test-kit', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.import-test-kit', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.create-test-kit', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.create-test-kit', 1) !!}</a>
                         </li>
                     </ul>
                 </li>
 
                  <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {{ Lang::choice('messages.management', 1) }}  <span class="caret"></span>
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.management', 1) !!}  <span class="caret"></span>
                     </a>
                    
                     <ul class="dropdown-menu">
                         
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.facility-management', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.facility-management', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.site-management', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.site-management', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.test-kit-management', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.test-kit-management', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.result-management', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.result-management', 1) !!}</a>
                         </li>
 
                     </ul>
@@ -108,15 +108,15 @@
 
                 <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {{ Lang::choice('messages.data-entry', 1) }}  <span class="caret"></span>
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.data-entry', 1) !!}  <span class="caret"></span>
                     </a>
                    
                     <ul class="dropdown-menu">
                         
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.page-summary-serial', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.page-summary-serial', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.page-summary-parallel', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.page-summary-parallel', 1) !!}</a>
                         </li>
                         
                     </ul>
@@ -124,24 +124,24 @@
 
                  <li class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {{ Lang::choice('messages.report', 1) }}  <span class="caret"></span>
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.report', 1) !!}  <span class="caret"></span>
                     </a>
                    
                     <ul class="dropdown-menu">
                         
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.logbook-data', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.logbook-data', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.trend-report', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.trend-report', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.testkit-use', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.testkit-use', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.invalid-results', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.invalid-results', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href=""><span class="fa fa-tag"></span> {{ Lang::choice('messages.custom-report', 1) }}</a>
+                        <li><a href=""><span class="fa fa-tag"></span> {!! Lang::choice('messages.custom-report', 1) !!}</a>
                         </li>
 
                     </ul>
@@ -150,12 +150,12 @@
              </ul>   
               <ul class="nav navbar-top-links navbar-right">
                     <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {{ Auth::user()->name }} <span class="caret"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-user"></span> {!! Auth::user()->name !!} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="{!! url('user/'.Auth::user()->id.'/edit') !!}"><span class="glyphicon glyphicon-user"></span> {{ Lang::choice('messages.user-profile', 1) }}</a>
+                        <li><a href="{!! url('user/'.Auth::user()->id.'/edit') !!}"><span class="glyphicon glyphicon-user"></span> {!! Lang::choice('messages.user-profile', 1) !!}</a>
                         </li>
                         <li class="divider"></li>
-                        <li><a href="{!! url('/auth/logout') !!}"><span class="glyphicon glyphicon-log-out"></span> {{ Lang::choice('messages.sign-out', 1) }}</a>
+                        <li><a href="{!! url('/auth/logout') !!}"><span class="glyphicon glyphicon-log-out"></span> {!! Lang::choice('messages.sign-out', 1) !!}</a>
                         </li>
                     </ul>
                     <!-- /.dropdown-user -->

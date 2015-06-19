@@ -37,8 +37,8 @@ class Facility extends Model {
 	/**
 	* Relationship with county
 	*/
-	public function county()
+	public function subCounty()
 	{
-		return $this->belongsTo('App\Models\County');
+		return $this->belongsTo('App\Models\SubCounty');
 	}
 }

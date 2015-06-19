@@ -70,12 +70,12 @@ Route::get("/county/{id}/delete", array(
     "uses" => "CountyController@delete"
 ));
 
-//	Constituency controller
-Route::resource('constituency', 'ConstituencyController');
+//	SubCounty controller
+Route::resource('subCounty', 'SubCountyController');
 
-Route::get("/constituency/{id}/delete", array(
-    "as"   => "constituency.delete",
-    "uses" => "ConstituencyController@delete"
+Route::get("/subCounty/{id}/delete", array(
+    "as"   => "subCounty.delete",
+    "uses" => "SubCountyController@delete"
 ));
 
 //	ImportFacilityData
@@ -140,11 +140,13 @@ Route::get("/agency/{id}/delete", array(
     "uses" => "AgencyController@delete"
 ));
 
+//  Role controller
+Route::resource('role', 'RoleController');
 
+//  Permission controller
+Route::resource('permission', 'PermissionController');
 
-
-
-
-
-
-
+//  Privilege controller
+Route::resource('privilege', 'PrivilegeController');
+//  Authorization controller
+Route::resource('authorization', 'AuthorizationController');

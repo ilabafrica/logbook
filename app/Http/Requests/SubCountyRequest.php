@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\Constituency;
+use App\Models\SubCounty;
 
-class ConstituencyRequest extends Request {
+class SubCountyRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,17 +24,17 @@ class ConstituencyRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:constituencies,name,'.$id,
-            'county_id'   => 'required:constituencies,county_id,'.$id,
+            'name'   => 'required|unique:sub_counties,name,'.$id,
+            'county_id'   => 'required:sub_counties,county_id,'.$id,
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('constituency');
+		$id = $this->route('subCounty');
 		$name = $this->input('name');
-		return Constituency::where(compact('id', 'name'))->exists() ? $id : '';
+		return SubCounty::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 
 }

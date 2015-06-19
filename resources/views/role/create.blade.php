@@ -4,17 +4,18 @@
 <div class="row">
     <div class="col-lg-12">
         <ol class="breadcrumb">
-            <li class="active">
-                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}
+            <li>
+                <a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}</a>
             </li>
+            <li>
+                <a href="{{ url('role') }}">{{ Lang::choice('messages.role', 1) }}</a>
+            </li>
+            <li class="active">{{ Lang::choice('messages.create-role', 1) }}</li>
         </ol>
     </div>
 </div>
-@if(Session::has('message'))
-<div class="alert alert-info">{{Session::get('message')}}</div>
-@endif
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-constituency', '1') }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.create-role', 1) }} </div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -24,8 +25,7 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::model($constituency, array('route' => array('constituency.update', $constituency->id), 
-        'method' => 'PUT', 'id' => 'form-edit-constituency', 'class' => 'form-horizontal')) !!}
+            {!! Form::open(array('route' => 'role.store', 'id' => 'form-add-role', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
@@ -36,11 +36,16 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('display_name', Lang::choice('messages.display-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('county_id', array(''=>trans('messages.select-county'))+$counties,
-                            old('county') ? old('county') : $county, 
-                            array('class' => 'form-control', 'id' => 'county_id')) !!}
+                        {!! Form::text('display_name', Input::old('display_name'), array('class' => 'form-control')) !!}
+                    </div>
+                </div>
+                <div class="form-group">
+                    {!! Form::label('name', Lang::choice('messages.description', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">
+                        {!! Form::textarea('description', Input::old('description'), 
+                            array('class' => 'form-control', 'rows' => '3')) !!}
                     </div>
                 </div>
                 <div class="form-group">

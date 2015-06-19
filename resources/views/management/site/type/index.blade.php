@@ -46,7 +46,7 @@
                         </tr>
                         @empty
                         <tr>
-                          <td colspan="3"><th>{{ Lang::choice('messages.no-records-found', 1) }}</th></td>
+                          <td colspan="3">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
                         @endforelse
                     </tbody>

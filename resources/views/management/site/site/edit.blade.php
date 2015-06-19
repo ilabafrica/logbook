@@ -34,47 +34,29 @@
                 <div class="form-group">
                     {!! Form::label('facility_id', Lang::choice('messages.reporting-to-facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                       {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'', 
+                       {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,
+                            old('facility') ? old('facility') : $facility, 
                             array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     {!! Form::label('site_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_id', Input::old('site_id'), array('class' => 'form-control')) !!}
+                        {!! Form::text('site_id', Input::old('local_id'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     {!! Form::label('site_name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_name', Input::old('site_name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('site_name', Input::old('name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                  <div class="form-group">
                     {!! Form::label('site_type_id', Lang::choice('messages.site-type', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                           {!! Form::select('site_type', array(''=>trans('messages.select-site-type'))+$siteTypes,'', 
+                        {!! Form::select('site_type', array(''=>trans('messages.select-site-type'))+$siteTypes,
+                            old('siteType') ? old('siteType') : $siteType, 
                             array('class' => 'form-control', 'id' => 'site_type')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('address', Lang::choice('messages.address', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::textarea('address', Input::old('address'), 
-                            array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
-                 <div class="form-group">
-                    {!! Form::label('nearest_town', Lang::choice('messages.nearest-town', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::text('nearest_town', Input::old('nearest_town'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-            <div class="form-group">
-                    {!! Form::label('county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties,'', 
-                            array('class' => 'form-control', 'id' => 'county')) !!}
                     </div>
                 </div>
                 <div class="form-group">
@@ -82,13 +64,7 @@
                     <div class="col-sm-8">
                         {!! Form::text('department', Input::old('department'), array('class' => 'form-control')) !!}
                     </div>
-                </div>           
-                <div class="form-group">
-                    {!! Form::label('landline', Lang::choice('messages.landline', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::text('landline', Input::old('landline'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
+                </div> 
                 <div class="form-group">
                     {!! Form::label('mobile', Lang::choice('messages.mobile', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
@@ -106,18 +82,6 @@
                     {!! Form::label('in_charge', Lang::choice('messages.in-charge', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::text('in_charge', Input::old('in_charge'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('latitude', Lang::choice('messages.latitude', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                         {!! Form::text('latitude', Input::old('latitude'), array('class' => 'form-control')) !!}
-                   </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('longitude', Lang::choice('messages.longitude', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                       {!! Form::text('longitude', Input::old('longitude'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">

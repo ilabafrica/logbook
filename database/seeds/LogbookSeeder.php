@@ -7,7 +7,7 @@ use App\Models\Role;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
 use App\Models\County;
-use App\Models\Constituency;
+use App\Models\SubCounty;
 use App\Models\Town;
 use App\Models\Title;
 use App\Models\Facility;
@@ -168,19 +168,19 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Counties table seeded');
 
-        /* Constituencies table */
-        $constituencies = array(
+        /* sub-counties table */
+        $subCounties = array(
             array("name" => "Ganze", "county_id" => "13", "user_id" => "1"),
         );
-        foreach ($constituencies as $constituency) {
-            Constituency::create($constituency);
+        foreach ($subCounties as $subCounty) {
+            SubCounty::create($subCounty);
         }
         $this->command->info('Constituencies table seeded');
        
          /* Facilities table */
         $facilities = array(
 
-            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "county_id" => "13",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "sub_county_id" => "1",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
             );
         foreach ($facilities as $facility) {
             Facility::create($facility);
