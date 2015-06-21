@@ -169,7 +169,7 @@ class CreateMflTables extends Migration {
 			$table->string('lot_no', 100);
 			$table->date('expiry_date')->nullable();
 			$table->string('comments', 100);
-			$table->tinyInteger('stock_available')->unsigned();
+			$table->tinyInteger('stock_available');
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -184,34 +184,36 @@ class CreateMflTables extends Migration {
 		Schema::create('htc', function(Blueprint $table)
 		{
 
-			$table->increments('id')->unsigned();
-			$table->integer('site_test_kit_id')->unsigned();
+			$table->increments('id')->unsigned();			
+			$table->integer('site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
 			$table->integer('page_no')->unsigned();
 			$table->date('start_date')->nullable();
 			$table->date('end_date')->nullable();
-			$table->integer('reactive')->unsigned();
-			$table->integer('non_reactive')->unsigned();
-			$table->tinyInteger('test_kit_no');
-			$table->integer('user_id')->unsigned();
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('site_test_kit_id')->references('id')->on('site_test_kits');
-            $table->softDeletes();
-			$table->timestamps();
-		});
-		//	Totals as counted by data officer
-		Schema::create('totals', function(Blueprint $table)
-		{
-
-			$table->increments('id')->unsigned();
-			$table->string('htcs', 10);
 			$table->integer('positive');
 			$table->integer('negative');
 			$table->integer('indeterminate');
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('site_id')->references('id')->on('sites');
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	Totals as counted by data officer
+		Schema::create('htc_test_kits', function(Blueprint $table)
+		{
+
+			$table->increments('id')->unsigned();
+			$table->integer('htc_id')->unsigned();
+			$table->integer('site_test_kit_id')->unsigned();
+			$table->integer('reactive');
+			$table->integer('non_reactive');
+			$table->integer('invalid');
+			$table->tinyInteger('test_kit_no');
+
+            $table->foreign('htc_id')->references('id')->on('htc');
+            $table->foreign('site_test_kit_id')->references('id')->on('site_test_kits');
             $table->softDeletes();
 			$table->timestamps();
 		});		

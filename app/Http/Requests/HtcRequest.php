@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\TestKit;
+use App\Models\Htc;
 
-class TestKitRequest extends Request {
+class HtcRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,17 +24,20 @@ class TestKitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'full_name'   => 'required|unique:test_kits,full_name,'.$id,
-            'short_name'   => 'required|unique:test_kits,short_name,'.$id,
+            'site'   => 'required:htc,site_id,'.$id,
+            'start_date'   => 'required:htc,start_date,'.$id,
+            'end_date'   => 'required:htc,end_date,'.$id,
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('testKit');
-		$full_name = $this->input('full_name');
-		$short_name = $this->input('short_name');
-		return TestKit::where(compact('id', 'full_name', 'short_name'))->exists() ? $id : '';
+		$id = $this->route('htc');
+		$site = $this->input('site');
+		$start_date = $this->input('start_date');
+		$end_date = $this->input('end_date');
+		return Htc::where(compact('id', 'site', 'start_date'. 'end_date'))->exists() ? $id : '';
 	}
+
 }

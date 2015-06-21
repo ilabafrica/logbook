@@ -11,17 +11,11 @@ use App\Models\SubCounty;
 use App\Models\Town;
 use App\Models\Title;
 use App\Models\Facility;
-use App\Models\LabLevel;
-use App\Models\LabAffiliation;
-use App\Models\LabType;
-use App\Models\AuditType;
-use App\Models\Assessment;
-use App\Models\Section;
-use App\Models\Question;
-use App\Models\Answer;
-use App\Models\Note;
-use App\Models\Lab;
 use App\Models\Agency;
+use App\Models\SiteType;
+use App\Models\Site;
+use App\Models\TestKit;
+use App\Models\SiteKit;
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -198,6 +192,37 @@ class LogbookSeeder extends Seeder
             Agency::create($agency);
         }
         $this->command->info('Agency table seeded');
-
+        /* Site types table */
+        $stypes = array(
+            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1"),
+        );
+        foreach ($stypes as $stype) {
+            SiteType::create($stype);
+        }
+        $this->command->info('Site types table seeded');
+        /* Sites table */
+        $sites = array(
+            array("facility_id" => "1", "site_type_id" => "1", "local_id" => "002", "name" => "Kaptembwa",  "department" => "VCT", "mobile" => "0729333333", "email" => "lmbugua@strathmore.edu", "in_charge" => "Pius Mathii", "user_id" => "1"),
+        );
+        foreach ($sites as $site) {
+            Site::create($site);
+        }
+        $this->command->info('Sites table seeded');
+        /* Test kits table */
+        $tkits = array(
+            array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1"),
+        );
+        foreach ($tkits as $tkit) {
+            TestKit::create($tkit);
+        }
+        $this->command->info('Test kits table seeded');
+        /* Site test kits table */
+        $stkits = array(
+            array("site_id" => "1", "kit_id" => "1", "lot_no" => "0087", "expiry_date" => "2015-08-09", "comments" => "Nothing special.", "stock_available" => "2", "user_id" => "1"),
+        );
+        foreach ($stkits as $stkit) {
+            SiteKit::create($stkit);
+        }
+        $this->command->info('Site test kits table seeded');
     }
 }

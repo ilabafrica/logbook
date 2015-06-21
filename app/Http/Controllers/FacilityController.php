@@ -142,7 +142,6 @@ class FacilityController extends Controller {
         $town->save();
 
         return redirect('facility')->with('message', 'Facility updated successfully.');
-       
 	}
 
 	/**
@@ -163,5 +162,9 @@ class FacilityController extends Controller {
 	{
 		//
 	}
-
+	public function import()
+	{
+		//	show the view 
+		return view('mfl.facility.import');
+	}
 }

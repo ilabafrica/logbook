@@ -28,11 +28,11 @@ class Facility extends Model {
 		return $this->belongsTo('App\Models\FacilityOwner');
 	}
 	/**
-	* Relationship with town
+	* Relationship with sites
 	*/
-	public function town()
+	public function sites()
 	{
-		return $this->belongsTo('App\Models\Town');
+		return $this->hasMany('App\Models\Site');
 	}
 	/**
 	* Relationship with county

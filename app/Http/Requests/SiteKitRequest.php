@@ -1,9 +1,9 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-use App\Models\TestKit;
+use App\Models\SiteKit;
 
-class TestKitRequest extends Request {
+class SiteKitRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -24,17 +24,17 @@ class TestKitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'full_name'   => 'required|unique:test_kits,full_name,'.$id,
-            'short_name'   => 'required|unique:test_kits,short_name,'.$id,
+            'kit'   => 'required:site_test_kits,kit_id,'.$id,
+            'site'   => 'required:site_test_kits,site_id,'.$id,
         ];
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('testKit');
-		$full_name = $this->input('full_name');
-		$short_name = $this->input('short_name');
-		return TestKit::where(compact('id', 'full_name', 'short_name'))->exists() ? $id : '';
+		$id = $this->route('siteKit');
+		$kit_id = $this->input('kit');
+		$site_id = $this->input('site');
+		return SiteKit::where(compact('id', 'kit_id', 'site_id'))->exists() ? $id : '';
 	}
 }

@@ -24,21 +24,21 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::model($testkit, array('route' => array('testkit.update', $testkit->id), 
+            {!! Form::model($testKit, array('route' => array('testKit.update', $testKit->id), 
         'method' => 'PUT', 'id' => 'form-edit-testkit', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
                                 <div class="form-group">
-                    {!! Form::label('full_testkit_name', Lang::choice('messages.test-kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('full_name', Lang::choice('messages.full-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('full_testkit_name', Input::old('full_testkit_name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('full_name', Input::old('full_name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('kit_name', Lang::choice('messages.kit-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('short_name', Lang::choice('messages.short-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('kit_name', Input::old('kit_name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('short_name', Input::old('short_name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                    <div class="form-group">
@@ -58,7 +58,8 @@
                 <div class="form-group">
                     {!! Form::label('approval_agency_id', Lang::choice('messages.approval-agency', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                       {!! Form::select('approval_agency', array(''=>trans('messages.select-approval-agency'))+$agencies,'', 
+                       {!! Form::select('approval_agency', array(''=>trans('messages.select-approval-agency'))+$agencies,
+                            old('agency') ? old('agency') : $agency, 
                             array('class' => 'form-control', 'id' => 'approval_agency')) !!}
                     </div>
                 </div>

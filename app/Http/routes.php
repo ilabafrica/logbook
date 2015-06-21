@@ -47,6 +47,10 @@ Route::get("/facility/{id}/delete", array(
     "as"   => "facility.delete",
     "uses" => "FacilityController@delete"
 ));
+Route::get("/import/facility", array(
+    "as"   => "facility.import",
+    "uses" => "FacilityController@import"
+));
 
 //	Facility Types controller
 Route::resource('facilityType', 'FacilityTypeController');
@@ -83,15 +87,19 @@ Route::resource('importfacilitydata', 'ImportFacilityDataController');
 //ImportTestKit
 Route::resource('importtestkit', 'ImportTestKitController');
 //testkit
-Route::resource('testkit', 'TestKitController');
-Route::get("/testkit/{id}/delete", array(
-    "as"   => "testkit.delete",
+Route::resource('testKit', 'TestKitController');
+Route::get("/testKit/{id}/delete", array(
+    "as"   => "testKit.delete",
     "uses" => "TestKitController@delete"
+));
+Route::get("/import/testKit", array(
+    "as"   => "testKit.import",
+    "uses" => "TestKitController@import"
 ));
 //site
 Route::resource('site', 'SiteController');
-//assigntestkit
-Route::resource('assigntestkit', 'AssignTestKitController');
+//assign testkit
+Route::resource('siteKit', 'SiteKitController');
 //result
 Route::resource('result', 'ResultController');
 
@@ -150,3 +158,13 @@ Route::resource('permission', 'PermissionController');
 Route::resource('privilege', 'PrivilegeController');
 //  Authorization controller
 Route::resource('authorization', 'AuthorizationController');
+//  HTC
+//Route::resource('htc', 'HtcController');
+Route::get("/htc/{id}/", array(
+    "as"   => "htc.index",
+    "uses" => "HtcController@index"
+));
+Route::get("/htc/{id}/create", array(
+    "as"   => "htc.create",
+    "uses" => "HtcController@create"
+));
