@@ -7,8 +7,16 @@ class HtcData extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'htc_test_kits';
-	/* Htc relationship	*/
+	/**
+	* Relationship with Htc
+	*/
 	public function htc(){
 		return $this->belongsTo('App\Models\Htc');
+	}
+	/**
+	* Get tests 1, 2 and 3
+	*/
+	public function testKit($test_kit_no){
+		return $this->where('test_kit_no', $test_kit_no)->first();
 	}
 }

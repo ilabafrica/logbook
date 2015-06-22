@@ -45,18 +45,52 @@
                             <th rowspan="2"></th>                            
                         </tr>
                          <tr>
-                            <td class="success">R</td>
-                            <td class="success">NR</td>
-                            <td class="success">Inv</td>
-                            <td class="danger">R</td>
-                            <td class="danger">NR</td>
-                            <td class="danger">Inv </td>
-                            <td class="info">R</td>
-                            <td class="info">NR</td>
-                            <td class="info">Inv</td>                           
+                            @foreach($testKits as $testKit)
+                                <?php
+                                    if($testKit['id'] == App\Models\Htc::TESTKIT1)
+                                        $class = 'success';
+                                    else if($testKit['id'] == App\Models\Htc::TESTKIT2)
+                                        $class = 'danger';
+                                    else if($testKit['id'] == App\Models\Htc::TESTKIT3)
+                                        $class = 'info';
+                                ?>
+                                <td class="{!! $class !!}">{!! Lang::choice('messages.reactive', 1) !!}</td>
+                                <td class="{!! $class !!}">{!! Lang::choice('messages.non-reactive', 1) !!}</td>
+                                <td class="{!! $class !!}">{!! Lang::choice('messages.invalid', 1) !!}</td>
+                            @endforeach                         
                         </tr>
                     </thead>
                     <tbody>
+                    @foreach($sites as $site)
+                        @foreach($site->htc as $htc)
+                        <tr>
+                            <td>{!! $site->name !!}</td>
+                            <td>{!! $htc->start_date !!}</td>
+                            <td>{!! $htc->end_date !!}</td>
+                            <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>
+                            @foreach($testKits as $testKit)
+                                <?php
+                                    if($testKit['id'] == App\Models\Htc::TESTKIT1)
+                                        $class = 'success';
+                                    else if($testKit['id'] == App\Models\Htc::TESTKIT2)
+                                        $class = 'danger';
+                                    else if($testKit['id'] == App\Models\Htc::TESTKIT3)
+                                        $class = 'info';
+                                ?>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->reactive !!}</td>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->non_reactive !!}</td>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->invalid !!}</td>
+                            @endforeach
+                            <td>{!! $htc->positivePercent() !!}</td>
+                            <td>{!! $htc->positiveAgreement() !!}</td>
+                            <td>{!! $htc->overallAgreement() !!}</td>
+                            <td>
+                                <a href="{!! url("htc/".$facility->id."/".$htc->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>

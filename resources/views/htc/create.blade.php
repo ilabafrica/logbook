@@ -26,7 +26,7 @@
                     {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
                 </div>
                 @endif
-                {!! Form::open(array('route' => 'htc.store', 'id' => 'form-add-htc', 'class' => 'form-horizontal')) !!}
+                {!! Form::open(array('route' => 'htc.saveLogbook', 'id' => 'form-add-htc', 'class' => 'form-horizontal')) !!}
                     <!-- CSRF Token -->
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                     <!-- ./ csrf token -->

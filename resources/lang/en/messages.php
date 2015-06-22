@@ -276,4 +276,7 @@ return [
 	's-kit-1'	=>	'Test Kit 1',
 	's-kit-2'	=>	'Test Kit 2',
 	's-kit-3'	=>	'Test Kit 3',
+	'reactive'	=>	'R',
+	'non-reactive'	=>	'NR',
+	'invalid'	=>	'INV',
 ];

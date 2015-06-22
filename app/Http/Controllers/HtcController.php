@@ -10,6 +10,8 @@ use App\Models\Htc;
 use App\Models\HtcData;
 use App\Models\Facility;
 use App\Models\SiteKit;
+use App\Models\TestKit;
+use App\Models\Site;
 use Response;
 use Auth;
 use Lang;
@@ -28,7 +30,11 @@ class HtcController extends Controller {
 		$facility = Facility::find($id);
 		//	Get data for the sites in the facility
 		$sites = $facility->sites;
-		return view('htc.index', compact('facility', 'sites'));
+		//	Create array for testkits
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);
+		//	Create color variable
+		$class = NULL;
+		return view('htc.index', compact('facility', 'sites', 'testKits', 'class'));
 	}
 
 	/**
@@ -47,7 +53,7 @@ class HtcController extends Controller {
 		//	Create color variable
 		$color = NULL;
 		//	Get site test kits
-		$skits = SiteKit::lists('site_id', 'id');
+		$skits = SiteKit::lists('kit_id', 'id');
 		return view('htc.create', compact('facility', 'sites', 'testKits', 'color', 'skits'));
 	}
 
@@ -108,11 +114,17 @@ class HtcController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($facility, $id)
 	{
-		$agency = agency::find($id);
-
-        return view('agency.edit', compact('agency'));
+		//	Get the htc
+		$htc = Htc::find($id);
+		//	Create array for testkits
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);
+		//	Create color variable
+		$class = NULL;
+		//	Get site test kits
+		$skits = SiteKit::lists('kit_id', 'id');
+        return view('htc.edit', compact('htc', 'testKits', 'class', 'skits'));
 	}
 
 	/**
@@ -121,15 +133,36 @@ class HtcController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update(AgencyRequest $request, $id)
+	public function update($id)
 	{
-		$agency = Agency::findOrFail($id);;
-        $agency->name = $request->name;
-        $agency->description = $request->description;
-        $agency->user_id = Auth::user()->id;;
-        $agency->save();
+		$htc = Htc::find($id);
+        $htc->site_id = Site::idByName(Input::get('site'));
+        $htc->book_no = Input::get('book_no');
+        $htc->page_no = Input::get('page_no');
+        $htc->start_date = Input::get('start_date');
+        $htc->end_date = Input::get('end_date');
+        $htc->positive = Input::get('positive');
+        $htc->negative = Input::get('negative');
+        $htc->indeterminate = Input::get('indeterminate');
+        $htc->user_id = Auth::user()->id;
 
-        return redirect('agency')->with('message', 'Agency updated successfully.');
+        try{
+			$htc->save();
+			$testKits = array(Htc::TESTKIT1, Htc::TESTKIT2, Htc::TESTKIT3);
+			for($i = 1; $i <= count($testKits); $i++){
+				$htcData = new HtcData;
+				$htcData->htc_id = $htc->id;
+				$htcData->site_test_kit_id = Input::get('test_kit_'.$i);
+				$htcData->reactive = Input::get('r_'.$i);
+				$htcData->non_reactive = Input::get('nr_'.$i);
+				$htcData->invalid = Input::get('inv_'.$i);
+				$htcData->test_kit_no = $i;
+				$htcData->save();
+			}
+			return redirect('htc/'.$htc->site->facility->id);
+		}catch(QueryException $e){
+			Log::error($e);
+		}
 	}
 
 	/**
@@ -140,9 +173,7 @@ class HtcController extends Controller {
 	 */
 	public function delete($id)
 	{
-		$agency= Agency::find($id);
-		$agency->delete();
-		return redirect('agency')->with('message', 'Agency deleted successfully.');
+		//
 	}
 	public function destroy($id)
 	{

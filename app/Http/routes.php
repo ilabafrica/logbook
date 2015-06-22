@@ -168,3 +168,15 @@ Route::get("/htc/{id}/create", array(
     "as"   => "htc.create",
     "uses" => "HtcController@create"
 ));
+Route::post("/htc/{id}/saveLogbook", array(
+    "as"   => "htc.saveLogbook",
+    "uses" => "HtcController@store"
+));
+Route::get("/htc/{id}/{htc}/edit", array(
+    "as"   => "htc.edit",
+    "uses" => "HtcController@edit"
+));
+Route::post("/htc/{id}/updateLogbook", array(
+    "as"   => "htc.updateLogbook",
+    "uses" => "HtcController@update"
+));
