@@ -14,10 +14,10 @@
 <div class="alert alert-info">{{Session::get('message')}}</div>
 @endif
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.sub-ounty', 2) }} <span class="panel-btn">
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.sub-county', 2) }} <span class="panel-btn">
       <a class="btn btn-sm btn-info" href="{{ URL::to("subCounty/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
-            {{ trans('messages.create-sub-ounty') }}
+            {{ trans('messages.create-sub-county') }}
           </a>
         </span>
     </div>

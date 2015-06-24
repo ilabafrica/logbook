@@ -11,6 +11,11 @@ class Htc extends Model {
 	const TESTKIT1 = 1;
 	const TESTKIT2 = 2;
 	const TESTKIT3 = 3;
+
+	//	Constants for serial and parallel
+	const SERIAL = 1;
+	const PARALLEL = 2;
+	
 	/**
 	* Relationship with htc Data
 	*/

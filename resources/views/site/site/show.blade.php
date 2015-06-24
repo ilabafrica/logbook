@@ -32,7 +32,7 @@
         </h5>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.reporting-to-facility', 1) }}:</strong> <span> {{ $site->facility->name }}</span>
+          <strong>{{ Lang::choice('messages.reporting-to-facility', 1) }}:</strong> <span> {{ $site->facility_id}}</span>
         </h5>
         <hr>
         <h5 class="no-margn">

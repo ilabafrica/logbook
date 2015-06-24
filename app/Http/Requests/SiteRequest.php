@@ -28,7 +28,7 @@ class SiteRequest extends Request {
 		$id = $this->ingnoreId();
 		return [
 		
-		'site_name'=> 'required',
+		'name'=> 'required',
 		
 		
         ];

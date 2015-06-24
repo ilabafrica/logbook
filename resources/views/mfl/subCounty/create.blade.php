@@ -21,7 +21,7 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::open(array('route' => 'sub-county.store', 'id' => 'form-add-sub-county', 'class' => 'form-horizontal')) !!}
+            {!! Form::open(array('route' => 'subCounty.store', 'id' => 'form-add-sub-county', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->

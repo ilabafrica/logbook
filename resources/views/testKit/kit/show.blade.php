@@ -12,7 +12,7 @@
 </div>
 <div class="panel panel-primary">
   <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.test-kit', 1) }} <span class="panel-btn">
-  <a class="btn btn-sm btn-info" href="{{ URL::to("testkit/" . $testkit->id . "/edit") }}" >
+  <a class="btn btn-sm btn-info" href="{{ URL::to("testKit/" . $testkit->id . "/edit") }}" >
     <i class="fa fa-edit"></i><span>{{ Lang::choice('messages.edit-test-kit', 1) }}</span>
   </a>
   </span></div>
@@ -20,11 +20,11 @@
     <div class="panel panel-default">
       <div class="panel-body">
         <h4 class="no-margn view">
-          <strong>{{ Lang::choice('messages.test-kit-name', 1) }}:</strong> <span> {{ $testkit->full_testkit_name }}</span>
+          <strong>{{ Lang::choice('messages.test-kit-name', 1) }}:</strong> <span> {{ $testkit->full_name }}</span>
         </h4>
         <hr>
         <h5 class="no-margn">
-          <strong>{{ Lang::choice('messages.kit-name', 1) }}:</strong> <span> {{ $testkit->kit_name }}</span>
+          <strong>{{ Lang::choice('messages.kit-name', 1) }}:</strong> <span> {{ $testkit->short_name }}</span>
         </h5>
          <hr>
         <h5 class="no-margn">

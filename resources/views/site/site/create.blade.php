@@ -32,15 +32,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('site_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('local_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_id', Input::old('site_id'), array('class' => 'form-control')) !!}
+                        {!! Form::text('local_id', Input::old('local_id'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('site_name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_name', Input::old('site_name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                  <div class="form-group">
@@ -50,13 +50,13 @@
                             array('class' => 'form-control', 'id' => 'site_type')) !!}
                     </div>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                     {!! Form::label('sub_county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                         {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties,'', 
                             array('class' => 'form-control', 'id' => 'sub_county')) !!}
                     </div>
-                </div>
+                </div>-->
                 <div class="form-group">
                     {!! Form::label('department', Lang::choice('messages.department', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">

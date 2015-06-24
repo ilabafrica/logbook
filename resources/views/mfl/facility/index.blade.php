@@ -60,7 +60,7 @@
                               <a href="{!! url("facility/" . $facility->id . "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{!! url("facility/" . $facility->id . "/delete") !!}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
                               <a href="{!! url("htc/" . $facility->id) !!}" class="btn btn-danger btn-sm"><i class="fa fa-trash-o"></i><span> Data Entry</span></a>
-                              <a href="{!! url("facility/" . $facility->id . "/delete") !!}" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i><span> Reports</span></a>
+                              <a href="{!! url("facility/" . $facility->id . " ") !!}" class="btn btn-default btn-sm"><i class="fa fa-trash-o"></i><span> Reports</span></a>
                             </td>
                         </tr>
                         @empty

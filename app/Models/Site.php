@@ -23,13 +23,7 @@ class Site extends Model {
 	{
 		return $this->belongsTo('App\Models\Facility');
 	}
-	/**
-	* Relationship with county
-	*/
-	public function county()
-	{
-		return $this->belongsTo('App\Models\County');
-	}
+	
 	/**
 	* Relationship with htc
 	*/

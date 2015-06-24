@@ -31,12 +31,18 @@
                         {!! Form::text('data_manager', Input::old('data-manager'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
-                <div class="form-group">
+               <!-- <div class="form-group">
                     {!! Form::label('facility_id', Lang::choice('messages.facility-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                        {!! Form::select('facility', array(''=>trans('messages.select-facility')),'', 
                             array('class' => 'form-control', 'id' => 'facility')) !!}
                     </div>
+                </div>-->
+                <div class="form-group">
+                    {!! Form::label('name', Lang::choice('messages.facility-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    <div class="col-sm-8">  
+                        {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
+                         </div>
                 </div>
                    <div class="form-group">
                     {!! Form::label('reporting_period', Lang::choice('messages.reporting-period', 1), array('class' => 'col-sm-4 control-label')) !!}

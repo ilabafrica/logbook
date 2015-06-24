@@ -45,7 +45,7 @@
                             <td>{{ $site->name }}</td>
                             <td>{{ $site->siteType->name }}</td>
                             <td>{{ $site->department }}</td>
-                            <td>{{ $site->facility->name }}</td>                            
+                            <td>{{ $site->facility_id}}</td>                            
                             <td>{{ $site->in_charge }}</td>
                             <td>{{ $site->email }}</td>
                             <td>{{ $site->mobile }}</td>

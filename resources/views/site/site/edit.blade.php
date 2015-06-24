@@ -40,15 +40,15 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('site_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('local_id', Lang::choice('messages.site-id', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_id', Input::old('local_id'), array('class' => 'form-control')) !!}
+                        {!! Form::text('local_id', Input::old('local_id'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">
-                    {!! Form::label('site_name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('name', Lang::choice('messages.site-name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::text('site_name', Input::old('name'), array('class' => 'form-control')) !!}
+                        {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                  <div class="form-group">

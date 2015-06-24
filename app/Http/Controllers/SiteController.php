@@ -51,8 +51,8 @@ class SiteController extends Controller {
 	{
 		$site = new Site;
 		$site->facility_id = $request->facility;
-        $site->local_id = $request->site_id;
-        $site->name = $request->site_name;
+        $site->local_id = $request->local_id;
+        $site->name = $request->name;
         $site->site_type_id = $request->site_type;
         $site->department = $request->department;
         $site->mobile = $request->mobile;
@@ -114,7 +114,7 @@ class SiteController extends Controller {
 		$site = Site::findOrFail($id);
         $site->facility_id = $request->facility;
         $site->local_id = $request->site_id;
-        $site->name = $request->site_name;
+        $site->name = $request->name;
         $site->site_type_id = $request->site_type;
         $site->department = $request->department;
         $site->mobile = $request->mobile;
