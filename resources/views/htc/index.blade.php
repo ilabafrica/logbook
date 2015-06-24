@@ -85,7 +85,7 @@
                             <td>{!! $htc->positiveAgreement() !!}</td>
                             <td>{!! $htc->overallAgreement() !!}</td>
                             <td>
-                                <a href="{!! url("htc/".$facility->id."/".$htc->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/show") !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
                                 <a href="{!! url("htc/".$facility->id."/".$htc->id."/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                             </td>
                         </tr>

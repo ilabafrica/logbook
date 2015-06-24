@@ -188,6 +188,7 @@ class CreateMflTables extends Migration {
 			$table->integer('site_id')->unsigned();
 			$table->integer('book_no')->unsigned();
 			$table->integer('page_no')->unsigned();
+			$table->integer('algorithm')->unsigned();
 			$table->date('start_date')->nullable();
 			$table->date('end_date')->nullable();
 			$table->integer('positive');

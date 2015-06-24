@@ -80,11 +80,13 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-sm-4">
-                            <div class="form-group" style="display:none">
-                                {!! Form::label('name', Lang::choice('messages.name', 1), array('class' => 'col-sm-4 control-label')) !!}
+                       <div class="col-sm-4">
+                            <div class="form-group">
+                                {!! Form::label('algorithm', Lang::choice('messages.algorithm', 1), array('class' => 'col-sm-4 control-label')) !!}
                                 <div class="col-sm-8">
-                                    {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
+                                    {!! Form::select('algorithm', array('1' => 'Serial', '2' =>'Parallel'),
+                                    old('algorithm') ? old('algorithm') :$algorithm,
+                                        array('class' => 'form-control', 'id' => 'algorithm')) !!}
                                 </div>
                             </div>
                         </div>

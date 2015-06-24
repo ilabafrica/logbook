@@ -69,6 +69,7 @@ class HtcController extends Controller {
         $htc->book_no = Input::get('book_no');
         $htc->page_no = Input::get('page_no');
         $htc->start_date = Input::get('start_date');
+        $htc->algorithm = Input::get('algorithm');
         $htc->end_date = Input::get('end_date');
         $htc->positive = Input::get('positive');
         $htc->negative = Input::get('negative');
@@ -88,7 +89,7 @@ class HtcController extends Controller {
 				$htcData->test_kit_no = $i;
 				$htcData->save();
 			}
-			return redirect('htc')->with('message', 'Htc created successfully.');
+			return redirect('facility')->with('message', 'Htc created successfully.');
 		}catch(QueryException $e){
 			Log::error($e);
 		}
@@ -100,12 +101,12 @@ class HtcController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function show($facility, $id)
 	{
 		//show agency 		
-		$agency = Agency::find($id);
+		//$agency = Agency::find($id);
 		//show the view and pass the $agency to it
-		return view('agency.show', compact('agency'));
+		//return view('agency.show', compact('agency'));
 	}
 
 	/**
@@ -124,7 +125,9 @@ class HtcController extends Controller {
 		$class = NULL;
 		//	Get site test kits
 		$skits = SiteKit::lists('kit_id', 'id');
-        return view('htc.edit', compact('htc', 'testKits', 'class', 'skits'));
+		//algorithm
+		$algorithm = $htc->algorithm;
+        return view('htc.edit', compact('htc', 'testKits', 'class', 'skits', 'algorithm'));
 	}
 
 	/**

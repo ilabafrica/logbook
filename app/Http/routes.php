@@ -176,6 +176,10 @@ Route::get("/htc/{id}/{htc}/edit", array(
     "as"   => "htc.edit",
     "uses" => "HtcController@edit"
 ));
+Route::get("/htc/{id}/{htc}/show", array(
+    "as"   => "htc.show_source()",
+    "uses" => "HtcController@show"
+));
 Route::post("/htc/{id}/updateLogbook", array(
     "as"   => "htc.updateLogbook",
     "uses" => "HtcController@update"
