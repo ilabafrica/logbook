@@ -22,7 +22,18 @@
    <div class="panel-body">
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-bordered table-hover search-table">
+           <ul class="nav nav-tabs default">
+           <li class="active"><a href="#trend" data-toggle="tab" aria-expanded="true">{!! Lang::choice('messages.trend-report', 1) !!}</a>
+                </li>
+                <li class=""><a href="#bar" data-toggle="tab" aria-expanded="true">{!! Lang::choice('messages.bar-chart', 1) !!}</a>
+                </li>
+                <li class=""><a href="#spider" data-toggle="tab" aria-expanded="false">{!! Lang::choice('messages.spider-chart', 1) !!}</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+            <div class="tab-pane fade active in" id="trend" style="padding-top:20px;">
+                
+            <table class="table table-striped table-bordered table-hover search-table">
                     <thead>
                         <tr>
                             <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th> 
@@ -58,8 +69,36 @@
                     </tbody>
                 </table>
             </div>
+            
+                <div class="tab-pane fade active in" id="spider" style="padding-top:20px;">
+                </div>
+                <div class="tab-pane fade active in" id="bar" style="padding-top:20px;"></div>
+            </div>               
+            </div>
             {{ Session::put('SOURCE_URL', URL::full()) }}
         </div>
       </div>
 </div>
+<script src="{{ URL::asset('fusioncharts/fusioncharts.js') }}"></script>
+<script src="{{ URL::asset('fusioncharts/themes/fusioncharts.theme.ocean.js') }}"></script>
+
+<script type="text/javascript">
+/* Return bar chart */
+FusionCharts.ready(function(){
+    var revenueChart = new FusionCharts();
+  revenueChart.render("bar");
+});
+/* Return spider chart */
+FusionCharts.ready(function(){
+    var revenueChart = new FusionCharts();
+  revenueChart.render("spider");
+});
+</script>
+
+
+
+
+
+
+
 @stop

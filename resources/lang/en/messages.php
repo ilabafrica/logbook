@@ -286,5 +286,7 @@ return [
 
 	//reports
 	'generate-report'	=>	'Generate Report',
+	'bar-chart'	=>	'Bar Chart',
+	'spider-chart'	=>	'Spider Chart',
 
 ];
