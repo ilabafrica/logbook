@@ -125,6 +125,7 @@ Route::resource('summaryparallel', 'SummaryParallelController');
 
 //logbookdata
 Route::resource('logbookdata', 'LogbookDataController');
+
 //trendreport
 Route::resource('trendreport', 'TrendReportController');
 //testkituse

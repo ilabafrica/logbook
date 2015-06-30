@@ -86,11 +86,11 @@
         <li>
             <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('user') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook-data', 2) !!}</a></li>
-                <li><a href="{!! url('role') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.trend-report', 2) !!}</a></li>
-                <li><a href="{!! url('permission') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.permission', 2) !!}</a></li>
-                <li><a href="{!! url('siteType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.privilege', 2) !!}</a></li>
-                <li><a href="{!! url('siteType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.authorization', 2) !!}</a></li>
+                <li><a href="{!! url('logbookdata') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook-data', 2) !!}</a></li>
+                <li><a href="{!! url('trendreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.trend-report', 2) !!}</a></li>
+                <li><a href="{!! url('testkituse') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.testkit-use', 2) !!}</a></li>
+                <li><a href="{!! url('invalidresults') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.invalid-results', 2) !!}</a></li>
+                <li><a href="{!! url('customreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.custom-report', 2) !!}</a></li>
             </ul>
         </li>
     </ul>
