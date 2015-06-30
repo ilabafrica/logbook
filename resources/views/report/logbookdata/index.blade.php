@@ -12,12 +12,13 @@
 </div>
 
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.logbook-data', '1') }}<span class="panel-btn">
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.logbook-data', '1') }}
+    <span class="panel-btn">
         <a class="btn btn-sm btn-info" href="{{ URL::to("logbookdata/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.generate-report') }}
           </a>
-          </span>
+    </span>
     </div>
     <div class="panel-body">
         <div class="row">

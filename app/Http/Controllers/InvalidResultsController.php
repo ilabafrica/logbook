@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Requests\InvalidResultsRequest;
 use App\Models\Facility;
 use App\Models\Site;
+use App\Models\Htc;
 use Response;
 use Auth;
+use Lang;
+use Input;
 
 class InvalidResultsController extends Controller {
 
@@ -18,9 +21,12 @@ class InvalidResultsController extends Controller {
 	 */
 	public function index()
 	{
-		$facilities= Facility::lists('name', 'id');
-		$sites= Site::lists('site_name', 'id');
-		return view('report.invalidresults.index', compact('facilities', 'sites'));
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)]);
+		//	Create color variable
+		$class = NULL;
+		
+		return view('report.invalidresults.index', compact('testKits', 'class'));
+		
 	}
 		
 	/**
@@ -30,7 +36,10 @@ class InvalidResultsController extends Controller {
 	 */
 	public function create()
 	{
-		
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('name', 'id');
+	    //Create color variable
+		return view('report.invalidresults.create', compact('facilities', 'sites'));
 	}
 
 	/**

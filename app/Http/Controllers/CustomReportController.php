@@ -8,8 +8,11 @@ use App\Models\Report;
 use App\Models\Facility;
 use App\Models\SiteType;
 use App\Models\Site;
+use App\Models\Htc;
 use Response;
 use Auth;
+use Lang;
+use Input;
 
 class CustomReportController extends Controller {
 
@@ -20,11 +23,11 @@ class CustomReportController extends Controller {
 	 */
 	public function index()
 	{
-		$facilities= Facility::lists('name', 'id');
-		$siteTypes= SiteType::lists('name', 'id');
-		$sites= Site::lists('site_name', 'id');
-		return view('report.customreport.index', compact('facilities', 'siteTypes', 'sites'));
-		
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)]);
+		//	Create color variable
+		$class = NULL;		
+		return view('report.customreport.index', compact('testKits', 'class'));
+			
 	}
 
 	/**
@@ -34,7 +37,10 @@ class CustomReportController extends Controller {
 	 */
 	public function create()
 	{
-		
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('name', 'id');
+	    //Create color variable
+		return view('report.customreport.create', compact('facilities', 'sites'));
 	}
 
 	/**

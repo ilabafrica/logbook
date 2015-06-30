@@ -103,10 +103,12 @@ class HtcController extends Controller {
 	 */
 	public function show($facility, $id)
 	{
-		//show agency 		
-		//$agency = Agency::find($id);
-		//show the view and pass the $agency to it
-		//return view('agency.show', compact('agency'));
+		$class = NULL;
+		$htcData = Htc::find($id);
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);
+		
+	
+		return view('htc.show', compact('htcData', 'class', 'testKits'));
 	}
 
 	/**

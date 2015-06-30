@@ -131,7 +131,7 @@ return [
 	'R'	=>	'R',
 	'NR'	=>	'NR',
 	'Inv'	=>	'Inv',
-	'final-result'	=>	'Result',
+	'final-result'	=>	'Final Result',
 	'positive'	=>	'Positive',
 	'negative'	=>	'Negative',
 	'indeterminate'	=>	'Indeterminate',
