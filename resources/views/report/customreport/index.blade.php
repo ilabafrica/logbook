@@ -26,7 +26,7 @@
                     <thead>
                         <tr>
                             <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th> 
-                            <th rowspan="2">{{ Lang::choice('messages.algorithm', 1) }}</th>  
+                            <!--<th rowspan="2">{{ Lang::choice('messages.algorithm', 1) }}</th>-->  
                              <th rowspan="2">{{ Lang::choice('messages.start-date', 1) }}</th> 
                               <th rowspan="2">{{ Lang::choice('messages.end-date', 1) }}</th>                       
                             <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>
@@ -58,7 +58,7 @@
                         @foreach($site->htc as $htc)
                         <tr>
                             <td>{!! $site->name !!}</td>
-                             <td>{{ $htc->algorithm== App\Models\HTC::SERIAL? Lang::choice('messages.serial', 1):Lang::choice('messages.parallel', 1) }}</td>
+                          <!--<td>{{ $htc->algorithm== App\Models\HTC::SERIAL? Lang::choice('messages.serial', 1):Lang::choice('messages.parallel', 1) }}</td>-->
                             <td>{!! $htc->start_date !!}</td>
                             <td>{!! $htc->end_date !!}</td>
                             <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>

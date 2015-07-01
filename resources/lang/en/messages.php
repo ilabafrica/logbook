@@ -282,11 +282,14 @@ return [
 	'reactive'	=>	'R',
 	'non-reactive'	=>	'NR',
 	'invalid'	=>	'INV',
+	
 
 
 	//reports
 	'generate-report'	=>	'Generate Report',
 	'bar-chart'	=>	'Bar Chart',
 	'spider-chart'	=>	'Spider Chart',
+	'serial'	=>	'Serial',
+	'parallel'	=>	'Parallel',
 
 ];
