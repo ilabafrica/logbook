@@ -88,9 +88,10 @@
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('logbookdata') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook-data', 2) !!}</a></li>
                 <li><a href="{!! url('trendreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.trend-report', 2) !!}</a></li>
+                <li><a href="{!! url('customreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.custom-report', 2) !!}</a></li>
                 <li><a href="{!! url('testkituse') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.testkit-use', 2) !!}</a></li>
                 <li><a href="{!! url('invalidresults') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.invalid-results', 2) !!}</a></li>
-                <li><a href="{!! url('customreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.custom-report', 2) !!}</a></li>
+                
             </ul>
         </li>
     </ul>

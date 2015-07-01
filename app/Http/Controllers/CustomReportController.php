@@ -23,10 +23,14 @@ class CustomReportController extends Controller {
 	 */
 	public function index()
 	{
+		//	Get faility
+		$facility = Facility::find(1);
+		//	Get data for the sites in the facility
+		$sites = $facility->sites;
 		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)]);
 		//	Create color variable
 		$class = NULL;		
-		return view('report.customreport.index', compact('testKits', 'class'));
+		return view('report.customreport.index', compact('facility', 'sites','testKits', 'class'));
 			
 	}
 

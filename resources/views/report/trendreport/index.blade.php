@@ -65,7 +65,37 @@
                         </tr>
                     </thead>
                     <tbody>
-                   
+                    @foreach($sites as $site)
+                        @foreach($site->htc as $htc)
+                        <tr>
+                            <td>{!! $site->name !!}</td>
+                             <td>{{ $htc->algorithm== App\Models\HTC::SERIAL? Lang::choice('messages.serial', 1):Lang::choice('messages.parallel', 1) }}</td>
+                            <td>{!! $htc->start_date !!}</td>
+                            <td>{!! $htc->end_date !!}</td>
+                            <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>
+                            @foreach($testKits as $testKit)
+                                <?php
+                                    if($testKit['id'] == App\Models\Htc::TESTKIT1)
+                                        $class = 'success';
+                                    else if($testKit['id'] == App\Models\Htc::TESTKIT2)
+                                        $class = 'danger';
+                                    
+                                ?>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->reactive !!}</td>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->non_reactive !!}</td>
+                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->invalid !!}</td>
+                            @endforeach
+                            <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>
+                            <td>{!! $htc->positivePercent() !!}</td>
+                            <td>{!! $htc->positiveAgreement() !!}</td>
+                            <td>{!! $htc->overallAgreement() !!}</td>
+                            <td>
+                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/show") !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>
