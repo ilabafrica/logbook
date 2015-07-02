@@ -292,4 +292,19 @@ return [
 	'serial'	=>	'Serial',
 	'parallel'	=>	'Parallel',
 
+	//other reports
+	'national-report'	=>	'National Reports',
+	'county-report'	=>	'County Reports',
+	'sub-county-report'	=>	'Sub County Reports',
+	'facility-report'	=>	'Facility Reports',
+	'county-list'	=>	'County List',
+	'%pos-comparison'	=>	'%Positive Comparison',
+	'%pos-agr-comparison'	=>	'%Positive Agreement Comparison',
+	'%over-agr-comparison'	=>	'%Overall Agreement Comparison',
+	'%inv-comparison'	=>	'% Invalid Results Comparison',
+	'sub-county-list'	=>	'Sub County',
+	'facility-list'	=>	'Facility List',
+
+	
+
 ];

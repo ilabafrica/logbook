@@ -43,6 +43,17 @@
             </div>
             <!-- /input-group -->
         </li>
+
+          <!-- Reports -->
+        <li>
+            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{!! url('nationalreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.national-report', 2) !!}</a></li>
+                <li><a href="{!! url('countyreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.county-report', 2) !!}</a></li>
+                <li><a href="{!! url('subCountyreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.sub-county-report', 2) !!}</a></li>
+                 <li><a href="{!! url('facilityreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.facility-report', 2) !!}</a></li>
+            </ul>
+        </li>
         <!-- Facility configuration -->
         <li>
             <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
@@ -82,17 +93,6 @@
                 <li><a href="{!! url('authorization') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.authorization', 2) !!}</a></li>
             </ul>
         </li>
-        <!-- Reports -->
-        <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('logbookdata') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook-data', 2) !!}</a></li>
-                <li><a href="{!! url('trendreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.trend-report', 2) !!}</a></li>
-                <li><a href="{!! url('customreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.custom-report', 2) !!}</a></li>
-                <li><a href="{!! url('testkituse') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.testkit-use', 2) !!}</a></li>
-                <li><a href="{!! url('invalidresults') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.invalid-results', 2) !!}</a></li>
-                
-            </ul>
-        </li>
+      
     </ul>
 @show

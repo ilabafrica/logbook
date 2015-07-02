@@ -40,6 +40,12 @@ Route::get("/user/{id}/delete", array(
 ));
 
 
+//  Facility Types controller
+Route::resource('facilityType', 'FacilityTypeController');
+Route::get("/facilityType/{id}/delete", array(
+    "as"   => "facilityType.delete",
+    "uses" => "FacilityTypeController@delete"
+));
 
 //	Facility controller
 Route::resource('facility', 'FacilityController');
@@ -52,12 +58,6 @@ Route::get("/import/facility", array(
     "uses" => "FacilityController@import"
 ));
 
-//	Facility Types controller
-Route::resource('facilityType', 'FacilityTypeController');
-Route::get("/facilityType/{id}/delete", array(
-    "as"   => "facilityType.delete",
-    "uses" => "FacilityTypeController@delete"
-));
 
 
 //	Facility owners controller
@@ -103,37 +103,15 @@ Route::resource('siteKit', 'SiteKitController');
 //result
 Route::resource('result', 'ResultController');
 
-//dataentry
-Route::resource('dataentry', 'DataEntryController');
-//serial
-Route::resource('serial', 'SerialController');
-Route::get("/serial/{id}/index", array(
-    "as"   => "serial.index",
-    "uses" => "SerialController@index"));
-//summaryserial
-Route::resource('summaryserial', 'SummarySerialController');
+//nationalreport
+Route::resource('nationalreport', 'NationalReportController');
+//countyreport
+Route::resource('countyreport', 'CountyReportController');
+//subcountyreport
+Route::resource('subCountyreport', 'SubCountyReportController');
+//countyreport
+Route::resource('facilityreport', 'FacilityReportController');
 
-
-//parallel
-Route::resource('parallel', 'ParallelController');
-Route::get("/parallel/{id}/index", array(
-    "as"   => "parallel.index",
-    "uses" => "ParallelController@index"));
-
-//summaryparallel
-Route::resource('summaryparallel', 'SummaryParallelController');
-
-//logbookdata
-Route::resource('logbookdata', 'LogbookDataController');
-
-//trendreport
-Route::resource('trendreport', 'TrendReportController');
-//testkituse
-Route::resource('testkituse', 'TestkitUseController');
-//invalidresults
-Route::resource('invalidresults', 'InvalidResultsController');
-//customreport
-Route::resource('customreport', 'CustomReportController');
 
 //  Site Types controller
 Route::resource('siteType', 'SiteTypeController');

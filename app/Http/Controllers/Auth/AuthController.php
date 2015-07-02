@@ -49,7 +49,7 @@ class AuthController extends Controller {
 		$credentials = ['username' => $request->input('username'), 'password' => $request->input('password')];
 		if ($this->auth->attempt($credentials, $request->has('memory')))
 		{
-			return redirect('/');
+			return redirect('/nationalreport');
 		}
 		return redirect('/auth/login')
 		->with('error', 'Invalid credentials')
