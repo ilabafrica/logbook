@@ -266,11 +266,11 @@ return [
 	'sub-county'	=>	'Sub-County|Sub-Counties',
 	'create-sub-county'	=>	'Create Sub-County',
 	'edit-sub-county'	=>	'Edit Sub-County',
-	'select-sub-county'	=>	'--- Select Sub County ---',
+	'select-sub-county'	=>	'Select Sub County',
 	'kit'	=>	'Kit|Kits',
 	'site-kit'	=>	'Site Kit|Site Kits',
-	'select-test-kit'	=>	'--- Select Test Kit ---',
-	'please-select'	=>	'--- Please Select ---',
+	'select-test-kit'	=>	'Select Test Kit',
+	'please-select'	=>	'Please Select',
 	'stock-availability'	=>	'Available|Not Available',
 	'import-data'	=>	'Import Data',
 	'total-positive'	=>	'Total Positive',
@@ -293,17 +293,29 @@ return [
 	'parallel'	=>	'Parallel',
 
 	//other reports
-	'national-report'	=>	'National Reports',
-	'county-report'	=>	'County Reports',
-	'sub-county-report'	=>	'Sub County Reports',
-	'facility-report'	=>	'Facility Reports',
+	'national-report'	=>	'National Report',
+	'county-report'	=>	'County Report',
+	'sub-county-report'	=>	'Sub County Report',
+	'facility-report'	=>	'Facility Report',
 	'county-list'	=>	'County List',
-	'%pos-comparison'	=>	'%Positive Comparison',
-	'%pos-agr-comparison'	=>	'%Positive Agreement Comparison',
-	'%over-agr-comparison'	=>	'%Overall Agreement Comparison',
-	'%inv-comparison'	=>	'% Invalid Results Comparison',
+	'%pos-comparison'	=>	'%Positive ',
+	'%pos-agr-comparison'	=>	'%Positive Agreement',
+	'%over-agr-comparison'	=>	'%Overall Agreement',
+	'%inv-comparison'	=>	'% Invalid Result',
 	'sub-county-list'	=>	'Sub County',
 	'facility-list'	=>	'Facility List',
+
+
+	'%positive-report'	=>	'% Positive Report',
+	'%positiveAgr-report'	=>	'% Positive Agreement Report',
+	'%overallAgr-report'	=>	'% Overall Agreement Report',
+	'%invalidResult-report'	=>	'% Invalid Result Report',
+	'facility-level'	=>	'Facility Level',
+	'subCounty-level'	=>	'Sub County Level',
+	'county-level'	=>	'County Level',
+	'national-level'	=>	'National Level',
+
+	
 
 	
 

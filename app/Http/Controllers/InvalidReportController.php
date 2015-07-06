@@ -4,13 +4,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Facility;
+use App\Models\County;
+use App\Models\SubCounty;
 use App\Models\Htc;
 use Response;
 use Auth;
 use Lang;
 use Input;
 
-class FacilityReportController extends Controller {
+class InvalidReportController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -18,16 +20,16 @@ class FacilityReportController extends Controller {
 	 * @return Response
 	 */
 	public function index()
-	{
-		  $facility = Facility::find(2);
-        //    Get data for the sites in the facility
-        $sites = $facility->sites;
-        $testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);
-        //    Create color variable
-        $class = NULL;
+	{	
+		//	Get all counties
+		$counties = County::all();
+		//get all facilities
+		$subCounties = SubCounty::all();
+		//get all facilities
+		$facilities = Facility::all();
         
-        return view('report.facilityreport.index', compact('facility', 'sites','testKits', 'class'));
-
+        
+        return view('report.invalidresult.index', compact('counties', 'subCounties','facilities'));
 
 	}
 

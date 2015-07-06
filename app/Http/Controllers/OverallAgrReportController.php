@@ -4,13 +4,15 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Facility;
+use App\Models\County;
+use App\Models\SubCounty;
 use App\Models\Htc;
 use Response;
 use Auth;
 use Lang;
 use Input;
 
-class SubCountyReportController extends Controller {
+class OverallAgrReportController extends Controller {
 
 	/**
 	 * Display a listing of the resource.
@@ -18,10 +20,16 @@ class SubCountyReportController extends Controller {
 	 * @return Response
 	 */
 	public function index()
-	{
-		//	Get all sub-counties
+	{	
+		//	Get all counties
+		$counties = County::all();
+		//get all facilities
+		$subCounties = SubCounty::all();
+		//get all facilities
 		$facilities = Facility::all();
-		return view('report.subCountyreport.index', compact('facilities'));
+        
+        
+        return view('report.overallAgr.index', compact('counties', 'subCounties','facilities'));
 
 	}
 

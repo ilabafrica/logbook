@@ -98,10 +98,16 @@ Route::get("/import/testKit", array(
 ));
 //site
 Route::resource('site', 'SiteController');
+Route::get("/site/{id}/delete", array(
+    "as"   => "site.delete",
+    "uses" => "SiteController@delete"
+));
 //assign testkit
 Route::resource('siteKit', 'SiteKitController');
 //result
 Route::resource('result', 'ResultController');
+
+
 
 //nationalreport
 Route::resource('nationalreport', 'NationalReportController');
@@ -111,6 +117,19 @@ Route::resource('countyreport', 'CountyReportController');
 Route::resource('subCountyreport', 'SubCountyReportController');
 //countyreport
 Route::resource('facilityreport', 'FacilityReportController');
+
+
+
+//nationalreport
+Route::resource('nationalreport', 'NationalReportController');
+//%pos
+Route::resource('positive', 'PositiveReportController');
+//posAgreement
+Route::resource('positiveAgr', 'PositiveAgrReportController');
+//overallAgreement
+Route::resource('overallAgr', 'OverallAgrReportController');
+//inv
+Route::resource('invalidresult', 'InvalidReportController');
 
 
 //  Site Types controller
