@@ -21,7 +21,7 @@ class TestKitController extends Controller {
 	{
 		$testkits= TestKit::all();
 		
-		return view('admin.testkit.index', compact('testkits'));
+		return view('testKit.kit.index', compact('testkits'));
 		
 	}
 
@@ -34,7 +34,7 @@ class TestKitController extends Controller {
 	{ 
 		//	Get all agencies
 		$agencies = Agency::lists('name', 'id');
-		return view('admin.testkit.create', compact ('agencies'));
+		return view('testKit.kit.create', compact ('agencies'));
 	}
 
 	/**
@@ -44,17 +44,17 @@ class TestKitController extends Controller {
 	 */
 	public function store(TestKitRequest $request)
 	{
-		$county = new TestKit;
-        $county->full_testkit_name = $request->full_testkit_name;
-        $county->kit_name = $request->kit_name;
-        $county->manufacturer = $request->manufacturer;
-		$county->approval_status = $request->approval_status;
-		$county->approval_agency_id = $request->approval_agency;
-		$county->incountry_approval = $request->incountry_approval;
-        $county->user_id = Auth::user()->id;
-        $county->save();
+		$testkit = new TestKit;
+        $testkit->full_name = $request->full_name;
+        $testkit->short_name = $request->short_name;
+        $testkit->manufacturer = $request->manufacturer;
+		$testkit->approval_status = $request->approval_status;
+		$testkit->approval_agency_id = $request->approval_agency;
+		$testkit->incountry_approval = $request->incountry_approval;
+        $testkit->user_id = Auth::user()->id;
+        $testkit->save();
 
-        return redirect('testkit')->with('message', 'Test kit saved successfully.');
+        return redirect('testKit')->with('message', 'Test kit saved successfully.');
 	}
 
 
@@ -69,7 +69,7 @@ class TestKitController extends Controller {
 		//show a testkit
 		$testkit = TestKit::find($id);
 		//show the view and pass the $town to it
-		return view('admin.testkit.show', compact('testkit'));
+		return view('testKit.kit.show', compact('testkit'));
 	}
 
 	/**
@@ -81,14 +81,13 @@ class TestKitController extends Controller {
 	public function edit($id)
 	{
 		//	Get testkit
-		$testkit = TestKit::find($id);
+		$testKit = TestKit::find($id);
 		//	Get all agencies
 		$agencies = Agency::lists('name', 'id');
 		//	Get initial facility type
-		$agency = $testkit->approval_agency_id;
-		
+		$agency = $testKit->approval_agency_id;		
 
-        return view('admin.testkit.edit', compact('testkit', 'agencies', 'agency'));
+        return view('testKit.kit.edit', compact('testKit', 'agencies', 'agency'));
 	}
 
 	/**
@@ -100,18 +99,17 @@ class TestKitController extends Controller {
 	public function update(TestKitRequest $request, $id)
 	{
 		
-		$county = TestKit::findOrFail($id);
-        $county->full_testkit_name = $request->full_testkit_name;
-        $county->kit_name = $request->kit_name;
-        $county->manufacturer = $request->manufacturer;
-		$county->approval_status = $request->approval_status;
-		$county->approval_agency_id = $request->approval_agency;
-		$county->incountry_approval = $request->incountry_approval;
-        $county->user_id = Auth::user()->id;
-        $county->save();
+		$testkit = TestKit::findOrFail($id);
+        $testkit->full_name = $request->full_name;
+        $testkit->short_name = $request->short_name;
+        $testkit->manufacturer = $request->manufacturer;
+		$testkit->approval_status = $request->approval_status;
+		$testkit->approval_agency_id = $request->approval_agency;
+		$testkit->incountry_approval = $request->incountry_approval;
+        $testkit->user_id = Auth::user()->id;
+        $testkit->save();
 
-        return redirect('testkit')->with('message', 'Test kit updated successfully.');
-
+        return redirect('testKit')->with('message', 'Test kit updated successfully.');
 	}
 
 	/**
@@ -125,11 +123,15 @@ class TestKitController extends Controller {
 	{
 		$testkit= TestKit::find($id);
 		$testkit->delete();
-		return redirect('testkit')->with('message', 'Testkit deleted successfully.');
+		return redirect('testKit')->with('message', 'Testkit deleted successfully.');
 	}
 	public function destroy($id)
 	{
 		//
 	}
-
+	public function import()
+	{
+		//	show the view 
+		return view('testKit.kit.import');
+	}
 }

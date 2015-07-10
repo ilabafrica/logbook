@@ -1,7 +1,7 @@
 <?php namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
-//use App\Models\County;
+use App\Models\TestKit;
 
 class TestKitRequest extends Request {
 
@@ -24,16 +24,17 @@ class TestKitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-		   'full_testkit_name'=> 'required',
-            'kit_name'   => 'required',
-            
+            'full_name'   => 'required|unique:test_kits,full_name,'.$id,
+            'short_name'   => 'required|unique:test_kits,short_name,'.$id,
         ];
-	}
-	public function ingnoreId(){
-		
 	}
 	/**
 	* @return \Illuminate\Routing\Route|null|string
 	*/
-	
+	public function ingnoreId(){
+		$id = $this->route('testKit');
+		$full_name = $this->input('full_name');
+		$short_name = $this->input('short_name');
+		return TestKit::where(compact('id', 'full_name', 'short_name'))->exists() ? $id : '';
+	}
 }

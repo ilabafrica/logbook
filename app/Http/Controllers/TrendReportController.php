@@ -8,8 +8,11 @@ use App\Models\Facility;
 use App\Models\Serial;
 use App\Models\Parallel;
 use App\Models\Site;
+use App\Models\Htc;
 use Response;
 use Auth;
+use Lang;
+use Input;
 
 class TrendReportController extends Controller {
 
@@ -20,11 +23,15 @@ class TrendReportController extends Controller {
 	 */
 	public function index()
 	{
-		$facilities= Facility::lists('name', 'id');
-		$sites= Site::lists('site_name', 'id');
-		$serials= Serial::all();
-		$parallels= Parallel::all();
-		return view('report.trendreport.index', compact('facilities', 'sites', 'serials', 'parallels'));
+		//	Get faility
+		$facility = Facility::find(1);
+		//	Get data for the sites in the facility
+		$sites = $facility->sites;
+		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)]);
+		//	Create color variable
+		$class = NULL;
+		
+		return view('report.trendreport.index', compact('facility', 'sites','testKits', 'class'));
 
 	}
 
@@ -35,7 +42,10 @@ class TrendReportController extends Controller {
 	 */
 	public function create()
 	{
-		
+		$facilities= Facility::lists('name', 'id');
+		$sites= Site::lists('name', 'id');
+	    //Create color variable
+		return view('report.trendreport.create', compact('facilities', 'sites'));
 	}
 
 	/**

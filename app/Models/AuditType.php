@@ -13,13 +13,13 @@ class AuditType extends Model {
 	 */
 	public function sections()
 	{
-	  return $this->hasMany('App\Models\Section');
+		return $this->hasMany('App\Models\Section');
 	}
 	/**
 	 * Reviews relationship
 	 */
 	public function reviews()
 	{
-	  return $this->hasMany('App\Models\Review');
+		return $this->hasMany('App\Models\Review');
 	}
 }

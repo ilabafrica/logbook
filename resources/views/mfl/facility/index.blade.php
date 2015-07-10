@@ -21,6 +21,10 @@
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.create-facility') }}
           </a>
+          <a class="btn btn-sm btn-info" href="{{ URL::to("import/facility") }}" >
+            <span class="glyphicon glyphicon-download"></span>
+                {{ trans('messages.import-facility-data') }}
+              </a>
         </span>
     </div>
     <div class="panel-body">
@@ -31,7 +35,7 @@
                         <tr>
                             <th>{{ Lang::choice('messages.code', 1) }}</th>
                             <th>{{ Lang::choice('messages.name', 1) }}</th>
-                            <th>{{ Lang::choice('messages.county', 1) }}</th>
+                            <th>{{ Lang::choice('messages.sub-county', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility-type', 1) }}</th>
                             <th>{{ Lang::choice('messages.landline', 1) }}</th>
                             <th>{{ Lang::choice('messages.email', 1) }}</th>
@@ -43,19 +47,21 @@
                     <tbody>
                         @forelse($facilities as $facility)
                         <tr>
-                            <td>{{ $facility->code }}</td>
-                            <td>{{ $facility->name }}</td>
-                            <td>{{ $facility->county->name}}</td>
-                            <td>{{ $facility->facilityType->name }}</td>
-                            <td>{{ $facility->landline }}</td>
-                            <td>{{ $facility->email }}</td>
-                            <td>{{ $facility->reporting_site }}</td>
+                            <td>{!! $facility->code !!}</td>
+                            <td>{!! $facility->name !!}</td>
+                            <td>{!! $facility->subCounty->name !!}</td>
+                            <td>{!! $facility->facilityType->name !!}</td>
+                            <td>{!! $facility->landline !!}</td>
+                            <td>{!! $facility->email !!}</td>
+                            <td>{!! $facility->reporting_site !!}</td>
                           
                             <td>
-                              <a href="{{ URL::to("facility/" . $facility->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
-                              <a href="{{ URL::to("facility/" . $facility->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
-                              <a href="{{URL::to("facility/" . $facility->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
-                              
+                              <a href="{!! url("facility/" . $facility->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              <a href="{!! url("facility/" . $facility->id . "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                              <a href="{!! url("facility/" . $facility->id . "/delete") !!}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
+                              <a href="{!! url("htc/" . $facility->id) !!}" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i><span> Run Reports</span></a>
+                             <!-- <a href="{!! url("customreport/" . $facility->id . "/index ") !!}" class="btn btn-default btn-sm"><i class="fa fa-edit"></i><span> Reports</span></a>
+                             -->
                             </td>
                         </tr>
                         @empty

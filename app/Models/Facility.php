@@ -18,28 +18,27 @@ class Facility extends Model {
 	*/
 	public function facilityType()
 	{
-	 return $this->belongsTo('App\Models\FacilityType');
+		return $this->belongsTo('App\Models\FacilityType');
 	}
 	/**
 	* Relationship with facilityOwner
 	*/
 	public function facilityOwner()
 	{
-	 return $this->belongsTo('App\Models\FacilityOwner');
+		return $this->belongsTo('App\Models\FacilityOwner');
 	}
 	/**
-	* Relationship with town
+	* Relationship with sites
 	*/
-	public function town()
+	public function sites()
 	{
-	 return $this->belongsTo('App\Models\Town');
+		return $this->hasMany('App\Models\Site');
 	}
 	/**
 	* Relationship with county
 	*/
-	public function county()
+	public function subCounty()
 	{
-	 return $this->belongsTo('App\Models\County');
+		return $this->belongsTo('App\Models\SubCounty');
 	}
-		
 }
