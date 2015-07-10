@@ -23,7 +23,7 @@ class PositiveReportController extends Controller {
 		//	Get all counties
 		$counties = County::all();
 
-		$facility = Facility::find(2);
+		$facility = Facility::find(1);
         //    Get data for the sites in the facility
         $sites = $facility->sites;
         $testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);

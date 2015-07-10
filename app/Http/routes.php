@@ -114,9 +114,6 @@ Route::resource('countyreport', 'CountyReportController');
 Route::resource('subCountyreport', 'SubCountyReportController');
 //countyreport
 Route::resource('facilityreport', 'FacilityReportController');
-
-
-
 //nationalreport
 Route::resource('nationalreport', 'NationalReportController');
 //%pos
@@ -127,9 +124,6 @@ Route::resource('positiveAgr', 'PositiveAgrReportController');
 Route::resource('overallAgr', 'OverallAgrReportController');
 //inv
 Route::resource('invalidresult', 'InvalidReportController');
-
->>>>>>> 0e7c0f110baf049209e7907134c5077a631f8413
-
 //  Site Types controller
 Route::resource('siteType', 'SiteTypeController');
 Route::get("/siteType/{id}/delete", array(

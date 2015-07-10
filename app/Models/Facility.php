@@ -35,7 +35,7 @@ class Facility extends Model {
 		return $this->hasMany('App\Models\Site');
 	}
 	/**
-	* Relationship with county
+	* Relationship with subcounty
 	*/
 	public function subCounty()
 	{
