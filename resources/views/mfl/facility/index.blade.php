@@ -47,16 +47,6 @@
                     <tbody>
                         @forelse($facilities as $facility)
                         <tr>
-<<<<<<< HEAD
-                            <td>{{ $facility->code }}</td>
-                            <td>{{ $facility->name }}</td>
-                            <td>{{ $facility->county->name}}</td>
-                            <td>{{ $facility->name }}</td>
-                            <td>{{ $facility->facilityType->name }}</td>
-                            <td>{{ $facility->landline }}</td>
-                            <td>{{ $facility->email }}</td>
-                            <td>{{ $facility->reporting_site }}</td>
-=======
                             <td>{!! $facility->code !!}</td>
                             <td>{!! $facility->name !!}</td>
                             <td>{!! $facility->subCounty->name !!}</td>
@@ -64,7 +54,7 @@
                             <td>{!! $facility->landline !!}</td>
                             <td>{!! $facility->email !!}</td>
                             <td>{!! $facility->reporting_site !!}</td>
->>>>>>> 0e7c0f110baf049209e7907134c5077a631f8413
+
                           
                             <td>
                               <a href="{!! url("facility/" . $facility->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>

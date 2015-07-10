@@ -64,7 +64,7 @@
                     @foreach($sites as $site)
                         @foreach($site->htc as $htc)
                         <tr>
-                            <td>{!! $site->name !!}</td>
+                            <td>{!! $site->siteType->name !!}</td>
                             <td>{!! $htc->start_date !!}</td>
                             <td>{!! $htc->end_date !!}</td>
                             <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>
