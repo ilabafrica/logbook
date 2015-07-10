@@ -2,12 +2,10 @@
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests\FacilityRequest;
 use App\Models\Facility;
-use App\Models\County;
+use App\Models\SubCounty;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
 use App\Models\Town;
@@ -40,9 +38,10 @@ class FacilityController extends Controller {
 		$facilityTypes = FacilityType::lists('name', 'id');
 		//	Get all facility owners
 		$facilityOwners = FacilityOwner::lists('name', 'id');
-		$counties = County::lists('name', 'id');
-		
-		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners', 'counties'));
+
+		$subCounties = SubCounty::lists('name', 'id');
+		return view('mfl.facility.create', compact('facilityTypes', 'facilityOwners', 'subCounties'));
+
 	}
 
 	/**
@@ -58,6 +57,7 @@ class FacilityController extends Controller {
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
         $town->reporting_site = $request->reporting_site;
+        $town->sub_county_id = $request->sub_county;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
@@ -108,10 +108,14 @@ class FacilityController extends Controller {
 		$facilityOwners = FacilityOwner::lists('name', 'id');
 		//	Get initial facility owner
 		$facilityOwner = $facility->facility_owner_id;
+		//get sub counties
+		$subCounties = SubCounty::lists('name', 'id');
+		//get initial subcounty
+		$subCounty =$facility->sub_county_id;
 		
 		$status = $facility->operational_status;
 
-        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'facilityOwners','facilityType', 'facilityOwner', 'town', 'title', 'status'));
+        return view('mfl.facility.edit', compact('facility', 'facilityTypes', 'facilityOwners','facilityType', 'facilityOwner','subCounties', 'subCounty',  'status'));
 	}
 
 	/**
@@ -128,6 +132,7 @@ class FacilityController extends Controller {
         $town->facility_type_id = $request->facility_type;
         $town->facility_owner_id = $request->facility_owner;
         $town->reporting_site = $request->reporting_site;
+        $town->sub_county_id = $request->sub_county;
         $town->nearest_town = $request->nearest_town;
         $town->landline = $request->landline;
         $town->mobile = $request->mobile;
@@ -137,11 +142,10 @@ class FacilityController extends Controller {
         $town->operational_status = $request->operational_status;
         $town->latitude = $request->latitude;
         $town->longitude = $request->longitude;
-      //  $town->user_id = Auth::user()->id;
+        $town->user_id = Auth::user()->id;
         $town->save();
 
         return redirect('facility')->with('message', 'Facility updated successfully.');
-       
 	}
 
 	/**
@@ -162,5 +166,9 @@ class FacilityController extends Controller {
 	{
 		//
 	}
-
+	public function import()
+	{
+		//	show the view 
+		return view('mfl.facility.import');
+	}
 }

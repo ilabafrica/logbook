@@ -6,7 +6,7 @@ return [
 
 
 	/* HIV Logbook */
-	'hiv-logbook'	=>	'HIV Logbook',
+	'hiv-logbook'	=>	'HTC Lab Register',
 	'spi-rt'	=>	'SPI-RT',
 	'm&e'	=>	'M & E',
 	'admin'	=>	'Admin',
@@ -23,7 +23,7 @@ return [
 	'page-summary-parallel'	=>	'Page Summary-Parallel',
 	'data-entry-serial-algorithm'	=>	'Data Entry-Serial Algorithm',
 	'data-entry-parallel-algorithm'	=>	'Data Entry-Parallel Algorithm',
-	'report'	=>	'Report',
+	'report'	=>	'Report|Reports',
 	'logbook-data'	=>	'Logbook Data',
 	'trend-report'	=>	'Trend Report',
 	'testkit-use'	=>	'TestKit Use',
@@ -39,10 +39,12 @@ return [
 	'reference-info'	=>	'Reference Information',
 	'upload-file'	=>	'Upload File',
 	'import-new-test-kit'	=>	'Import New Test Kit',
-	'test-kit-name'	=>	'Test Kit Full Name',
+	'full-name'	=>	'Full Name',
+	'short-name'	=>	'Short Name',
+	'create-site-kit'	=>	'Create Site kit',
+	'edit-site-kit'	=>	'Edit Site Kit',
 	'kit-name'	=>	'Kit Name',
-	'assign-test-kit'	=>	'Assign Test Kit',
-	'create-kit-name'	=>	'Create Test Kit Name',
+	'test-kit-name'	=>	'Test Kit Name',
 	'edit-kit-name'	=>	'Edit Kit Name',
 	'select-kit-name'	=>	'Select Kit Name',
 	'manufacturer'	=>	'Manufacturer',
@@ -60,17 +62,17 @@ return [
 	'site-id'	=>	'Local Site ID',
 	'reporting-to-facility'	=>	'Reporting To Facility',
 	'department'	=>	'Department',
-	'site-type'	=>	'Site Type',
 	'select-site-type'	=>	'Select Site Type',
 	'site-management'	=>	'Site Management',
 	'site-name'	=>	'Site Name',
 	'select-site-name'	=>	'Select Site Name',
 	'create-new-test-kit'	=>	'Create New Test Kit',
+	'create-new-site-kit'	=>	'Create New Site Kit',
 	'add-new-test-kit'	=>	'Add New Test Kit',
 	'lot-no'	=>	'Lot Number',
 	'expiry-date'	=>	'Expiry Date',
-	'comments'	=>	'Comments',
-	'stock-avl'	=>	'Stock Availability',
+	'comment'	=>	'Comment|Comments',
+	'stock-available'	=>	'Stock Availability',
 	'testkit-management'	=>	'Test Kit Management',
 	'result-management'	=>	'Result Management',
 	'algo'	=>	'Algo',
@@ -94,12 +96,12 @@ return [
 	'invalid-results'	=>	'Invalid Results',
 	'custom-report'	=>	'Custom Report',
 	'select-report'	=>	'Select Report',
-	'site'	=>	'Site',
-	'site-type'	=>	'Site Type',
+	'site'	=>	'Site|Sites',
+	'site-type'	=>	'Site Type|Site Types',
 	'create-site-type'	=>	'Create Site Type',
-	'test-kit'	=>	'Test Kit',
+	'test-kit'	=>	'Test Kit|Test Kits',
 	'results'	=>	'Results',
-	'agency'	=>	'Agency',
+	'agency'	=>	'Agency|Agencies',
 	'create-agency'	=>	'Create Agency',
 	'edit-agency'	=>	'Edit Agency',
 	'edit-test-kit'	=>	'Edit Test Kit',
@@ -116,7 +118,7 @@ return [
 	'test-used'	=>	'Test Used',
 	'algorithm'	=>	'Algorithm',
 	'test'	=>	'Test',
-	'select-site'	=>	'Select Site',
+	'select-site'	=>	'--- Select Site ---',
 	'reporting-period'	=>	'Reporting Period',
 	'total-tests'	=>	'Total Tests',
 	'page-summary-data-entry-serial-algorithm'	=>	'Page Summary Data Entry-Serial Algorithm',
@@ -129,11 +131,12 @@ return [
 	'R'	=>	'R',
 	'NR'	=>	'NR',
 	'Inv'	=>	'Inv',
-	'final-result'	=>	'Result',
+	'final-result'	=>	'Final Result',
 	'positive'	=>	'Positive',
 	'negative'	=>	'Negative',
 	'indeterminate'	=>	'Indeterminate',
 
+	'positive-agreement'	=>	'Positive Agreement',
 	'test1R'	=>	'Test1 R',
 	'test1NR'	=>	'Test1 NR',
 	'test1Inv'	=>	'Test1 Inv',
@@ -144,16 +147,12 @@ return [
 	'test3NR'	=>	'Test3 NR',
 	'test3Inv'	=>	'Test3 Inv',
 	'facilities'	=>	'Facilities',
-	
-	
-
-
-
-	
-
-	
-	
-
+	'page-summary'	=>	'Page Summary',
+	'test-results'	=>	'Test Results',
+	'no-of-tests'	=>	'No. of Tests',
+	'final-pos'	=>	'Final Pos',
+	'approved'	=>	'Approved',
+	'not-approved'	=>	'Not Approved',
 	
 	'reports'	=>	'Reports',
 	'access-controls'	=>	'Access Controls',
@@ -258,7 +257,66 @@ return [
 	'select-job-title' =>	'Select Job Title',
 	'operational-status' =>	'Operational Status',
 	'select-facility' =>	'Select Facility',
+	'testing-month' =>	'Month',
+	/* Sidebar */
+	'facility-configuration'	=>	'Facility Config',
+	'site-catalog'	=>	'Site Catalog',
+	'user-management'	=>	'User Management',
+	/* sub-counties */
+	'sub-county'	=>	'Sub-County|Sub-Counties',
+	'create-sub-county'	=>	'Create Sub-County',
+	'edit-sub-county'	=>	'Edit Sub-County',
+	'select-sub-county'	=>	'Select Sub County',
+	'kit'	=>	'Kit|Kits',
+	'site-kit'	=>	'Site Kit|Site Kits',
+	'select-test-kit'	=>	'Select Test Kit',
+	'please-select'	=>	'Please Select',
+	'stock-availability'	=>	'Available|Not Available',
+	'import-data'	=>	'Import Data',
+	'total-positive'	=>	'Total Positive',
+	'total-negative'	=>	'Total Negative',
+	'total-intermediate'	=>	'Total Intermediate',
+	's-kit-1'	=>	'Test Kit 1',
+	's-kit-2'	=>	'Test Kit 2',
+	's-kit-3'	=>	'Test Kit 3',
+	'reactive'	=>	'R',
+	'non-reactive'	=>	'NR',
+	'invalid'	=>	'INV',
+	
+
+
+	//reports
+	'generate-report'	=>	'Generate Report',
+	'bar-chart'	=>	'Bar Chart',
+	'spider-chart'	=>	'Spider Chart',
+	'serial'	=>	'Serial',
+	'parallel'	=>	'Parallel',
+
+	//other reports
+	'national-report'	=>	'National Report',
+	'county-report'	=>	'County Report',
+	'sub-county-report'	=>	'Sub County Report',
+	'facility-report'	=>	'Facility Report',
+	'county-list'	=>	'County List',
+	'%pos-comparison'	=>	'%Positive ',
+	'%pos-agr-comparison'	=>	'%Positive Agreement',
+	'%over-agr-comparison'	=>	'%Overall Agreement',
+	'%inv-comparison'	=>	'% Invalid Result',
+	'sub-county-list'	=>	'Sub County',
+	'facility-list'	=>	'Facility List',
+
+
+	'%positive-report'	=>	'% Positive Report',
+	'%positiveAgr-report'	=>	'% Positive Agreement Report',
+	'%overallAgr-report'	=>	'% Overall Agreement Report',
+	'%invalidResult-report'	=>	'% Invalid Result Report',
+	'facility-level'	=>	'Facility Level',
+	'subCounty-level'	=>	'Sub County Level',
+	'county-level'	=>	'County Level',
+	'national-level'	=>	'National Level',
 
 	
+
 	
+
 ];

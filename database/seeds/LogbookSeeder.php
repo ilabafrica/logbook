@@ -7,21 +7,15 @@ use App\Models\Role;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
 use App\Models\County;
-use App\Models\Constituency;
+use App\Models\SubCounty;
 use App\Models\Town;
 use App\Models\Title;
 use App\Models\Facility;
-use App\Models\LabLevel;
-use App\Models\LabAffiliation;
-use App\Models\LabType;
-use App\Models\AuditType;
-use App\Models\Assessment;
-use App\Models\Section;
-use App\Models\Question;
-use App\Models\Answer;
-use App\Models\Note;
-use App\Models\Lab;
 use App\Models\Agency;
+use App\Models\SiteType;
+use App\Models\Site;
+use App\Models\TestKit;
+use App\Models\SiteKit;
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -168,18 +162,19 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Counties table seeded');
 
-        /* Constituencies table */
-        $constituencies = array(
+        /* sub-counties table */
+        $subCounties = array(
             array("name" => "Ganze", "county_id" => "13", "user_id" => "1"),
         );
-        foreach ($constituencies as $constituency) {
-            Constituency::create($constituency);
+        foreach ($subCounties as $subCounty) {
+            SubCounty::create($subCounty);
         }
         $this->command->info('Constituencies table seeded');
        
          /* Facilities table */
         $facilities = array(
-            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "county_id" => "13",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "sub_county_id" => "1",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+
             );
         foreach ($facilities as $facility) {
             Facility::create($facility);
@@ -197,6 +192,37 @@ class LogbookSeeder extends Seeder
             Agency::create($agency);
         }
         $this->command->info('Agency table seeded');
-
+        /* Site types table */
+        $stypes = array(
+            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1"),
+        );
+        foreach ($stypes as $stype) {
+            SiteType::create($stype);
+        }
+        $this->command->info('Site types table seeded');
+        /* Sites table */
+        $sites = array(
+            array("facility_id" => "1", "site_type_id" => "1", "local_id" => "002", "name" => "Kaptembwa",  "department" => "VCT", "mobile" => "0729333333", "email" => "lmbugua@strathmore.edu", "in_charge" => "Pius Mathii", "user_id" => "1"),
+        );
+        foreach ($sites as $site) {
+            Site::create($site);
+        }
+        $this->command->info('Sites table seeded');
+        /* Test kits table */
+        $tkits = array(
+            array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1"),
+        );
+        foreach ($tkits as $tkit) {
+            TestKit::create($tkit);
+        }
+        $this->command->info('Test kits table seeded');
+        /* Site test kits table */
+        $stkits = array(
+            array("site_id" => "1", "kit_id" => "1", "lot_no" => "0087", "expiry_date" => "2015-08-09", "comments" => "Nothing special.", "stock_available" => "2", "user_id" => "1"),
+        );
+        foreach ($stkits as $stkit) {
+            SiteKit::create($stkit);
+        }
+        $this->command->info('Site test kits table seeded');
     }
 }

@@ -21,7 +21,7 @@ class SiteTypeController extends Controller {
 	{
 		//	Get all facility types
 		$siteTypes = SiteType::all();
-		return view('management.site.type.index', compact('siteTypes'));
+		return view('site.type.index', compact('siteTypes'));
 	}
 
 	/**
@@ -31,7 +31,7 @@ class SiteTypeController extends Controller {
 	 */
 	public function create()
 	{
-		return view('management.site.type.create');
+		return view('site.type.create');
 	}
 
 	/**
@@ -61,7 +61,7 @@ class SiteTypeController extends Controller {
 		//show a Site type
 		$siteType = SiteType::find($id);
 		//show the view and pass the $facilityType to it
-		return view('management.site.type.show', compact('siteType'));
+		return view('site.type.show', compact('siteType'));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class SiteTypeController extends Controller {
 	{
 		$siteType = SiteType::find($id);
 
-        return view('management.site.type.edit', compact('siteType'));
+        return view('site.type.edit', compact('siteType'));
 	}
 
 	/**

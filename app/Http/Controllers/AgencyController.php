@@ -21,7 +21,7 @@ class AgencyController extends Controller {
 	{
 		//	Get all agency 
 		$agencies = Agency::all();
-		return view('admin.agency.index', compact('agencies'));
+		return view('agency.index', compact('agencies'));
 	}
 
 	/**
@@ -31,7 +31,7 @@ class AgencyController extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.agency.create');
+		return view('agency.create');
 	}
 
 	/**
@@ -61,7 +61,7 @@ class AgencyController extends Controller {
 		//show agency 		
 		$agency = Agency::find($id);
 		//show the view and pass the $agency to it
-		return view('admin.agency.show', compact('agency'));
+		return view('agency.show', compact('agency'));
 	}
 
 	/**
@@ -74,7 +74,7 @@ class AgencyController extends Controller {
 	{
 		$agency = agency::find($id);
 
-        return view('admin.agency.edit', compact('agency'));
+        return view('agency.edit', compact('agency'));
 	}
 
 	/**
@@ -110,5 +110,4 @@ class AgencyController extends Controller {
 	{
 		//
 	}
-
 }

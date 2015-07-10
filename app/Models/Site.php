@@ -14,22 +14,38 @@ class Site extends Model {
 	*/
 	public function siteType()
 	{
-	 return $this->belongsTo('App\Models\SiteType');
+		return $this->belongsTo('App\Models\SiteType');
 	}
 	/**
 	* Relationship with facility
 	*/
 	public function facility()
 	{
-	 return $this->belongsTo('App\Models\Facility');
+		return $this->belongsTo('App\Models\Facility');
+	}
+	
+	/**
+	* Relationship with htc
+	*/
+	public function htc()
+	{
+		return $this->hasMany('App\Models\Htc');
 	}
 	/**
-	* Relationship with county
+	* Return Site ID given the name
+	* @param $name the name of the site
 	*/
-	public function county()
+	public static function idByName($name)
 	{
-	 return $this->belongsTo('App\Models\County');
+		try 
+		{
+			$site = Site::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+			return $site->id;
+		} catch (ModelNotFoundException $e) 
+		{
+			Log::error("The site ` $name ` does not exist:  ". $e->getMessage());
+			//TODO: send email?
+			return null;
+		}
 	}
-	
-	
 }

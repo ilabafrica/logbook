@@ -40,6 +40,12 @@ Route::get("/user/{id}/delete", array(
 ));
 
 
+//  Facility Types controller
+Route::resource('facilityType', 'FacilityTypeController');
+Route::get("/facilityType/{id}/delete", array(
+    "as"   => "facilityType.delete",
+    "uses" => "FacilityTypeController@delete"
+));
 
 //	Facility controller
 Route::resource('facility', 'FacilityController');
@@ -47,13 +53,11 @@ Route::get("/facility/{id}/delete", array(
     "as"   => "facility.delete",
     "uses" => "FacilityController@delete"
 ));
-
-//	Facility Types controller
-Route::resource('facilityType', 'FacilityTypeController');
-Route::get("/facilityType/{id}/delete", array(
-    "as"   => "facilityType.delete",
-    "uses" => "FacilityTypeController@delete"
+Route::get("/import/facility", array(
+    "as"   => "facility.import",
+    "uses" => "FacilityController@import"
 ));
+
 
 
 //	Facility owners controller
@@ -70,12 +74,12 @@ Route::get("/county/{id}/delete", array(
     "uses" => "CountyController@delete"
 ));
 
-//	Constituency controller
-Route::resource('constituency', 'ConstituencyController');
+//	SubCounty controller
+Route::resource('subCounty', 'SubCountyController');
 
-Route::get("/constituency/{id}/delete", array(
-    "as"   => "constituency.delete",
-    "uses" => "ConstituencyController@delete"
+Route::get("/subCounty/{id}/delete", array(
+    "as"   => "subCounty.delete",
+    "uses" => "SubCountyController@delete"
 ));
 
 //	ImportFacilityData
@@ -83,39 +87,48 @@ Route::resource('importfacilitydata', 'ImportFacilityDataController');
 //ImportTestKit
 Route::resource('importtestkit', 'ImportTestKitController');
 //testkit
-Route::resource('testkit', 'TestKitController');
-Route::get("/testkit/{id}/delete", array(
-    "as"   => "testkit.delete",
+Route::resource('testKit', 'TestKitController');
+Route::get("/testKit/{id}/delete", array(
+    "as"   => "testKit.delete",
     "uses" => "TestKitController@delete"
+));
+Route::get("/import/testKit", array(
+    "as"   => "testKit.import",
+    "uses" => "TestKitController@import"
 ));
 //site
 Route::resource('site', 'SiteController');
-//assigntestkit
-Route::resource('assigntestkit', 'AssignTestKitController');
+Route::get("/site/{id}/delete", array(
+    "as"   => "site.delete",
+    "uses" => "SiteController@delete"
+));
+//assign testkit
+Route::resource('siteKit', 'SiteKitController');
 //result
 Route::resource('result', 'ResultController');
-//dataentry
-Route::resource('dataentry', 'DataEntryController');
-//serial
-Route::resource('serial', 'SerialController');
-//summaryserial
-Route::resource('summaryserial', 'SummarySerialController');
-Route::get("/summaryserial/{id}/indx", array(
-    "as"   => "summaryserial.delete",
-    "uses" => "SummarySerialController@index"
-));
-//parallel
-Route::resource('parallel', 'ParallelController');
-//logbookdata
-Route::resource('logbookdata', 'LogbookDataController');
-//trendreport
-Route::resource('trendreport', 'TrendReportController');
-//testkituse
-Route::resource('testkituse', 'TestkitUseController');
-//invalidresults
-Route::resource('invalidresults', 'InvalidResultsController');
-//customreport
-Route::resource('customreport', 'CustomReportController');
+//nationalreport
+Route::resource('nationalreport', 'NationalReportController');
+//countyreport
+Route::resource('countyreport', 'CountyReportController');
+//subcountyreport
+Route::resource('subCountyreport', 'SubCountyReportController');
+//countyreport
+Route::resource('facilityreport', 'FacilityReportController');
+
+
+
+//nationalreport
+Route::resource('nationalreport', 'NationalReportController');
+//%pos
+Route::resource('positive', 'PositiveReportController');
+//posAgreement
+Route::resource('positiveAgr', 'PositiveAgrReportController');
+//overallAgreement
+Route::resource('overallAgr', 'OverallAgrReportController');
+//inv
+Route::resource('invalidresult', 'InvalidReportController');
+
+>>>>>>> 0e7c0f110baf049209e7907134c5077a631f8413
 
 //  Site Types controller
 Route::resource('siteType', 'SiteTypeController');
@@ -131,11 +144,39 @@ Route::get("/agency/{id}/delete", array(
     "uses" => "AgencyController@delete"
 ));
 
+//  Role controller
+Route::resource('role', 'RoleController');
 
+//  Permission controller
+Route::resource('permission', 'PermissionController');
 
-
-
-
-
-
-
+//  Privilege controller
+Route::resource('privilege', 'PrivilegeController');
+//  Authorization controller
+Route::resource('authorization', 'AuthorizationController');
+//  HTC
+//Route::resource('htc', 'HtcController');
+Route::get("/htc/{id}/", array(
+    "as"   => "htc.index",
+    "uses" => "HtcController@index"
+));
+Route::get("/htc/{id}/create", array(
+    "as"   => "htc.create",
+    "uses" => "HtcController@create"
+));
+Route::post("/htc/{id}/saveLogbook", array(
+    "as"   => "htc.saveLogbook",
+    "uses" => "HtcController@store"
+));
+Route::get("/htc/{id}/{htc}/edit", array(
+    "as"   => "htc.edit",
+    "uses" => "HtcController@edit"
+));
+Route::get("/htc/{id}/{htc}/show", array(
+    "as"   => "htc.show_source()",
+    "uses" => "HtcController@show"
+));
+Route::post("/htc/{id}/updateLogbook", array(
+    "as"   => "htc.updateLogbook",
+    "uses" => "HtcController@update"
+));

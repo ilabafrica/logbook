@@ -51,11 +51,12 @@
                             array('class' => 'form-control', 'id' => 'facility_owner')) !!}
                     </div>
                 </div>
+
                  <div class="form-group">
-                    {!! Form::label('county_id', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                    {!! Form::label('sub_county_id', Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
-                        {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties,'', 
-                            array('class' => 'form-control', 'id' => 'county')) !!}
+                        {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties,'', 
+                            array('class' => 'form-control', 'id' => 'sub_county')) !!}
                     </div>
                 </div>
                    <div class="form-group">
