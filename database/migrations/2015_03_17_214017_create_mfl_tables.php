@@ -218,6 +218,93 @@ class CreateMflTables extends Migration {
 			$table->timestamps();
 		});		
 	}
+
+	//tables dealing with survey
+	//	checklists
+		Schema::create('checklists', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('description', 100);
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+
+		//	Field Groups - Sections
+		Schema::create('sections', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('label')->nullable();
+			$table->string('description', 100);
+			$table->integer('checklist_id')->unsigned();
+			$table->smallInteger('total_points')->nullable();
+			$table->smallInteger('order');
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('checklist_id')->references('id')->on('checklists');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+
+		//	Fields - Questions
+		Schema::create('questions', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('section_id')->unsigned();
+			$table->string('name')->nullable();
+			$table->string('title')->nullable();
+			$table->text('description')->nullable();			
+			$table->integer('required')->nullable();
+			$table->string('info')->nullable();
+			$table->integer('score')->nullable();
+			$table->integer('user_id')->unsigned();
+			
+
+			$table->integer('user_id')->unsigned();
+            $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+
+		 //	possible responses to the questions
+		Schema::create('responses', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+
+        //	actual responses to the questions
+		Schema::create('question_responses', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('question_id')->unsigned();
+			$table->string('answer')->nullable();			
+			$table->integer('user_id')->unsigned();
+			$table->string('comment')->nullable();
+           
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('question_id')->references('id')->on('questions');
+
+            $table->softDeletes();
+			$table->timestamps();
+
+		});
 	/**
 	 * Reverse the migrations.
 	 *
