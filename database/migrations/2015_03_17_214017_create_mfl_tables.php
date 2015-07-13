@@ -261,6 +261,7 @@ class CreateMflTables extends Migration {
 			$table->string('name')->nullable();
 			$table->string('title')->nullable();
 			$table->text('description')->nullable();			
+			$table->tinyInteger('question_type');
 			$table->integer('required')->nullable();
 			$table->string('info')->nullable();
 			$table->integer('score')->nullable();
@@ -324,5 +325,11 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('site_test_kits');
 		Schema::dropIfExists('htc');
 		Schema::dropIfExists('totals');
+		Schema::dropIfExists('checklists');
+		Schema::dropIfExists('sections');
+		Schema::dropIfExists('questions');
+		Schema::dropIfExists('responses');
+		Schema::dropIfExists('question_responses');
+
 	}
 }
