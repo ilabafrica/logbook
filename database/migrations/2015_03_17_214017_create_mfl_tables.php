@@ -282,12 +282,14 @@ class CreateMflTables extends Migration {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
+            $table->integer('checklist_id')->unsigned();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+             $table->foreign('checklist_id')->references('id')->on('checklists');
         });
 
         //	actual responses to the questions
@@ -295,16 +297,113 @@ class CreateMflTables extends Migration {
 		{
 			$table->increments('id')->unsigned();
 			$table->integer('question_id')->unsigned();
-			$table->string('answer')->nullable();			
+			$table->integer('response_id')->unsigned();			
 			$table->integer('user_id')->unsigned();
 			$table->string('comment')->nullable();
            
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('response_id')->references('id')->on('responses');
+
+            $table->unique(array('question_id','response_id'));
 
             $table->softDeletes();
 			$table->timestamps();
 
+		});
+
+		//	survey
+		Schema::create('survey', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('qa_officer');
+			$table->integer('facility_id')->unsigned();
+			$table->integer('longitude')->unsigned();
+			$table->integer('latitude')->unsigned();
+			$table->integer('checklist_id')->unsigned();
+			$table->string('comment')->nullable();	
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('checklist_id')->references('id')->on('checklists');
+            $table->foreign('facility_id')->references('id')->on('facilities');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	survey_data
+		Schema::create('survey_data', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();			
+			$table->integer('survey_id')->unsigned();			
+			$table->integer('question_id')->unsigned();
+			$table->string('answer');
+			$table->string('comment')->nullable();		
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('question_id')->references('id')->on('questions');
+            $table->foreign('survey_id')->references('id')->on('survey');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	survey_scores
+		Schema::create('survey_scores', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();	
+			$table->integer('survey_id')->unsigned();		
+			$table->integer('section_id')->unsigned();			
+			$table->integer('section_score')->unsigned();
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('survey_id')->references('id')->on('survey');
+            $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+	
+		//sdps
+		Schema::create('sdps', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('description', 100);
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+
+		//hiv test kits 
+		Schema::create('hiv_test_kits', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('description', 100);
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	Audit Types
+		Schema::create('cadres', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('description', 100);
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
 		});
 	/**
 	 * Reverse the migrations.
@@ -330,6 +429,12 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('questions');
 		Schema::dropIfExists('responses');
 		Schema::dropIfExists('question_responses');
+		Schema::dropIfExists('survey');
+		Schema::dropIfExists('survey_data');
+		Schema::dropIfExists('survey_scores');
+		Schema::dropIfExists('sdps');
+		Schema::dropIfExists('hiv_test_kits');
+		Schema::dropIfExists('cadres');
 
 	}
 }

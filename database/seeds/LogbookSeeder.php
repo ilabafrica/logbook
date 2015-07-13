@@ -137,7 +137,7 @@ class LogbookSeeder extends Seeder
             array("name" => "Meru", "hq" => "Meru", "user_id" => "1"),
             array("name" => "Migori", "hq" => "Migori", "user_id" => "1"),
             array("name" => "Mombasa", "hq" => "Mombasa", "user_id" => "1"),
-            array("name" => "Murang\'a", "hq" => "Murang\'a", "user_id" => "1"),
+            array("name" => "Muranga", "hq" => "Muranga", "user_id" => "1"),
             array("name" => "Nairobi", "hq" => "Nairobi", "user_id" => "1"),
             array("name" => "Nakuru", "hq" => "Nakuru", "user_id" => "1"),
             array("name" => "Nandi", "hq" => "Kapsabet", "user_id" => "1"),
@@ -165,7 +165,34 @@ class LogbookSeeder extends Seeder
 
         /* sub-counties table */
         $subCounties = array(
-            array("name" => "Ganze", "county_id" => "13", "user_id" => "1"),
+            array("name" => "Kiharu", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Kandara", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Kangema", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Muranga", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Gatanga", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Kigumo", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Maragua", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Mathioya", "county_id" => "29", "user_id" => "1"),
+            array("name" => "Embakasi", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Westlands", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Starehe", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Ruaraka", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Kasarani", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Langata", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Kamukunji", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Makandara", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Dagoretti", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Bomet East", "county_id" => "2", "user_id" => "1"),
+            array("name" => "Bomet Central", "county_id" => "2", "user_id" => "1"),
+            array("name" => "Sotik", "county_id" => "2", "user_id" => "1"),
+            array("name" => "Chepalungu", "county_id" => "2", "user_id" => "1"),
+            array("name" => "Konoin", "county_id" => "2", "user_id" => "1"),
+            array("name" => "Alego Usonga", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Bondo", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Rarieda", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Ugenya", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Ugunja", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Gem", "county_id" => "38", "user_id" => "1"),
         );
         foreach ($subCounties as $subCounty) {
             SubCounty::create($subCounty);
@@ -226,6 +253,57 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Site test kits table seeded');
 
+        /* SDPs table */
+        $sdps= array(
+            array("name" => "Laboratory", "description" => "", "user_id" => "1"),
+            array("name" => "TB Clinic", "description" => "", "user_id" => "1"),          
+            array("name" => "CCC", "description" => "", "user_id" => "1"),  
+            array("name" => "OPD", "description" => "", "user_id" => "1"),  
+            array("name" => "STI Clinic", "description" => "", "user_id" => "1"),  
+            array("name" => "PMTCT", "description" => "", "user_id" => "1"),  
+            array("name" => "IPD (Ward)", "description" => "", "user_id" => "1"),  
+            array("name" => "Patient Support Center (PSC)", "description" => "", "user_id" => "1"),  
+            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1"),
+            array("name" => "VMMC", "description" => "", "user_id" => "1"),
+            array("name" => "Pediatric department", "description" => "", "user_id" => "1"),
+            array("name" => "Youth Centre", "description" => "", "user_id" => "1"),
+            array("name" => "Others", "description" => "", "user_id" => "1"),
+
+        );
+        foreach ($sdps as $sdp) {
+            Sdp::create($stype);
+        }
+        $this->command->info('SDPs table seeded');
+
+        /* hiv_test_kits table */
+        $hiv_test_kits = array(
+            array("name" => "KHB", "description" => "", "user_id" => "1"),
+            array("name" => "First Response", "description" => "", "user_id" => "1"),
+            array("name" => "Unigold", "description" => "", "user_id" => "1"),
+            array("name" => "Other", "description" => "", "user_id" => "1"),
+           
+        );
+        foreach ($hiv_test_kits as $hiv_test_kit) {
+            Hiv_test_kits::create($hiv_test_kit);
+        }
+        $this->command->info('HIV Test Kits table seeded');
+
+         /* cadres*/
+        $cadres = array(
+            array("name" => "Counselor", "description" => "", "user_id" => "1"),
+            array("name" => "Nurse", "description" => "", "user_id" => "1"),
+            array("name" => "Laboratory", "description" => "", "user_id" => "1"),
+            array("name" => "Lay Workers", "description" => "", "user_id" => "1"),
+            array("name" => "Clinical Officer", "description" => "", "user_id" => "1"),
+            array("name" => "Doctor", "description" => "", "user_id" => "1"),
+            array("name" => "Mid wives", "description" => "", "user_id" => "1"),
+           array("name" => "Other", "description" => "", "user_id" => "1"),
+        );
+        foreach ($cadres as $cadre) {
+            Cadre::create($cadre);
+        }
+        $this->command->info('HIV Test Kits table seeded');
+
         /* Checklists table */
         $checklists = array(
             array("name" => "HTC Lab Register MOH(362)", "description" => "", "user_id" => "1"),
@@ -237,6 +315,8 @@ class LogbookSeeder extends Seeder
             Checklist::create($checklist);
         }
         $this->command->info('checklists table seeded');
+
+        
          /* sections table */
         $sections = array(
            // HTC Lab Register MOH (362)
@@ -318,6 +398,30 @@ class LogbookSeeder extends Seeder
         $question_algorithmFollowed = Question::create(array("section_id" => $sec_sdp->id, "name" => "Algorithm Followed", "title" => "", "description" => "Aligorithm Followed?", "question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
        
         $this->command->info('Questions table seeded');
-    }
+
+        /* Responses */
+        $response_yes = Response::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
+        $response_no = Response::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
+        $response_partial = Response::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
+        $response_doesNotExist = Response::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
+        $response_inDevelopment = Response::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
+        $response_beingImplemented= Response::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
+        $response_completed = Response::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
+
+        $this->command->info('Responses table seeded');
+
+        /* Question-Responses*/
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supervisorReview ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supervisorReview ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_no->id));
+       
+        $this->command->info('Question-responses table seeded');
+
+    
     }
 }
