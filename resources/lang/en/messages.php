@@ -204,6 +204,8 @@ return [
 	'role'	=>	'Role|Roles',
 	'create-role'	=>	'Create Role',
 	'edit-role'	=>	'Edit Role',
+	'select-role'	=>	'Select Role',
+
 	/* Permissions */
 	'permission'	=>	'Permission|Permissions',
 	'create-permission'	=>	'Create Permission',
