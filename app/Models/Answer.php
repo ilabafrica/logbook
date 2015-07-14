@@ -3,9 +3,9 @@
 use Illuminate\Database\Eloquent\Model;
 use Lang;
 
-class Response extends Model {
+class Answer extends Model {
 
-	protected $table = 'answers';
+	protected $table = 'responses';
 	/**
 	* Responses for questions
 	*/

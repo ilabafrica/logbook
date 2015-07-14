@@ -28,5 +28,59 @@ class Question extends Model {
 	{
 	  return $this->belongsToMany('App\Models\Response', 'question_responses', 'question_id', 'response_id');
 	}
-	
+	/**
+	 * Section relationship
+	 */
+	public function section()
+	{
+		return $this->belongsTo('App\Models\Section');
+	}
+	/**
+	 * Answers relationship
+	 */
+	public function answers()
+	{
+	  return $this->belongsToMany('App\Models\Answer', 'question_responses', 'question_id', 'response_id');
+	}
+	/**
+	 * Set possible responses where applicable
+	 */
+	public function setAnswers($field){
+
+		$fieldAdded = array();
+		$questionId = 0;	
+
+		if(is_array($field)){
+			foreach ($field as $key => $value) {
+				$fieldAdded[] = array(
+					'question_id' => (int)$this->id,
+					'response_id' => (int)$value,
+					'created_at' => date('Y-m-d H:i:s'),
+					'updated_at' => date('Y-m-d H:i:s')
+					);
+				$questionId = (int)$this->id;
+			}
+
+		}
+		// Delete existing parent-child mappings
+		DB::table('question_responses')->where('question_id', '=', $questionId)->delete();
+
+		// Add the new mapping
+		DB::table('question_responses')->insert($fieldAdded);
+	}
+	/**
+	* Decode question type
+	*/
+	public function q_type()
+	{
+		$type = $this->question_type;
+		if($type == Question::CHOICE)
+			return 'Choice';
+		else if($type == Question::DATE)
+			return 'Date';
+		else if($type == Question::FIELD)
+			return 'Field';
+		else if($type == Question::TEXTAREA)
+			return 'Free Text';
+	}
 }

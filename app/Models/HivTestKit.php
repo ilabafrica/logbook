@@ -3,8 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Survey_data extends Model {
+class HivTestKit extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'survey_data';
+	protected $table = 'hiv_test_kits';
 }

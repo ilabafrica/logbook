@@ -174,3 +174,28 @@ Route::post("/htc/{id}/updateLogbook", array(
     "as"   => "htc.updateLogbook",
     "uses" => "HtcController@update"
 ));
+
+/* Checklists */
+Route::resource('checklist', 'ChecklistController');
+Route::get("/checklist/{id}/delete", array(
+    "as"   => "checklist.delete",
+    "uses" => "ChecklistController@delete"
+));
+/* Sections */
+Route::resource('section', 'SectionController');
+Route::get("/section/{id}/delete", array(
+    "as"   => "section.delete",
+    "uses" => "SectionController@delete"
+));
+/* Questions */
+Route::resource('question', 'QuestionController');
+Route::get("/question/{id}/delete", array(
+    "as"   => "question.delete",
+    "uses" => "QuestionController@delete"
+));
+/* Responses */
+Route::resource('response', 'ResponseController');
+Route::get("/response/{id}/delete", array(
+    "as"   => "response.delete",
+    "uses" => "ResponseController@delete"
+));

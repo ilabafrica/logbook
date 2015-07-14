@@ -17,5 +17,11 @@ class Section extends Model {
 	{
 		return $this->hasMany('App\Models\Question');
 	}
-	
+	/**
+	 * Checklist relationship
+	 */
+	public function checklist()
+	{
+		return $this->belongsTo('App\Models\Checklist');
+	}
 }

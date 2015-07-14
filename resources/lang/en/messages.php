@@ -317,8 +317,29 @@ return [
 	'county-level'	=>	'County Level',
 	'national-level'	=>	'National Level',
 
-	
+	/**
+	*
+	* Checklist config
+	*
+	*/
+	'checklist'	=>	'Checklist|Checklists',
+	'create-checklist'	=>	'Create Checklist',
+	'edit-checklist'	=>	'Edit Checklist',
+	'checklist-config'	=>	'Checklist Config',
+	'info'	=>	'More Info',
+	'score'	=>	'Score',
+	'question-type'	=>	'Question Type',
+	'required'	=>	'Required',
 
-	
+	'section'	=>	'Section|Sections',
+	'create-section'	=>	'Create Section',
+	'edit-section'	=>	'Edit Section',
 
+	'question'	=>	'Question|Questions',
+	'create-question'	=>	'Create Question',
+	'edit-question'	=>	'Edit Question',
+
+	'response'	=>	'Response|Responses',
+	'create-response'	=>	'Create Response',
+	'edit-response'	=>	'Edit Response',
 ];

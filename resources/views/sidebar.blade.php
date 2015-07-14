@@ -44,9 +44,17 @@
             </div>
             <!-- /input-group -->
         </li>
-
-
-          <!-- Reports -->
+        <!-- Checklist config -->
+        <li>
+            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{!! url('checklist') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.checklist', 2) !!}</a></li>
+                <li><a href="{!! url('section') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.section', 2) !!}</a></li>
+                <li><a href="{!! url('question') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.question', 2) !!}</a></li>
+                <li><a href="{!! url('response') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.response', 2) !!}</a></li>
+            </ul>
+        </li>
+        <!-- Reports -->
         <li>
             <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">

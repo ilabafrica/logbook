@@ -3,8 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Survey_score extends Model {
+class SurveyData extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'survey_scores';
+	protected $table = 'survey_data';
 }

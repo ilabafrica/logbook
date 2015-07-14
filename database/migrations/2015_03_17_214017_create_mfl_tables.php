@@ -12,6 +12,18 @@ class CreateMflTables extends Migration {
 	 */
 	public function up()
 	{
+		//	User tiers - county/sub-county/facility
+		Schema::create('user_tiers', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('user_id')->unsigned();
+			$table->tinyInteger('tier');
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
 		//	Facility Types
 		Schema::create('facility_types', function(Blueprint $table)
 		{
@@ -181,7 +193,7 @@ class CreateMflTables extends Migration {
 			$table->timestamps();
 		});
 		//	Algorithm data
-		Schema::create('htc', function(Blueprint $table)
+		/*Schema::create('htc', function(Blueprint $table)
 		{
 
 			$table->increments('id')->unsigned();			
@@ -217,7 +229,7 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});		
-	}
+	}*/
 
 	//tables dealing with survey
 	//	checklists
@@ -243,7 +255,6 @@ class CreateMflTables extends Migration {
 			$table->string('description', 100);
 			$table->integer('checklist_id')->unsigned();
 			$table->smallInteger('total_points')->nullable();
-			$table->smallInteger('order');
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
@@ -259,7 +270,6 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->integer('section_id')->unsigned();
 			$table->string('name')->nullable();
-			$table->string('title')->nullable();
 			$table->text('description')->nullable();			
 			$table->tinyInteger('question_type');
 			$table->integer('required')->nullable();
@@ -268,8 +278,7 @@ class CreateMflTables extends Migration {
 			$table->integer('user_id')->unsigned();
 			
 
-			$table->integer('user_id')->unsigned();
-            $table->foreign('section_id')->references('id')->on('sections');
+			$table->foreign('section_id')->references('id')->on('sections');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
@@ -282,14 +291,12 @@ class CreateMflTables extends Migration {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
-            $table->integer('checklist_id')->unsigned();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
-             $table->foreign('checklist_id')->references('id')->on('checklists');
         });
 
         //	actual responses to the questions
@@ -297,11 +304,9 @@ class CreateMflTables extends Migration {
 		{
 			$table->increments('id')->unsigned();
 			$table->integer('question_id')->unsigned();
-			$table->integer('response_id')->unsigned();			
-			$table->integer('user_id')->unsigned();
+			$table->integer('response_id')->unsigned();
 			$table->string('comment')->nullable();
            
-            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('question_id')->references('id')->on('questions');
             $table->foreign('response_id')->references('id')->on('responses');
 
@@ -354,7 +359,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();	
 			$table->integer('survey_id')->unsigned();		
 			$table->integer('section_id')->unsigned();			
-			$table->integer('section_score')->unsigned();
+			$table->integer('score');
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('survey_id')->references('id')->on('survey');
@@ -405,6 +410,7 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+	}
 	/**
 	 * Reverse the migrations.
 	 *
