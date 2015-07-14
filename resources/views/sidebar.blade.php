@@ -54,6 +54,10 @@
                 <li><a href="{!! url('response') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.response', 2) !!}</a></li>
             </ul>
         </li>
+        <!-- Surveys -->
+        <li>
+            <a href="{!! url('survey') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.survey', 1) !!}</a>
+        </li>
         <!-- Reports -->
         <li>
             <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>

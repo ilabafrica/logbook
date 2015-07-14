@@ -199,3 +199,16 @@ Route::get("/response/{id}/delete", array(
     "as"   => "response.delete",
     "uses" => "ResponseController@delete"
 ));
+/* Survey */
+Route::get('survey', array(
+    "as"    =>  "surveys",
+    "uses"  =>  "SurveyController@index"
+));
+Route::get('survey/{id}/create', array(
+    "as"    =>  "survey.create",
+    "uses"  =>  "SurveyController@create"
+));
+Route::get('survey/save', array(
+    "as"    =>  "survey.store",
+    "uses"  =>  "SurveyController@store"
+));

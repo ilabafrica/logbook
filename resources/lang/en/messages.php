@@ -342,4 +342,15 @@ return [
 	'response'	=>	'Response|Responses',
 	'create-response'	=>	'Create Response',
 	'edit-response'	=>	'Edit Response',
+	/**
+	*
+	* Surveys
+	*
+	*/
+	'survey'	=>	'Survey|Surveys',
+	'no-of-questionnaire'	=>	'No. of Questionnaires filled',
+	'no-of-qa'	=>	'No. of QA Officers',
+	'fill-questionnaire'	=>	'Fill Questionnaire',
+	'view-collected-data'	=>	'View Collected Data',
+	'view-summary'	=>	'View Summary',
 ];

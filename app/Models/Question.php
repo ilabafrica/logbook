@@ -83,4 +83,43 @@ class Question extends Model {
 		else if($type == Question::TEXTAREA)
 			return 'Free Text';
 	}
+	/**
+	* Decode questions to display field
+	*/
+	public function decode()
+	{
+		$type = $this->question_type;
+		if($type == Question::CHOICE)
+			return "<div class='form-group'>
+	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
+	                    <div class='col-sm-8'>
+	                    @foreach($this->answers as $response)
+	                        <label class='radio-inline'>{!! Form::radio('radio_'.$this->id, $response->name, false) !!}{!! $response->name !!}</label>
+	                    @endforeach
+	                    </div>
+	                </div>";
+		else if($type == Question::DATE)
+			return "<div class='form-group'>
+                        {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
+                        <div class='col-sm-6 form-group input-group input-append date datepicker' style='padding-left:15px;''>
+                            {!! Form::text('date_'.$this->id, old('date_'.$this->id), array('class' => 'form-control')) !!}
+                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                        </div>
+                    </div>";
+		else if($type == Question::FIELD)
+			return "<div class='form-group'>
+	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
+	                    <div class='col-sm-8'>
+	                        {!! Form::text('textfield_'.$this->id, old('textfield_'.$this->id), array('class' => 'form-control')) !!}
+	                    </div>
+	                </div>";
+		else if($type == Question::TEXTAREA)
+			return "<div class='form-group'>
+	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
+	                    <div class='col-sm-8'>
+	                        {!! Form::textarea('textarea_'.$this->id, old('textarea_'.$this->id), 
+	                            array('class' => 'form-control', 'rows' => '3')) !!}
+	                    </div>
+	                </div>";
+	}
 }
