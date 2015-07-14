@@ -255,6 +255,7 @@ class CreateMflTables extends Migration {
 			$table->string('description', 100);
 			$table->integer('checklist_id')->unsigned();
 			$table->smallInteger('total_points')->nullable();
+			$table->smallInteger('order')->nullable();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
@@ -270,10 +271,12 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->integer('section_id')->unsigned();
 			$table->string('name')->nullable();
+			$table->string('title')->nullable();
 			$table->text('description')->nullable();			
 			$table->tinyInteger('question_type');
 			$table->integer('required')->nullable();
 			$table->string('info')->nullable();
+			$table->string('comment')->nullable();
 			$table->integer('score')->nullable();
 			$table->integer('user_id')->unsigned();
 			

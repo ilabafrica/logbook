@@ -16,15 +16,17 @@ use App\Models\SiteType;
 use App\Models\Site;
 use App\Models\TestKit;
 use App\Models\SiteKit;
+use App\Models\Checklist;
 use App\Models\Sdp;
 use App\Models\Survey;
 use App\Models\Survey_data;
 use App\Models\Survey_score;
 use App\Models\Hiv_test_kit;
 use App\Models\Cadre;
+use App\Models\Answer;
 use App\Models\Section;
 use App\Models\Question;
-use App\Models\question_response;
+
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -293,7 +295,7 @@ class LogbookSeeder extends Seeder
            
         );
         foreach ($hiv_test_kits as $hiv_test_kit) {
-            Hiv_test_kits::create($hiv_test_kit);
+            Hiv_test_kit::create($hiv_test_kit);
         }
         $this->command->info('HIV Test Kits table seeded');
 
@@ -406,15 +408,15 @@ class LogbookSeeder extends Seeder
         $this->command->info('Questions table seeded');
 
         /* Responses */
-        $response_yes = Response::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
-        $response_no = Response::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
-        $response_partial = Response::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
-        $response_doesNotExist = Response::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
-        $response_inDevelopment = Response::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
-        $response_beingImplemented= Response::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
-        $response_completed = Response::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
+        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
+        $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
+        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
+        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
+        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
+        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
+        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
 
-        $this->command->info('Responses table seeded');
+        $this->command->info('Answers table seeded');
 
         /* Question-Responses*/
         DB::table('question_responses')->insert(
