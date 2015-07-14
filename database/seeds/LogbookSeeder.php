@@ -16,6 +16,15 @@ use App\Models\SiteType;
 use App\Models\Site;
 use App\Models\TestKit;
 use App\Models\SiteKit;
+use App\Models\Sdp;
+use App\Models\Survey;
+use App\Models\Survey_data;
+use App\Models\Survey_score;
+use App\Models\Hiv_test_kit;
+use App\Models\Cadre;
+use App\Models\Section;
+use App\Models\Question;
+use App\Models\question_response;
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -25,7 +34,7 @@ class LogbookSeeder extends Seeder
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@hivlogbook.org",
                 "name" => "Lucy Mbugua", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
-            ),
+            )
         );
 
         foreach ($usersData as $user)
@@ -192,16 +201,16 @@ class LogbookSeeder extends Seeder
             array("name" => "Rarieda", "county_id" => "38", "user_id" => "1"),
             array("name" => "Ugenya", "county_id" => "38", "user_id" => "1"),
             array("name" => "Ugunja", "county_id" => "38", "user_id" => "1"),
-            array("name" => "Gem", "county_id" => "38", "user_id" => "1"),
+            array("name" => "Gem", "county_id" => "38", "user_id" => "1")
         );
         foreach ($subCounties as $subCounty) {
             SubCounty::create($subCounty);
         }
-        $this->command->info('Constituencies table seeded');
+        $this->command->info('subcounties table seeded');
        
          /* Facilities table */
         $facilities = array(
-            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "sub_county_id" => "1",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1"),
+            array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "sub_county_id" => "1",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1")
 
             );
         foreach ($facilities as $facility) {
@@ -214,7 +223,7 @@ class LogbookSeeder extends Seeder
             array("name" => "NA", "description" => "", "user_id" => "1"),
             array("name" => "USAID", "description" => "", "user_id" => "1"),
             array("name" => "WHO and National", "description" => "", "user_id" => "1"),
-            array("name" => "Other", "description" => "", "user_id" => "1"),
+            array("name" => "Other", "description" => "", "user_id" => "1")
         );
         foreach ($agencies as $agency) {
             Agency::create($agency);
@@ -222,7 +231,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Agency table seeded');
         /* Site types table */
         $stypes = array(
-            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1"),
+            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1")
         );
         foreach ($stypes as $stype) {
             SiteType::create($stype);
@@ -230,7 +239,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Site types table seeded');
         /* Sites table */
         $sites = array(
-            array("facility_id" => "1", "site_type_id" => "1", "local_id" => "002", "name" => "Kaptembwa",  "department" => "VCT", "mobile" => "0729333333", "email" => "lmbugua@strathmore.edu", "in_charge" => "Pius Mathii", "user_id" => "1"),
+            array("facility_id" => "1", "site_type_id" => "1", "local_id" => "002", "name" => "Kaptembwa",  "department" => "VCT", "mobile" => "0729333333", "email" => "lmbugua@strathmore.edu", "in_charge" => "Pius Mathii", "user_id" => "1")
         );
         foreach ($sites as $site) {
             Site::create($site);
@@ -238,7 +247,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Sites table seeded');
         /* Test kits table */
         $tkits = array(
-            array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1"),
+            array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1")
         );
         foreach ($tkits as $tkit) {
             TestKit::create($tkit);
@@ -246,7 +255,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Test kits table seeded');
         /* Site test kits table */
         $stkits = array(
-            array("site_id" => "1", "kit_id" => "1", "lot_no" => "0087", "expiry_date" => "2015-08-09", "comments" => "Nothing special.", "stock_available" => "2", "user_id" => "1"),
+            array("site_id" => "1", "kit_id" => "1", "lot_no" => "0087", "expiry_date" => "2015-08-09", "comments" => "Nothing special.", "stock_available" => "2", "user_id" => "1")
         );
         foreach ($stkits as $stkit) {
             SiteKit::create($stkit);
@@ -267,7 +276,7 @@ class LogbookSeeder extends Seeder
             array("name" => "VMMC", "description" => "", "user_id" => "1"),
             array("name" => "Pediatric department", "description" => "", "user_id" => "1"),
             array("name" => "Youth Centre", "description" => "", "user_id" => "1"),
-            array("name" => "Others", "description" => "", "user_id" => "1"),
+            array("name" => "Others", "description" => "", "user_id" => "1")
 
         );
         foreach ($sdps as $sdp) {
@@ -280,7 +289,7 @@ class LogbookSeeder extends Seeder
             array("name" => "KHB", "description" => "", "user_id" => "1"),
             array("name" => "First Response", "description" => "", "user_id" => "1"),
             array("name" => "Unigold", "description" => "", "user_id" => "1"),
-            array("name" => "Other", "description" => "", "user_id" => "1"),
+            array("name" => "Other", "description" => "", "user_id" => "1")
            
         );
         foreach ($hiv_test_kits as $hiv_test_kit) {
@@ -297,7 +306,7 @@ class LogbookSeeder extends Seeder
             array("name" => "Clinical Officer", "description" => "", "user_id" => "1"),
             array("name" => "Doctor", "description" => "", "user_id" => "1"),
             array("name" => "Mid wives", "description" => "", "user_id" => "1"),
-           array("name" => "Other", "description" => "", "user_id" => "1"),
+           array("name" => "Other", "description" => "", "user_id" => "1")
         );
         foreach ($cadres as $cadre) {
             Cadre::create($cadre);
@@ -308,8 +317,8 @@ class LogbookSeeder extends Seeder
         $checklists = array(
             array("name" => "HTC Lab Register MOH(362)", "description" => "", "user_id" => "1"),
             array("name" => "M & E Checklist", "description" => "", "user_id" => "1"),
-            array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1"),
-           
+            array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1")
+        
         );
         foreach ($checklists as $checklist) {
             Checklist::create($checklist);
@@ -318,17 +327,14 @@ class LogbookSeeder extends Seeder
 
         
          /* sections table */
-        $sections = array(
+        
            // HTC Lab Register MOH (362)
         $sec_mainPage = Section::create(array("name" => "Main Page", "label" => "HTC Lab Register MOH (362)", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
         $sec_sdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => $sec_mainPage->id, "user_id" => "1"));
         $sec_location = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
         //M&E checklist
-        //SPI-RT checklist           
-        );
-        foreach ($sections as $section) {
-            Section::create($section);
-        }
+        //SPI-RT checklist          
+       
         $this->command->info('sections table seeded');
 
        /** Questions */
