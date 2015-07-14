@@ -323,15 +323,13 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->string('qa_officer');
 			$table->integer('facility_id')->unsigned();
-			$table->integer('longitude')->unsigned();
-			$table->integer('latitude')->unsigned();
+			$table->string('longitude')->nullable();
+			$table->string('latitude')->nullable();
 			$table->integer('checklist_id')->unsigned();
-			$table->string('comment')->nullable();	
-			$table->integer('user_id')->unsigned();
+			$table->string('comment')->nullable();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
             $table->foreign('facility_id')->references('id')->on('facilities');
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -343,12 +341,10 @@ class CreateMflTables extends Migration {
 			$table->integer('survey_id')->unsigned();			
 			$table->integer('question_id')->unsigned();
 			$table->string('answer');
-			$table->string('comment')->nullable();		
-			$table->integer('user_id')->unsigned();
+			$table->string('comment')->nullable();
 
             $table->foreign('question_id')->references('id')->on('questions');
             $table->foreign('survey_id')->references('id')->on('survey');
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -360,11 +356,9 @@ class CreateMflTables extends Migration {
 			$table->integer('survey_id')->unsigned();		
 			$table->integer('section_id')->unsigned();			
 			$table->integer('score');
-			$table->integer('user_id')->unsigned();
 
             $table->foreign('survey_id')->references('id')->on('survey');
             $table->foreign('section_id')->references('id')->on('sections');
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
 			$table->timestamps();

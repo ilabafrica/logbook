@@ -21,4 +21,11 @@ class Survey extends Model {
 	{
 		return $this->belongsTo('App\Models\User');
 	}
+	/**
+	 * SurveyData relationship
+	 */
+	public function data()
+	{
+		return $this->hasMany('App\Models\SurveyData');
+	}
 }

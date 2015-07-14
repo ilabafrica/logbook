@@ -40,7 +40,7 @@ class QuestionController extends Controller {
 		//	Get all answers
 		$answers = Answer::orderBy('name')->get();
 		//	question types
-		$questionTypes = array(Question::CHOICE=>'Choice', Question::DATE=>'Date', Question::FIELD=>'Field', Question::TEXTAREA=>'Free Text');
+		$questionTypes = array(Question::CHOICE=>'Choice', Question::DATE=>'Date', Question::FIELD=>'Field', Question::TEXTAREA=>'Free Text', Question::SELECT=>'Select List');
 		return view('question.create', compact('parents', 'sections', 'questionTypes', 'answers', 'notes'));
 	}
 
@@ -104,7 +104,7 @@ class QuestionController extends Controller {
 		//	Get audit question group
 		$section = $question->section_id;
 		//	question types
-		$questionTypes = array(Question::CHOICE=>'Choice', Question::DATE=>'Date', Question::FIELD=>'Field', Question::TEXTAREA=>'Free Text');
+		$questionTypes = array(Question::CHOICE=>'Choice', Question::DATE=>'Date', Question::FIELD=>'Field', Question::TEXTAREA=>'Free Text', Question::SELECT=>'Select List');
 		//	Get question type
 		$questionType = $question->question_type;
 		//	Get all answers

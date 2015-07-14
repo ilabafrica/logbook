@@ -353,4 +353,13 @@ return [
 	'fill-questionnaire'	=>	'Fill Questionnaire',
 	'view-collected-data'	=>	'View Collected Data',
 	'view-summary'	=>	'View Summary',
+	'collected-data'	=>	'Collected Data',
+	'response-no'	=>	'Response No.',
+	'qa-officer'	=>	'QA Officer',
+	'edit-questionnaire'	=>	'Edit Questionnaire',
+	'data-collection-summary'	=>	'Data Collection Summary',
+	'survey-summary'	=>	'Survey Summary',
+	'participants'	=>	'Participating Facilities',
+	'download-summary'	=>	'Download Summary',
+	'summary'	=>	'Summary',
 ];
