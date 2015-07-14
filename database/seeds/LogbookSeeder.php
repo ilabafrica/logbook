@@ -317,7 +317,7 @@ class LogbookSeeder extends Seeder
 
         /* Checklists table */
         $checklists = array(
-            array("name" => "HTC Lab Register MOH(362)", "description" => "", "user_id" => "1"),
+            array("name" => "HTC Lab Register (MOH 362)", "description" => "", "user_id" => "1"),
             array("name" => "M & E Checklist", "description" => "", "user_id" => "1"),
             array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1")
         
@@ -330,18 +330,55 @@ class LogbookSeeder extends Seeder
         
          /* sections table */
         
-           // HTC Lab Register MOH (362)
-        $sec_mainPage = Section::create(array("name" => "Main Page", "label" => "HTC Lab Register MOH (362)", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
+        // HTC Lab Register (MOH 362)
+        $sec_mainPage = Section::create(array("name" => "Main Page", "label" => "HTC Lab Register (MOH 362)", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
         $sec_sdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => $sec_mainPage->id, "user_id" => "1"));
         $sec_location = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
         //M&E checklist
-        //SPI-RT checklist          
+        $sec_MEmainPage = Section::create(array("name" => "Main Page", "label" => "M & E Checklist", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => 0, "user_id" => "1"));
+        $sec_MEsdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => $sec_mainPage->id, "user_id" => "1"));
+        $sec_sec1 = Section::create(array("name" => "Section 1.0", "label" => "Support from the MOH (i.e.,subcounty, county or national level)", "description" => "Provide information on the level of MOH engagement to support the implementation of quality assurance activities and address supply chain for HIV RTs and testing.", "checklist_id" => "2", "total_points" => "6", "order" => $sec_MEsdp->id, "user_id" => "1"));
+        $sec_sec2 = Section::create(array("name" => "Section 2.0", "label" => "HR Development – Training and Certification", "description" => "Provide information below for network of HIV rapid testers at site level and link innovative hands-on training and re-training with certification process.", "checklist_id" => "2", "total_points" => "30", "order" => $sec_sec1->id, "user_id" => "1"));
+        $sec_sec3 = Section::create(array("name" => "Section 3.0", "label" => "Proficiency Testing and QC using DTS", "description" => "Provide information on dried tube specimen (DTS)-based proficiency testing and quality control specimens, as part of routine HIV RT testing and for training purpose.", "checklist_id" => "2", "total_points" => "18", "order" => $sec_sec2->id, "user_id" => "1"));
+        $sec_sec4 = Section::create(array("name" => "Section 4.0", "label" => "Use of Standardized HTC register", "description" => " Provide information on the use of standardized HTC register or register for the purposes of quality assurance of HIV rapid testing.", "checklist_id" => "2", "total_points" => "18", "order" => $sec_sec3->id, "user_id" => "1"));
+        $sec_MEtotalScore = Section::create(array("name" => "Total Score", "label" => "Total Score", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
+        $sec_MElocation = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => 0, "user_id" => "1"));
+        //SPI-RT checklist
+        $sec_SpimainPage = Section::create(array("name" => "Main Page", "label" => "M & E Checklist", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
+        $sec_Spisdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_SpimainPage->id, "user_id" => "1"));
+       
+        $sec_Spisec1 = Section::create(array("name" => "Section 1.0", "label" => "PERSONNEL TRAINING AND CERTIFICATION", "description" => "(Score = 11)", "checklist_id" => "3", "total_points" => "11", "order" => $sec_Spisdp->id, "user_id" => "1"));
+        $sec_Spisec2 = Section::create(array("name" => "Section 2.0", "label" => "PHYSICAL FACILITY", "description" => "(Score = 5)", "checklist_id" => "3", "total_points" => "5", "order" => $sec_Spisec1->id, "user_id" => "1"));
+        $sec_Spisec3 = Section::create(array("name" => "Section 3.0", "label" => "SAFETY", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9", "order" => $sec_Spisec2->id, "user_id" => "1"));
+        $sec_Spisec4 = Section::create(array("name" => "Section 4.0", "label" => "PRE-TESTING PHASE", "description" => "(Score = 12)", "checklist_id" => "3", "total_points" => "12", "order" => $sec_Spisec3->id, "user_id" => "1"));       
+        $sec_Spisec5 = Section::create(array("name" => "Section 5.0", "label" => "TESTING PHASE", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9", "order" => $sec_Spisec4->id, "user_id" => "1"));       
+        $sec_Spisec6 =Section::create(array("name" => "Section 6.0", "label" => "POST TESTING PHASE", "description" => "(Score = 4)", "checklist_id" => "3", "total_points" => "4", "order" => $sec_Spisec5->id, "user_id" => "1"));
+        $sec_Spisec7= Section::create(array("name" => "Section 7.0", "label" => "DOCUMENTS AND RECORDS", "description" => "(Score = 7)", "checklist_id" => "3", "total_points" => "7", "order" => $sec_Spisec6->id, "user_id" => "1"));
+        $sec_Spisec8= Section::create(array("name" => "Section 8.0", "label" => "EXTERNAL QUALITY ASSESSMENT", "description" => "(PT, RETESTING AND SITE SUPERVISION), (Score = 13)", "checklist_id" => "3", "total_points" => "13", "order" => $sec_Spisec7->id, "user_id" => "1"));
+        $sec_Spisec9= Section::create(array("name" => "Section 9.0", "label" => "Auditor’s Summation Report for SPI-RT Assessment", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec8->id, "user_id" => "1"));
+        $sec_Spisec10= Section::create(array("name" => "Levels (Score in %)", "label" => "", "description" => "level 0 = Less than 40% (needs improvement in all areas and immediate remediation)
+                                            level 1 = 40% - 59% (needs improvement in specific areas)
+                                            level 2 = 60% - 79% (partially eligible)
+                                            Level 3 = 80% - 89% (close to site certification)
+                                            Level 4 = 90% or higher (Eligible for certification)", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec9->id, "user_id" => "1"));
+        $sec_Spisec11= Section::create(array("name" => "", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec10->id, "user_id" => "1"));
+        $sec_Spilocation = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
+      
+        
+        
+        
+         
+        
+        
+        
+        
+                  
        
         $this->command->info('sections table seeded');
 
        /** Questions */
          /**Section 1 - main page*/
-        $question_qaOfficer = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Name of the QA Officer", "title" => "HTC Lab Register MOH (362)", "description" => "Name of the QA Officer*","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_qaOfficer = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Name of the QA Officer", "title" => "HTC Lab Register (MOH 362)", "description" => "Name of the QA Officer*","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
         $question_county = Question::create(array("section_id" => $sec_mainPage->id, "name" => "County", "title" => "", "description" => "County","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
         $question_subCounty = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Sub County", "title" => "", "description" => "Sub County", "question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
         $question_facility = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Facility", "title" => "", "description" => "Facility","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
