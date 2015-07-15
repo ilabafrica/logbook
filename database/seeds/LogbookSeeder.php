@@ -327,8 +327,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('checklists table seeded');
 
         
-         /* sections table */
-
+         /* HTC Lab Register sections table */
         $sec_survey = Section::create(array("name" => "Survey Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
         $sec_register = Section::create(array("name" => "Lab Register Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
         $sec_hiv1 = Section::create(array("name" => "HIV Test 1", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
@@ -337,11 +336,39 @@ class LogbookSeeder extends Seeder
         $sec_finalResult = Section::create(array("name" => "Final Results", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
         $sec_consumption = Section::create(array("name" => "Test Kit Consumption Summary", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
         $sec_other = Section::create(array("name" => "Other Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
-
+        /*M&E Checklist sections table*/
+        $sec_MEsurvey = Section::create(array("name" => "Survey Details", "description" => "", "checklist_id" => "2", "total_points" => "0", "user_id" => "1"));
+        $sec_MEregister = Section::create(array("name" => "M & E Checklist", "description" => "", "checklist_id" => "2", "total_points" => "0", "user_id" => "1"));
+        $sec_sec1 = Section::create(array("name" => "Section 1.0", "label" => "Support from the MOH (i.e.,subcounty, county or national level)", "description" => "Provide information on the level of MOH engagement to support the implementation of quality assurance activities and address supply chain for HIV RTs and testing.", "checklist_id" => "2", "total_points" => "6", "user_id" => "1"));
+        $sec_sec2 = Section::create(array("name" => "Section 2.0", "label" => "HR Development – Training and Certification", "description" => "Provide information below for network of HIV rapid testers at site level and link innovative hands-on training and re-training with certification process.", "checklist_id" => "2", "total_points" => "30", "user_id" => "1"));
+        $sec_sec3 = Section::create(array("name" => "Section 3.0", "label" => "Proficiency Testing and QC using DTS", "description" => "Provide information on dried tube specimen (DTS)-based proficiency testing and quality control specimens, as part of routine HIV RT testing and for training purpose.", "checklist_id" => "2", "total_points" => "18", "user_id" => "1"));
+        $sec_sec4 = Section::create(array("name" => "Section 4.0", "label" => "Use of Standardized HTC register", "description" => " Provide information on the use of standardized HTC register or register for the purposes of quality assurance of HIV rapid testing.", "checklist_id" => "2", "total_points" => "18", "user_id" => "1"));
+        $sec_MEtotalScore = Section::create(array("name" => "Total Score", "label" => "", "description" => "", "checklist_id" => "2", "total_points" => "0",  "user_id" => "1"));
+        $sec_MEother = Section::create(array("name" => "GPRS Location", "label" => "", "description" => "", "checklist_id" => "2", "total_points" => "0", "user_id" => "1"));
+       /*SPI-RT Checklist sections table*/
+        $sec_Spisurvey = Section::create(array("name" => "Survey Details", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
+        $sec_Spiregister = Section::create(array("name" => "SPI-RT Checklist", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
+        $sec_Spisec1 = Section::create(array("name" => "Section 1.0", "label" => "PERSONNEL TRAINING AND CERTIFICATION", "description" => "(Score = 11)", "checklist_id" => "3", "total_points" => "11", "user_id" => "1"));
+        $sec_Spisec2 = Section::create(array("name" => "Section 2.0", "label" => "PHYSICAL FACILITY", "description" => "(Score = 5)", "checklist_id" => "3", "total_points" => "5",  "user_id" => "1"));
+        $sec_Spisec3 = Section::create(array("name" => "Section 3.0", "label" => "SAFETY", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9","user_id" => "1"));
+        $sec_Spisec4 = Section::create(array("name" => "Section 4.0", "label" => "PRE-TESTING PHASE", "description" => "(Score = 12)", "checklist_id" => "3", "total_points" => "12", "user_id" => "1"));       
+        $sec_Spisec5 = Section::create(array("name" => "Section 5.0", "label" => "TESTING PHASE", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9","user_id" => "1"));       
+        $sec_Spisec6 =Section::create(array("name" => "Section 6.0", "label" => "POST TESTING PHASE", "description" => "(Score = 4)", "checklist_id" => "3", "total_points" => "4", "user_id" => "1"));
+        $sec_Spisec7= Section::create(array("name" => "Section 7.0", "label" => "DOCUMENTS AND RECORDS", "description" => "(Score = 7)", "checklist_id" => "3", "total_points" => "7", "user_id" => "1"));
+        $sec_Spisec8= Section::create(array("name" => "Section 8.0", "label" => "EXTERNAL QUALITY ASSESSMENT", "description" => "(PT, RETESTING AND SITE SUPERVISION), (Score = 13)", "checklist_id" => "3", "total_points" => "13","user_id" => "1"));
+        $sec_Spisec9= Section::create(array("name" => "Section 9.0", "label" => "Auditor’s Summation Report for SPI-RT Assessment", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
+        $sec_Spisec10= Section::create(array("name" => "Levels (Score in %)", "label" => "", "description" => " Level 0 = Less than 40% (needs improvement in all essential rapid HIV testing Quality areas and immediate remediation)
+                                                            Level 1 =40% - 59% (needs improvement in specific essential rapid HIV testing Quality  areas)    
+                                                            Level 2 =60% - 79% (partial implementation of essential rapid HIV testing Quality  areas)
+                                                            Level 3 =80% - 89% (close to satisfactory implementation of  essential rapid HIV testing Quality  elements)
+                                                            Level 4 =90% or higher(satisfactory implementation of essential rapid HIV testing Quality  elements)", "checklist_id" => "3", "total_points" => "0","user_id" => "1"));
+        $sec_Spisec11= Section::create(array("name" => "", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
+        $sec_Spiother = Section::create(array("name" => "GPRS Location", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
         $this->command->info('sections table seeded');
         
 
-       /** Questions */
+
+       /**HTC Lab Register Questions */
          /**Section 1 - main page*/
         $question_qaOfficer = Question::create(array("section_id" => $sec_survey->id, "name" => "Name of the QA Officer", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_facility = Question::create(array("section_id" => $sec_survey->id, "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
@@ -406,6 +433,89 @@ class LogbookSeeder extends Seeder
         $question_lat = Question::create(array("section_id" => $sec_other->id, "name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_long = Question::create(array("section_id" => $sec_other->id, "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_addComm = Question::create(array("section_id" => $sec_other->id, "name" => "Additional Comments", "description" => "", "question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+      
+
+    /**M & E Checklist Questions */
+         /** main page*/
+        $question_MEqaOfficer = Question::create(array("section_id" => $sec_MEsurvey->id, "name" => "Name of the QA Officer", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEfacility = Question::create(array("section_id" => $sec_MEsurvey->id, "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_auditType= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Type of Audit", "description" => "","question_type" =>"0",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_MEsupervisor = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Name of supervisor being interviewed", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEIndividualsTested = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Number of individuals tested by rapid testing (previous year) at this site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEpersonnel = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Number of personnel authorized to offer HIV testing and counseling services at the site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEcadres = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Cadres authorized to offer HIV testing and counseling services at the site", "description" => "(Please check box where applicable)","question_type" =>"5", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEstrategy= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Current testing strategy used at the site (Serial vs. Parallel)", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest1= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest2= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Confirmatory or Test - 2:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest3= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Tie-breaker or Test - 3 (if applicable):", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        //M & E sections
+        //section1
+        
+        $question_resources = Question::create(array("section_id" =>$sec_sec1 ->id, "name" => "1.1 Are resources (staffing, funding, etc…) available to support quality assurance activities for HIV rapid testing at the site?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_resourcesComment= Question::create(array("section_id" => $sec_sec1->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_supply = Question::create(array("section_id" =>$sec_sec1 ->id, "name" => "1.2 Is there a mechanism in place to address supply chain issues at the site (e.g., stock out, recall, expired kits, damaged, etc.)?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_supplyComment= Question::create(array("section_id" => $sec_sec1->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+       
+        //section2
+        $question_curricula= Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.1 Do the training curricula contain adequate hands-on sessions for HIV testing and counseling, interpretation, and troubleshooting?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_curriculaComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_training= Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.2 Have staff been trained on various aspects of practical approaches to ensure and monitor the accuracy HIV of testing at the sites (e.g., use of standardized HTC register, DTS based proficiency testing program, QA, safety, testing procedures, etc.)?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_trainingComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_competency = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.3 Is the competency of the personnel performing HIV testing and counseling assessed for certification by a MOH-recognized body?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_competencyComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_certificate= Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.4 Are the certificates for competency of each testing personnel required to be on display at testing sites/laboratories?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_certificateComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_certified= Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.5 Has the HIV testing and counseling personnel of the site been certified or re-certified according to the certification calendar (annually, bi-annually. etc.)?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_certifiedComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_performance = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.6 Has testing personnel been with unsatisfactory performance been re-trained on or de-certified for HIV testing and quality assurance related activities?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_performanceComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_criteria = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.7 Is the site ensuring that the criteria set by the MOH-recognized certification body are met for site certification", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_criteriaComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_siteCerification = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.8 Has the site been certified or re-certified according the certification calendar (annually, bi-annually. etc.)?* ", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_siteCerificationComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_display = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.9 Is the registration and certification certificate of the HIV testing site required to be on display at testing site?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_displayComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_action = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.10 Are corrective actions implemented at the sites/laboratories to ensure certification/re-certification of the sites?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_actionComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+       
+        //section3
+        $question_control = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.1 Is the site using quality control routinely to monitor the HIV test kits used?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_controlComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_pt = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.2 Is the site participating in proficiency testing (PT) program to monitor the competency of the all testing personnel performing HIV testing?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_ptComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_feedback = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.3 Is feedback of PT program provided by the reference laboratory or PT provider?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_feedbackComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_ack = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.4 Is testing personnel with satisfactory PT score acknowledged by site supervisor?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_ackComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_issues = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.5 Are issues identified by the PT program properly investigated by site supervisor and documented?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_issuesComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_correctiveAction = Question::create(array("section_id" =>$sec_sec3 ->id, "name" => "3.6 Are appropriate corrective actions implemented for HIV testing personnel with unsatisfactory PT score as instructed by the national reference lab?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_correctiveActionComment= Question::create(array("section_id" => $sec_sec3->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        //section4
+        $question_standardRegister = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.1 Is the site using a standardized HTC register or register to capture key HIV testing data (e.g. kit names, lot number, expiration dates, and individual test results)?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_standardRegisterComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_registerTraining = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.2 Is training provided for all testing personnel on the use of standardized HTC register?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_registerTrainingComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_reviewDataTraining = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.3 Has site supervisors been trained to review data from standardized HTC register and apply corrective actions, if needed?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+         $question_reviewDataTrainingComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_reportingStructure = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.4 Is there a structured system in place for periodical HTC register page total data reporting?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+         $question_reportingStructureComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_analyze = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.5 Are HTC register pages and/or summary page totals reviewed and data analyzed at district level or by a laboratory or QA staff for troubleshooting, periodically?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+         $question_analyzeComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_reviewfeedback = Question::create(array("section_id" =>$sec_sec4 ->id, "name" => "4.6 Is feedback from the review of the HTC register data provided to the sites and site personal?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_reviewfeedbackComment= Question::create(array("section_id" => $sec_sec4->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        //total
+        $question_MEtotalScore= Question::create(array("section_id" =>$sec_MEtotalScore ->id, "name" => "Total Score", "description" => "", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        //other
+        $question_MElat = Question::create(array("section_id" => $sec_MEother->id, "name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MElong = Question::create(array("section_id" => $sec_MEother->id, "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        
+
+
+
+
+
+
         $this->command->info('Questions table seeded');
 
         /* Responses */

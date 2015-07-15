@@ -16,7 +16,7 @@ class Question extends Model {
 	const FIELD = 2;
 	const TEXTAREA = 3;
 	const SELECT = 4;
-
+	const MULTICHOICE = 5;
 	//	Constants for whether field is required
 	const REQUIRED = 1;
 	
