@@ -15,19 +15,11 @@ class Question extends Model {
 	const DATE = 1;
 	const FIELD = 2;
 	const TEXTAREA = 3;
+	const SELECT = 4;
 
 	//	Constants for whether field is required
 	const REQUIRED = 1;
-	//	Constants for whether field is to include tabular display
-	const ONESTAR = 1;
 	
-	/**
-	 * responses relationship
-	 */
-	public function responses()
-	{
-	  return $this->belongsToMany('App\Models\Response', 'question_responses', 'question_id', 'response_id');
-	}
 	/**
 	 * Section relationship
 	 */
@@ -82,44 +74,48 @@ class Question extends Model {
 			return 'Field';
 		else if($type == Question::TEXTAREA)
 			return 'Free Text';
+		else if($type == Question::SELECT)
+			return 'Select List';
 	}
 	/**
-	* Decode questions to display field
+	* Return Question ID given the name
+	* @param $name the name of the user
 	*/
-	public function decode()
+	public static function idByName($name=NULL)
 	{
-		$type = $this->question_type;
-		if($type == Question::CHOICE)
-			return "<div class='form-group'>
-	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
-	                    <div class='col-sm-8'>
-	                    @foreach($this->answers as $response)
-	                        <label class='radio-inline'>{!! Form::radio('radio_'.$this->id, $response->name, false) !!}{!! $response->name !!}</label>
-	                    @endforeach
-	                    </div>
-	                </div>";
-		else if($type == Question::DATE)
-			return "<div class='form-group'>
-                        {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
-                        <div class='col-sm-6 form-group input-group input-append date datepicker' style='padding-left:15px;''>
-                            {!! Form::text('date_'.$this->id, old('date_'.$this->id), array('class' => 'form-control')) !!}
-                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
-                        </div>
-                    </div>";
-		else if($type == Question::FIELD)
-			return "<div class='form-group'>
-	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
-	                    <div class='col-sm-8'>
-	                        {!! Form::text('textfield_'.$this->id, old('textfield_'.$this->id), array('class' => 'form-control')) !!}
-	                    </div>
-	                </div>";
-		else if($type == Question::TEXTAREA)
-			return "<div class='form-group'>
-	                    {!! Form::label('name', $this->description, array('class' => 'col-sm-4 control-label')) !!}
-	                    <div class='col-sm-8'>
-	                        {!! Form::textarea('textarea_'.$this->id, old('textarea_'.$this->id), 
-	                            array('class' => 'form-control', 'rows' => '3')) !!}
-	                    </div>
-	                </div>";
+		if($name!=NULL){
+			try 
+			{
+				$question = Question::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+				return $question->id;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The question ` $name ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
+	/**
+	* Return response of a given question
+	* @param $id the id of the survey
+	*/
+	public function response($id)
+	{
+		return SurveyData::where('survey_id', $id)
+						 ->where('question_id', $this->id)
+						 ->first();
+	}
+	/**
+	 * Count number of responses of the type for the question
+	 */
+	public function responses($answer)
+	{
+		return SurveyData::where('question_id', $this->id)
+						 ->where('answer', $answer)
+						 ->count();
 	}
 }

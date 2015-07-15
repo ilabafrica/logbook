@@ -208,7 +208,27 @@ Route::get('survey/{id}/create', array(
     "as"    =>  "survey.create",
     "uses"  =>  "SurveyController@create"
 ));
-Route::get('survey/save', array(
+Route::post('survey/save', array(
     "as"    =>  "survey.store",
     "uses"  =>  "SurveyController@store"
+));
+Route::get('survey/{id}/list', array(
+    "as"    =>  "survey.list",
+    "uses"  =>  "SurveyController@listing"
+));
+Route::get('survey/{id}', array(
+    "as"    =>  "survey.show",
+    "uses"  =>  "SurveyController@show"
+));
+Route::get('survey/{id}/summary', array(
+    "as"    =>  "survey.summary",
+    "uses"  =>  "SurveyController@summary"
+));
+Route::get('survey/{id}/collection', array(
+    "as"    =>  "survey.collection",
+    "uses"  =>  "SurveyController@collection"
+));
+Route::get('survey/{id}/participant', array(
+    "as"    =>  "survey.participant",
+    "uses"  =>  "SurveyController@participant"
 ));

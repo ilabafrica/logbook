@@ -26,7 +26,6 @@ use App\Models\Cadre;
 use App\Models\Answer;
 use App\Models\Section;
 use App\Models\Question;
-
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -329,116 +328,84 @@ class LogbookSeeder extends Seeder
 
         
          /* sections table */
-        
-        // HTC Lab Register (MOH 362)
-        $sec_mainPage = Section::create(array("name" => "Main Page", "label" => "HTC Lab Register (MOH 362)", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        $sec_sdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => $sec_mainPage->id, "user_id" => "1"));
-        $sec_location = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        //M&E checklist
-        $sec_MEmainPage = Section::create(array("name" => "Main Page", "label" => "M & E Checklist", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        $sec_MEsdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => $sec_mainPage->id, "user_id" => "1"));
-        $sec_sec1 = Section::create(array("name" => "Section 1.0", "label" => "Support from the MOH (i.e.,subcounty, county or national level)", "description" => "Provide information on the level of MOH engagement to support the implementation of quality assurance activities and address supply chain for HIV RTs and testing.", "checklist_id" => "2", "total_points" => "6", "order" => $sec_MEsdp->id, "user_id" => "1"));
-        $sec_sec2 = Section::create(array("name" => "Section 2.0", "label" => "HR Development – Training and Certification", "description" => "Provide information below for network of HIV rapid testers at site level and link innovative hands-on training and re-training with certification process.", "checklist_id" => "2", "total_points" => "30", "order" => $sec_sec1->id, "user_id" => "1"));
-        $sec_sec3 = Section::create(array("name" => "Section 3.0", "label" => "Proficiency Testing and QC using DTS", "description" => "Provide information on dried tube specimen (DTS)-based proficiency testing and quality control specimens, as part of routine HIV RT testing and for training purpose.", "checklist_id" => "2", "total_points" => "18", "order" => $sec_sec2->id, "user_id" => "1"));
-        $sec_sec4 = Section::create(array("name" => "Section 4.0", "label" => "Use of Standardized HTC register", "description" => " Provide information on the use of standardized HTC register or register for the purposes of quality assurance of HIV rapid testing.", "checklist_id" => "2", "total_points" => "18", "order" => $sec_sec3->id, "user_id" => "1"));
-        $sec_MEtotalScore = Section::create(array("name" => "Total Score", "label" => "Total Score", "description" => "", "checklist_id" => "1", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        $sec_MElocation = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "2", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        //SPI-RT checklist
-        $sec_SpimainPage = Section::create(array("name" => "Main Page", "label" => "M & E Checklist", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
-        $sec_Spisdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_SpimainPage->id, "user_id" => "1"));
-        $sec_Spisec1 = Section::create(array("name" => "Section 1.0", "label" => "PERSONNEL TRAINING AND CERTIFICATION", "description" => "(Score = 11)", "checklist_id" => "3", "total_points" => "11", "order" => $sec_Spisdp->id, "user_id" => "1"));
-        $sec_Spisec2 = Section::create(array("name" => "Section 2.0", "label" => "PHYSICAL FACILITY", "description" => "(Score = 5)", "checklist_id" => "3", "total_points" => "5", "order" => $sec_Spisec1->id, "user_id" => "1"));
-        $sec_Spisec3 = Section::create(array("name" => "Section 3.0", "label" => "SAFETY", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9", "order" => $sec_Spisec2->id, "user_id" => "1"));
-        $sec_Spisec4 = Section::create(array("name" => "Section 4.0", "label" => "PRE-TESTING PHASE", "description" => "(Score = 12)", "checklist_id" => "3", "total_points" => "12", "order" => $sec_Spisec3->id, "user_id" => "1"));       
-        $sec_Spisec5 = Section::create(array("name" => "Section 5.0", "label" => "TESTING PHASE", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9", "order" => $sec_Spisec4->id, "user_id" => "1"));       
-        $sec_Spisec6 =Section::create(array("name" => "Section 6.0", "label" => "POST TESTING PHASE", "description" => "(Score = 4)", "checklist_id" => "3", "total_points" => "4", "order" => $sec_Spisec5->id, "user_id" => "1"));
-        $sec_Spisec7= Section::create(array("name" => "Section 7.0", "label" => "DOCUMENTS AND RECORDS", "description" => "(Score = 7)", "checklist_id" => "3", "total_points" => "7", "order" => $sec_Spisec6->id, "user_id" => "1"));
-        $sec_Spisec8= Section::create(array("name" => "Section 8.0", "label" => "EXTERNAL QUALITY ASSESSMENT", "description" => "(PT, RETESTING AND SITE SUPERVISION), (Score = 13)", "checklist_id" => "3", "total_points" => "13", "order" => $sec_Spisec7->id, "user_id" => "1"));
-        $sec_Spisec9= Section::create(array("name" => "Section 9.0", "label" => "Auditor’s Summation Report for SPI-RT Assessment", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec8->id, "user_id" => "1"));
-        $sec_Spisec10= Section::create(array("name" => "Levels (Score in %)", "label" => "", "description" => "level 0 = Less than 40% (needs improvement in all areas and immediate remediation)
-                                            level 1 = 40% - 59% (needs improvement in specific areas)
-                                            level 2 = 60% - 79% (partially eligible)
-                                            Level 3 = 80% - 89% (close to site certification)
-                                            Level 4 = 90% or higher (Eligible for certification)", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec9->id, "user_id" => "1"));
-        $sec_Spisec11= Section::create(array("name" => "", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec10->id, "user_id" => "1"));
-        $sec_Spilocation = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
+
+        $sec_survey = Section::create(array("name" => "Survey Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_register = Section::create(array("name" => "Lab Register Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_hiv1 = Section::create(array("name" => "HIV Test 1", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_hiv2 = Section::create(array("name" => "HIV Test 2", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_hiv3 = Section::create(array("name" => "HIV Test 3", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_finalResult = Section::create(array("name" => "Final Results", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_consumption = Section::create(array("name" => "Test Kit Consumption Summary", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+        $sec_other = Section::create(array("name" => "Other Details", "description" => "", "checklist_id" => "1", "total_points" => "0", "user_id" => "1"));
+
         $this->command->info('sections table seeded');
         
 
        /** Questions */
          /**Section 1 - main page*/
-        $question_qaOfficer = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Name of the QA Officer", "title" => "HTC Lab Register (MOH 362)", "description" => "Name of the QA Officer*","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_county = Question::create(array("section_id" => $sec_mainPage->id, "name" => "County", "title" => "", "description" => "County","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_subCounty = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Sub County", "title" => "", "description" => "Sub County", "question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_facility = Question::create(array("section_id" => $sec_mainPage->id, "name" => "Facility", "title" => "", "description" => "Facility","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_qaOfficer = Question::create(array("section_id" => $sec_survey->id, "name" => "Name of the QA Officer", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_facility = Question::create(array("section_id" => $sec_survey->id, "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
    
-        /**Section 2-SDP*/
-        $question_sdp = Question::create(array("section_id" => $sec_sdp->id, "name" => "Service Delivery Points (SDP)", "title" => "SDP", "description" => "Service Delivery Points (SDP) (Select One)","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_pageStartDate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Register Page Start Date", "title" => "Page", "description" => "Register Page Start Date", "question_type" =>"1","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_pageEndDate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Register Page End Date", "title" => "", "description" => "Register Page End Date","question_type" =>"1", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_sdp = Question::create(array("section_id" => $sec_register->id, "name" => "Service Delivery Points (SDP)", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_pageStartDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page Start Date", "description" => "", "question_type" =>"1","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_pageEndDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page End Date", "description" => "","question_type" =>"1", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
                  //hivtest1
-        $question_hivTest1 = Question::create(array("section_id" => $sec_sdp->id, "name" => "HIV Test-1 Name", "title" => "Sections", "description" => "HIV Test-1 Name","question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test1lotNo = Question::create(array("section_id" => $sec_sdp->id, "name" => "Lot Number", "title" => "", "description" => "Lot Number (select one)", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test1expiryDate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Expiry Date", "title" => "", "description" => "Expiry Date","question_type" =>"1", "required" => "1", "info" => "", "comment" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
-        $question_test1TotalPositive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-1 Total Positive", "title" => "", "description" => "Test-1 Total Positive","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test1TotalNegative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-1 Total Negative", "title" => "", "description" => "Test-1 Total Negative", "question_type" =>"2","required" => "1", "info" => "", "comment" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test1TotalInvalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-1 Total Invalid", "title" => "", "description" => "Test-1 Total Invalid","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test1Comment= Question::create(array("section_id" => $sec_sdp->id, "name" => "Comments", "title" => "", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_hivTest1 = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test1lotNo = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test1expiryDate = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test1TotalPositive = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Positive", "description" => "Test-1 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test1TotalNegative = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Negative", "description" => "Test-1 Total Negative", "question_type" =>"2","required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test1TotalInvalid = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Invalid", "description" => "Test-1 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test1Comment= Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest2
-        $question_hivTest2 = Question::create(array("section_id" => $sec_sdp->id, "name" => "HIV Test-2 Name", "title" => "Sections", "description" => "HIV Test-1 Name","question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test2lotNo = Question::create(array("section_id" => $sec_sdp->id, "name" => "Lot Number", "title" => "", "description" => "Lot Number (select one)", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test2expiryDate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Expiry Date", "title" => "", "description" => "Expiry Date", "question_type" =>"1","required" => "1", "info" => "", "comment" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
-        $question_test2TotalPositive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-2 Total Positive", "title" => "", "description" => "Test-2 Total Positive", "question_type" =>"2","required" => "1", "info" => "", "comment" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test2TotalNegative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-2 Total Negative", "title" => "", "description" => "Test-2 Total Negative","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test2TotalInvalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-2 Total Invalid", "title" => "", "description" => "Test-2 Total Invalid","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test2Comment= Question::create(array("section_id" => $sec_sdp->id, "name" => "Comments", "title" => "", "description" => "Comments", "question_type" =>"3","required" => "0", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_hivTest2 = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name", "description" => "HIV Test-1 Name","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2lotNo = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2expiryDate = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date", "description" => "Expiry Date", "question_type" =>"0","required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test2TotalPositive = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Positive", "description" => "Test-2 Total Positive", "question_type" =>"2","required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test2TotalNegative = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Negative", "description" => "Test-2 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test2TotalInvalid = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Invalid", "description" => "Test-2 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test2Comment= Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Comments", "description" => "Comments", "question_type" =>"3","required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest3
-        $question_hivTest3 = Question::create(array("section_id" => $sec_sdp->id, "name" => "HIV Test-3 Name", "title" => "Sections", "description" => "HIV Test-1 Name", "question_type" =>"0","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test3lotNo = Question::create(array("section_id" => $sec_sdp->id, "name" => "Lot Number", "title" => "", "description" => "Lot Number (select one)", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test3expiryDate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Expiry Date", "title" => "", "description" => "Expiry Date","question_type" =>"1", "required" => "1", "info" => "", "comment" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
-        $question_test3TotalPositive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-3 Total Positive", "title" => "", "description" => "Test-3 Total Positive","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test3TotalNegative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-3 Total Negative", "title" => "", "description" => "Test-3 Total Negative","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test3TotalInvalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-3 Total Invalid", "title" => "", "description" => "Test-3 Total Invalid", "question_type" =>"2","required" => "1", "info" => "", "comment" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
-        $question_test3Comment= Question::create(array("section_id" => $sec_sdp->id, "name" => "Comments", "title" => "", "description" => "Comments", "question_type" =>"3", "required" => "0", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_hivTest3 = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name", "description" => "HIV Test-1 Name", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3lotNo = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3expiryDate = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date", "description" => "Expiry Date","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test3TotalPositive = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Positive", "description" => "Test-3 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test3TotalNegative = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Negative", "description" => "Test-3 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test3TotalInvalid = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Invalid", "description" => "Test-3 Total Invalid", "question_type" =>"2","required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
+        $question_test3Comment= Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Comments", "description" => "Comments", "question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
       
        //finalResults
-        $question_finalPositive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Positive(column “r”)", "title" => "Final Results", "description" => "Total Positive(column “r”)","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Final Results Positive in Column “r”", "score" => "0", "user_id" => "1"));
-        $question_finalNegative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Negative(column “r”)", "title" => "", "description" => "Total Negative(column “r”)","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Final Results Negative in Column “r”", "score" => "0", "user_id" => "1"));
-        $question_finalIndeterminate = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Indeterminate(column “r”)", "title" => "Final Results", "description" => "Total Indeterminate(column “r”)","question_type" =>"2", "required" => "1", "info" => "", "comment" => "Count all Final Results Indeterminate in Column “r”", "score" => "0", "user_id" => "1"));
+        $question_finalPositive = Question::create(array("section_id" => $sec_finalResult->id, "name" => "Total Positive (P)", "description" => "","question_type" =>"2", "required" => "1", "info" => "Count all Final Results Positive in Column 'r'", "score" => "0", "user_id" => "1"));
+        $question_finalNegative = Question::create(array("section_id" => $sec_finalResult->id, "name" => "Total Negative (N)", "description" => "","question_type" =>"2", "required" => "1", "info" => "Count all Final Results Negative in Column 'r'", "score" => "0", "user_id" => "1"));
+        $question_finalIndeterminate = Question::create(array("section_id" => $sec_finalResult->id, "name" => "Total Indeterminate (I)", "description" => "","question_type" =>"2", "required" => "1", "info" => "Count all Final Results Indeterminate in Column 'r'", "score" => "0", "user_id" => "1"));
       
        //test kit consumption summary
         //Test 1
-        $question_totalTest1Positive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-1 Positive", "title" => "Total Test-1 Positive", "description" => "Total Test-1 Positive","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest1Negative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-1 Negative", "title" => "Total Test-1 Negative", "description" => "Total Test-1 Negative", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest1Invalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-1 Invalid", "title" => "Total Test-1 Invalid", "description" => "Total Test-1 Invalid", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest1Wastage = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-1 Wastage", "title" => "Total Test-1 Wastage", "description" => "Total Test-1 Wastage","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test1Total = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-1 Total ", "title" => "Test-1 Total ", "description" => "Test-1 Total ","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest1Positive = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-1 Positive", "description" => "Total Test-1 Positive","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest1Negative = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-1 Negative", "description" => "Total Test-1 Negative", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest1Invalid = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-1 Invalid", "description" => "Total Test-1 Invalid", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest1Wastage = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-1 Wastage", "description" => "Total Test-1 Wastage","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test1Total = Question::create(array("section_id" => $sec_consumption->id, "name" => "Test-1 Total", "description" => "Test-1 Total ","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         
         //Test 2
-        $question_totalTest2Positive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-2 Positive", "title" => "Total Test-2 Positive", "description" => "Total Test-2 Positive","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest2Negative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-2 Negative", "title" => "Total Test-2 Negative", "description" => "Total Test-2 Negative","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest2Invalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-2 Invalid", "title" => "Total Test-2 Invalid", "description" => "Total Test-2 Invalid", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest2Wastage = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-2 Wastage", "title" => "Total Test-2 Wastage", "description" => "Total Test-2 Wastage", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test2Total = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-2 Total ", "title" => "Test-2 Total ", "description" => "Test-2 Total ", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest2Positive = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-2 Positive", "description" => "Total Test-2 Positive","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest2Negative = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-2 Negative", "description" => "Total Test-2 Negative","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest2Invalid = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-2 Invalid", "description" => "Total Test-2 Invalid", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest2Wastage = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-2 Wastage", "description" => "Total Test-2 Wastage", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2Total = Question::create(array("section_id" => $sec_consumption->id, "name" => "Test-2 Total", "description" => "Test-2 Total ", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         
         //Test 3
-        $question_totalTest3Positive = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-3 Positive", "title" => "Total Test-3 Positive", "description" => "Total Test-3 Positive","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest3Negative = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-3 Negative", "title" => "Total Test-3 Negative", "description" => "Total Test-3 Negative","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest3Invalid = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-3 Invalid", "title" => "Total Test-3 Invalid", "description" => "Total Test-3 Invalid","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_totalTest3Wastage = Question::create(array("section_id" => $sec_sdp->id, "name" => "Total Test-3 Wastage", "title" => "Total Test-3 Wastage", "description" => "Total Test-3 Wastage","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_test3Total = Question::create(array("section_id" => $sec_sdp->id, "name" => "Test-3 Total ", "title" => "Test-3 Total ", "description" => "Test-3 Total ", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest3Positive = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-3 Positive", "description" => "Total Test-3 Positive","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest3Negative = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-3 Negative", "description" => "Total Test-3 Negative","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest3Invalid = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-3 Invalid", "description" => "Total Test-3 Invalid","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_totalTest3Wastage = Question::create(array("section_id" => $sec_consumption->id, "name" => "Total Test-3 Wastage", "description" => "Total Test-3 Wastage","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3Total = Question::create(array("section_id" => $sec_consumption->id, "name" => "Test-3 Total", "description" => "Test-3 Total ", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
       
-        $question_supervisorReview = Question::create(array("section_id" => $sec_sdp->id, "name" => "Supervisor Review", "title" => "", "description" => "Supervisor Reviewed Done? ( check for supervisor signature)", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_algorithmFollowed = Question::create(array("section_id" => $sec_sdp->id, "name" => "Algorithm Followed", "title" => "", "description" => "Aligorithm Followed?", "question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-       
-
-       //M&E questions
-        //sec_MEmainPage
-        $question_MEqaOfficer = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Name of the QA Officer", "title" => "M & E Checklist", "description" => "Name of the QA Officer*","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_MEcounty = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "County", "title" => "", "description" => "County","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_MEsubCounty = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Sub County", "title" => "", "description" => "Sub County", "question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        $question_MEfacility = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Facility", "title" => "", "description" => "Facility","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
-        //$sec_MEsdp
+        $question_supervisorReview = Question::create(array("section_id" => $sec_other->id, "name" => "Supervisor Reviewed Done? ( check for supervisor signature)", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_algorithmFollowed = Question::create(array("section_id" => $sec_other->id, "name" => "Algorithm Followed?", "description" => "Aligorithm Followed?", "question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_lat = Question::create(array("section_id" => $sec_other->id, "name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_long = Question::create(array("section_id" => $sec_other->id, "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_addComm = Question::create(array("section_id" => $sec_other->id, "name" => "Additional Comments", "description" => "", "question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $this->command->info('Questions table seeded');
 
         /* Responses */
@@ -449,14 +416,54 @@ class LogbookSeeder extends Seeder
         $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
         $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
         $response_completed = Answer::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
-
+        $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
+        $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));
         $this->command->info('Answers table seeded');
 
         /* Question-Responses*/
         DB::table('question_responses')->insert(
-            array("question_id" => $question_supervisorReview ->id, "response_id" => $response_yes->id));
+            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_supervisorReview ->id, "response_id" => $response_no->id));
+            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_notProvided->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_notProvided->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_notProvided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_provided->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_notProvided->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supervisorReview->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supervisorReview->id, "response_id" => $response_no->id));
         DB::table('question_responses')->insert(
             array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_yes->id));
         DB::table('question_responses')->insert(
