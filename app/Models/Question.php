@@ -76,6 +76,8 @@ class Question extends Model {
 			return 'Free Text';
 		else if($type == Question::SELECT)
 			return 'Select List';
+		else if($type == Question::MULTICHOICE)
+			return 'Checkbox';
 	}
 	/**
 	* Return Question ID given the name
