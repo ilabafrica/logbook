@@ -90,7 +90,7 @@
                                    {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,'', 
                                     array('class' => 'form-control')) !!}
                                 @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)'))
-                                    {!! Form::select('select_'.$question->id, array(''=>trans('messages.select'))+$sdps,'', 
+                                    {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,'', 
                                     array('class' => 'form-control')) !!}
                                 @endif
                             </div>

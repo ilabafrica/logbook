@@ -232,3 +232,24 @@ Route::get('survey/{id}/participant', array(
     "as"    =>  "survey.participant",
     "uses"  =>  "SurveyController@participant"
 ));
+/* Reports */
+Route::get('report', array(
+    "as"    =>  "reports",
+    "uses"  =>  "SurveyController@index"
+));
+Route::any('report/{id}', array(
+    "as"    =>  "reports.percent.positive",
+    "uses"  =>  "ReportController@index"
+));
+Route::any('report/{id}/agreement', array(
+    "as"    =>  "reports.percent.agreement",
+    "uses"  =>  "ReportController@agreement"
+));
+Route::any('report/{id}/overall', array(
+    "as"    =>  "reports.overall.agreement",
+    "uses"  =>  "ReportController@overall"
+));
+Route::any('report/{id}/invalid', array(
+    "as"    =>  "reports.results.invalid",
+    "uses"  =>  "ReportController@invalid"
+));

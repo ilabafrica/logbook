@@ -60,15 +60,7 @@
         </li>
         <!-- Reports -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('nationalreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.national-report', 2) !!}</a></li>
-                <li><a href="{!! url('positive') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%pos-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('positiveAgr') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%pos-agr-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('overallAgr') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%over-agr-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('invalidresult') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%inv-comparison', 2) !!}</a></li>
-            </ul>
-
+            <a href="{!! url('report') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}</a>
         </li>
         <!-- Facility configuration -->
         <li>
