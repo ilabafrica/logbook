@@ -192,6 +192,20 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+	
+		//sdps
+		Schema::create('sdps', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->string('name');
+			$table->string('description', 100);
+			$table->integer('user_id')->unsigned();
+
+            $table->foreign('user_id')->references('id')->on('users');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
 		//	Algorithm data
 		/*Schema::create('htc', function(Blueprint $table)
 		{
@@ -329,10 +343,12 @@ class CreateMflTables extends Migration {
 			$table->string('longitude')->nullable();
 			$table->string('latitude')->nullable();
 			$table->integer('checklist_id')->unsigned();
+			$table->integer('sdp_id')->unsigned();
 			$table->string('comment')->nullable();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
             $table->foreign('facility_id')->references('id')->on('facilities');
+            $table->foreign('sdp_id')->references('id')->on('sdps');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -362,20 +378,6 @@ class CreateMflTables extends Migration {
 
             $table->foreign('survey_id')->references('id')->on('survey');
             $table->foreign('section_id')->references('id')->on('sections');
-
-            $table->softDeletes();
-			$table->timestamps();
-		});
-	
-		//sdps
-		Schema::create('sdps', function(Blueprint $table)
-		{
-			$table->increments('id')->unsigned();
-			$table->string('name');
-			$table->string('description', 100);
-			$table->integer('user_id')->unsigned();
-
-            $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();
 			$table->timestamps();

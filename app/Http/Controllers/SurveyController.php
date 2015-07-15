@@ -62,10 +62,12 @@ class SurveyController extends Controller {
 		$longitude = Input::get('longitude');
 		$latitude = Input::get('latitude');
 		$comments = Input::get('comments');
+		$sdp_id = Input::get('sdp');
 		//	Check if survey exists
 		$survey = Survey::where('checklist_id', $checklist_id)
 						->where('facility_id', $facility_id)
 						->where('qa_officer', $qa_officer)
+						->where('sdp_id', $sdp_id)
 						->first();
 		if(count($survey) == 0){
 			$survey = new Survey;
@@ -75,12 +77,13 @@ class SurveyController extends Controller {
 			$survey->latitude = $latitude;
 			$survey->longitude = $longitude;
 			$survey->comment = $comments;
+			$survey->sdp_id = $sdp_id;
 			$survey->save();
 		}
 		foreach (Input::all() as $key => $value) {
 			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE))
 				continue;
-			else if((stripos($key, 'select') !==FALSE) || (stripos($key, 'date') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'textfield') !==FALSE) || (stripos($key, 'textarea') !==FALSE)){
+			else if((stripos($key, 'date') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'textfield') !==FALSE) || (stripos($key, 'textarea') !==FALSE)){
 				$fieldId = $this->strip($key);
 				//	Save survey data
 				$surveyData = new surveyData;

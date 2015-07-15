@@ -67,60 +67,14 @@
                     
                 </li>
                    <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.admin', 1) !!}  <span class="caret"></span>
+                    <a class="dropdown-toggle" href="{!! url('survey') !!}" role="button" aria-expanded="false">
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.survey', 2) !!}
                     </a>
-                   
-                    <ul class="dropdown-menu">
-                        
-                        <li><a href="{!! url('user') !!}"><span class="fa fa-tag"></span> {!! Lang::choice('messages.user', 2) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{!! url('role') !!}"><span class="fa fa-tag"></span> {!! Lang::choice('messages.role', 2) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{!! url('authorization') !!}"><span class="fa fa-tag"></span>  {!! Lang::choice('messages.authorization', 2) !!}</a>
-                        </li>
-                    </ul>
                 </li>
-
-                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.management', 1) !!}  <span class="caret"></span>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="{!! url('report') !!}" role="button" aria-expanded="false">
+                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.report', 2) !!}
                     </a>
-                   
-                    <ul class="dropdown-menu">
-                        
-                        <li><a href="{!! url('facility') !!}"><span class="fa fa-tag"></span> {!! Lang::choice('messages.facility-management', 1) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{!! url('site') !!}"><span class="fa fa-tag"></span> {!! Lang::choice('messages.site-management', 1) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{!! url('testKit') !!}"><span class="fa fa-tag"></span> {!! Lang::choice('messages.test-kit-management', 1) !!}</a>
-                        </li>
-                    </ul>
-                </li>
-              
-                 <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                        <span class="fa fa-stack-exchange"></span> {!! Lang::choice('messages.report', 1) !!}  <span class="caret"></span>
-                    </a>
-                   
-                    <ul class="dropdown-menu">
-                        
-                        <li><a href="{!! url('nationalreport') !!}"><span class="fa fa-tag"></span>{!! Lang::choice('messages.national-report', 2) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href={!! url('countyreport') !!}><span class="fa fa-tag"></span>{!! Lang::choice('messages.county-report', 2) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href={!! url('subCountyreport') !!}><span class="fa fa-tag"></span>{!! Lang::choice('messages.sub-county-report', 2) !!}</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li><a href="{!! url('facilityreport') !!}"><span class="fa fa-tag">{!! Lang::choice('messages.facility-report', 2) !!}</span></a>
-                        </li>
-                    </ul>
                 </li>
 
              </ul>   
