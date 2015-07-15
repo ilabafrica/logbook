@@ -346,7 +346,6 @@ class LogbookSeeder extends Seeder
         //SPI-RT checklist
         $sec_SpimainPage = Section::create(array("name" => "Main Page", "label" => "M & E Checklist", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
         $sec_Spisdp = Section::create(array("name" => "SDP", "label" => "Service Delivery Points", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_SpimainPage->id, "user_id" => "1"));
-       
         $sec_Spisec1 = Section::create(array("name" => "Section 1.0", "label" => "PERSONNEL TRAINING AND CERTIFICATION", "description" => "(Score = 11)", "checklist_id" => "3", "total_points" => "11", "order" => $sec_Spisdp->id, "user_id" => "1"));
         $sec_Spisec2 = Section::create(array("name" => "Section 2.0", "label" => "PHYSICAL FACILITY", "description" => "(Score = 5)", "checklist_id" => "3", "total_points" => "5", "order" => $sec_Spisec1->id, "user_id" => "1"));
         $sec_Spisec3 = Section::create(array("name" => "Section 3.0", "label" => "SAFETY", "description" => "(Score = 9)", "checklist_id" => "3", "total_points" => "9", "order" => $sec_Spisec2->id, "user_id" => "1"));
@@ -363,18 +362,8 @@ class LogbookSeeder extends Seeder
                                             Level 4 = 90% or higher (Eligible for certification)", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec9->id, "user_id" => "1"));
         $sec_Spisec11= Section::create(array("name" => "", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => $sec_Spisec10->id, "user_id" => "1"));
         $sec_Spilocation = Section::create(array("name" => "GPRS Location", "label" => "GPRS Location", "description" => "", "checklist_id" => "3", "total_points" => "0", "order" => 0, "user_id" => "1"));
-      
-        
-        
-        
-         
-        
-        
-        
-        
-                  
-       
         $this->command->info('sections table seeded');
+        
 
        /** Questions */
          /**Section 1 - main page*/
@@ -442,6 +431,14 @@ class LogbookSeeder extends Seeder
         $question_supervisorReview = Question::create(array("section_id" => $sec_sdp->id, "name" => "Supervisor Review", "title" => "", "description" => "Supervisor Reviewed Done? ( check for supervisor signature)", "question_type" =>"2","required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
         $question_algorithmFollowed = Question::create(array("section_id" => $sec_sdp->id, "name" => "Algorithm Followed", "title" => "", "description" => "Aligorithm Followed?", "question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
        
+
+       //M&E questions
+        //sec_MEmainPage
+        $question_MEqaOfficer = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Name of the QA Officer", "title" => "M & E Checklist", "description" => "Name of the QA Officer*","question_type" =>"2", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_MEcounty = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "County", "title" => "", "description" => "County","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_MEsubCounty = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Sub County", "title" => "", "description" => "Sub County", "question_type" =>"0", "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        $question_MEfacility = Question::create(array("section_id" => $sec_MEmainPage->id, "name" => "Facility", "title" => "", "description" => "Facility","question_type" =>"0",  "required" => "1", "info" => "", "comment" => "", "score" => "0", "user_id" => "1"));
+        //$sec_MEsdp
         $this->command->info('Questions table seeded');
 
         /* Responses */
