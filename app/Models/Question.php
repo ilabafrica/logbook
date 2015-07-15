@@ -109,4 +109,13 @@ class Question extends Model {
 						 ->where('question_id', $this->id)
 						 ->first();
 	}
+	/**
+	 * Count number of responses of the type for the question
+	 */
+	public function responses($answer)
+	{
+		return SurveyData::where('question_id', $this->id)
+						 ->where('answer', $answer)
+						 ->count();
+	}
 }

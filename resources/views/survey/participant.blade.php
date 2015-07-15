@@ -42,19 +42,21 @@
                     <table class="table table-striped table-bordered table-hover search-table">
                         <thead>
                             <tr>
-                                <th>{{ Lang::choice('messages.response-no', 1) }}</th>
-                                <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
-                                <th>{{ Lang::choice('messages.date', 1) }}</th>
-                                <th>{{ Lang::choice('messages.action', 2) }}</th>
+                                <th>{{ Lang::choice('messages.count', 1) }}</th>
+                                <th>{{ Lang::choice('messages.facility', 1) }}</th>
+                                <th>{{ Lang::choice('messages.name', 1) }}</th>
                             </tr>
                         </thead>
                          <tbody>
+                         <?php $counter = 0; ?>
+                         @foreach($checklist->surveys as $survey)
+                         <?php $counter++; ?>
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td>{!! $counter !!}</td>
+                                <td>{!! $survey->facility->code !!}</td>
+                                <td>{!! $survey->facility->name !!}</td>
                             </tr>
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

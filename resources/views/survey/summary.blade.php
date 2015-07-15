@@ -39,22 +39,36 @@
             </p>
             <div class="row">
                 <div class="col-sm-12">
-                    <table class="table table-striped table-bordered table-hover search-table">
+                    <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th>{{ Lang::choice('messages.response-no', 1) }}</th>
-                                <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
-                                <th>{{ Lang::choice('messages.date', 1) }}</th>
-                                <th>{{ Lang::choice('messages.action', 2) }}</th>
+                                <th>{{ Lang::choice('messages.question', 1) }}</th>
+                                <th>{{ Lang::choice('messages.response', 2) }}</th>
+                                <th>{{ Lang::choice('messages.number', 1) }}</th>
                             </tr>
                         </thead>
                          <tbody>
+                         @foreach($sections as $section)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <td colspan="3" class="text-muted"><strong>{!! $section->name !!}</strong></td>
                             </tr>
+                            @foreach($section->questions as $question)
+                                @if($question->question_type == App\Models\Question::CHOICE)
+                                <tr>
+                                    <td>{!! $question->name !!}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                    @foreach($question->answers as $answer)
+                                    <tr>
+                                        <td></td>
+                                        <td>{!! $answer->name !!}</td>
+                                        <td>{!! $question->responses($answer->name) !!}</td>
+                                    </tr>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endforeach
                         </tbody>
                     </table>
                 </div>

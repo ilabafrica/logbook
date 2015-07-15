@@ -22,10 +22,24 @@ class Survey extends Model {
 		return $this->belongsTo('App\Models\User');
 	}
 	/**
+	 * Facility relationship
+	 */
+	public function facility()
+	{
+		return $this->belongsTo('App\Models\Facility');
+	}
+	/**
 	 * SurveyData relationship
 	 */
 	public function data()
 	{
 		return $this->hasMany('App\Models\SurveyData');
+	}
+	/**
+	 * Count number of questionnaires given qa officer filled
+	 */
+	public static function questionnaires($officer)
+	{
+		return count(Survey::where('qa_officer', $officer));
 	}
 }

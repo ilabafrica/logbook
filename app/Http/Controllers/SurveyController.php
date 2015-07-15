@@ -160,7 +160,17 @@ class SurveyController extends Controller {
 	{
 		//	Get specific checklist
 		$checklist = Checklist::find($id);
-		return view('survey.summary', compact('checklist'));
+		$sections = array();		
+		foreach ($checklist->sections as $section) {
+			$questions = array();
+			foreach ($section->questions as $question) {
+				if($question->answers->count()>0)
+					array_push($questions, $question);
+			}
+			if(count($questions)>0)
+				array_push($sections, $section);
+		}
+		return view('survey.summary', compact('checklist', 'sections'));
 	}
 	/**
 	 * Show data collection summaries as desired

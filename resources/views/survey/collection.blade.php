@@ -50,7 +50,7 @@
                             @foreach($qa as $officer)
                             <tr>
                                 <td>{!! $officer->qa_officer !!}</td>
-                                <td></td>
+                                <td>{!! App\Models\Survey::questionnaires($officer->qa_officer) !!}</td>
                             </tr>
                             @endforeach
                         </tbody>

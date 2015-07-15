@@ -362,4 +362,5 @@ return [
 	'participants'	=>	'Participating Facilities',
 	'download-summary'	=>	'Download Summary',
 	'summary'	=>	'Summary',
+	'number'	=>	'Number',
 ];
