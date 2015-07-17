@@ -44,19 +44,23 @@
             </div>
             <!-- /input-group -->
         </li>
-
-
-          <!-- Reports -->
+        <!-- Checklist config -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('nationalreport') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.national-report', 2) !!}</a></li>
-                <li><a href="{!! url('positive') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%pos-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('positiveAgr') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%pos-agr-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('overallAgr') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%over-agr-comparison', 2) !!}</a></li>
-                <li><a href="{!! url('invalidresult') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.%inv-comparison', 2) !!}</a></li>
+                <li><a href="{!! url('checklist') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.checklist', 2) !!}</a></li>
+                <li><a href="{!! url('section') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.section', 2) !!}</a></li>
+                <li><a href="{!! url('question') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.question', 2) !!}</a></li>
+                <li><a href="{!! url('response') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.response', 2) !!}</a></li>
             </ul>
-
+        </li>
+        <!-- Surveys -->
+        <li>
+            <a href="{!! url('survey') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.survey', 1) !!}</a>
+        </li>
+        <!-- Reports -->
+        <li>
+            <a href="{!! url('report') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}</a>
         </li>
         <!-- Facility configuration -->
         <li>

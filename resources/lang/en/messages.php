@@ -204,6 +204,8 @@ return [
 	'role'	=>	'Role|Roles',
 	'create-role'	=>	'Create Role',
 	'edit-role'	=>	'Edit Role',
+	'select-role'	=>	'Select Role',
+
 	/* Permissions */
 	'permission'	=>	'Permission|Permissions',
 	'create-permission'	=>	'Create Permission',
@@ -298,25 +300,67 @@ return [
 	'sub-county-report'	=>	'Sub County Report',
 	'facility-report'	=>	'Facility Report',
 	'county-list'	=>	'County List',
-	'%pos-comparison'	=>	'%Positive ',
-	'%pos-agr-comparison'	=>	'%Positive Agreement',
-	'%over-agr-comparison'	=>	'%Overall Agreement',
-	'%inv-comparison'	=>	'% Invalid Result',
 	'sub-county-list'	=>	'Sub County',
 	'facility-list'	=>	'Facility List',
 
 
-	'%positive-report'	=>	'% Positive Report',
-	'%positiveAgr-report'	=>	'% Positive Agreement Report',
-	'%overallAgr-report'	=>	'% Overall Agreement Report',
-	'%invalidResult-report'	=>	'% Invalid Result Report',
+	'percent-positive'	=>	'% Positive',
+	'percent-positiveAgr'	=>	'% Positive Agreement',
+	'percent-overallAgr'	=>	'% Overall Agreement',
+	'percent-invalidResult'	=>	'% Invalid Result',
 	'facility-level'	=>	'Facility Level',
 	'subCounty-level'	=>	'Sub County Level',
 	'county-level'	=>	'County Level',
 	'national-level'	=>	'National Level',
 
-	
+	/**
+	*
+	* Checklist config
+	*
+	*/
+	'checklist'	=>	'Checklist|Checklists',
+	'create-checklist'	=>	'Create Checklist',
+	'edit-checklist'	=>	'Edit Checklist',
+	'checklist-config'	=>	'Checklist Config',
+	'info'	=>	'More Info',
+	'score'	=>	'Score',
+	'question-type'	=>	'Question Type',
+	'required'	=>	'Required',
 
-	
+	'section'	=>	'Section|Sections',
+	'create-section'	=>	'Create Section',
+	'edit-section'	=>	'Edit Section',
 
+	'question'	=>	'Question|Questions',
+	'create-question'	=>	'Create Question',
+	'edit-question'	=>	'Edit Question',
+
+	'response'	=>	'Response|Responses',
+	'create-response'	=>	'Create Response',
+	'edit-response'	=>	'Edit Response',
+	/**
+	*
+	* Surveys
+	*
+	*/
+	'survey'	=>	'Survey|Surveys',
+	'no-of-questionnaire'	=>	'No. of Questionnaires filled',
+	'no-of-qa'	=>	'No. of QA Officers',
+	'fill-questionnaire'	=>	'Fill Questionnaire',
+	'view-collected-data'	=>	'View Collected Data',
+	'view-summary'	=>	'View Summary',
+	'collected-data'	=>	'Collected Data',
+	'response-no'	=>	'Response No.',
+	'qa-officer'	=>	'QA Officer',
+	'edit-questionnaire'	=>	'Edit Questionnaire',
+	'data-collection-summary'	=>	'Data Collection Summary',
+	'survey-summary'	=>	'Survey Summary',
+	'participants'	=>	'Participating Facilities',
+	'download-summary'	=>	'Download Summary',
+	'summary'	=>	'Summary',
+	'number'	=>	'Number',
+	'view-report'	=>	'View Reports',
+	'comparison'	=>	'Comparison',
+	'from'	=>	'From',
+	'to'	=>	'To',
 ];

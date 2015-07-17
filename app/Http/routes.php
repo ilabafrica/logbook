@@ -174,3 +174,82 @@ Route::post("/htc/{id}/updateLogbook", array(
     "as"   => "htc.updateLogbook",
     "uses" => "HtcController@update"
 ));
+
+/* Checklists */
+Route::resource('checklist', 'ChecklistController');
+Route::get("/checklist/{id}/delete", array(
+    "as"   => "checklist.delete",
+    "uses" => "ChecklistController@delete"
+));
+/* Sections */
+Route::resource('section', 'SectionController');
+Route::get("/section/{id}/delete", array(
+    "as"   => "section.delete",
+    "uses" => "SectionController@delete"
+));
+/* Questions */
+Route::resource('question', 'QuestionController');
+Route::get("/question/{id}/delete", array(
+    "as"   => "question.delete",
+    "uses" => "QuestionController@delete"
+));
+/* Responses */
+Route::resource('response', 'ResponseController');
+Route::get("/response/{id}/delete", array(
+    "as"   => "response.delete",
+    "uses" => "ResponseController@delete"
+));
+/* Survey */
+Route::get('survey', array(
+    "as"    =>  "surveys",
+    "uses"  =>  "SurveyController@index"
+));
+Route::get('survey/{id}/create', array(
+    "as"    =>  "survey.create",
+    "uses"  =>  "SurveyController@create"
+));
+Route::post('survey/save', array(
+    "as"    =>  "survey.store",
+    "uses"  =>  "SurveyController@store"
+));
+Route::get('survey/{id}/list', array(
+    "as"    =>  "survey.list",
+    "uses"  =>  "SurveyController@listing"
+));
+Route::get('survey/{id}', array(
+    "as"    =>  "survey.show",
+    "uses"  =>  "SurveyController@show"
+));
+Route::get('survey/{id}/summary', array(
+    "as"    =>  "survey.summary",
+    "uses"  =>  "SurveyController@summary"
+));
+Route::get('survey/{id}/collection', array(
+    "as"    =>  "survey.collection",
+    "uses"  =>  "SurveyController@collection"
+));
+Route::get('survey/{id}/participant', array(
+    "as"    =>  "survey.participant",
+    "uses"  =>  "SurveyController@participant"
+));
+/* Reports */
+Route::get('report', array(
+    "as"    =>  "reports",
+    "uses"  =>  "SurveyController@index"
+));
+Route::any('report/{id}', array(
+    "as"    =>  "reports.percent.positive",
+    "uses"  =>  "ReportController@index"
+));
+Route::any('report/{id}/agreement', array(
+    "as"    =>  "reports.percent.agreement",
+    "uses"  =>  "ReportController@agreement"
+));
+Route::any('report/{id}/overall', array(
+    "as"    =>  "reports.overall.agreement",
+    "uses"  =>  "ReportController@overall"
+));
+Route::any('report/{id}/invalid', array(
+    "as"    =>  "reports.results.invalid",
+    "uses"  =>  "ReportController@invalid"
+));

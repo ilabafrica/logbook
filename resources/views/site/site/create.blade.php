@@ -43,7 +43,7 @@
                         {!! Form::text('name', Input::old('name'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
-                 <div class="form-group">
+                <div class="form-group">
                     {!! Form::label('site_type_id', Lang::choice('messages.site-type', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">
                            {!! Form::select('site_type', array(''=>trans('messages.select-site-type'))+$siteTypes,'', 

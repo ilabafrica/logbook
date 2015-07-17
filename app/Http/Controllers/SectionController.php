@@ -1,4 +1,4 @@
-?php namespace App\Http\Controllers;
+<?php namespace App\Http\Controllers;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -6,9 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\SectionRequest;
-use App\Models\AuditType;
+use App\Models\Checklist;
 use App\Models\Section;
-use App\Models\Note;
 use Response;
 use Auth;
 
@@ -23,7 +22,7 @@ class SectionController extends Controller {
 	{
 		//	Get all sections
 		$sections = Section::all();
-		return view('audit.section.index', compact('sections'));
+		return view('section.index', compact('sections'));
 	}
 
 	/**
@@ -33,13 +32,9 @@ class SectionController extends Controller {
 	 */
 	public function create()
 	{
-		//	Get all present sections
-		$parents = Section::lists('name', 'id');
-		//	Get all audit types
-		$auditTypes = AuditType::lists('name', 'id');
-		//	Get all notes
-		$notes = Note::orderBy('name')->get();
-		return view('audit.section.create', compact('parents', 'auditTypes', 'notes'));
+		//	Get all checklists
+		$checklists = Checklist::lists('name', 'id');
+		return view('section.create', compact('checklists'));
 	}
 
 	/**
@@ -53,21 +48,14 @@ class SectionController extends Controller {
         $section->name = $request->name;
         $section->label = $request->label;
         $section->description = $request->description;
-        $section->audit_type_id = $request->audit_type_id;
+        $section->checklist_id = $request->checklist;
         $section->total_points = $request->total_points;
-        $section->order = $request->order;
-        $section->user_id = Auth::user()->id;;
+        $section->user_id = Auth::user()->id;
         try{
 			$section->save();
-			if($request->parent_id){
-				$section->setParent(array($request->parent_id));
-			}
-			if($request->notes){
-				$section->setNotes($request->notes);
-			}
-			//$url = Session::get('SOURCE_URL');
+			$url = session('SOURCE_URL');
         
-        	return redirect('section')->with('message', 'Audit Section created successfully.');
+        	return redirect()->to($url)->with('message', 'Section created successfully.')->with('active_section', $section ->id);
 		}
 		catch(QueryException $e){
 			Log::error($e);
@@ -82,10 +70,10 @@ class SectionController extends Controller {
 	 */
 	public function show($id)
 	{
-		//show a Audit Section
+		//show a Section
 		$section = Section::find($id);
 		//show the view and pass the $section to it
-		return view('audit.section.show', compact('section'));
+		return view('section.show', compact('section'));
 	}
 
 	/**
@@ -97,20 +85,11 @@ class SectionController extends Controller {
 	public function edit($id)
 	{
 		$section = Section::find($id);
-		//	Get all present sections
-		$parents = Section::lists('name', 'id');
-		//	Get initial parent id
-		$parent = $section->parent_id;
-		//	Get all audit types
-		$auditTypes = AuditType::lists('name', 'id');
-		//	Get initial audit type
-		$auditType = $section->audit_type_id;
-		//	Get all notes
-		$notes = Note::orderBy('name', 'ASC')->get();
-		//	Get initial order
-		$order = $section->order;
-
-        return view('audit.section.edit', compact('section', 'parents', 'parent', 'auditTypes', 'auditType', 'notes', 'order'));
+		$checklists = Checklist::lists('name', 'id');
+		//	Get initial checklist
+		$checklist = $section->checklist_id;
+		
+        return view('section.edit', compact('section', 'checklists', 'checklist'));
 	}
 
 	/**
@@ -125,22 +104,15 @@ class SectionController extends Controller {
         $section->name = $request->name;
         $section->label = $request->label;
         $section->description = $request->description;
-        $section->audit_type_id = $request->audit_type_id;
+        $section->checklist_id = $request->checklist;
         $section->total_points = $request->total_points;
-        $section->order = $request->order;
         $section->user_id = Auth::user()->id;;
 
         try{
 			$section->save();
-			if($request->parent_id){
-				$section->setParent(array($request->parent_id));
-			}
-			if($request->notes){
-				$section->setNotes($request->notes);
-			}
-			//$url = Session::get('SOURCE_URL');
+			$url = session('SOURCE_URL');
         
-        	return redirect('section')->with('message', 'Audit Section updated successfully.');
+        	return redirect()->to($url)->with('message', 'Section updated successfully.')->with('active_section', $section ->id);
 		}
 		catch(QueryException $e){
 			Log::error($e);
@@ -165,5 +137,4 @@ class SectionController extends Controller {
 	{
 		//
 	}
-
 }

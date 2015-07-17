@@ -13,12 +13,12 @@
 </div>
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.user', 2) }} <span class="panel-btn">
-        @if(Auth::user()->can('create-user'))
+       
       <a class="btn btn-sm btn-info" href="{{ URL::to("user/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.create-user') }}
           </a>
-        @endif
+  
         </span>
     </div>
     <div class="panel-body">
@@ -33,9 +33,7 @@
                 <table class="table table-striped table-bordered table-hover {!! !$users->isEmpty()?'search-table':'' !!}">
                     <thead>
                         <tr>
-                            <th>{{ Lang::choice('messages.name', 1) }}</th>
-                        <!--<th>{{ Lang::choice('messages.gender', 1) }}</th>
-                            <th>{{ Lang::choice('messages.dob', 1) }}</th>-->
+                            <th>{{ Lang::choice('messages.name', 1) }}</th>                     
                             <th>{{ Lang::choice('messages.email', 1) }}</th>
                             <th>{{ Lang::choice('messages.phone', 1) }}</th>
                             <th>{{ Lang::choice('messages.address', 1) }}</th>
@@ -49,8 +47,6 @@
                             @endif
                             >
                             <td>{{ $user->name }}</td>
-                        <!--<td>{{ $user->gender }}</td>
-                            <td>{{ $user->dob }}</td>-->
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->phone }}</td>
                             <td>{{ $user->address }}</td>
