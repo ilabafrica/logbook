@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Survey extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'survey';
+	protected $table = 'surveys';
 	/**
 	 * Checklist relationship
 	 */
@@ -36,11 +36,11 @@ class Survey extends Model {
 		return $this->belongsTo('App\Models\Sdp');
 	}
 	/**
-	 * SurveyData relationship
+	 * SurveyQuestions relationship
 	 */
-	public function data()
+	public function questions()
 	{
-		return $this->hasMany('App\Models\SurveyData');
+		return $this->hasMany('App\Models\SurveyQuestion');
 	}
 	/**
 	 * Count number of questionnaires given qa officer filled
