@@ -281,7 +281,7 @@ class LogbookSeeder extends Seeder
 
         );
         foreach ($sdps as $sdp) {
-            Sdp::create($stype);
+            Sdp::create($sdp);
         }
         $this->command->info('SDPs table seeded');
 
