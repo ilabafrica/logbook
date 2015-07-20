@@ -335,7 +335,7 @@ class CreateMflTables extends Migration {
 		});
 
 		//	survey
-		Schema::create('survey', function(Blueprint $table)
+		Schema::create('surveys', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();
 			$table->string('qa_officer');
@@ -353,17 +353,30 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+		//	Survey-questions
+		Schema::create('survey_questions', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('survey_id')->unsigned();
+			$table->integer('question_id')->unsigned();
+
+			$table->foreign('survey_id')->references('id')->on('surveys');
+            $table->foreign('question_id')->references('id')->on('questions');
+            $table->unique(array('review_id', 'question_id'));
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
 		//	survey_data
 		Schema::create('survey_data', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();			
-			$table->integer('survey_id')->unsigned();			
-			$table->integer('question_id')->unsigned();
+			$table->integer('survey_question_id')->unsigned();
 			$table->string('answer');
 			$table->string('comment')->nullable();
 
-            $table->foreign('question_id')->references('id')->on('questions');
-            $table->foreign('survey_id')->references('id')->on('survey');
+            $table->foreign('survey_question_id')->references('id')->on('survey_questions');
+            $table->foreign('survey_id')->references('id')->on('surveys');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -372,12 +385,10 @@ class CreateMflTables extends Migration {
 		Schema::create('survey_scores', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();	
-			$table->integer('survey_id')->unsigned();		
-			$table->integer('section_id')->unsigned();			
+			$table->integer('survey_question_id')->unsigned();
 			$table->integer('score');
 
-            $table->foreign('survey_id')->references('id')->on('survey');
-            $table->foreign('section_id')->references('id')->on('sections');
+            $table->foreign('survey_question_id')->references('id')->on('survey_questions');
 
             $table->softDeletes();
 			$table->timestamps();
