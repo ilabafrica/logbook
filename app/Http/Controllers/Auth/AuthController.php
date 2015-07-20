@@ -51,7 +51,7 @@ class AuthController extends Controller {
 		{
 			return redirect('/checklist');
 		}
-		return redirect('/auth/login')
+		return redirect('/')
 		->with('error', 'Invalid credentials')
 		->withInput($request->only('username'));
 	}
