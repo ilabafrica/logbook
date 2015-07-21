@@ -101,6 +101,9 @@
                 <li><a href="{!! url('authorization') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.authorization', 2) !!}</a></li>
             </ul>
         </li>
-      
+         <!-- Data management -->
+        <li>
+            <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.data-management', 2) !!}</a>
+        </li>
     </ul>
 @show

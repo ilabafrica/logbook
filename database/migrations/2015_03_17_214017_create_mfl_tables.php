@@ -362,7 +362,7 @@ class CreateMflTables extends Migration {
 
 			$table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('question_id')->references('id')->on('questions');
-            $table->unique(array('review_id', 'question_id'));
+            //$table->unique(array('survey_id', 'question_id'));
 
             $table->softDeletes();
 			$table->timestamps();
@@ -372,6 +372,7 @@ class CreateMflTables extends Migration {
 		{
 			$table->increments('id')->unsigned();			
 			$table->integer('survey_question_id')->unsigned();
+			$table->integer('survey_id')->unsigned();
 			$table->string('answer');
 			$table->string('comment')->nullable();
 

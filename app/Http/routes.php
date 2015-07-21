@@ -148,6 +148,9 @@ Route::resource('permission', 'PermissionController');
 Route::resource('privilege', 'PrivilegeController');
 //  Authorization controller
 Route::resource('authorization', 'AuthorizationController');
+
+//  Review controller
+Route::resource('review', 'ReviewController');
 //  HTC
 //Route::resource('htc', 'HtcController');
 Route::get("/htc/{id}/", array(
