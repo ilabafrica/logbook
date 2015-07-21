@@ -27,16 +27,40 @@
             <li class="active"><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
         </ul>
-
+        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
             <div class="row">
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                            {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
+                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                            {!! Form::text('to', old('from'), array('class' => 'form-control')) !!}
+                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
+                                array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
+                </div>
+                <hr >
                 <div class="col-sm-12">
-                    
+                    <div id="chart" style="height: 300px"></div>
                 </div>
             </div>
-          </div>
+        </div>
+        {!! Form::close() !!}
         </div>
     </div>
     <!-- /.panel-body -->
@@ -45,6 +69,8 @@
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
 <script type="text/javascript">
-    
+    $(function () {
+        $('#chart').highcharts(<?php echo $chart ?>);  
+    });
 </script>
 @stop
