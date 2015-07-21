@@ -105,9 +105,9 @@ class Question extends Model {
 	* Return response of a given question
 	* @param $id the id of the survey
 	*/
-	public function response($id)
+	public function sq($id)
 	{
-		return SurveyData::where('survey_id', $id)
+		return SurveyQuestion::where('survey_id', $id)
 						 ->where('question_id', $this->id)
 						 ->first();
 	}

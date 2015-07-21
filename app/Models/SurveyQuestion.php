@@ -3,16 +3,16 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReviewQuestion extends Model{
+class SurveyQuestion extends Model{
 	use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'review_questions';
+	protected $table = 'survey_questions';
     /**
      * Survey relationship
      */
     public function survey()
     {
-       return $this->belongsTo('App\Models\Review');
+       return $this->belongsTo('App\Models\Survey');
     }
 	/**
 	 * Questions relationship
