@@ -219,6 +219,10 @@ Route::get('survey/{id}/list', array(
     "as"    =>  "survey.list",
     "uses"  =>  "SurveyController@listing"
 ));
+Route::get('survey/{id}/{checklist_id}/edit', array(
+    "as"    =>  "survey.edit",
+    "uses"  =>  "SurveyController@edit"
+));
 Route::get('survey/{id}', array(
     "as"    =>  "survey.show",
     "uses"  =>  "SurveyController@show"

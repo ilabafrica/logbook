@@ -33,6 +33,7 @@
                             <th>{{ Lang::choice('messages.response-no', 1) }}</th>
                             <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
                             <th>{{ Lang::choice('messages.date', 1) }}</th>
+                            <th>{{ Lang::choice('messages.status', 1) }}</th>
                             <th>{{ Lang::choice('messages.action', 2) }}</th>
                         </tr>
                     </thead>
@@ -44,10 +45,12 @@
                             <td>{{ $counter }}</td>
                             <td>{{ $survey->qa_officer }}</td>
                             <td>{{ $survey->created_at }}</td>
-                          
+                            <td></td>
                             <td>
+                                
                               <a href="{!! url('survey/'.$survey->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
-                              <a href="#" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                              <a href="{!! url('survey/'.$survey->id."/". $checklist_id. "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
+                              <a href="" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i><span> Mark as Reviewed</span></a>
                               <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
                               
                             </td>

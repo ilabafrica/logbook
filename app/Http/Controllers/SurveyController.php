@@ -117,8 +117,10 @@ class SurveyController extends Controller {
 	public function listing($id)
 	{
 		//	Get checklist
+		$checklist_id= $id;
 		$checklist = Checklist::find($id);
-		return view('survey.list', compact('checklist'));
+		
+		return view('survey.list', compact('checklist','checklist_id'));
 	}
 
 	/**
@@ -140,9 +142,18 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function edit($id, $checklist_id)
 	{
-		//
+		//	Get survey
+		$survey = Survey::find($id);
+		//	Get specific checklist
+		$checklist = Checklist::find($checklist_id);
+		//	Get list of facilities
+		$facilities = Facility::lists('name', 'id');
+		//	Get list of service delivery points
+		$sdps = Sdp::lists('name', 'id');
+
+		return view('survey.edit', compact('survey','facilities','checklist', 'sdps'));
 	}
 
 	/**

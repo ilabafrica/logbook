@@ -371,4 +371,5 @@ return [
 	'data-management'	=>	'Data Management',
 	'review'	=>	'Review',
 	'review-collected-data' =>	'Review Collected Data',
+	'edit-questionnaire'	=>	'Edit Questionnaire',
 ];
