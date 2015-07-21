@@ -19,9 +19,9 @@ use App\Models\SiteKit;
 use App\Models\Checklist;
 use App\Models\Sdp;
 use App\Models\Survey;
-use App\Models\Survey_data;
-use App\Models\Survey_score;
-use App\Models\Hiv_test_kit;
+use App\Models\SurveyData;
+use App\Models\SurveyScore;
+use App\Models\HivTestKit;
 use App\Models\Cadre;
 use App\Models\Answer;
 use App\Models\Section;
@@ -294,7 +294,7 @@ class LogbookSeeder extends Seeder
            
         );
         foreach ($hiv_test_kits as $hiv_test_kit) {
-            Hiv_test_kit::create($hiv_test_kit);
+            HivTestKit::create($hiv_test_kit);
         }
         $this->command->info('HIV Test Kits table seeded');
 

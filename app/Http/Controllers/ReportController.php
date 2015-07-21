@@ -22,6 +22,9 @@ class ReportController extends Controller {
 	 */
 	public function index($id)
 	{
+		
+		//	Define months array
+		$monthNames = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		$facility = Facility::find(1);
@@ -170,5 +173,37 @@ class ReportController extends Controller {
 	public function destroy($id)
 	{
 		//
+	}
+	/**
+	* Get months: return months for time_created column when filter dates are set
+	*/	
+	public static function getMonths($from, $to){
+		$today = "'".date("Y-m-d")."'";
+		$year = date('Y');
+		$surveys = Survey::select('created_at')->distinct();
+
+		if(strtotime($from)===strtotime($today)){
+			$surveys = $surveys->where('created_at', 'LIKE', $year.'%');
+		}
+		else
+		{
+			$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+			$surveys = $surveys->whereBetween('created_at', array($from, $toPlusOne));
+		}
+
+		$allDates = $surveys->lists('created_at');
+		asort($allDates);
+		$yearMonth = function($value){return strtotime(substr($value, 0, 7));};
+		$allDates = array_map($yearMonth, $allDates);
+		$allMonths = array_unique($allDates);
+		$dates = array();
+
+		foreach ($allMonths as $date) {
+			$dateInfo = getdate($date);
+			$dates[] = array('months' => $dateInfo['mon'], 'label' => substr($dateInfo['month'], 0, 3),
+				'annum' => $dateInfo['year']);
+		}
+
+		return json_encode($dates);
 	}
 }

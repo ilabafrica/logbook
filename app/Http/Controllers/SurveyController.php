@@ -9,6 +9,7 @@ use App\Models\Survey;
 use App\Models\surveyData;
 use App\Models\Facility;
 use App\Models\Sdp;
+use App\Models\SurveyQuestion;
 
 use Illuminate\Http\Request;
 use Response;
@@ -85,12 +86,24 @@ class SurveyController extends Controller {
 				continue;
 			else if((stripos($key, 'date') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'textfield') !==FALSE) || (stripos($key, 'textarea') !==FALSE)){
 				$fieldId = $this->strip($key);
+				//	Check if survey-question exists before saving
+				$surveyQuestion = SurveyQuestion::where('survey_id', $survey->id)->where('question_id', $fieldId)->first();
+				//	Create survey-question
+				if(!$surveyQuestion){
+					$surveyQuestion = new SurveyQuestion;
+					$surveyQuestion->survey_id = $survey->id;
+					$surveyQuestion->question_id = $fieldId;
+					$surveyQuestion->save();
+				}
+				//	Check if data already exists
+				$surveyData = SurveyData::where('survey_question_id', $surveyQuestion->id)->first();
 				//	Save survey data
-				$surveyData = new surveyData;
-				$surveyData->survey_id = $survey->id;
-				$surveyData->question_id = $fieldId;
-				$surveyData->answer = $value;
-				$surveyData->save();
+				if(!$surveyData){
+					$surveyData = new SurveyData;
+					$surveyData->survey_question_id = $surveyQuestion->id;
+					$surveyData->answer = $value;
+					$surveyData->save();
+				}
 			}
 		}
 		return redirect('survey');

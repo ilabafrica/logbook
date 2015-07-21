@@ -12,9 +12,6 @@ class County extends Model {
 	*/
 	public function constituencies()
 	{
-
 		return $this->hasMany('constituencies');
-
 	}
 }
-
