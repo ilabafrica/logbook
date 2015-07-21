@@ -40,7 +40,7 @@
                 <tr>
                     <td>{!! $counter !!}</td>
                     <td>{!! $question->name !!}</td>
-                    <td>{!! $question->response($survey->id)?$question->response($survey->id)->answer:'' !!}</td>
+                    <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
                 </tr>
                 @endforeach
               @endforeach
