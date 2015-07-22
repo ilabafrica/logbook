@@ -6,7 +6,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Models\County;
+use App\Models\SubCounty;
+use App\Models\RoleUserTier;
 use App\Http\Requests\AuthorizationRequest;
+
+use DB;
+use Input;
 
 class AuthorizationController extends Controller {
 
@@ -21,8 +27,12 @@ class AuthorizationController extends Controller {
 		$users = User::all();
 		//	Get all roles
 		$roles = Role::all();
+		//	Get all counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
 		
-		return view('authorization.index', compact('users', 'roles'));
+		return view('authorization.index', compact('users', 'roles','counties', 'subCounties'));
 	}
 
 	/**
@@ -36,8 +46,12 @@ class AuthorizationController extends Controller {
 		$users = User::all();
 		//	Get all roles
 		$roles = Role::all();
+		//	Get all counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
 		
-		return view('authorization.index', compact('users', 'roles'));
+		return view('authorization.index', compact('users', 'roles', 'counties', 'subCounties'));
 	}
 
 	/**
@@ -53,18 +67,47 @@ class AuthorizationController extends Controller {
 
 		foreach ($users as $userkey => $user) {
 			foreach ($roles as $roleKey => $role) {
+				
+				$county = Input::get('county'.$user->id);
+				$sub_county = Input::get('sub_county'.$user->id);
 				//If checkbox is clicked attach the role
 				if(!empty($arrayUserRoleMapping[$userkey][$roleKey]))
 				{
 					$user->detachRole($role);
 					$user->attachRole($role);
+					if(($county || $sub_county) && $role != Role::getAdminRole()){
+						$county?$tier_id=$county:$tier_id=$sub_county;
+						$tier = RoleUserTier::where('user_id', $user->id)
+											->where('role_id', $role->id)
+											->first();
+						if($tier){
+							$userTier = RoleUserTier::find($tier->id);
+							$userTier->user_id = $user->id;
+							$userTier->role_id = $role->id;
+							$userTier->tier = $tier_id;
+							$userTier->save();
+						}
+						else{
+							$userTier = new RoleUserTier;
+							$userTier->user_id = $user->id;
+							$userTier->role_id = $role->id;
+							$userTier->tier = $tier_id;
+							$userTier->save();
+						}
+					}
 				}
 				//If checkbox is NOT clicked detatch the role
 				elseif (empty($arrayUserRoleMapping[$userkey][$roleKey])) {
+					$tier = RoleUserTier::where('user_id', $user->id)
+											->where('role_id', $role->id)
+											->first();
+					if($tier)
+							$tier->delete();
 					$user->detachRole($role);
 				}
 			}
 		}
+
 		return redirect('authorization')->with('message', 'Authorization created successfully.');
 	}
 

@@ -9,6 +9,7 @@ use App\Http\Requests\CountyRequest;
 use App\Models\County;
 use Response;
 use Auth;
+use Input;
 
 class CountyController extends Controller {
 
@@ -101,7 +102,7 @@ class CountyController extends Controller {
 	 * @return Response
 	 */
 
-		public function delete($id)
+	public function delete($id)
 	{
 		$county= County::find($id);
 		$county->delete();
@@ -111,5 +112,13 @@ class CountyController extends Controller {
 	{
 		//
 	}
-
+	/**
+	*	Function to return sub-counties of a particular county to fill sub-counties dropdown
+	*/
+	public function dropdown(){
+        $input = Input::get('county_id');
+        $county = County::find($input);
+        $subCounties = $county->subCounties;
+        return json_encode($subCounties);
+    }
 }
