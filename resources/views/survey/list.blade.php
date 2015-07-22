@@ -48,7 +48,7 @@
                             <td></td>
                             <td>
                                 
-                              <a href="{!! url('survey/'.$survey->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              <a href="{!! url('survey/'.$survey->id."/". $checklist_id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
                               <a href="{!! url('survey/'.$survey->id."/". $checklist_id. "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i><span> Mark as Reviewed</span></a>
                               <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>

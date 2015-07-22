@@ -370,25 +370,34 @@ class LogbookSeeder extends Seeder
         $question_pageStartDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page Start Date", "description" => "", "question_type" =>"1","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_pageEndDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page End Date", "description" => "","question_type" =>"1", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
                  //hivtest1
-        $question_hivTest1 = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_test1lotNo = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_test1expiryDate = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest1Status = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest1Name = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test1lotNoStatus = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test1lotNo = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test1expiryDateStatus = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test1expiryDate = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test1TotalPositive = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Positive", "description" => "Test-1 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1TotalNegative = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Negative", "description" => "Test-1 Total Negative", "question_type" =>"2","required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1TotalInvalid = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Invalid", "description" => "Test-1 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1Comment= Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest2
-        $question_hivTest2 = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name", "description" => "HIV Test-1 Name","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test2lotNo = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test2expiryDate = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date", "description" => "Expiry Date", "question_type" =>"0","required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest2Status = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest2Name = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2lotNoStatus = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test2lotNo = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2expiryDateStatus = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test2expiryDate = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test2TotalPositive = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Positive", "description" => "Test-2 Total Positive", "question_type" =>"2","required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2TotalNegative = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Negative", "description" => "Test-2 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2TotalInvalid = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Invalid", "description" => "Test-2 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2Comment= Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Comments", "description" => "Comments", "question_type" =>"3","required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest3
-        $question_hivTest3 = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name", "description" => "HIV Test-1 Name", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test3lotNo = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test3expiryDate = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date", "description" => "Expiry Date","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest3Status = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest3Name = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3lotNoStatus = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test3lotNo = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3expiryDateStatus = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date ", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test3expiryDate = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test3TotalPositive = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Positive", "description" => "Test-3 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test3TotalNegative = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Negative", "description" => "Test-3 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test3TotalInvalid = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Invalid", "description" => "Test-3 Total Invalid", "question_type" =>"2","required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
@@ -690,43 +699,43 @@ class LogbookSeeder extends Seeder
 
         /* Question-Responses*/
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest1Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest1Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test1lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test1lotNoStatus->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test1expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test1expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest2Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest2Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test2lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test2lotNoStatus ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test2expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test2expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest3Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest3Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test3lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test3lotNoStatus ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test3expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test3expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
             array("question_id" => $question_supervisorReview->id, "response_id" => $response_yes->id));

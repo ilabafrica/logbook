@@ -22,7 +22,8 @@
             {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
         </div>
         @endif
-        {!! Form::open(array('route' => 'survey.edit', 'id' => 'form-add-survey', 'class' => 'form-horizontal')) !!}
+        {!! Form::model($survey, array('route' => array('survey.update', $survey->id), 
+        'method' => 'PUT', 'id' => 'form-edit-survey', 'class' => 'form-horizontal')) !!}
             <!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
@@ -30,13 +31,14 @@
             {!! Form::hidden('checklist_id', $checklist->id, array('id' => 'checklist_id')) !!}
             @foreach($checklist->sections as $section)
                 <legend><h5 class="text-primary"><strong>{!! $section->name !!}</strong></h5></legend>
+                 
                 @foreach($section->questions as $question)
                     @if($question->question_type == App\Models\Question::CHOICE)
                         <div class='form-group'>
                             {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class='col-sm-6'>
                             @foreach($question->answers as $response)
-                                <label class='radio-inline'>{!! Form::radio('radio_'.$question->id, $response->name, false) !!}{!! $response->name !!}</label>
+                                <label class='radio-inline'>{!! Form::radio('radio_'.$question->id, $response->name, ($question->sq($survey->id) && ($question->sq($survey->id)->sd->answer == $response->name))?true:false) !!}{!! $response->name !!}</label>
                             @endforeach
                             </div>
                         </div>
@@ -44,16 +46,17 @@
                         <div class='form-group'>
                             {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class="col-sm-6 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                                {!! Form::text('date_'.$question->id, old('date_'.$question->id), array('class' => 'form-control')) !!}
+                                {!! Form::text('date_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', array('class' => 'form-control')) !!}
                                 <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                             </div>
                         </div>
                     @elseif($question->question_type == App\Models\Question::FIELD)
+
                         <div class='form-group'>
                             {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             @if($question->id == App\Models\Question::idByName('Name of the QA Officer'))
                             <div class='col-sm-6'>
-                                {!! Form::text('qa_officer', old('qa_officer'), array('class' => 'form-control')) !!}
+                                {!! Form::text('qa_officer', old('qa_officer') , array('class' => 'form-control')) !!}
                             </div>
                             @elseif($question->id == App\Models\Question::idByName('GPS Latitude'))
                             <div class='col-sm-6'>
@@ -65,7 +68,7 @@
                             </div>
                             @else
                             <div class='col-sm-6'>
-                                {!! Form::text('textfield_'.$question->id, old('textfield_'.$question->id), array('class' => 'form-control')) !!}
+                                {!! Form::text('textfield_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', array('class' => 'form-control')) !!}
                             </div>
                             @endif
                         </div>
@@ -74,10 +77,12 @@
                             {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class='col-sm-6'>
                                 @if($question->id == App\Models\Question::idByName('Additional Comments'))
-                                    {!! Form::textarea('comments', old('comments'), 
+                                    {!! Form::textarea('comments_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', 
                                         array('class' => 'form-control', 'rows' => '3')) !!}
+
+                              
                                 @else
-                                    {!! Form::textarea('textarea_'.$question->id, old('textarea_'.$question->id), 
+                                    {!! Form::textarea('textarea_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', 
                                         array('class' => 'form-control', 'rows' => '3')) !!}
                                 @endif
                             </div>
@@ -87,10 +92,12 @@
                             {!! Form::label('select_'.$question->id, $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class="col-sm-6">
                                 @if($question->id == App\Models\Question::idByName('Facility'))
-                                   {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,'', 
+                                   {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,
+                                   old('facility') ? old('facility') : $facility, 
                                     array('class' => 'form-control')) !!}
                                 @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)'))
-                                    {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,'', 
+                                    {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,
+                                    old('sdp') ? old('sdp') : $sdp,
                                     array('class' => 'form-control')) !!}
                                 @endif
                             </div>
@@ -98,7 +105,8 @@
                     @endif
                 @endforeach
                 <hr>
-            @endforeach
+                @endforeach
+            
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
                 {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 

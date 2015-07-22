@@ -16,7 +16,7 @@
 </div>
 <div class="panel panel-primary">
   <div class="panel-heading"><i class="fa fa-tags"></i> {!! $survey->checklist->name !!} <span class="panel-btn">
-  <a class="btn btn-sm btn-info" href="{{ URL::to("survey/" . $survey->id . "/edit") }}" >
+  <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id."/". $checklist_id. "/edit") !!}" >
     <i class="fa fa-edit"></i><span> {{ trans('messages.edit-questionnaire') }}</span>
   </a>
   </span></div>
