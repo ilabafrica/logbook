@@ -278,3 +278,11 @@ function load(id){
     });
 }
 /*End dynamic select list options for counties-sub-counties*/
+/*Toggle county/sub-county*/
+function sub_county(id){
+    $('.sub_county'+id).toggle(this.checked);
+}
+function county(id){
+    $('#county'+id).toggle(this.checked);
+}
+/*End toggle susceptibility*/

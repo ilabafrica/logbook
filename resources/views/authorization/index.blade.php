@@ -66,7 +66,7 @@
                                         array('style'=>'display:none')) !!}
                                     @else
                                         @if($role->id == App\Models\Role::idByName('County Lab Coordinator'))
-                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
+                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "county('$user->id')")) !!}
                                             @if($user->id != App\Models\User::getAdminUser()->id)
                                                 <br />
                                                 <div class="county">
@@ -79,25 +79,21 @@
                                                 </div>
                                             @endif
                                         @elseif($role->id == App\Models\Role::idByName('Sub-County Lab Coordinator'))
-                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
+                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "sub_county('$user->id')")) !!}
                                             @if($user->id != App\Models\User::getAdminUser()->id)
                                                 <br />
-                                                <div class="county">
-                                                    <div class="form-group">
+                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
                                                         <div class="col-sm-8">
                                                             {!! Form::select('county_'.$user->id, array(''=>trans('messages.select-county'))+$counties, '', 
                                                                 array('class' => 'form-control', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="subCounty">
-                                                    <div class="form-group">
+                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
                                                         <div class="col-sm-8">
                                                             {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
                                                                 array('class' => 'form-control', 'id' => 'sub_county'.$user->id)) !!}
                                                         </div>
                                                     </div>
-                                                </div>
                                             @endif
                                         @else
                                             {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
