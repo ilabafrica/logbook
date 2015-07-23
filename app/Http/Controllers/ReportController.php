@@ -22,13 +22,17 @@ class ReportController extends Controller {
 	 */
 	public function index($id)
 	{
+		//	Retrieve HTC Lab Register
+		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
+		//	Get sdps
+		$sdps = $checklist->sdps();
 		
 		//	Define months array
 		$monthNames = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
 		//	Get checklist
-		$checklist = Checklist::find($id);
+		//$checklist = Checklist::find($id);
 		$facility = Facility::find(1);
-		$sdps = array();
+		/*//$sdps = array();
 		$tests = array('Test-1', 'Test-2');
 		$survey_ids = array();
 		//	Get dates
@@ -45,7 +49,8 @@ class ReportController extends Controller {
 		foreach ($surveys as $survey) {
 			if(in_array($survey->sdp->name, $sdps))
 				array_push($survey_ids, $survey->id);
-		}
+		}*/
+		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
 		$chart = "{
 		        chart: {
 		            type: 'column'
@@ -54,7 +59,17 @@ class ReportController extends Controller {
 		            text: '".$facility->name."'
 		        },
 		        xAxis: {
-		            categories: ["."'".implode(',', $sdps)."'"."]
+		            categories: [";
+		            $count = count($months);
+		            	foreach ($months as $month) {
+		    				$chart.= "'".$month->label.' '.$month->annum;
+		    				if($count==1)
+		    					$chart.="' ";
+		    				else
+		    					$chart.="' ,";
+		    				$count--;
+		    			}
+		            $chart.="]
 		        },
 		        yAxis: {
 		            title: {
@@ -62,12 +77,35 @@ class ReportController extends Controller {
 		            }
 		        },
 		        series: [";
-		        foreach ($tests as $test) {
-		        	$chart.="{name:"."'".$test."'".", data:[";
-		        		foreach ($sdps as $sdp) {
-		        			$chart.=Sdp::find(Sdp::idByName($sdp))->positivePercent($test, $survey_ids);
-		        		}
-		        	$chart.="]},";
+		        $counts = count($sdps);
+		        foreach ($sdps as $sdp) {
+		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+	        		$counter = count($months);
+	        		foreach ($months as $month) {
+	        			$data = Sdp::find($sdp->sdp_id)->positivePercent();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
 		        }
 		        $chart.="],
 		    }";
@@ -84,7 +122,70 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		return view('report.agreement', compact('checklist'));
+		//	Get sdps
+		$sdps = $checklist->sdps();
+		//	Get facility
+		$facility = Facility::find(1);
+		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
+		$chart = "{
+		        chart: {
+		            type: 'column'
+		        },
+		        title: {
+		            text: '".$facility->name."'
+		        },
+		        xAxis: {
+		            categories: [";
+		            $count = count($months);
+		            	foreach ($months as $month) {
+		    				$chart.= "'".$month->label.' '.$month->annum;
+		    				if($count==1)
+		    					$chart.="' ";
+		    				else
+		    					$chart.="' ,";
+		    				$count--;
+		    			}
+		            $chart.="]
+		        },
+		        yAxis: {
+		            title: {
+		                text: '".Lang::choice('messages.percent-positiveAgr', 1)."'
+		            }
+		        },
+		        series: [";
+		        $counts = count($sdps);
+		        foreach ($sdps as $sdp) {
+		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+	        		$counter = count($months);
+	        		foreach ($months as $month) {
+	        			$data = Sdp::find($sdp->sdp_id)->positiveAgreement();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+		    }";
+		return view('report.agreement', compact('checklist', 'chart'));
 	}
 
 	/**
@@ -97,7 +198,70 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		return view('report.overall', compact('checklist'));
+		//	Get sdps
+		$sdps = $checklist->sdps();
+		//	Get facility
+		$facility = Facility::find(1);
+		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
+		$chart = "{
+		        chart: {
+		            type: 'column'
+		        },
+		        title: {
+		            text: '".$facility->name."'
+		        },
+		        xAxis: {
+		            categories: [";
+		            $count = count($months);
+		            	foreach ($months as $month) {
+		    				$chart.= "'".$month->label.' '.$month->annum;
+		    				if($count==1)
+		    					$chart.="' ";
+		    				else
+		    					$chart.="' ,";
+		    				$count--;
+		    			}
+		            $chart.="]
+		        },
+		        yAxis: {
+		            title: {
+		                text: '".Lang::choice('messages.percent-overallAgr', 1)."'
+		            }
+		        },
+		        series: [";
+		        $counts = count($sdps);
+		        foreach ($sdps as $sdp) {
+		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+	        		$counter = count($months);
+	        		foreach ($months as $month) {
+	        			$data = Sdp::find($sdp->sdp_id)->overallAgreement();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+		    }";
+		return view('report.overall', compact('checklist', 'chart'));
 	}
 	/**
 	 * Invalid results report
@@ -178,6 +342,7 @@ class ReportController extends Controller {
 	* Get months: return months for time_created column when filter dates are set
 	*/	
 	public static function getMonths($from, $to){
+		$from = "'".date("Y-m-d")."'";
 		$today = "'".date("Y-m-d")."'";
 		$year = date('Y');
 		$surveys = Survey::select('created_at')->distinct();

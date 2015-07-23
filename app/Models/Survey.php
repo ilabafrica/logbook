@@ -65,10 +65,4 @@ class Survey extends Model {
 		$absNonReactive = abs($this->htcData->where('test_kit_no', Htc::TESTKIT2)->first()->non_reactive - $this->htcData->where('test_kit_no', Htc::TESTKIT1)->first()->non_reactive);
 		return round((($total - $invalid) - ($absReactive + $absNonReactive)) * 100 / ($total - $invalid), 2);
 	}
-	/**
-	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
-	*/
-	public function positiveAgreement(){
-		return round($this->htcData->where('test_kit_no', Htc::TESTKIT2)->first()->reactive*100/$this->htcData->where('test_kit_no', Htc::TESTKIT1)->first()->reactive, 2);
-	}
 }

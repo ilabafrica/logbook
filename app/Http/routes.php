@@ -265,3 +265,14 @@ Route::any('report/{id}/invalid', array(
     "as"    =>  "reports.results.invalid",
     "uses"  =>  "ReportController@invalid"
 ));
+
+/* *
+*
+* Dynamic loading of sub-county filtered by county
+*
+*/
+Route::any('/sub_county/dropdown', array(
+    "as"    =>  "subCounty.dropdown",
+    "uses"  =>  "CountyController@dropdown"
+));
+

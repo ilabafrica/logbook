@@ -29,36 +29,6 @@
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
-
-                 <div class="form-group">
-                    {!! Form::label('role_id', Lang::choice('messages.role', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('role', array(''=>trans('messages.select-role'))+$roles,'', 
-                            array('class' => 'form-control', 'id' => 'role')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties,'', 
-                            array('class' => 'form-control', 'id' => 'county')) !!}
-                    </div>
-                </div>
-               <div class="form-group">
-                    {!! Form::label('sub_county_id', Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties,'', 
-                            array('class' => 'form-control', 'id' => 'sub_county')) !!}
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    {!! Form::label('facility', Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,'', 
-                            array('class' => 'form-control', 'id' => 'facility')) !!}
-                    </div>
-                </div>
                 <div class="form-group">
                     {!! Form::label('name', Lang::choice('messages.name', 1), array('class' => 'col-sm-4 control-label')) !!}
                     <div class="col-sm-8">

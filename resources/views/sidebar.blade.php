@@ -46,7 +46,7 @@
         </li>
         <!-- Checklist config -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-sliders"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('checklist') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.checklist', 2) !!}</a></li>
                 <li><a href="{!! url('section') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.section', 2) !!}</a></li>
@@ -56,15 +56,15 @@
         </li>
         <!-- Surveys -->
         <li>
-            <a href="{!! url('survey') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.survey', 1) !!}</a>
+            <a href="{!! url('survey') !!}"><i class="fa fa-edit fa-fw"></i> {!! Lang::choice('messages.survey', 1) !!}</a>
         </li>
         <!-- Reports -->
         <li>
-            <a href="{!! url('report') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}</a>
+            <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}</a>
         </li>
         <!-- Facility configuration -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-database"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('facility') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.facility', 2) !!}</a></li>
                 <li><a href="{!! url('facilityType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.facility-type', 2) !!}</a></li>
@@ -75,7 +75,7 @@
         </li>
         <!-- Site catalog -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.site-catalog', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.site-catalog', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('site') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site', 2) !!}</a></li>
                 <li><a href="{!! url('siteType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site-type', 2) !!}</a></li>
@@ -83,7 +83,7 @@
         </li>
         <!-- Test kits -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.test-kit', 2) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-book"></i> {!! Lang::choice('messages.test-kit', 2) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('testKit') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.kit', 2) !!}</a></li>
                 <li><a href="{!! url('siteKit') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site-kit', 2) !!}</a></li>
@@ -92,7 +92,7 @@
         </li>
         <!-- User management -->
         <li>
-            <a href="#"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.user-management', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-users"></i> {!! Lang::choice('messages.user-management', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('user') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.user', 2) !!}</a></li>
                 <li><a href="{!! url('role') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.role', 2) !!}</a></li>

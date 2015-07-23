@@ -10,8 +10,8 @@ class County extends Model {
 	/**
 	* Relationship with constituencies
 	*/
-	public function constituencies()
+	public function subCounties()
 	{
-		return $this->hasMany('constituencies');
+		return $this->hasMany('App\Models\SubCounty');
 	}
 }

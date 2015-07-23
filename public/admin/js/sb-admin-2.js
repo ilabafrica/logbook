@@ -257,3 +257,32 @@ function set_total(id) {
    });
     var xx= 0;
 }
+/*Dynamic loading of select list options for counties-sub-counties*/
+function load(id){
+    cId = $('#county_'+id).val();
+    var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
+    _token: JSON.stringify($('input[name=_token]').val());
+    $.ajax({
+        dataType: 'json',
+        type: 'POST',
+        url:  URL_ROOT+'sub_county/dropdown',
+        data: {county_id: cId, '_token': $('input[name=_token]').val()},
+        success: function(data){
+            var sub_county = $('#sub_county'+id);
+            sub_county.empty();
+            sub_county.append("<option value=''>Select Sub-County</option>");
+            $.each(data, function(index, element) {
+                sub_county.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+            });
+        }
+    });
+}
+/*End dynamic select list options for counties-sub-counties*/
+/*Toggle county/sub-county*/
+function sub_county(id){
+    $('.sub_county'+id).toggle(this.checked);
+}
+function county(id){
+    $('#county'+id).toggle(this.checked);
+}
+/*End toggle susceptibility*/

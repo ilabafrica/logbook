@@ -6,10 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use App\Models\Role;
-use App\Models\County;
-use App\Models\SubCounty;
-use App\Models\Facility;
 use Hash;
 use Input;
 
@@ -35,11 +31,7 @@ class UserController extends Controller {
 	public function create()
 	{
 		//	Return new user form
-		$roles = Role::lists('name', 'id');
-		$counties = County::lists('name', 'id');
-		$subCounties = SubCounty::lists('name', 'id');
-		$facilities = Facility::lists('name', 'id');
-		return view('user.create', compact('roles','counties','subCounties','facilities'));
+		return view('user.create');
 	}
 
 	/**
@@ -52,7 +44,6 @@ class UserController extends Controller {
 		$user = new User;
 		$user->name = $request->name;
         $user->gender = $request->gender;
-        $user->dob = $request->dob;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->username = $request->username;
@@ -106,7 +97,6 @@ class UserController extends Controller {
 		$user = User::find($id);
 		$user->name = $request->name;
         $user->gender = $request->gender;
-        $user->dob = $request->dob;
         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->address = $request->address;

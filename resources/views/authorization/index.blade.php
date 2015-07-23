@@ -36,6 +36,9 @@
 
             <div class="col-sm-12">
                 {!! Form::open(array('route' => 'authorization.store', 'id' => 'form-add-authorization', 'class' => 'form-horizontal')) !!}
+                <!-- CSRF Token -->
+                <input type="hidden" id="_token" name="_token" value="{{{ csrf_token() }}}" />
+                <!-- ./ csrf token -->
                 <table class="table table-striped table-bordered table-hover">
                     <thead>
                         <tr>
@@ -62,7 +65,39 @@
                                         {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name),
                                         array('style'=>'display:none')) !!}
                                     @else
-                                       {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
+                                        @if($role->id == App\Models\Role::idByName('County Lab Coordinator'))
+                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "county('$user->id')")) !!}
+                                            @if($user->id != App\Models\User::getAdminUser()->id)
+                                                <br />
+                                                <div class="county">
+                                                    <div class="form-group">
+                                                        <div class="col-sm-8">
+                                                            {!! Form::select('county'.$user->id, array(''=>trans('messages.select-county'))+$counties, $user->tier?$user->tier->tier:'', 
+                                                                array('class' => 'form-control', 'id' => 'county'.$user->id)) !!}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        @elseif($role->id == App\Models\Role::idByName('Sub-County Lab Coordinator'))
+                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "sub_county('$user->id')")) !!}
+                                            @if($user->id != App\Models\User::getAdminUser()->id)
+                                                <br />
+                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
+                                                        <div class="col-sm-8">
+                                                            {!! Form::select('county_'.$user->id, array(''=>trans('messages.select-county'))+$counties, '', 
+                                                                array('class' => 'form-control', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
+                                                        <div class="col-sm-8">
+                                                            {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
+                                                                array('class' => 'form-control', 'id' => 'sub_county'.$user->id)) !!}
+                                                        </div>
+                                                    </div>
+                                            @endif
+                                        @else
+                                            {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name)) !!}
+                                        @endif
                                     @endif
                                 </td>
                                 @empty
