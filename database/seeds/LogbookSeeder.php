@@ -822,15 +822,7 @@ class LogbookSeeder extends Seeder
         DB::table('question_responses')->insert(
             array("question_id" => $question_curricula->id, "response_id" => $response_completed->id));
 
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_competency->id, "response_id" => $response_doesNotExist->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_competency ->id, "response_id" => $response_inDevelopment->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_competency ->id, "response_id" => $response_beingImplemented->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_competency->id, "response_id" => $response_completed->id));
-
+        
          DB::table('question_responses')->insert(
             array("question_id" => $question_training->id, "response_id" => $response_doesNotExist->id));
         DB::table('question_responses')->insert(
