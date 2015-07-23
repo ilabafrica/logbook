@@ -40,7 +40,21 @@
                 <tr>
                     <td>{!! $counter !!}</td>
                     <td>{!! $question->name !!}</td>
-                    <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
+                    @if($question->id == App\Models\Question::idByName('Name of the QA Officer'))
+                      <td>{!! $survey->qa_officer !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Facility'))
+                      <td>{!! $survey->facility->name !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)'))
+                      <td>{!! $survey->sdp->name !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('GPS Latitude'))
+                      <td>{!! $survey->latitude !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('GPS Longitude'))
+                      <td>{!! $survey->longitude !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Additional Comments'))
+                      <td>{!! $survey->comment !!}</td>
+                    @else
+                      <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
+                    @endif
                 </tr>
                 @endforeach
               @endforeach

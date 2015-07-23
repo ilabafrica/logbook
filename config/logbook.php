@@ -8,7 +8,7 @@ return array(
 	|
 	*/
 
-	'name' => 'HTC Lab Register (MoH 362)',
+	'name' => 'HIV Quality Assurance (HIVQA)',
 	
 	/*
 	|--------------------------------------------------------------------------

@@ -83,12 +83,17 @@ class Question extends Model {
 	* Return Question ID given the name
 	* @param $name the name of the user
 	*/
-	public static function idByName($name=NULL)
+	public static function idByName($name=NULL, $checklist = NULL)
 	{
 		if($name!=NULL){
 			try 
 			{
-				$question = Question::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+				$question = Question::select('questions.*');
+				if($checklist != NULL){
+					$question = $question->join('sections', 'questions.section_id', '=', 'sections.id')
+										 ->where('sections.checklist_id', $checklist);
+				}
+				$question = $question->where('questions.name', $name)->orderBy('questions.id', 'asc')->firstOrFail();
 				return $question->id;
 			} catch (ModelNotFoundException $e) 
 			{

@@ -86,10 +86,10 @@
                         <div class="form-group">
                             {!! Form::label('select_'.$question->id, $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class="col-sm-6">
-                                @if($question->id == App\Models\Question::idByName('Facility'))
+                                @if($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
                                    {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,'', 
                                     array('class' => 'form-control')) !!}
-                                @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)'))
+                                @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)', $question->section->checklist->id))
                                     {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,'', 
                                     array('class' => 'form-control')) !!}
                                 @endif

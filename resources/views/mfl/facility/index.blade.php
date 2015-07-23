@@ -38,8 +38,8 @@
                             <th>{{ Lang::choice('messages.sub-county', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility-type', 1) }}</th>
                             <th>{{ Lang::choice('messages.landline', 1) }}</th>
-                            <th>{{ Lang::choice('messages.email', 1) }}</th>
-                            <th>{{ Lang::choice('messages.reporting-site', 1) }}</th>
+                           <!-- <th>{{ Lang::choice('messages.email', 1) }}</th>
+                            <th>{{ Lang::choice('messages.reporting-site', 1) }}</th>-->
                            
                             <th></th>
                         </tr>
@@ -52,8 +52,8 @@
                             <td>{!! $facility->subCounty->name !!}</td>
                             <td>{!! $facility->facilityType->name !!}</td>
                             <td>{!! $facility->landline !!}</td>
-                            <td>{!! $facility->email !!}</td>
-                            <td>{!! $facility->reporting_site !!}</td>
+                            <!--<td>{!! $facility->email !!}</td>
+                            <td>{!! $facility->reporting_site !!}</td>-->
 
                           
                             <td>
