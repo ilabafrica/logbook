@@ -37,28 +37,86 @@ class Sdp extends Model {
 		}
 	}
 	/**
-	* Get sdps in period given
-	*/
-	public function sdps($checklist = 1, $from = NULL, $to = NULL)
-	{
-		return $sdps = Survey::select('sdp_id')
-					  		 ->where('checklist_id', $checklist)
-					  		 ->get();
-	}
-	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($name, $surveys)
+	public function positivePercent($from = NULL, $to = NULL, $testTypeID = NULL, $name = NULL, $surveys = NULL)
 	{
-		/*$positive = SurveyData::select('answer')
-							  ->where('question_id', Question::idByName($name.' Total Positive'))
-							  ->whereIn('survey_id', $surveys)
-							  ->sum('answer');
-		$negative = SurveyData::select('answer')
-							  ->where('question_id', Question::idByName($name.' Total Negative'))
-							  ->whereIn('survey_id', $surveys)
-							  ->sum('answer');*/
-
-		return round(16*100/(30), 2);
+		//	Initialize counts
+		$positive = 0;
+		$total = 0;
+		//	Declare questions to be used in calculation of both positive and total values
+		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
+		//	Get the counts
+		foreach ($qstns as $qstn) {
+			$question = Question::idByName($qstn);
+			$value = SurveyQuestion::where('question_id', $question)
+								   ->first();
+			if(substr_count($qstn, 'Test-1')>0)
+				$total+=$value->sd->answer;
+			else
+				$positive+=$value->sd->answer;
+		}
+		return $total>0?round((int)$positive*100/(int)$total, 2):0;
+	}
+	/**
+	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
+	*/
+	public function positiveAgreement()
+	{
+		//	Initialize counts
+		$testOne = 0;
+		$testTwo = 0;
+		//	Declare questions to be used in calculation of both values
+		$qstns = array('Test-1 Total Positive', 'Test-2 Total Positive');
+		//	Calculation
+		foreach ($qstns as $qstn) {
+			$question = Question::idByName($qstn);
+			$value = SurveyQuestion::where('question_id', $question)
+								   ->first();
+			if(substr_count($qstn, 'Test-1')>0)
+				$testOne+=$value->sd->answer;
+			else
+				$testTwo+=$value->sd->answer;
+		}
+		return $testOne>0?round((int)$testTwo*100/(int)$testOne, 2):0;
+	}
+	/**
+	* Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]
+	*/
+	public function overallAgreement()
+	{
+		//	Initialize variables
+		$total = 0;
+		$invalid = 0;
+		$reactiveOne = 0;
+		$nonReactiveOne = 0;
+		$reactiveTwo = 0;
+		$nonReactiveTwo = 0;
+		//	Get questions to be used in the math
+		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-1 Total Invalid', 'Test-2 Total Positive', 'Test-2 Total Negative', 'Test-2 Total Invalid');
+		//	Math
+		foreach ($qstns as $qstn) {
+			$question = Question::idByName($qstn);
+			$value = SurveyQuestion::where('question_id', $question)
+								   ->first();
+			if(substr_count($qstn, 'Test-1')>0)
+				$total+=$value->sd->answer;
+			if(substr_count($qstn, 'Invalid')>0)
+				$invalid+=$value->sd->answer;
+			if(substr_count($qstn, 'Test-1 Total Positive')>0)
+				$reactiveOne+=$value->sd->answer;
+			if(substr_count($qstn, 'Test-1 Total Negative')>0)
+				$nonReactiveOne+=$value->sd->answer;
+			if(substr_count($qstn, 'Test-2 Total Positive')>0)
+				$reactiveTwo+=$value->sd->answer;
+			if(substr_count($qstn, 'Test-2 Total Negative')>0)
+				$nonReactiveTwo+=$value->sd->answer;
+		}
+		$absReactive = abs($reactiveTwo-$reactiveOne);
+		$absNonReactive = abs($nonReactiveTwo-$nonReactiveOne);
+		/*if($algorithm == 'Parallel')
+			return ($total - $invalid)>0?round((($total - $invalid) - ($absReactive + $absNonReactive)) * 100 / ($total - $invalid), 2):0;
+		else*/
+			return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
 	}
 }
