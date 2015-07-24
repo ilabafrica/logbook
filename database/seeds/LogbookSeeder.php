@@ -30,8 +30,8 @@ class LogbookSeeder extends Seeder
 {
     public function run()
     {
-    	/* Users table */
-    	$usersData = array(
+        /* Users table */
+        $usersData = array(
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@hivlogbook.org",
                 "name" => "Lucy Mbugua", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
@@ -43,7 +43,7 @@ class LogbookSeeder extends Seeder
             $users[] = User::create($user);
         }
         $this->command->info('Users table seeded');
-    	
+        
         /* Roles table */
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
@@ -712,7 +712,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Answers table seeded');
 
         /* Question-Responses*/
-                
+                        
         DB::table('question_responses')->insert(
             array("question_id" => $question_hivTest1Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
@@ -822,8 +822,7 @@ class LogbookSeeder extends Seeder
         DB::table('question_responses')->insert(
             array("question_id" => $question_curricula->id, "response_id" => $response_completed->id));
 
-        
-         DB::table('question_responses')->insert(
+        DB::table('question_responses')->insert(
             array("question_id" => $question_training->id, "response_id" => $response_doesNotExist->id));
         DB::table('question_responses')->insert(
             array("question_id" => $question_training ->id, "response_id" => $response_inDevelopment->id));
@@ -1013,6 +1012,17 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_reviewfeedback->id, "response_id" => $response_completed->id));
 
         //SPI-RT checklist
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_govt->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_private->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_fbo->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation->id, "response_id" => $response_ngo->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_other->id));
+
         DB::table('question_responses')->insert(
             array("question_id" => $question_comprehensiveTraining ->id, "response_id" => $response_no->id));
         DB::table('question_responses')->insert(
