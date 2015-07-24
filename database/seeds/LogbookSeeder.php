@@ -684,31 +684,31 @@ class LogbookSeeder extends Seeder
          $this->command->info('Questions table seeded');
 
         /* Responses */
-        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
-        $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
-        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
-        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
-        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
-        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
-        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
+        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "score" =>"1","user_id" => "1"));
+        $response_no = Answer::create(array("name" => "No", "description" => "No(N)","score" =>"0", "user_id" => "1"));
+        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)","score" =>"0.5", "user_id" => "1"));
+        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "score" =>"1","user_id" => "1"));
+        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "","score" =>"2", "user_id" => "1"));
+        $response_completed = Answer::create(array("name" => "Completed", "description" => "","score" =>"3", "user_id" => "1"));
         //HTC lab register
-        $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
-        $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));
+        $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided","score" =>"0", "user_id" => "1"));
+        $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided","score" =>"0", "user_id" => "1"));
         //M&E
-        $response_baseline = Answer::create(array("name" => "Baseline", "description" => "", "user_id" => "1"));
-        $response_followUp = Answer::create(array("name" => "Follow Up", "description" => "", "user_id" => "1"));
-        $response_serial = Answer::create(array("name" => "Serial", "description" => "", "user_id" => "1"));
-        $response_parallel = Answer::create(array("name" => "Parallel", "description" => "", "user_id" => "1"));
-        $response_KHB = Answer::create(array("name" => "KHB", "description" => "", "user_id" => "1"));
-        $response_firstResponse = Answer::create(array("name" => "First Response", "description" => "", "user_id" => "1"));
-        $response_unigold = Answer::create(array("name" => "Unigold", "description" => "", "user_id" => "1"));
-        $response_other = Answer::create(array("name" => "Other", "description" => "", "user_id" => "1"));
+        $response_baseline = Answer::create(array("name" => "Baseline", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_followUp = Answer::create(array("name" => "Follow Up", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_serial = Answer::create(array("name" => "Serial", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_parallel = Answer::create(array("name" => "Parallel", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_KHB = Answer::create(array("name" => "KHB", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_firstResponse = Answer::create(array("name" => "First Response", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_unigold = Answer::create(array("name" => "Unigold", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_other = Answer::create(array("name" => "Other", "description" => "","score" =>"0", "user_id" => "1"));
 
-        $response_govt = Answer::create(array("name" => "Government", "description" => "", "user_id" => "1"));
-        $response_private = Answer::create(array("name" => "Private", "description" => "", "user_id" => "1"));
-        $response_fbo = Answer::create(array("name" => "Faith Based Organization", "description" => "", "user_id" => "1"));
-        $response_ngo = Answer::create(array("name" => "Non Governmental Organisation", "description" => "", "user_id" => "1"));
-        $response_other = Answer::create(array("name" => "Other", "description" => "", "user_id" => "1"));
+        $response_govt = Answer::create(array("name" => "Government", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_private = Answer::create(array("name" => "Private", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_fbo = Answer::create(array("name" => "Faith Based Organization", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_ngo = Answer::create(array("name" => "Non Governmental Organisation", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_other = Answer::create(array("name" => "Other", "description" => "","score" =>"0", "user_id" => "1"));
         $this->command->info('Answers table seeded');
 
         /* Question-Responses*/

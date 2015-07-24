@@ -40,15 +40,15 @@
                 <tr>
                     <td>{!! $counter !!}</td>
                     <td>{!! $question->name !!}</td>
-                    @if($question->id == App\Models\Question::idByName('Name of the QA Officer'))
+                    @if($question->id == App\Models\Question::idByName('Name of the QA Officer', $question->section->checklist->id))
                       <td>{!! $survey->qa_officer !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('Facility'))
+                    @elseif($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
                       <td>{!! $survey->facility->name !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)'))
+                    @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)' , $question->section->checklist->id))
                       <td>{!! $survey->sdp->name !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('GPS Latitude'))
+                    @elseif($question->id == App\Models\Question::idByName('GPS Latitude', $question->section->checklist->id))
                       <td>{!! $survey->latitude !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('GPS Longitude'))
+                    @elseif($question->id == App\Models\Question::idByName('GPS Longitude', $question->section->checklist->id))
                       <td>{!! $survey->longitude !!}</td>
                     @elseif($question->id == App\Models\Question::idByName('Additional Comments'))
                       <td>{!! $survey->comment !!}</td>

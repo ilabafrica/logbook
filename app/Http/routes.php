@@ -223,7 +223,7 @@ Route::get('survey/{id}/{checklist_id}/edit', array(
     "as"    =>  "survey.edit",
     "uses"  =>  "SurveyController@edit"
 ));
-Route::get('survey/{id}/update', array(
+Route::any('survey/{id}/update', array(
     "as"    =>  "survey.update",
     "uses"  =>  "SurveyController@update"
 ));

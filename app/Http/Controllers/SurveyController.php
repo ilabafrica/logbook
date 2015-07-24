@@ -56,7 +56,7 @@ class SurveyController extends Controller {
 	 */
 	public function store()
 	{
-		//	dd(Input::all());
+		//dd(Input::all());
 		$checklist_id = Input::get('checklist_id');
 		$facility_id = Input::get('facility');
 		$qa_officer = Input::get('qa_officer');
@@ -177,12 +177,8 @@ class SurveyController extends Controller {
 		$comments = Input::get('comments');
 		$sdp_id = Input::get('sdp');
 		//	Check if survey exists
-		$survey = Survey::where('checklist_id', $checklist_id)
-						->where('facility_id', $facility_id)
-						->where('qa_officer', $qa_officer)
-						->where('sdp_id', $sdp_id)
-						->first();
-		if(count($survey) == 0){
+		$survey = Survey::find($id);
+		if($survey->isEmpty()){
 			$survey = new Survey;
 			$survey->checklist_id = $checklist_id;
 			$survey->facility_id = $facility_id;

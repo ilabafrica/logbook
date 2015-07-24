@@ -51,15 +51,15 @@
                     @elseif($question->question_type == App\Models\Question::FIELD)
                         <div class='form-group'>
                             {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            @if($question->id == App\Models\Question::idByName('Name of the QA Officer'))
+                            @if($question->id == App\Models\Question::idByName('Name of the QA Officer', $question->section->checklist->id))
                             <div class='col-sm-6'>
                                 {!! Form::text('qa_officer', old('qa_officer'), array('class' => 'form-control')) !!}
                             </div>
-                            @elseif($question->id == App\Models\Question::idByName('GPS Latitude'))
+                            @elseif($question->id == App\Models\Question::idByName('GPS Latitude', $question->section->checklist->id))
                             <div class='col-sm-6'>
                                 {!! Form::text('latitude', old('latitude'), array('class' => 'form-control')) !!}
                             </div>
-                            @elseif($question->id == App\Models\Question::idByName('GPS Longitude'))
+                            @elseif($question->id == App\Models\Question::idByName('GPS Longitude', $question->section->checklist->id))
                             <div class='col-sm-6'>
                                 {!! Form::text('longitude', old('longitude'), array('class' => 'form-control')) !!}
                             </div>
