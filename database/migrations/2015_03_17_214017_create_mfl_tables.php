@@ -311,7 +311,6 @@ class CreateMflTables extends Migration {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
-            $table->float('score')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
@@ -423,7 +422,48 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
 			$table->timestamps();
 		});
+
+		//affiliations
+		Schema::create('affiliations', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+        //algorithms
+		Schema::create('algorithms', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
+        //audit_types
+		Schema::create('audit_types', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+        });
 	}
+
 	/**
 	 * Reverse the migrations.
 	 *
@@ -454,6 +494,9 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('sdps');
 		Schema::dropIfExists('hiv_test_kits');
 		Schema::dropIfExists('cadres');
+		Schema::dropIfExists('algorithms');
+		Schema::dropIfExists('affiliations');
+		Schema::dropIfExists('audit_types');
 
 	}
 }
