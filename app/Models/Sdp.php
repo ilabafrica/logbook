@@ -44,12 +44,15 @@ class Sdp extends Model {
 		//	Initialize counts
 		$positive = 0;
 		$total = 0;
+		//	Get sdp surveys
+		$surveys = $this->surveys->lists('id');
 		//	Declare questions to be used in calculation of both positive and total values
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
 		//	Get the counts
 		foreach ($qstns as $qstn) {
 			$question = Question::idByName($qstn);
 			$value = SurveyQuestion::where('question_id', $question)
+								   ->whereIn('survey_id', $surveys)
 								   ->first();
 			if(substr_count($qstn, 'Test-1')>0)
 				$total+=$value->sd->answer;
@@ -68,10 +71,13 @@ class Sdp extends Model {
 		$testTwo = 0;
 		//	Declare questions to be used in calculation of both values
 		$qstns = array('Test-1 Total Positive', 'Test-2 Total Positive');
+		//	Get sdp surveys
+		$surveys = $this->surveys->lists('id');
 		//	Calculation
 		foreach ($qstns as $qstn) {
 			$question = Question::idByName($qstn);
 			$value = SurveyQuestion::where('question_id', $question)
+								   ->whereIn('survey_id', $surveys)
 								   ->first();
 			if(substr_count($qstn, 'Test-1')>0)
 				$testOne+=$value->sd->answer;
@@ -92,12 +98,15 @@ class Sdp extends Model {
 		$nonReactiveOne = 0;
 		$reactiveTwo = 0;
 		$nonReactiveTwo = 0;
+		//	Get sdp surveys
+		$surveys = $this->surveys->lists('id');
 		//	Get questions to be used in the math
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-1 Total Invalid', 'Test-2 Total Positive', 'Test-2 Total Negative', 'Test-2 Total Invalid');
 		//	Math
 		foreach ($qstns as $qstn) {
 			$question = Question::idByName($qstn);
 			$value = SurveyQuestion::where('question_id', $question)
+								   ->whereIn('survey_id', $surveys)
 								   ->first();
 			if(substr_count($qstn, 'Test-1')>0)
 				$total+=$value->sd->answer;
