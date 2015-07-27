@@ -30,8 +30,8 @@ class LogbookSeeder extends Seeder
 {
     public function run()
     {
-    	/* Users table */
-    	$usersData = array(
+        /* Users table */
+        $usersData = array(
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@hivlogbook.org",
                 "name" => "Lucy Mbugua", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
@@ -43,7 +43,7 @@ class LogbookSeeder extends Seeder
             $users[] = User::create($user);
         }
         $this->command->info('Users table seeded');
-    	
+        
         /* Roles table */
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
@@ -312,7 +312,7 @@ class LogbookSeeder extends Seeder
         foreach ($cadres as $cadre) {
             Cadre::create($cadre);
         }
-        $this->command->info('HIV Test Kits table seeded');
+        $this->command->info('Cadres table seeded');
 
         /* Checklists table */
         $checklists = array(
@@ -370,25 +370,34 @@ class LogbookSeeder extends Seeder
         $question_pageStartDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page Start Date", "description" => "", "question_type" =>"1","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_pageEndDate = Question::create(array("section_id" => $sec_register->id, "name" => "Register Page End Date", "description" => "","question_type" =>"1", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
                  //hivtest1
-        $question_hivTest1 = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_test1lotNo = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_test1expiryDate = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest1Status = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest1Name = Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test1lotNoStatus = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test1lotNo = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test1expiryDateStatus = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test1expiryDate = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test1TotalPositive = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Positive", "description" => "Test-1 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1TotalNegative = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Negative", "description" => "Test-1 Total Negative", "question_type" =>"2","required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1TotalInvalid = Question::create(array("section_id" => $sec_hiv1->id, "name" => "Test-1 Total Invalid", "description" => "Test-1 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test1Comment= Question::create(array("section_id" => $sec_hiv1->id, "name" => "HIV Test-1 Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest2
-        $question_hivTest2 = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name", "description" => "HIV Test-1 Name","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test2lotNo = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test2expiryDate = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date", "description" => "Expiry Date", "question_type" =>"0","required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest2Status = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest2Name = Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2lotNoStatus = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test2lotNo = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test2expiryDateStatus = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test2expiryDate = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test2TotalPositive = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Positive", "description" => "Test-2 Total Positive", "question_type" =>"2","required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2TotalNegative = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Negative", "description" => "Test-2 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2TotalInvalid = Question::create(array("section_id" => $sec_hiv2->id, "name" => "Test-2 Total Invalid", "description" => "Test-2 Total Invalid","question_type" =>"2", "required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test2Comment= Question::create(array("section_id" => $sec_hiv2->id, "name" => "HIV Test-2 Comments", "description" => "Comments", "question_type" =>"3","required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
                 //hivtest3
-        $question_hivTest3 = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name", "description" => "HIV Test-1 Name", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test3lotNo = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number", "description" => "Lot Number (select one)", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_test3expiryDate = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date", "description" => "Expiry Date","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_hivTest3Status = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name Status", "description" => "","question_type" =>"0", "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_hivTest3Name = Question::create(array("section_id" => $sec_hiv3->id, "name" => "HIV Test-3 Name", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3lotNoStatus = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number Status", "description" => "", "question_type" =>"0","required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_test3lotNo = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Lot Number", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_test3expiryDateStatus = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date ", "description" => "","question_type" =>"0", "required" => "1", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
+        $question_test3expiryDate = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Expiry Date", "description" => "","question_type" =>"1", "required" => "0", "info" => "For expiry dates with mm/yyyy format, select the last date of that month as the expiry date", "score" => "0", "user_id" => "1"));
         $question_test3TotalPositive = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Positive", "description" => "Test-3 Total Positive","question_type" =>"2", "required" => "1", "info" => "Count all Positives (P or R) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test3TotalNegative = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Negative", "description" => "Test-3 Total Negative","question_type" =>"2", "required" => "1", "info" => "Count all Negatives (N or NR) in Column “o”", "score" => "0", "user_id" => "1"));
         $question_test3TotalInvalid = Question::create(array("section_id" => $sec_hiv3->id, "name" => "Test-3 Total Invalid", "description" => "Test-3 Total Invalid", "question_type" =>"2","required" => "1", "info" => "Count all Invalids (I or INV) in Column “o”", "score" => "0", "user_id" => "1"));
@@ -440,8 +449,12 @@ class LogbookSeeder extends Seeder
         $question_MEcadres = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Cadres authorized to offer HIV testing and counseling services at the site", "description" => "(Please check box where applicable)","question_type" =>"5", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEstrategy= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Current testing strategy used at the site (Serial vs. Parallel)", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest1= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest1Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest2= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Confirmatory or Test - 2:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest2Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 2 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest3= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Tie-breaker or Test - 3 (if applicable):", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest3Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 3 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        
         //M & E sections
         //section1
         
@@ -465,8 +478,8 @@ class LogbookSeeder extends Seeder
         $question_performanceComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_criteria = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.7 Is the site ensuring that the criteria set by the MOH-recognized certification body are met for site certification", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
         $question_criteriaComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_siteCerification = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.8 Has the site been certified or re-certified according the certification calendar (annually, bi-annually. etc.)?* ", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
-        $question_siteCerificationComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_siteCertification = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.8 Has the site been certified or re-certified according the certification calendar (annually, bi-annually. etc.)?* ", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
+        $question_siteCertificationComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_display = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.9 Is the registration and certification certificate of the HIV testing site required to be on display at testing site?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
         $question_displayComment= Question::create(array("section_id" => $sec_sec2->id, "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_action = Question::create(array("section_id" =>$sec_sec2 ->id, "name" => "2.10 Are corrective actions implemented at the sites/laboratories to ensure certification/re-certification of the sites?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
@@ -668,65 +681,76 @@ class LogbookSeeder extends Seeder
         $question_Spilat = Question::create(array("section_id" => $sec_Spiother->id, "name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_Spilong = Question::create(array("section_id" => $sec_Spiother->id, "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         
-       
-       
-
-
-
-
-        $this->command->info('Questions table seeded');
+         $this->command->info('Questions table seeded');
 
         /* Responses */
-        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
-        $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
-        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
-        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
-        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
-        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
-        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
-        $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
-        $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));
+        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "score" =>"1","user_id" => "1"));
+        $response_no = Answer::create(array("name" => "No", "description" => "No(N)","score" =>"0", "user_id" => "1"));
+        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)","score" =>"0.5", "user_id" => "1"));
+        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "score" =>"1","user_id" => "1"));
+        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "","score" =>"2", "user_id" => "1"));
+        $response_completed = Answer::create(array("name" => "Completed", "description" => "","score" =>"3", "user_id" => "1"));
+        //HTC lab register
+        $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided","score" =>"0", "user_id" => "1"));
+        $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided","score" =>"0", "user_id" => "1"));
+        //M&E
+        $response_baseline = Answer::create(array("name" => "Baseline", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_followUp = Answer::create(array("name" => "Follow Up", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_serial = Answer::create(array("name" => "Serial", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_parallel = Answer::create(array("name" => "Parallel", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_KHB = Answer::create(array("name" => "KHB", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_firstResponse = Answer::create(array("name" => "First Response", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_unigold = Answer::create(array("name" => "Unigold", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_other = Answer::create(array("name" => "Other", "description" => "","score" =>"0", "user_id" => "1"));
+
+        $response_govt = Answer::create(array("name" => "Government", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_private = Answer::create(array("name" => "Private", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_fbo = Answer::create(array("name" => "Faith Based Organization", "description" => "", "score" =>"0","user_id" => "1"));
+        $response_ngo = Answer::create(array("name" => "Non Governmental Organisation", "description" => "","score" =>"0", "user_id" => "1"));
+        $response_other = Answer::create(array("name" => "Other", "description" => "","score" =>"0", "user_id" => "1"));
         $this->command->info('Answers table seeded');
 
         /* Question-Responses*/
+                        
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest1Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest1 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest1Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test1lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test1lotNoStatus->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test1expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test1expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test1expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest2Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest2 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest2Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test2lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test2lotNoStatus ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test2expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test2expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test2expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_hivTest3Status ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_hivTest3 ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_hivTest3Status ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test3lotNoStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3lotNo ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test3lotNoStatus ->id, "response_id" => $response_notProvided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_provided->id));
+            array("question_id" => $question_test3expiryDateStatus ->id, "response_id" => $response_provided->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_test3expiryDate ->id, "response_id" => $response_notProvided->id));
+            array("question_id" => $question_test3expiryDateStatus ->id, "response_id" => $response_notProvided->id));
 
         DB::table('question_responses')->insert(
             array("question_id" => $question_supervisorReview->id, "response_id" => $response_yes->id));
@@ -736,7 +760,738 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_yes->id));
         DB::table('question_responses')->insert(
             array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_no->id));
+
+       //M & E
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_auditType ->id, "response_id" => $response_baseline->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_auditType ->id, "response_id" => $response_followUp->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_MEstrategy ->id, "response_id" => $response_serial->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_MEstrategy->id, "response_id" => $response_parallel->id));
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_METest1->id, "response_id" => $response_KHB->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest1 ->id, "response_id" => $response_firstResponse->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest1 ->id, "response_id" => $response_unigold ->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest1->id, "response_id" => $response_other->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest2->id, "response_id" => $response_KHB->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest2 ->id, "response_id" => $response_firstResponse->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest2 ->id, "response_id" => $response_unigold ->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest2->id, "response_id" => $response_other->id));
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_METest3->id, "response_id" => $response_KHB->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest3->id, "response_id" => $response_firstResponse->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest3->id, "response_id" => $response_unigold ->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_METest3->id, "response_id" => $response_other->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_resources->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_resources ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_resources ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_resources->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supply->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supply ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supply ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supply->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_curricula->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_curricula ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_curricula ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_curricula->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_training->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_training ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_training ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_training->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_competency->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_competency ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_competency ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_competency->id, "response_id" => $response_completed->id));
+        
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificate->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificate ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificate ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificate->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certified->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certified ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certified ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certified->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_performance->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_performance ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_performance ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_performance->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_criteria->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_criteria ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_criteria ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_criteria->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCertification->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCertification ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCertification ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCertification->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_display->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_display ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_display ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_display->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_action->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_action ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_action ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_action->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_control->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_control ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_control ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_control->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_pt->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_pt ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_pt ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_pt->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_feedback->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_feedback ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_feedback ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_feedback->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ack->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ack ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ack ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ack->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_issues->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_issues ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_issues ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_issues->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_correctiveAction->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_correctiveAction ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_correctiveAction ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_correctiveAction->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_standardRegister->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_standardRegister ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_standardRegister ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_standardRegister->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_registerTraining->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_registerTraining ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_registerTraining ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_registerTraining->id, "response_id" => $response_completed->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewDataTraining->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewDataTraining ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewDataTraining ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewDataTraining->id, "response_id" => $response_completed->id));
        
+       DB::table('question_responses')->insert(
+            array("question_id" => $question_reportingStructure->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reportingStructure ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reportingStructure ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reportingStructure->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_analyze->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_analyze ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_analyze ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_analyze->id, "response_id" => $response_completed->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewfeedback->id, "response_id" => $response_doesNotExist->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewfeedback ->id, "response_id" => $response_inDevelopment->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewfeedback ->id, "response_id" => $response_beingImplemented->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reviewfeedback->id, "response_id" => $response_completed->id));
+
+        //SPI-RT checklist
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_govt->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_private->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_fbo->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation->id, "response_id" => $response_ngo->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_affiliation ->id, "response_id" => $response_other->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_comprehensiveTraining ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_comprehensiveTraining ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_comprehensiveTraining ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stdRegisterTraining ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stdRegisterTraining ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stdRegisterTraining ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptTraining ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptTraining ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptTraining ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_qc ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qc ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qc ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_safety ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_safety ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_safety ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_signedRecord ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_signedRecord ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_signedRecord ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicTraining ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicTraining ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicTraining ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_evidence ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_evidence ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_evidence ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificationProgram ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificationProgram ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_certificationProgram ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_provider ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_provider ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_provider ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reCertification ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reCertification ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reCertification ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_area ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_area ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_area ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_clean ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_clean ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_clean ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_lighting ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_lighting ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_lighting ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_power ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_power ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_power ->id, "response_id" => $response_partial->id));
+        
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_storage ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_storage ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_storage ->id, "response_id" => $response_partial->id));
+        
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_sops ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_sops ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_sops ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_dispose ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_dispose ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_dispose ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_spill ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_spill ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_spill ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_exposure ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_exposure ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_exposure ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_gear ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_gear ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_gear ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_gearuse ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_gearuse ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_gearuse ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_water ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_water ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_water ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disinfectant ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disinfectant ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disinfectant ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_handling ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_handling ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_handling ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_guidelines ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_guidelines ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_guidelines ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algoUse ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algoUse ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algoUse ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_jobAides ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_jobAides ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_jobAides ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kits ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kits ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kits ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kitStorage ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kitStorage ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_kitStorage ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_inventory ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_inventory ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_inventory ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reagent ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reagent ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_reagent ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_label ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_label ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_label ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_alternative ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_alternative ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_alternative ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_specimen ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_specimen ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_specimen ->id, "response_id" => $response_partial->id));
+
+          DB::table('question_responses')->insert(
+            array("question_id" => $question_supplies ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supplies ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_supplies ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disposal ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disposal ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_disposal ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_timers ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_timers ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_timers ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_devices ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_devices ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_devices ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_sample ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_sample ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_sample ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_procedures ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_procedures ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_procedures ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcSpecimen ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcSpecimen ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcSpecimen ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcResult ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcResult ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcResult ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stepDocumentation ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stepDocumentation ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_stepDocumentation ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_qcRecordReview ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcRecordReview ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_qcRecordReview ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_testResult ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testResult ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testResult ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testDevice ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testDevice ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testDevice ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testArea ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testArea ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_testArea ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_container ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_container ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_container ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_htcUse ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_htcUse ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_htcUse ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_elements ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_elements ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_elements ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_invalid ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_invalid ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_invalid ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_end ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_end ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_end ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_secure ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_secure ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_secure ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_numbered ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_numbered ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_numbered ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_confidentiality ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_confidentiality ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_confidentiality ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptEnrolled ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptEnrolled ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_ptEnrolled ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_enrolled ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_enrolled ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_enrolled ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_eqa ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_eqa ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_eqa ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_headReview ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_headReview ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_headReview ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_report ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_report ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_report ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCorrectiveAction ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCorrectiveAction ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_siteCorrectiveAction ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_unsatisfactory ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_unsatisfactory ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_unsatisfactory ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_dbs ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_dbs ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_dbs ->id, "response_id" => $response_partial->id));
+
+         DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicReview ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicReview ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_periodicReview ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_observation ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_observation ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_observation ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_providers ->id, "response_id" => $response_no->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_providers ->id, "response_id" => $response_yes->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_providers ->id, "response_id" => $response_partial->id));
+        
         $this->command->info('Question-responses table seeded');
 
     

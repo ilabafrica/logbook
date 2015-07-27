@@ -363,4 +363,13 @@ return [
 	'comparison'	=>	'Comparison',
 	'from'	=>	'From',
 	'to'	=>	'To',
+	/**
+	*
+	* Data management
+	*
+	*/
+	'data-management'	=>	'Data Management',
+	'review'	=>	'Review',
+	'review-collected-data' =>	'Review Collected Data',
+	'edit-questionnaire'	=>	'Edit Questionnaire',
 ];

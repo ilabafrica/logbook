@@ -16,7 +16,7 @@
 </div>
 <div class="panel panel-primary">
   <div class="panel-heading"><i class="fa fa-tags"></i> {!! $survey->checklist->name !!} <span class="panel-btn">
-  <a class="btn btn-sm btn-info" href="{{ URL::to("survey/" . $survey->id . "/edit") }}" >
+  <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id."/". $checklist_id. "/edit") !!}" >
     <i class="fa fa-edit"></i><span> {{ trans('messages.edit-questionnaire') }}</span>
   </a>
   </span></div>
@@ -40,7 +40,21 @@
                 <tr>
                     <td>{!! $counter !!}</td>
                     <td>{!! $question->name !!}</td>
-                    <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
+                    @if($question->id == App\Models\Question::idByName('Name of the QA Officer', $question->section->checklist->id))
+                      <td>{!! $survey->qa_officer !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
+                      <td>{!! $survey->facility->name !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)' , $question->section->checklist->id))
+                      <td>{!! $survey->sdp->name !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('GPS Latitude', $question->section->checklist->id))
+                      <td>{!! $survey->latitude !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('GPS Longitude', $question->section->checklist->id))
+                      <td>{!! $survey->longitude !!}</td>
+                    @elseif($question->id == App\Models\Question::idByName('Additional Comments'))
+                      <td>{!! $survey->comment !!}</td>
+                    @else
+                      <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
+                    @endif
                 </tr>
                 @endforeach
               @endforeach

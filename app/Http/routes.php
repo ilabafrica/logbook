@@ -148,6 +148,9 @@ Route::resource('permission', 'PermissionController');
 Route::resource('privilege', 'PrivilegeController');
 //  Authorization controller
 Route::resource('authorization', 'AuthorizationController');
+
+//  Review controller
+Route::resource('review', 'ReviewController');
 //  HTC
 //Route::resource('htc', 'HtcController');
 Route::get("/htc/{id}/", array(
@@ -216,7 +219,16 @@ Route::get('survey/{id}/list', array(
     "as"    =>  "survey.list",
     "uses"  =>  "SurveyController@listing"
 ));
-Route::get('survey/{id}', array(
+Route::get('survey/{id}/{checklist_id}/edit', array(
+    "as"    =>  "survey.edit",
+    "uses"  =>  "SurveyController@edit"
+));
+Route::any('survey/{id}/update', array(
+    "as"    =>  "survey.update",
+    "uses"  =>  "SurveyController@update"
+));
+
+Route::get('survey/{id}/{checklist_id}', array(
     "as"    =>  "survey.show",
     "uses"  =>  "SurveyController@show"
 ));
@@ -253,6 +265,7 @@ Route::any('report/{id}/invalid', array(
     "as"    =>  "reports.results.invalid",
     "uses"  =>  "ReportController@invalid"
 ));
+
 /* *
 *
 * Dynamic loading of sub-county filtered by county
@@ -262,3 +275,4 @@ Route::any('/sub_county/dropdown', array(
     "as"    =>  "subCounty.dropdown",
     "uses"  =>  "CountyController@dropdown"
 ));
+

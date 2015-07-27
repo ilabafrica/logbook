@@ -11,5 +11,12 @@ class Answer extends Model {
 	*/
 	const NO = 0;
 	const YES = 1;	
-	const PARTIAL = 0.5;	
+	const PARTIAL = 0.5;
+	/**
+	* Return respective score for a response
+	*/
+	public function point()
+	{
+		return 0;
+	}
 }
