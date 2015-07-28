@@ -298,3 +298,12 @@ Route::any('report/{id}/me', array(
     "as"    =>  "reports.me.mscolumn",
     "uses"  =>  "ReportController@me"
 ));
+/* *
+*
+* SPI-RT reports
+*
+*/
+Route::any('report/{id}/spirt', array(
+    "as"    =>  "reports.spirt.spider",
+    "uses"  =>  "ReportController@spirt"
+));

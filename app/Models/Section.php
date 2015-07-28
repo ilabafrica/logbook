@@ -48,4 +48,22 @@ class Section extends Model {
 		else
 			return false;
 	}
+	/**
+	 * Function to calculate scores per section
+	 */
+	public function spider()
+	{
+		//dd($this->label);
+		$points = 0.0;
+		$array = array();
+		foreach ($this->questions as $question) {
+			if($question->answers->count()>0)
+				array_push($array, $question);
+		}
+		//dd($questions);
+		foreach ($array as $question) {
+			$points+=SurveyQuestion::where('question_id', $question->id)->first()->ss->score;
+		}
+		return $points;
+	}
 }

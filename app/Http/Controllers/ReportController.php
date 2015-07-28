@@ -365,6 +365,79 @@ class ReportController extends Controller {
 		return view('report.mscolumn', compact('checklist', 'chart'));
 	}
 	/**
+	 * SPI-RT spider chart report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function spirt($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Add scorable sections to array
+		$categories = array();
+		foreach ($checklist->sections as $section){
+			if($section->isScorable())
+				array_push($categories, $section);
+		}
+		$chart = "{
+
+	        chart: {
+	            polar: true,
+	            type: 'line'
+	        },
+
+	        title: {
+	            text: 'SPI-RT Scores Comparison',
+	            x: -80
+	        },
+
+	        pane: {
+	            size: '80%'
+	        },
+
+	        xAxis: {
+	            categories: [";
+	            	foreach ($categories as $category) {
+	            		$chart.="'".$category->label."',";
+	            	}
+	            $chart.="],
+	            tickmarkPlacement: 'on',
+	            lineWidth: 0
+	        },
+
+	        yAxis: {
+	            gridLineInterpolation: 'polygon',
+	            lineWidth: 0,
+	            min: 0
+	        },
+
+	        tooltip: {
+	            shared: true,
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
+	        },
+
+	        legend: {
+	            align: 'right',
+	            verticalAlign: 'top',
+	            y: 70,
+	            layout: 'vertical'
+	        },
+
+	        series: [{
+	            name: 'Score',
+	            data: [";
+	            	foreach ($categories as $category) {
+	   					$chart.=round($category->spider()*100/$category->total_points, 2).',';
+	   				}
+	   				$chart.="],
+	            pointPlacement: 'on'
+	        }]
+
+	    }";
+	    return view('report.spider', compact('checklist', 'chart'));
+	}
+	/**
 	 * Show the form for creating a new resource.
 	 *
 	 * @return Response
