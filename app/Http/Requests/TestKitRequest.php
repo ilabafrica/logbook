@@ -24,8 +24,7 @@ class TestKitRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'full_name'   => 'required|unique:test_kits,full_name,'.$id,
-            'short_name'   => 'required|unique:test_kits,short_name,'.$id,
+            'name'   => 'required|unique:hiv_test_kits,name,'.$id,
         ];
 	}
 	/**
@@ -33,8 +32,7 @@ class TestKitRequest extends Request {
 	*/
 	public function ingnoreId(){
 		$id = $this->route('testKit');
-		$full_name = $this->input('full_name');
-		$short_name = $this->input('short_name');
-		return TestKit::where(compact('id', 'full_name', 'short_name'))->exists() ? $id : '';
+		$name = $this->input('name');
+		return TestKit::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 }

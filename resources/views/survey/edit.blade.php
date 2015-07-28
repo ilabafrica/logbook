@@ -99,6 +99,18 @@
                                     {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,
                                     old('sdp') ? old('sdp') : $sdp,
                                     array('class' => 'form-control')) !!}
+                                @elseif($question->id == App\Models\Question::idByName('Type of Audit', $question->section->checklist->id))
+                                    {!! Form::select('audit_type', array(''=>trans('messages.select'))+$auditTypes,
+                                    old('audit_type') ? old('audit_type') : $audit_type, 
+                                    array('class' => 'form-control')) !!}
+                                @elseif($question->id == App\Models\Question::idByName('Current testing strategy used at the site (Serial vs. Parallel)', $question->section->checklist->id))
+                                    {!! Form::select('algorithm', array(''=>trans('messages.select'))+$algorithms,
+                                    old('algorithm') ? old('algorithm') : $algorithm, 
+                                    array('class' => 'form-control')) !!}
+                                @elseif($question->id == App\Models\Question::idByName('Affilliation (Circle One)', $question->section->checklist->id))
+                                    {!! Form::select('affiliation', array(''=>trans('messages.select'))+$affiliations,
+                                    old('affiliation') ? old('affiliation') : $affiliation, 
+                                    array('class' => 'form-control')) !!}
                                 @endif
                             </div>
                         </div>

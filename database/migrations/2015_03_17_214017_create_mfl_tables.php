@@ -311,6 +311,7 @@ class CreateMflTables extends Migration {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
+            $table->string('score')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
@@ -461,6 +462,40 @@ class CreateMflTables extends Migration {
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
+        });
+        //	survey_me_info
+		Schema::create('survey_me_info', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->integer('survey_id')->unsigned();
+            $table->integer('audit_type_id')->unsigned();
+            $table->integer('algorithm_id')->unsigned();
+            $table->integer('screening')->unsigned();
+            $table->integer('confirmatory')->unsigned();
+            $table->integer('tie_breaker')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('survey_id')->references('id')->on('surveys');
+            $table->foreign('audit_type_id')->references('id')->on('audit_types');
+            $table->foreign('algorithm_id')->references('id')->on('algorithms');
+            $table->foreign('screening')->references('id')->on('test_kits');
+            $table->foreign('confirmatory')->references('id')->on('test_kits');
+            $table->foreign('tie_breaker')->references('id')->on('test_kits');
+        });
+        //	survey_spirt_info
+		Schema::create('survey_spirt_info', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->integer('survey_id')->unsigned();
+            $table->integer('affiliation_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('survey_id')->references('id')->on('surveys');
+            $table->foreign('affiliation_id')->references('id')->on('affiliations');
         });
 	}
 
