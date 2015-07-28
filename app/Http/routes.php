@@ -275,4 +275,17 @@ Route::any('/sub_county/dropdown', array(
     "as"    =>  "subCounty.dropdown",
     "uses"  =>  "CountyController@dropdown"
 ));
-
+/* Algorithms */
+Route::resource('algorithm', 'AlgorithmController');
+/* Audit Types controller */
+Route::resource('auditType', 'AuditTypeController');
+Route::get("/auditType/{id}/delete", array(
+    "as"   => "auditType.delete",
+    "uses" => "AuditTypeController@delete"
+));
+/* Affiliations controller */
+Route::resource('affiliation', 'AffiliationController');
+Route::get("/affiliation/{id}/delete", array(
+    "as"   => "affiliation.delete",
+    "uses" => "AffiliationController@delete"
+));

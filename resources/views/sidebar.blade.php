@@ -52,6 +52,9 @@
                 <li><a href="{!! url('section') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.section', 2) !!}</a></li>
                 <li><a href="{!! url('question') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.question', 2) !!}</a></li>
                 <li><a href="{!! url('response') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.response', 2) !!}</a></li>
+                <li><a href="{!! url('algorithm') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.algorithm', 2) !!}</a></li>
+                <li><a href="{!! url('auditType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.audit-type', 2) !!}</a></li>
+                <li><a href="{!! url('affiliation') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.affiliation', 2) !!}</a></li>
             </ul>
         </li>
         <!-- Surveys -->

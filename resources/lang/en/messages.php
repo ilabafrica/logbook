@@ -372,4 +372,29 @@ return [
 	'review'	=>	'Review',
 	'review-collected-data' =>	'Review Collected Data',
 	'edit-questionnaire'	=>	'Edit Questionnaire',
+	/**
+	*
+	* Algorithms
+	*
+	*/
+	'algorithm'	=>	'Algorithm|Algorithms',
+	'create-algorithm'	=>	'Create Algorithm',
+	'edit-algorithm'	=>	'Edit Algorithm',
+	/**
+	*
+	* Audit Types
+	*
+	*/
+	'audit-type'	=>	'Audit Type|Audit Types',
+	'create-audit-type'	=>	'Create Audit Type',
+	'edit-audit-type'	=>	'Edit Audit Type',
+	'select-audit-type' =>	'Select Audit Type',
+	/**
+	*
+	* Affiliations
+	*
+	*/
+	'affiliation'	=>	'Affiliation|Affiliations',
+	'create-affiliation'	=>	'Create Affiliation',
+	'edit-affiliation'	=>	'Edit Affiliation',
 ];
