@@ -13,10 +13,25 @@ class Answer extends Model {
 	const YES = 1;	
 	const PARTIAL = 0.5;
 	/**
-	* Return respective score for a response
+	* Return response ID given the name
+	* @param $name the name of the response
 	*/
-	public function point()
+	public static function idByName($name=NULL)
 	{
-		return 0;
+		if($name!=NULL){
+			try 
+			{
+				$response = Answer::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+				return $response->id;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The response ` $name ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
 	}
 }

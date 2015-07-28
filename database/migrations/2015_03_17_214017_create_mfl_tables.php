@@ -389,7 +389,7 @@ class CreateMflTables extends Migration {
 		{
 			$table->increments('id')->unsigned();	
 			$table->integer('survey_question_id')->unsigned();
-			$table->integer('score');
+			$table->float('score');
 
             $table->foreign('survey_question_id')->references('id')->on('survey_questions');
 
@@ -480,9 +480,9 @@ class CreateMflTables extends Migration {
             $table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('audit_type_id')->references('id')->on('audit_types');
             $table->foreign('algorithm_id')->references('id')->on('algorithms');
-            $table->foreign('screening')->references('id')->on('test_kits');
-            $table->foreign('confirmatory')->references('id')->on('test_kits');
-            $table->foreign('tie_breaker')->references('id')->on('test_kits');
+            $table->foreign('screening')->references('id')->on('hiv_test_kits');
+            $table->foreign('confirmatory')->references('id')->on('hiv_test_kits');
+            $table->foreign('tie_breaker')->references('id')->on('hiv_test_kits');
         });
         //	survey_spirt_info
 		Schema::create('survey_spirt_info', function(Blueprint $table)
