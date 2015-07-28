@@ -8,6 +8,9 @@ use App\Models\Survey;
 use App\Models\SurveyData;
 use App\Models\Question;
 use App\Models\Sdp;
+use App\Models\QuestionResponse;
+use App\Models\Section;
+use App\Models\Answer;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -287,17 +290,16 @@ class ReportController extends Controller {
 		$categories = array();
 		foreach ($checklist->sections as $section){
 			if($section->isScorable())
-				array_push($categories, $section->label);
+				array_push($categories, $section->id);
 		}
 		//	Get distinct responses
 		$options = QuestionResponse::join('questions', 'question_responses.question_id', '=', 'questions.id')
 									->join('responses', 'question_responses.response_id', '=', 'responses.id')
 									->join('sections', 'questions.section_id', '=', 'sections.id')
 									->where('sections.checklist_id', $checklist->id)
-									->where('responses.score', '>', 0)
+									->whereNotNull('responses.score')
 									->groupBy('response_id')
 									->get();
-		dd($options);
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -308,7 +310,7 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            	foreach ($categories as $category) {
-	            		$chart.="'".$category."',";
+	            		$chart.="'".Section::find($category)->label."',";
 	            	}
 	            $chart.="]
 	        },
@@ -327,16 +329,38 @@ class ReportController extends Controller {
 	                stacking: 'percent'
 	            }
 	        },
-	        series: [{
-	            name: 'John',
-	            data: [5, 3, 4, 7]
-	        }, {
-	            name: 'Jane',
-	            data: [2, 2, 3, 2]
-	        }, {
-	            name: 'Joe',
-	            data: [3, 4, 4, 2]
-	        }]
+	        series: [";
+	        	$counts = count($options);
+		        foreach ($options as $option) {
+		        	$chart.="{name:"."'".Answer::find($option->response_id)->name."'".", data:[";
+	        		$counter = count($categories);
+	        		foreach ($categories as $category) {
+	        			$data = Answer::find($option->response_id)->column($category);
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
 	    }";
 		return view('report.mscolumn', compact('checklist', 'chart'));
 	}

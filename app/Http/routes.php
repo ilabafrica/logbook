@@ -289,3 +289,12 @@ Route::get("/affiliation/{id}/delete", array(
     "as"   => "affiliation.delete",
     "uses" => "AffiliationController@delete"
 ));
+/* *
+*
+* M&E reports
+*
+*/
+Route::any('report/{id}/me', array(
+    "as"    =>  "reports.me.mscolumn",
+    "uses"  =>  "ReportController@me"
+));
