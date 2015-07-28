@@ -3,10 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class AuditType extends Model {
-	use SoftDeletes;
+class Affiliation extends Model {
+    use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'audit_types';
-
-	
+	protected $table = 'affiliations';
 }
