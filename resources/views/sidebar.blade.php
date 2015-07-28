@@ -86,12 +86,7 @@
         </li>
         <!-- Test kits -->
         <li>
-            <a href="#"><i class="fa fa-book"></i> {!! Lang::choice('messages.test-kit', 2) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('testKit') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.kit', 2) !!}</a></li>
-                <li><a href="{!! url('siteKit') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site-kit', 2) !!}</a></li>
-                <li><a href="{!! url('agency') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.agency', 2) !!}</a></li>
-            </ul>
+            <a href="{!! url('testKit') !!}"><i class="fa fa-book"></i> {!! Lang::choice('messages.test-kit', 2) !!}</a>
         </li>
         <!-- User management -->
         <li>

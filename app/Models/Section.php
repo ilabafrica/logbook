@@ -24,4 +24,28 @@ class Section extends Model {
 	{
 		return $this->belongsTo('App\Models\Checklist');
 	}
+	/**
+	 * Check if section has scorable questions
+	 */
+	public function isScorable()
+	{
+		$array = array();
+		foreach ($this->questions as $question) {
+			$answers = array();
+			if($question->answers->count()>0)
+			{	
+				foreach ($question->answers as $response) 
+				{
+					if($response->score>0)
+						array_push($answers, $response->id);
+				}
+			}
+			if(count($answers)>0)
+				array_push($array, $question->id);
+		}
+		if(count($array)>0)
+			return true;
+		else
+			return false;
+	}
 }

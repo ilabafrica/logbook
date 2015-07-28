@@ -250,21 +250,21 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Sites table seeded');
         /* Test kits table */
-        $tkits = array(
+        /*$tkits = array(
             array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1")
         );
         foreach ($tkits as $tkit) {
             TestKit::create($tkit);
         }
-        $this->command->info('Test kits table seeded');
+        $this->command->info('Test kits table seeded');*/
         /* Site test kits table */
-        $stkits = array(
+        /*$stkits = array(
             array("site_id" => "1", "kit_id" => "1", "lot_no" => "0087", "expiry_date" => "2015-08-09", "comments" => "Nothing special.", "stock_available" => "2", "user_id" => "1")
         );
         foreach ($stkits as $stkit) {
             SiteKit::create($stkit);
         }
-        $this->command->info('Site test kits table seeded');
+        $this->command->info('Site test kits table seeded');*/
 
         /* SDPs table */
         $sdps= array(
@@ -432,17 +432,17 @@ class LogbookSeeder extends Seeder
         $question_MEqaOfficer = Question::create(array("section_id" => $sec_MEsurvey->id, "name" => "Name of the QA Officer", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEfacility = Question::create(array("section_id" => $sec_MEsurvey->id, "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEsdp = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Service Delivery Points (SDP)", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_auditType= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Type of Audit", "description" => "","question_type" =>"0",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
+        $question_auditType= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Type of Audit", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
         $question_MEsupervisor = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Name of supervisor being interviewed", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEIndividualsTested = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Number of individuals tested by rapid testing (previous year) at this site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEpersonnel = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Number of personnel authorized to offer HIV testing and counseling services at the site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEcadres = Question::create(array("section_id" => $sec_MEregister->id, "name" => "Cadres authorized to offer HIV testing and counseling services at the site", "description" => "(Please check box where applicable)","question_type" =>"5", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_MEstrategy= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Current testing strategy used at the site (Serial vs. Parallel)", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_METest1= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEstrategy= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Current testing strategy used at the site (Serial vs. Parallel)", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest1= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1:", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest1Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 1 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_METest2= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Confirmatory or Test - 2:", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest2= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Confirmatory or Test - 2:", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest2Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 2 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
-        $question_METest3= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Tie-breaker or Test - 3 (if applicable):", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_METest3= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Tie-breaker or Test - 3 (if applicable):", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest3Other= Question::create(array("section_id" => $sec_MEregister->id, "name" => "Screening or Test - 3 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         
         //M & E sections
@@ -514,7 +514,7 @@ class LogbookSeeder extends Seeder
         $question_SpiqaOfficer = Question::create(array("section_id" => $sec_Spisurvey->id, "name" => "Name of the QA Officer", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_Spifacility = Question::create(array("section_id" => $sec_Spisurvey->id, "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_Spisdp = Question::create(array("section_id" => $sec_Spiregister->id, "name" => "Service Delivery Points (SDP)", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_affiliation= Question::create(array("section_id" => $sec_Spiregister->id, "name" => "Affilliation (Circle One)", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_affiliation= Question::create(array("section_id" => $sec_Spiregister->id, "name" => "Affilliation (Circle One)", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_collectionDate= Question::create(array("section_id" => $sec_Spiregister->id, "name" => "Date of Collection", "description" => "","question_type" =>"1", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
          //section1
         $question_comprehensiveTraining= Question::create(array("section_id" => $sec_Spisec1->id, "name" => "1.1 Have the providers received a comprehensive training on HIV rapid test?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "1", "user_id" => "1"));
@@ -674,13 +674,13 @@ class LogbookSeeder extends Seeder
          $this->command->info('Questions table seeded');
 
         /* Responses */
-        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "user_id" => "1"));
-        $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "user_id" => "1"));
-        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "user_id" => "1"));
-        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "user_id" => "1"));
-        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "user_id" => "1"));
-        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "user_id" => "1"));
-        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "user_id" => "1"));
+        $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "score" => "1.0", "user_id" => "1"));
+        $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "score" => "0.0", "user_id" => "1"));
+        $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "score" => "0.5", "user_id" => "1"));
+        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "score" => "0.0", "user_id" => "1"));
+        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "score" => "1.0", "user_id" => "1"));
+        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "score" => "2.0", "user_id" => "1"));
+        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "score" => "3.0", "user_id" => "1"));
         //HTC lab register
         $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
         $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));
@@ -759,40 +759,7 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_algorithmFollowed->id, "response_id" => $response_no->id));
 
        //M & E
-         DB::table('question_responses')->insert(
-            array("question_id" => $question_auditType ->id, "response_id" => $response_baseline->id));
         DB::table('question_responses')->insert(
-            array("question_id" => $question_auditType ->id, "response_id" => $response_followUp->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_MEstrategy ->id, "response_id" => $response_serial->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_MEstrategy->id, "response_id" => $response_parallel->id));
-         DB::table('question_responses')->insert(
-            array("question_id" => $question_METest1->id, "response_id" => $response_KHB->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest1 ->id, "response_id" => $response_firstResponse->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest1 ->id, "response_id" => $response_unigold ->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest1->id, "response_id" => $response_other->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest2->id, "response_id" => $response_KHB->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest2 ->id, "response_id" => $response_firstResponse->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest2 ->id, "response_id" => $response_unigold ->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest2->id, "response_id" => $response_other->id));
-         DB::table('question_responses')->insert(
-            array("question_id" => $question_METest3->id, "response_id" => $response_KHB->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest3->id, "response_id" => $response_firstResponse->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest3->id, "response_id" => $response_unigold ->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_METest3->id, "response_id" => $response_other->id));
-
-         DB::table('question_responses')->insert(
             array("question_id" => $question_resources->id, "response_id" => $response_doesNotExist->id));
         DB::table('question_responses')->insert(
             array("question_id" => $question_resources ->id, "response_id" => $response_inDevelopment->id));
@@ -1009,17 +976,6 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_reviewfeedback->id, "response_id" => $response_completed->id));
 
         //SPI-RT checklist
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_affiliation ->id, "response_id" => $response_govt->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_affiliation ->id, "response_id" => $response_private->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_affiliation ->id, "response_id" => $response_fbo->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_affiliation->id, "response_id" => $response_ngo->id));
-        DB::table('question_responses')->insert(
-            array("question_id" => $question_affiliation ->id, "response_id" => $response_other->id));
-
         DB::table('question_responses')->insert(
             array("question_id" => $question_comprehensiveTraining ->id, "response_id" => $response_no->id));
         DB::table('question_responses')->insert(

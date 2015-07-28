@@ -93,6 +93,29 @@
                                     {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,'', 
                                     array('class' => 'form-control')) !!}
                                 @endif
+                                @if($question->section->checklist->id == App\Models\Checklist::idByName('SPI-RT Checklist'))
+                                    @if($question->id == App\Models\Question::idByName('Affilliation (Circle One)', $question->section->checklist->id))
+                                        {!! Form::select('affiliation', array(''=>trans('messages.select'))+$affiliations,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @endif
+                                @elseif($question->section->checklist->id == App\Models\Checklist::idByName('M & E Checklist'))
+                                    @if($question->id == App\Models\Question::idByName('Type of Audit', $question->section->checklist->id))
+                                        {!! Form::select('audit_type', array(''=>trans('messages.select'))+$auditTypes,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @elseif($question->id == App\Models\Question::idByName('Current testing strategy used at the site (Serial vs. Parallel)', $question->section->checklist->id))
+                                        {!! Form::select('algorithm', array(''=>trans('messages.select'))+$algorithms,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @elseif($question->id == App\Models\Question::idByName('Screening or Test - 1:', $question->section->checklist->id))
+                                        {!! Form::select('screening', array(''=>trans('messages.select'))+$kits,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @elseif($question->id == App\Models\Question::idByName('Confirmatory or Test - 2:', $question->section->checklist->id))
+                                        {!! Form::select('confirmatory', array(''=>trans('messages.select'))+$kits,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @elseif($question->id == App\Models\Question::idByName('Tie-breaker or Test - 3 (if applicable):', $question->section->checklist->id))
+                                        {!! Form::select('tie_breaker', array(''=>trans('messages.select'))+$kits,'', 
+                                        array('class' => 'form-control')) !!}
+                                    @endif
+                                @endif
                             </div>
                         </div>
                     @endif

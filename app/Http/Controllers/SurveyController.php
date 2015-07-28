@@ -10,6 +10,14 @@ use App\Models\surveyData;
 use App\Models\Facility;
 use App\Models\Sdp;
 use App\Models\SurveyQuestion;
+use App\Models\Affiliation;
+use App\Models\Algorithm;
+use App\Models\AuditType;
+use App\Models\TestKit;
+use App\Models\MeInfo;
+use App\Models\SpirtInfo;
+use App\Models\surveyScore;
+use App\Models\Answer;
 
 use Illuminate\Http\Request;
 use Response;
@@ -46,7 +54,15 @@ class SurveyController extends Controller {
 		$facilities = Facility::lists('name', 'id');
 		//	Get list of service delivery points
 		$sdps = Sdp::lists('name', 'id');
-		return view('survey.create', compact('checklist', 'facilities', 'sdps'));
+		//	Get list of algorithms
+		$algorithms = Algorithm::lists('name', 'id');
+		//	Get list of affiliations
+		$affiliations = Affiliation::lists('name', 'id');
+		//	Get list of audit-types
+		$auditTypes = AuditType::lists('name', 'id');
+		//	Get list of test kits
+		$kits = TestKit::lists('name', 'id');
+		return view('survey.create', compact('checklist', 'facilities', 'sdps', 'algorithms', 'affiliations', 'auditTypes', 'kits'));
 	}
 
 	/**
@@ -64,6 +80,21 @@ class SurveyController extends Controller {
 		$latitude = Input::get('latitude');
 		$comments = Input::get('comments');
 		$sdp_id = Input::get('sdp');
+		$affiliation = NULL;
+		$audit_type = NULL;
+		$algorithm = NULL;
+		$screening = NULL;
+		$confirmatory = NULL;
+		$tie_breaker = NULL;
+		if($checklist_id == Checklist::idByName('SPI-RT Checklist'))
+			$affiliation = Input::get('affiliation');
+		if($checklist_id == Checklist::idByName('M & E Checklist')){
+			$audit_type = Input::get('audit_type');
+			$algorithm = Input::get('algorithm');
+			$screening = Input::get('screening');
+			$confirmatory = Input::get('confirmatory');
+			$tie_breaker = Input::get('tie_breaker');
+		}
 		//	Check if survey exists
 		$survey = Survey::where('checklist_id', $checklist_id)
 						->where('facility_id', $facility_id)
@@ -81,8 +112,32 @@ class SurveyController extends Controller {
 			$survey->sdp_id = $sdp_id;
 			$survey->save();
 		}
+		//	ME info
+		if($checklist_id == Checklist::idByName('M & E Checklist')){
+			$me_info = $survey->me;
+			if($me_info->count() == 0){
+				$me_info = new MeInfo;
+				$me_info->survey_id = $survey->id;
+				$me_info->audit_type_id = $audit_type;
+				$me_info->algorithm_id = $algorithm;
+				$me_info->screening = $screening;
+				$me_info->confirmatory = $confirmatory;
+				$me_info->tie_breaker = $tie_breaker;
+				$me_info->save();
+			}
+		}
+		//	SPI-RT info
+		if($checklist_id == Checklist::idByName('SPI-RT Checklist')){
+			$spirt_info = $survey->spirt;
+			if($spirt_info->count() == 0){
+				$spirt_info = new SpirtInfo;
+				$spirt_info->survey_id = $survey->id;
+				$spirt_info->affiliation_id = $affiliation;
+				$spirt_info->save();
+			}
+		}
 		foreach (Input::all() as $key => $value) {
-			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE))
+			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE) || (stripos($key, 'audit') !==FALSE))
 				continue;
 			else if((stripos($key, 'date') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'textfield') !==FALSE) || (stripos($key, 'textarea') !==FALSE)){
 				$fieldId = $this->strip($key);
@@ -103,6 +158,28 @@ class SurveyController extends Controller {
 					$surveyData->survey_question_id = $surveyQuestion->id;
 					$surveyData->answer = $value;
 					$surveyData->save();
+				}				
+				//	Check if scorable
+				if($responses = Question::find($surveyQuestion->question_id)->answers)
+				{
+					$answers = array();
+					foreach ($responses as $response) 
+					{
+						if($response->score)
+							array_push($answers, $response->id);
+					}
+					if(count($answers)>0)
+					{
+						//	Check if score already exists
+						$surveyScore = SurveyScore::where('survey_question_id', $surveyQuestion->id)->first();
+						if(!$surveyScore)
+						{
+							$surveyScore = new SurveyScore;
+							$surveyScore->survey_question_id = $surveyQuestion->id;
+							$surveyScore->score = Answer::find(Answer::idByName($value))->score;
+							$surveyScore->save();
+						}
+					}
 				}
 			}
 		}
@@ -151,14 +228,22 @@ class SurveyController extends Controller {
 		$surveyquestion = $survey->questions;
 		$facility=$survey->facility_id;
 		$sdp=$survey->sdp_id;
+		$algorithm=$survey->sdp_id;
+		$affiliation=$survey->sdp_id;
+		$audit_type=$survey->sdp_id;
 		//	Get specific checklist
 		$checklist = Checklist::find($checklist_id);
 		//	Get list of facilities
 		$facilities = Facility::lists('name', 'id');
 		//	Get list of service delivery points
 		$sdps = Sdp::lists('name', 'id');
-
-		return view('survey.edit', compact('survey','facilities','checklist', 'sdps','facility', 'sdp'));
+		//	Get list of algorithms
+		$algorithms = Algorithm::lists('name', 'id');
+		//	Get list of affiliations
+		$affiliations = Affiliation::lists('name', 'id');
+		//	Get list of audit-types
+		$auditTypes = AuditType::lists('name', 'id');
+		return view('survey.edit', compact('survey','facilities','checklist', 'sdps','facility', 'sdp', 'algorithms', 'algorithm', 'affiliations', 'affiliation', 'auditTypes', 'audit_type'));
 	}
 
 	/**
@@ -211,6 +296,28 @@ class SurveyController extends Controller {
 					$surveyData->survey_question_id = $surveyQuestion->id;
 					$surveyData->answer = $value;
 					$surveyData->save();
+				}
+				//	Check if scorable
+				if($responses = Question::find($surveyQuestion->question_id)->answers)
+				{
+					$answers = array();
+					foreach ($responses as $response) 
+					{
+						if((float)$response->score>0)
+							array_push($answers, $response->id);
+					}
+					if(count($answers)>0)
+					{
+						//	Check if score already exists
+						$surveyScore = SurveyScore::where('survey_question_id', $surveyQuestion->id)->first();
+						if(!$surveyScore)
+						{
+							$surveyScore = new SurveyScore;
+							$surveyScore->survey_question_id = $surveyQuestion->id;
+							$surveyScore->score = Answer::find(Answer::idByName($value))->score;
+							$surveyScore->save();
+						}
+					}
 				}
 			}
 		}

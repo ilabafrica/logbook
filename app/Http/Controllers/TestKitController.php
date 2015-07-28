@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\TestKitRequest;
 use App\Models\TestKit;
-use App\Models\Agency;
 use Response;
 use Auth;
 
@@ -19,9 +18,9 @@ class TestKitController extends Controller {
 	 */
 	public function index()
 	{
-		$testkits= TestKit::all();
+		$testKits = TestKit::all();
 		
-		return view('testKit.kit.index', compact('testkits'));
+		return view('kit.index', compact('testKits'));
 		
 	}
 
@@ -32,9 +31,7 @@ class TestKitController extends Controller {
 	 */
 	public function create()
 	{ 
-		//	Get all agencies
-		$agencies = Agency::lists('name', 'id');
-		return view('testKit.kit.create', compact ('agencies'));
+		return view('kit.create');
 	}
 
 	/**
@@ -45,15 +42,11 @@ class TestKitController extends Controller {
 	public function store(TestKitRequest $request)
 	{
 
-		$testkit = new TestKit;
-        $testkit->full_name = $request->full_name;
-        $testkit->short_name = $request->short_name;
-        $testkit->manufacturer = $request->manufacturer;
-		$testkit->approval_status = $request->approval_status;
-		$testkit->approval_agency_id = $request->approval_agency;
-		$testkit->incountry_approval = $request->incountry_approval;
-        $testkit->user_id = Auth::user()->id;
-        $testkit->save();
+		$testKit = new TestKit;
+        $testKit->name = $request->name;
+        $testKit->description = $request->description;
+        $testKit->user_id = Auth::user()->id;
+        $testKit->save();
 
         return redirect('testKit')->with('message', 'Test kit saved successfully.');
 	}
@@ -68,9 +61,9 @@ class TestKitController extends Controller {
 	public function show($id)
 	{
 		//show a testkit
-		$testkit = TestKit::find($id);
+		$testKit = TestKit::find($id);
 		//show the view and pass the $town to it
-		return view('testKit.kit.show', compact('testkit'));
+		return view('kit.show', compact('testKit'));
 	}
 
 	/**
@@ -83,12 +76,8 @@ class TestKitController extends Controller {
 	{
 		//	Get testkit
 		$testKit = TestKit::find($id);
-		//	Get all agencies
-		$agencies = Agency::lists('name', 'id');
-		//	Get initial facility type
-		$agency = $testKit->approval_agency_id;		
-
-        return view('testKit.kit.edit', compact('testKit', 'agencies', 'agency'));
+		
+        return view('kit.edit', compact('testKit'));
 	}
 
 	/**
@@ -100,15 +89,11 @@ class TestKitController extends Controller {
 	public function update(TestKitRequest $request, $id)
 	{
 		
-		$testkit = TestKit::findOrFail($id);
-        $testkit->full_name = $request->full_name;
-        $testkit->short_name = $request->short_name;
-        $testkit->manufacturer = $request->manufacturer;
-		$testkit->approval_status = $request->approval_status;
-		$testkit->approval_agency_id = $request->approval_agency;
-		$testkit->incountry_approval = $request->incountry_approval;
-        $testkit->user_id = Auth::user()->id;
-        $testkit->save();
+		$testKit = TestKit::findOrFail($id);
+        $testKit->name = $request->name;
+        $testKit->description = $request->description;
+        $testKit->user_id = Auth::user()->id;
+        $testKit->save();
 
         return redirect('testKit')->with('message', 'Test kit updated successfully.');
 	}
@@ -122,8 +107,8 @@ class TestKitController extends Controller {
 
 		public function delete($id)
 	{
-		$testkit= TestKit::find($id);
-		$testkit->delete();
+		$testKit= TestKit::find($id);
+		$testKit->delete();
 		return redirect('testKit')->with('message', 'Testkit deleted successfully.');
 	}
 	public function destroy($id)
@@ -133,6 +118,6 @@ class TestKitController extends Controller {
 	public function import()
 	{
 		//	show the view 
-		return view('testKit.kit.import');
+		return view('kit.import');
 	}
 }

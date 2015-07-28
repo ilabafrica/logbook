@@ -65,4 +65,18 @@ class Survey extends Model {
 		$absNonReactive = abs($this->htcData->where('test_kit_no', Htc::TESTKIT2)->first()->non_reactive - $this->htcData->where('test_kit_no', Htc::TESTKIT1)->first()->non_reactive);
 		return round((($total - $invalid) - ($absReactive + $absNonReactive)) * 100 / ($total - $invalid), 2);
 	}
+	/**
+	 * survey-me-info relationship
+	 */
+	public function me()
+	{
+		return $this->hasMany('App\Models\MeInfo');
+	}
+	/**
+	 * survey-spirt-info relationship
+	 */
+	public function spirt()
+	{
+		return $this->hasMany('App\Models\SpirtInfo');
+	}
 }
