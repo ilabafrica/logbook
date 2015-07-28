@@ -273,6 +273,28 @@ class SurveyController extends Controller {
 					$surveyData->answer = $value;
 					$surveyData->save();
 				}
+				//	Check if scorable
+				if($responses = Question::find($surveyQuestion->question_id)->answers)
+				{
+					$answers = array();
+					foreach ($responses as $response) 
+					{
+						if((float)$response->score>0)
+							array_push($answers, $response->id);
+					}
+					if(count($answers)>0)
+					{
+						//	Check if score already exists
+						$surveyScore = SurveyScore::where('survey_question_id', $surveyQuestion->id)->first();
+						if(!$surveyScore)
+						{
+							$surveyScore = new SurveyScore;
+							$surveyScore->survey_question_id = $surveyQuestion->id;
+							$surveyScore->score = Answer::find(Answer::idByName($value))->score;
+							$surveyScore->save();
+						}
+					}
+				}
 			}
 		}
 		return redirect('survey');

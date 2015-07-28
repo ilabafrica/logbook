@@ -262,18 +262,83 @@ class ReportController extends Controller {
 		        $chart.="],
 		    }";
 		return view('report.overall', compact('checklist', 'chart'));
-	}
-	/**
+	}/**
 	 * Invalid results report
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function Invalid($id)
+	public function invalid($id)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		return view('report.Invalid', compact('checklist'));
+		return view('report.invalid', compact('checklist'));
+	}
+	/**
+	 * M$E stacked percentages report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function me($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		$categories = array();
+		foreach ($checklist->sections as $section){
+			if($section->isScorable())
+				array_push($categories, $section->label);
+		}
+		//	Get distinct responses
+		$options = QuestionResponse::join('questions', 'question_responses.question_id', '=', 'questions.id')
+									->join('responses', 'question_responses.response_id', '=', 'responses.id')
+									->join('sections', 'questions.section_id', '=', 'sections.id')
+									->where('sections.checklist_id', $checklist->id)
+									->where('responses.score', '>', 0)
+									->groupBy('response_id')
+									->get();
+		dd($options);
+		$chart = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: 'Stacked column chart'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($categories as $category) {
+	            		$chart.="'".$category."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Total fruit consumption'
+	            }
+	        },
+	        tooltip: {
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+	            shared: true
+	        },
+	        plotOptions: {
+	            column: {
+	                stacking: 'percent'
+	            }
+	        },
+	        series: [{
+	            name: 'John',
+	            data: [5, 3, 4, 7]
+	        }, {
+	            name: 'Jane',
+	            data: [2, 2, 3, 2]
+	        }, {
+	            name: 'Joe',
+	            data: [3, 4, 4, 2]
+	        }]
+	    }";
+		return view('report.mscolumn', compact('checklist', 'chart'));
 	}
 	/**
 	 * Show the form for creating a new resource.
