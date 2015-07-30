@@ -140,6 +140,7 @@ return [
 		'Zizaco\Entrust\EntrustServiceProvider',
 		'Laracasts\Flash\FlashServiceProvider',
 		'Maatwebsite\Excel\ExcelServiceProvider',
+		'Sofa\Revisionable\Laravel\ServiceProvider',
 		/*
 		 * Application Service Providers...
 		 */

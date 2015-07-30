@@ -305,7 +305,7 @@ class ReportController extends Controller {
 	            type: 'column'
 	        },
 	        title: {
-	            text: 'Stacked column chart'
+	            text: 'M&E Summary'
 	        },
 	        xAxis: {
 	            categories: [";
@@ -317,7 +317,7 @@ class ReportController extends Controller {
 	        yAxis: {
 	            min: 0,
 	            title: {
-	                text: 'Total fruit consumption'
+	                text: '% Score'
 	            }
 	        },
 	        tooltip: {
