@@ -287,6 +287,8 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
+		//	Get facility
+		$facility = Facility::find(1);
 		$categories = array();
 		foreach ($checklist->sections as $section){
 			if($section->isScorable())
@@ -305,7 +307,7 @@ class ReportController extends Controller {
 	            type: 'column'
 	        },
 	        title: {
-	            text: 'Stacked column chart'
+	            text: '".$facility->name."'
 	        },
 	        xAxis: {
 	            categories: [";
@@ -317,7 +319,7 @@ class ReportController extends Controller {
 	        yAxis: {
 	            min: 0,
 	            title: {
-	                text: 'Total fruit consumption'
+	                text: '% Score'
 	            }
 	        },
 	        tooltip: {
