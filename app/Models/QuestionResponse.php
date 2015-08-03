@@ -3,8 +3,8 @@
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Question_response extends Model {
+class QuestionResponse extends Model {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'question_response';
+	protected $table = 'question_responses';
 }

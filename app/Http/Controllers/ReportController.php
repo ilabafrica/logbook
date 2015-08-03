@@ -8,6 +8,9 @@ use App\Models\Survey;
 use App\Models\SurveyData;
 use App\Models\Question;
 use App\Models\Sdp;
+use App\Models\QuestionResponse;
+use App\Models\Section;
+use App\Models\Answer;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -284,38 +287,39 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
+		//	Get facility
+		$facility = Facility::find(1);
 		$categories = array();
 		foreach ($checklist->sections as $section){
 			if($section->isScorable())
-				array_push($categories, $section->label);
+				array_push($categories, $section->id);
 		}
 		//	Get distinct responses
 		$options = QuestionResponse::join('questions', 'question_responses.question_id', '=', 'questions.id')
 									->join('responses', 'question_responses.response_id', '=', 'responses.id')
 									->join('sections', 'questions.section_id', '=', 'sections.id')
 									->where('sections.checklist_id', $checklist->id)
-									->where('responses.score', '>', 0)
+									->whereNotNull('responses.score')
 									->groupBy('response_id')
 									->get();
-		dd($options);
 		$chart = "{
 	        chart: {
 	            type: 'column'
 	        },
 	        title: {
-	            text: 'Stacked column chart'
+	            text: '".$facility->name."'
 	        },
 	        xAxis: {
 	            categories: [";
 	            	foreach ($categories as $category) {
-	            		$chart.="'".$category."',";
+	            		$chart.="'".Section::find($category)->label."',";
 	            	}
 	            $chart.="]
 	        },
 	        yAxis: {
 	            min: 0,
 	            title: {
-	                text: 'Total fruit consumption'
+	                text: '% Score'
 	            }
 	        },
 	        tooltip: {
@@ -327,18 +331,113 @@ class ReportController extends Controller {
 	                stacking: 'percent'
 	            }
 	        },
-	        series: [{
-	            name: 'John',
-	            data: [5, 3, 4, 7]
-	        }, {
-	            name: 'Jane',
-	            data: [2, 2, 3, 2]
-	        }, {
-	            name: 'Joe',
-	            data: [3, 4, 4, 2]
-	        }]
+	        series: [";
+	        	$counts = count($options);
+		        foreach ($options as $option) {
+		        	$chart.="{name:"."'".Answer::find($option->response_id)->name."'".", data:[";
+	        		$counter = count($categories);
+	        		foreach ($categories as $category) {
+	        			$data = Answer::find($option->response_id)->column($category);
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
 	    }";
 		return view('report.mscolumn', compact('checklist', 'chart'));
+	}
+	/**
+	 * SPI-RT spider chart report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function spirt($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Add scorable sections to array
+		$categories = array();
+		foreach ($checklist->sections as $section){
+			if($section->isScorable())
+				array_push($categories, $section);
+		}
+		$chart = "{
+
+	        chart: {
+	            polar: true,
+	            type: 'line'
+	        },
+
+	        title: {
+	            text: 'SPI-RT Scores Comparison',
+	            x: -80
+	        },
+
+	        pane: {
+	            size: '80%'
+	        },
+
+	        xAxis: {
+	            categories: [";
+	            	foreach ($categories as $category) {
+	            		$chart.="'".$category->label."',";
+	            	}
+	            $chart.="],
+	            tickmarkPlacement: 'on',
+	            lineWidth: 0
+	        },
+
+	        yAxis: {
+	            gridLineInterpolation: 'polygon',
+	            lineWidth: 0,
+	            min: 0
+	        },
+
+	        tooltip: {
+	            shared: true,
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
+	        },
+
+	        legend: {
+	            align: 'right',
+	            verticalAlign: 'top',
+	            y: 70,
+	            layout: 'vertical'
+	        },
+
+	        series: [{
+	            name: 'Score',
+	            data: [";
+	            	foreach ($categories as $category) {
+	   					$chart.=round($category->spider()*100/$category->total_points, 2).',';
+	   				}
+	   				$chart.="],
+	            pointPlacement: 'on'
+	        }]
+
+	    }";
+	    return view('report.spider', compact('checklist', 'chart'));
 	}
 	/**
 	 * Show the form for creating a new resource.
