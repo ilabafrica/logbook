@@ -70,7 +70,7 @@ class Survey extends Model {
 	 */
 	public function me()
 	{
-		return $this->hasMany('App\Models\MeInfo');
+		return $this->hasOne('App\Models\MeInfo');
 	}
 	/**
 	 * survey-spirt-info relationship

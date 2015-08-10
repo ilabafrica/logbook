@@ -298,6 +298,10 @@ Route::any('report/{id}/me', array(
     "as"    =>  "reports.me.mscolumn",
     "uses"  =>  "ReportController@me"
 ));
+Route::any('report/{id}/stage', array(
+    "as"    =>  "reports.me.stages",
+    "uses"  =>  "ReportController@stage"
+));
 /* *
 *
 * SPI-RT reports
@@ -306,4 +310,49 @@ Route::any('report/{id}/me', array(
 Route::any('report/{id}/spirt', array(
     "as"    =>  "reports.spirt.spider",
     "uses"  =>  "ReportController@spirt"
+));
+/* *
+*
+* Local partner
+*
+*/
+Route::any('report/{id}/periodic', array(
+    "as"    =>  "reports.partner.periodic",
+    "uses"  =>  "ReportController@periodic"
+));
+Route::any('partner/accomplishment', array(
+    "as"    =>  "reports.accomplishment",
+    "uses"  =>  "ReportController@accomplishment"
+));
+Route::any('partner/hr', array(
+    "as"    =>  "reports.hr",
+    "uses"  =>  "ReportController@hr"
+));
+Route::any('partner/pt', array(
+    "as"    =>  "reports.pt",
+    "uses"  =>  "ReportController@pt"
+));
+Route::any('partner/logbook', array(
+    "as"    =>  "reports.logbook",
+    "uses"  =>  "ReportController@logbook"
+));
+Route::any('partner/spirt', array(
+    "as"    =>  "reports.spirt",
+    "uses"  =>  "ReportController@sprt"
+));
+Route::any('partner/me', array(
+    "as"    =>  "reports.eval",
+    "uses"  =>  "ReportController@evaluation"
+));
+Route::any('analysis/data', array(
+    "as"    =>  "reports.data",
+    "uses"  =>  "ReportController@data"
+));
+Route::any('analysis/chart', array(
+    "as"    =>  "reports.chart",
+    "uses"  =>  "ReportController@chart"
+));
+Route::any('analysis/snapshot', array(
+    "as"    =>  "reports.snapshot",
+    "uses"  =>  "ReportController@snapshot"
 ));

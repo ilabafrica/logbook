@@ -677,10 +677,10 @@ class LogbookSeeder extends Seeder
         $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "score" => "1.0", "user_id" => "1"));
         $response_no = Answer::create(array("name" => "No", "description" => "No(N)", "score" => "0.0", "user_id" => "1"));
         $response_partial = Answer::create(array("name" => "Partial", "description" => "Partial(P)", "score" => "0.5", "user_id" => "1"));
-        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "score" => "0.0", "user_id" => "1"));
-        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "score" => "1.0", "user_id" => "1"));
-        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "score" => "2.0", "user_id" => "1"));
-        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "score" => "3.0", "user_id" => "1"));
+        $response_doesNotExist = Answer::create(array("name" => "Does Not Exist", "description" => "", "score" => "0.0", "range_lower" => "0.00", "range_upper" => "25.00", "user_id" => "1"));
+        $response_inDevelopment = Answer::create(array("name" => "In Development", "description" => "", "score" => "1.0", "range_lower" => "25.00", "range_upper" => "50.00", "user_id" => "1"));
+        $response_beingImplemented= Answer::create(array("name" => "Being Implemented", "description" => "", "score" => "2.0", "range_lower" => "50.00", "range_upper" => "75.00", "user_id" => "1"));
+        $response_completed = Answer::create(array("name" => "Completed", "description" => "", "score" => "3.0", "range_lower" => "75.00", "range_upper" => "100.00", "user_id" => "1"));
         //HTC lab register
         $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
         $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));

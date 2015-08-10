@@ -397,4 +397,45 @@ return [
 	'affiliation'	=>	'Affiliation|Affiliations',
 	'create-affiliation'	=>	'Create Affiliation',
 	'edit-affiliation'	=>	'Edit Affiliation',
+	/**
+	*
+	* Other general terms
+	*
+	*/
+	'current-implementing-stage'	=>	'Current stage of sites implementing RTQII priority activities in Country X (percentage of sites).',
+	'current-implementing-stage-chart'	=>	'Monitoring and Evaluation at Site Level for Country X (N=15)',
+	'snapshot-label'	=>	'Snap shot representing National Level (based on average score of all sites for each pillar',
+	'dne-range'	=>	'(0-25%)',
+	'id-range'	=>	'(26-49%)',
+	'bi-range'	=>	'(50-74%)',
+	'c-range'	=>	'(75-100%)',
+	/**
+	*
+	* Local partner analysis
+	*
+	*/
+	'local-partner-analysis'	=>	'Local Partner Analysis',
+	'accomplishment'	=>	'Accomplishment',
+	'hr'	=>	'HR',
+	'pt'	=>	'PT',
+	'logbook'	=>	'Logbook',
+	'spirt'	=>	'SPI-RT',
+	'm-e'	=>	'M&E',
+	'summary-analysis'	=>	'Summary & Data Analysis',
+	'analysis'	=>	'Analysis',
+	'summary-chart'	=>	'Summary Chart',
+	'percent-of-sites'	=>	'Percent of sites',
+	'sites-using-htc'	=>	'Sites using standardized HTC register',
+	'sites-stock-out'	=>	'Sites reporting HTC stock out',
+	'consistent-agreement-rate'	=>	'Sites with consistent agreement rate >98%',
+	'htc-data-reviewed'	=>	'Sites with HTC register data reviewed across program',
+	'sites-received-feedback'	=>	'Sites that received corrective actions/feedback',
+	'quarter-1'	=>	'Quarter 1',
+	'quarter-2'	=>	'Quarter 2',
+	'quarter-3'	=>	'Quarter 3',
+	'quarter-4'	=>	'Quarter 4',
+	'cadre'	=>	'Cadre',
+	'period'	=>	'Period',
+	'region'	=>	'Region',
+	'sdp'	=>	'SDP',
 ];

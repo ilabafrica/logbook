@@ -125,4 +125,12 @@ class Question extends Model {
 						 ->where('answer', $answer)
 						 ->count();
 	}
+	/**
+	* Return Survey-Questions of the given question
+	* @param $id the id of the survey
+	*/
+	public function sqs()
+	{
+		return $this->hasMany('App\Models\SurveyQuestion');
+	}
 }

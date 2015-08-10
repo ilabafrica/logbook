@@ -57,14 +57,6 @@
                 <li><a href="{!! url('affiliation') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.affiliation', 2) !!}</a></li>
             </ul>
         </li>
-        <!-- Surveys -->
-        <li>
-            <a href="{!! url('survey') !!}"><i class="fa fa-edit fa-fw"></i> {!! Lang::choice('messages.survey', 1) !!}</a>
-        </li>
-        <!-- Reports -->
-        <li>
-            <a href="{!! url('report') !!}"><i class="fa fa-bar-chart-o fa-fw"></i> {!! Lang::choice('messages.report', 2) !!}</a>
-        </li>
         <!-- Facility configuration -->
         <li>
             <a href="#"><i class="fa fa-database"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
@@ -102,6 +94,26 @@
          <!-- Data management -->
         <li>
             <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.data-management', 2) !!}</a>
+        </li>
+        <!-- Local partner analysis -->
+        <li>
+            <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.local-partner-analysis', 1) !!}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{!! url('partner/accomplishment') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.accomplishment', 1) !!}</a></li>
+                <li><a href="{!! url('partner/hr') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.hr', 1) !!}</a></li>
+                <li><a href="{!! url('partner/pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt', 1) !!}</a></li>
+                <li><a href="{!! url('partner/logbook') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook', 1) !!}</a></li>
+                <li><a href="{!! url('partner/spirt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.spi-rt', 1) !!}</a></li>
+                <li><a href="{!! url('partner/me') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.m-e', 1) !!}</a></li>
+            </ul>
+        </li>
+        <!-- Summary and Data Analysis -->
+        <li>
+            <a href="#"><i class="fa fa-stethoscope"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level collapse">
+                <li><a href="{!! url('analysis/data') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.analysis', 2) !!}</a></li>
+                <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
+            </ul>
         </li>
     </ul>
 @show

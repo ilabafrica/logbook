@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dc2a343ae579b36f325f58b67bb86016",
+    "hash": "78bb851f4e2ab514728d361cb80ee18b",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -398,6 +398,62 @@
             "time": "2015-04-20 18:58:01"
         },
         {
+            "name": "jenssegers/date",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jenssegers/laravel-date.git",
+                "reference": "7933306f067f1ce230e31fee91783320627f7326"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jenssegers/laravel-date/zipball/7933306f067f1ce230e31fee91783320627f7326",
+                "reference": "7933306f067f1ce230e31fee91783320627f7326",
+                "shasum": ""
+            },
+            "require": {
+                "nesbot/carbon": "~1.0",
+                "php": ">=5.3.3",
+                "symfony/translation": "~2.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0",
+                "satooshi/php-coveralls": "~0.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jenssegers\\Date\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jens Segers",
+                    "homepage": "http://jenssegers.be"
+                }
+            ],
+            "description": "A date library to help you work with dates in different languages",
+            "keywords": [
+                "carbon",
+                "date",
+                "datetime",
+                "i18n",
+                "laravel",
+                "time",
+                "translation"
+            ],
+            "time": "2015-07-25 18:06:01"
+        },
+        {
             "name": "jeremeamia/SuperClosure",
             "version": "2.1.0",
             "source": {
@@ -439,7 +495,7 @@
                     "name": "Jeremy Lindblom",
                     "email": "jeremeamia@gmail.com",
                     "homepage": "https://github.com/jeremeamia",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "Serialize Closure objects, including their context and binding",
@@ -2233,12 +2289,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "971dcdfdc2239b3d516672139f4368c19f6c2060"
+                "reference": "612bde5e291b775a549ab15a56dcc84f9e490cba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/971dcdfdc2239b3d516672139f4368c19f6c2060",
-                "reference": "971dcdfdc2239b3d516672139f4368c19f6c2060",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/612bde5e291b775a549ab15a56dcc84f9e490cba",
+                "reference": "612bde5e291b775a549ab15a56dcc84f9e490cba",
                 "shasum": ""
             },
             "require": {
@@ -2290,7 +2346,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2015-07-13 08:15:35"
+            "time": "2015-07-27 08:38:58"
         },
         {
             "name": "phpdocumentor/reflection-docblock",

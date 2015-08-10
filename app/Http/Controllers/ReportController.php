@@ -15,6 +15,7 @@ use App\Models\Answer;
 use Illuminate\Http\Request;
 use Lang;
 use Input;
+use Jenssegers\Date\Date as Carbon;
 
 class ReportController extends Controller {
 
@@ -112,7 +113,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.positive', compact('checklist', 'chart'));
+		return view('report.htc.positive', compact('checklist', 'chart'));
 	}
 
 	/**
@@ -188,7 +189,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.agreement', compact('checklist', 'chart'));
+		return view('report.htc.agreement', compact('checklist', 'chart'));
 	}
 
 	/**
@@ -264,7 +265,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.overall', compact('checklist', 'chart'));
+		return view('report.htc.overall', compact('checklist', 'chart'));
 	}/**
 	 * Invalid results report
 	 *
@@ -275,7 +276,7 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		return view('report.invalid', compact('checklist'));
+		return view('report.htc.invalid', compact('checklist'));
 	}
 	/**
 	 * M$E stacked percentages report
@@ -364,7 +365,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.mscolumn', compact('checklist', 'chart'));
+		return view('report.me.mscolumn', compact('checklist', 'chart'));
 	}
 	/**
 	 * SPI-RT spider chart report
@@ -437,26 +438,183 @@ class ReportController extends Controller {
 	        }]
 
 	    }";
-	    return view('report.spider', compact('checklist', 'chart'));
+	    return view('report.spirt.spider', compact('checklist', 'chart'));
 	}
 	/**
-	 * Show the form for creating a new resource.
+	 * Show the table for current stage of sites implementing RTQII priority activities in Country X (percentage of sites)..
 	 *
 	 * @return Response
 	 */
-	public function create()
+	public function chart()
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$columns = array();
+		$options = array();
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($columns, $section);
+		}
+		foreach ($columns as $column) {
+			foreach ($column->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}
+			}
+		}
+		$options = array_unique($options);
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'bar'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.current-implementing-stage-chart', 1)."'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($columns as $column) {
+	            		$chart.="'".$column->label."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '% Score'
+	            }
+	        },
+	        tooltip: {
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b>%<br/>'
+	        },
+	        plotOptions: {
+	            column: {
+	                colorByPoint: true
+	            }
+	        },
+	        series: [";
+	        	$counts = count($options);
+		        foreach ($options as $option) {
+		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
+	        		$counter = count($columns);
+	        		foreach ($columns as $column) {
+	        			$data = round(Answer::find(Answer::idByName($option))->column($column->id)*100/$column->column(), 2);
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="], color:"."'".$colors[$counts-1]."'";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart'));
 	}
 
 	/**
-	 * Store a newly created resource in storage.
+	 * Return snapshot of average score for each pillar at the given level
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function snapshot()
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$columns = array();
+		$options = array();
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($columns, $section);
+		}
+		foreach ($columns as $column) {
+			foreach ($column->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}
+			}
+		}
+		$options = array_unique($options);
+		//	Colors to be used in the series
+		$colors = array();
+		$chart = "{
+			chart: {
+				type: 'column'
+			},
+	        xAxis: {
+	            categories: [";
+	            	foreach ($columns as $column) {
+	            		$chart.="'".$column->label."',";
+	            	}
+	            $chart.="],
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '% Score'
+	            }
+	        },
+			plotOptions: {
+				column: {
+					colorByPoint: true
+				}
+			},
+			series: [{name: 'Snapshot',
+				data: [";
+				$counter = count($columns);
+				$color = NULL;
+				foreach ($columns as $column) {
+					$value = $column->snapshot($checklist->id);
+					if($value >= 0 && $value <25)
+						$color = '#d9534f';
+					else if($value >=25 && $value <50)
+						$color = '#f0ad4e';
+					else if($value >=50 && $value <75)
+						$color = '#d6e9c6';
+					else if($value >=75 && $value <=100)
+						$color = '#5cb85c';
+					array_push($colors, $color);
+					$chart.= $column->snapshot($checklist->id);
+					if($counter==1)
+    					$chart.="";
+    				else
+    					$chart.=",";
+    				$counter--;
+				}
+				$chart.="]
+			}],
+			colors:["."'".implode("','", $colors)."'"."]          
+		}";
+		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart'));
 	}
 
 	/**
@@ -465,47 +623,283 @@ class ReportController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id)
+	public function periodic($id)
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		$columns = array(Lang::choice('messages.sites-using-htc', 1), Lang::choice('messages.sites-stock-out', 1), Lang::choice('messages.consistent-agreement-rate', 1), Lang::choice('messages.htc-data-reviewed', 1), Lang::choice('messages.sites-received-feedback', 1));
+		return view('report.partner.period', compact('checklist', 'columns'));
 	}
 
 	/**
-	 * Show the form for editing the specified resource.
+	 * Show accomplishment
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id)
+	public function accomplishment()
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$columns = array();
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($columns, $section);
+		}
+		//	Quarters array - Baseline, Previous Quarter, Quarter 1,2,3,4
+		$options = array('Baseline', 'Previous Quarter', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		$date = Carbon::now();
+        $date->month($date->month-6);
+        $lastQuarter = $date->quarter;
+        $fQuarter = $date->quarter;
+		return view('report.accomplishment.index', compact('checklist', 'columns', 'options', 'lastQuarter', 'fQuarter'));
 	}
 
 	/**
-	 * Update the specified resource in storage.
+	 * Return hr report
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function hr()
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find(2);
+		return view('report.hr.index', compact('checklist'));
 	}
-
 	/**
-	 * Remove the specified resource from storage.
+	 * Return pt report
 	 *
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function destroy($id)
+	public function pt()
 	{
-		//
+		//	Get checklist
+		$checklist = Checklist::find(2);
+		return view('report.pt.period', compact('checklist'));
+	}
+	/**
+	 * Return logbook report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function logbook()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(2);
+		return view('report.logbook.period', compact('checklist'));
+	}
+	/**
+	 * Return sprt report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function sprt()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		$columns = array();
+		$periods = array('Baseline', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($columns, $section);
+		}
+		$colors = array('#434348', '#f45b5b', '#7cb5ec', '#2b908f', '#e4d354');
+		$chart = "{
+
+	        chart: {
+	            polar: true,
+	            type: 'line'
+	        },
+
+	        title: {
+	            text: 'SPI-RT Scores Comparison',
+	            x: -80
+	        },
+
+	        pane: {
+	            size: '80%'
+	        },
+
+	        xAxis: {
+	            categories: [";
+	            	foreach ($columns as $column) {
+	            		$chart.="'".$column->label."',";
+	            	}
+	            $chart.="],
+	            tickmarkPlacement: 'on',
+	            lineWidth: 0
+	        },
+
+	        yAxis: {
+	            gridLineInterpolation: 'polygon',
+	            lineWidth: 0,
+	            min: 0
+	        },
+
+	        tooltip: {
+	            shared: true,
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
+	        },
+
+	        legend: {
+	            align: 'right',
+	            verticalAlign: 'top',
+	            y: 70,
+	            layout: 'vertical'
+	        },
+	        series: [";
+	        	$counts = count($periods);
+		        foreach ($periods as $period) {
+		        	$chart.="{colorByPoint: false,name:"."'".$period."'".", data:[";
+	        		$counter = count($columns);
+	        		foreach ($columns as $column) {
+	        			$data = $column->quarter($period);
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="], color:"."'".$colors[$counts-1]."'";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.spirt.section', compact('checklist', 'columns', 'periods', 'chart'));
+	}
+	/**
+	 * Return eval report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function evaluation()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$columns = array();
+		$options = array();
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($columns, $section);
+		}
+		foreach ($columns as $column) {
+			foreach ($column->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}
+			}
+		}
+		$options = array_unique($options);
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: 'Current Assessment Information'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($columns as $column) {
+	            		$chart.="'".$column->label."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '% Score'
+	            }
+	        },
+	        tooltip: {
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+	            shared: true
+	        },
+	        plotOptions: {
+	            column: {
+	                stacking: 'percent'
+	            }
+	        },
+	        series: [";
+	        	$counts = count($options);
+		        foreach ($options as $option) {
+		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
+	        		$counter = count($columns);
+	        		foreach ($columns as $column) {
+	        			$data = Answer::find(Answer::idByName($option))->column($column->id);
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="], color:"."'".$colors[$counts-1]."'";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.me.section', compact('checklist', 'columns', 'options', 'chart'));
+	}
+	/**
+	 * Return data report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function data()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(2);
+		return view('report.me.analysis', compact('checklist'));
 	}
 	/**
 	* Get months: return months for time_created column when filter dates are set
 	*/	
-	public static function getMonths($from, $to){
+	public static function getMonths($from, $to)
+	{
 		$from = "'".date("Y-m-d")."'";
 		$today = "'".date("Y-m-d")."'";
 		$year = date('Y');
@@ -535,4 +929,19 @@ class ReportController extends Controller {
 
 		return json_encode($dates);
 	}
+	/**
+	* Get quarter: return the specific quarter given the month
+	*/
+	public static function getQuarter($month)
+	{
+		$n = $month;
+		if($n < 4)
+			return '2';
+		else if($n > 3 && $n < 7)
+			return '3';
+		else if($n > 6 && $n < 10)
+			return '4';
+		else if($n > 9)
+			return '1';
+    }
 }

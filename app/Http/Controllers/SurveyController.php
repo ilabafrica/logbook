@@ -115,7 +115,7 @@ class SurveyController extends Controller {
 		//	ME info
 		if($checklist_id == Checklist::idByName('M & E Checklist')){
 			$me_info = $survey->me;
-			if($me_info->count() == 0){
+			if(count($me_info) == 0){
 				$me_info = new MeInfo;
 				$me_info->survey_id = $survey->id;
 				$me_info->audit_type_id = $audit_type;
@@ -129,7 +129,7 @@ class SurveyController extends Controller {
 		//	SPI-RT info
 		if($checklist_id == Checklist::idByName('SPI-RT Checklist')){
 			$spirt_info = $survey->spirt;
-			if($spirt_info->count() == 0){
+			if(count($spirt_info) == 0){
 				$spirt_info = new SpirtInfo;
 				$spirt_info->survey_id = $survey->id;
 				$spirt_info->affiliation_id = $affiliation;

@@ -312,6 +312,8 @@ class CreateMflTables extends Migration {
             $table->string('name');
             $table->string('description');
             $table->float('score')->nullable();
+            $table->float('range_lower')->nullable();
+            $table->float('range_upper')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
