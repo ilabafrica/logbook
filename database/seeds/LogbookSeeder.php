@@ -29,6 +29,7 @@ use App\Models\Cadre;
 use App\Models\Answer;
 use App\Models\Section;
 use App\Models\Question;
+use App\Models\Level;
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -1446,7 +1447,12 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_providers ->id, "response_id" => $response_partial->id));
         
         $this->command->info('Question-responses table seeded');
-
-    
+        //  Levels table
+        $level_0 = Level::create(array("name" => "Level 0", "description" => "", "range_lower" => "0", "range_upper" => "39", "user_id" => "1"));
+        $level_1 = Level::create(array("name" => "Level 1", "description" => "", "range_lower" => "40", "range_upper" => "59", "user_id" => "1"));
+        $level_2 = Level::create(array("name" => "Level 2", "description" => "", "range_lower" => "60", "range_upper" => "79", "user_id" => "1"));
+        $level_3 = Level::create(array("name" => "Level 3", "description" => "", "range_lower" => "80", "range_upper" => "89", "user_id" => "1"));
+        $level_4 = Level::create(array("name" => "Level 4", "description" => "", "range_lower" => "90", "range_upper" => "100", "user_id" => "1"));
+        $this->command->info('Levels table seeded');    
     }
 }

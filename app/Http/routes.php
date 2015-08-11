@@ -141,6 +141,9 @@ Route::get("/agency/{id}/delete", array(
 //  Role controller
 Route::resource('role', 'RoleController');
 
+//  Level controller
+Route::resource('level', 'LevelController');
+
 //  Permission controller
 Route::resource('permission', 'PermissionController');
 
@@ -336,6 +339,14 @@ Route::any('partner/logbook', array(
     "as"    =>  "reports.logbook",
     "uses"  =>  "ReportController@logbook"
 ));
+Route::any('partner/logSdp', array(
+    "as"    =>  "reports.logSdp",
+    "uses"  =>  "ReportController@logSdp"
+));
+Route::any('partner/logRegion', array(
+    "as"    =>  "reports.logRegion",
+    "uses"  =>  "ReportController@logRegion"
+));
 Route::any('partner/spirt', array(
     "as"    =>  "reports.spirt",
     "uses"  =>  "ReportController@sprt"
@@ -343,6 +354,22 @@ Route::any('partner/spirt', array(
 Route::any('partner/me', array(
     "as"    =>  "reports.eval",
     "uses"  =>  "ReportController@evaluation"
+));
+Route::any('partner/period', array(
+    "as"    =>  "reports.partner.period",
+    "uses"  =>  "ReportController@period"
+));
+Route::any('partner/region', array(
+    "as"    =>  "reports.partner.region",
+    "uses"  =>  "ReportController@region"
+));
+Route::any('partner/sdp', array(
+    "as"    =>  "reports.partner.sdp",
+    "uses"  =>  "ReportController@sdp"
+));
+Route::any('partner/ptSdp', array(
+    "as"    =>  "reports.partner.ptSdp",
+    "uses"  =>  "ReportController@ptSdp"
 ));
 Route::any('analysis/data', array(
     "as"    =>  "reports.data",

@@ -82,7 +82,7 @@
                                     <tr>
                                         <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
                                         @foreach($columns as $column)
-                                            <td>{!! round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id)*100/$column->column(), 2).'%'; !!}</td>
+                                            <td>{!! $column->column()!=0?round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id)*100/$column->column(), 2).'%':0.00; !!}</td>
                                         @endforeach
                                     </tr>
                                 @endforeach

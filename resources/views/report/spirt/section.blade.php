@@ -22,10 +22,10 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#">{!! Lang::choice('messages.section', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.period', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.region', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/spirt') !!}">{!! Lang::choice('messages.section', 1) !!}</a></li>
+            <li><a href="{!! url('partner/period') !!}">{!! Lang::choice('messages.period', 1) !!}</a></li>
+            <li><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.region', 1) !!}</a></li>
+            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->

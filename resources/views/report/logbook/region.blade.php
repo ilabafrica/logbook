@@ -22,10 +22,9 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li><a href="#">{!! Lang::choice('messages.period', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
-            <li class="active"><a href="#">{!! Lang::choice('messages.region', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.cadre', 1) !!}</a></li>
+            <li><a href="{!! url('partner/logbook') !!}">{!! Lang::choice('messages.period', 1) !!}</a></li>
+            <li><a href="{!! url('partner/logSdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/logRegion') !!}">{!! Lang::choice('messages.region', 1) !!}</a></li>
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
@@ -60,56 +59,22 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="6">Total Number</td>
+                                    <td colspan="{{ count($regions)+1 }}">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    <td>Counsellor</td>
-                                    <td>Midwife</td>
-                                    <td>Doctor</td>
-                                    <td>Lab Tech</td>
-                                    <td>Others</td>
+                                    <td>{!! Lang::choice('messages.agreement-rate', 1) !!}</td>
+                                    @foreach($regions as $region)
+                                        <td>{!! App\Models\County::find($region)->name !!}</td>
+                                    @endforeach
                                 </tr>
+                                @foreach($rates as $rate)
                                 <tr>
-                                    <td>Baseline</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{!! $rate !!}</td>
+                                    @foreach($regions as $region)
+                                        <td></td>
+                                    @endforeach
                                 </tr>
-                                <tr>
-                                    <td>Previous Quarter</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 3</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

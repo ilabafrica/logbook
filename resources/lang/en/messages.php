@@ -284,9 +284,12 @@ return [
 	'reactive'	=>	'R',
 	'non-reactive'	=>	'NR',
 	'invalid'	=>	'INV',
-	
-
-
+	/* Levels */
+	'level'	=>	'Level|Levels',
+	'create-level'	=>	'Create Level',
+	'edit-level'	=>	'Edit Level',
+	'range-lower'	=>	'Lower Range',
+	'range-upper'	=>	'Upper Range',
 	//reports
 	'generate-report'	=>	'Generate Report',
 	'bar-chart'	=>	'Bar Chart',
@@ -405,10 +408,6 @@ return [
 	'current-implementing-stage'	=>	'Current stage of sites implementing RTQII priority activities in Country X (percentage of sites).',
 	'current-implementing-stage-chart'	=>	'Monitoring and Evaluation at Site Level for Country X (N=15)',
 	'snapshot-label'	=>	'Snap shot representing National Level (based on average score of all sites for each pillar',
-	'dne-range'	=>	'(0-25%)',
-	'id-range'	=>	'(26-49%)',
-	'bi-range'	=>	'(50-74%)',
-	'c-range'	=>	'(75-100%)',
 	/**
 	*
 	* Local partner analysis
@@ -424,7 +423,7 @@ return [
 	'summary-analysis'	=>	'Summary & Data Analysis',
 	'analysis'	=>	'Analysis',
 	'summary-chart'	=>	'Summary Chart',
-	'percent-of-sites'	=>	'Percent of sites',
+	'percent-of-sites'	=>	'Percent of sites Assessed',
 	'sites-using-htc'	=>	'Sites using standardized HTC register',
 	'sites-stock-out'	=>	'Sites reporting HTC stock out',
 	'consistent-agreement-rate'	=>	'Sites with consistent agreement rate >98%',
@@ -438,4 +437,9 @@ return [
 	'period'	=>	'Period',
 	'region'	=>	'Region',
 	'sdp'	=>	'SDP',
+	'sites-enrolled'	=>	'Sites/Providers enrolled',
+	'pt-results'	=>	'Sites/Providers with PT results in each round',
+	'satisfactory-results'	=>	'Sites/Providers with satisfactory reults in each round',
+	'corrective-feedback'	=>	'Sites/Providers that received corrective actions/feedback',
+	'agreement-rate'	=>	'Agreement Rate',
 ];

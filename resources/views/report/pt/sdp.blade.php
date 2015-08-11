@@ -22,9 +22,8 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li><a href="#">{!! Lang::choice('messages.period', 1) !!}</a></li>
-            <li class="active"><a href="#">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.cadre', 1) !!}</a></li>
+            <li><a href="{!! url('partner/pt') !!}">{!! Lang::choice('messages.period', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/ptSdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
@@ -59,56 +58,22 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="6">Total Number</td>
+                                    <td colspan="{{ count($sdps)+1 }}">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>Counsellor</td>
-                                    <td>Midwife</td>
-                                    <td>Doctor</td>
-                                    <td>Lab Tech</td>
-                                    <td>Others</td>
+                                    @foreach($sdps as $sdp)
+                                        <td>{!! App\Models\Sdp::find($sdp)->name !!}</td>
+                                    @endforeach
                                 </tr>
+                                @foreach($periods as $period)
                                 <tr>
-                                    <td>Baseline</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{!! $period !!}</td>
+                                    @foreach($sdps as $sdp)
+                                        <td></td>
+                                    @endforeach
                                 </tr>
-                                <tr>
-                                    <td>Previous Quarter</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 3</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

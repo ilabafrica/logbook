@@ -86,7 +86,7 @@ class Section extends Model {
 					}
 				}
 			}
-			return round(($total*100)/($count*$this->total_points), 2);
+			return $count!=0?round(($total*100)/($count*$this->total_points), 2):0.00;
 		}
 	}
 	/**

@@ -53,7 +53,7 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="5">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
+                                    <td colspan="{{ count($columns)+1 }}">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
@@ -67,7 +67,7 @@
                                 <tr>
                                     <td>{!! $option !!}</td>
                                     @foreach($columns as $column)
-                                        <td>{!! 1 !!}</td>
+                                        <td></td>
                                     @endforeach
                                 </tr>
                                 @endforeach

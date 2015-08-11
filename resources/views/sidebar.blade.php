@@ -55,6 +55,7 @@
                 <li><a href="{!! url('algorithm') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.algorithm', 2) !!}</a></li>
                 <li><a href="{!! url('auditType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.audit-type', 2) !!}</a></li>
                 <li><a href="{!! url('affiliation') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.affiliation', 2) !!}</a></li>
+                <li><a href="{!! url('level') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.level', 2) !!}</a></li>
             </ul>
         </li>
         <!-- Facility configuration -->
@@ -104,7 +105,7 @@
                 <li><a href="{!! url('partner/pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt', 1) !!}</a></li>
                 <li><a href="{!! url('partner/logbook') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.logbook', 1) !!}</a></li>
                 <li><a href="{!! url('partner/spirt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.spi-rt', 1) !!}</a></li>
-                <li><a href="{!! url('partner/me') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.m-e', 1) !!}</a></li>
+                <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.m-e', 1) !!}</a></li>
             </ul>
         </li>
         <!-- Summary and Data Analysis -->

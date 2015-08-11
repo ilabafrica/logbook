@@ -22,10 +22,10 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li><a href="#">{!! Lang::choice('messages.section', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.period', 1) !!}</a></li>
-            <li class="active"><a href="#">{!! Lang::choice('messages.region', 1) !!}</a></li>
-            <li><a href="#">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
+            <li><a href="{!! url('partner/spirt') !!}">{!! Lang::choice('messages.section', 1) !!}</a></li>
+            <li><a href="{!! url('partner/period') !!}">{!! Lang::choice('messages.period', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.region', 1) !!}</a></li>
+            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
@@ -60,56 +60,22 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="6">Total Number</td>
+                                    <td colspan="6">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
                                 </tr>
                                 <tr>
                                     <td></td>
-                                    <td>Counsellor</td>
-                                    <td>Midwife</td>
-                                    <td>Doctor</td>
-                                    <td>Lab Tech</td>
-                                    <td>Others</td>
+                                    @foreach($levels as $level)
+                                        <td>{!! $level->name.' ('.$level->range_lower.' - '.$level->range_upper.'%)' !!}</td>
+                                    @endforeach
                                 </tr>
+                                @foreach($regions as $region)
                                 <tr>
-                                    <td>Baseline</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td>{!! App\Models\County::find($region)->name !!}</td>
+                                    @foreach($levels as $level)
+                                        <td></td>
+                                    @endforeach
                                 </tr>
-                                <tr>
-                                    <td>Previous Quarter</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 1</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 2</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Q 3</td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

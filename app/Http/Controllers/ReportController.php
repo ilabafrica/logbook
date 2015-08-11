@@ -11,6 +11,7 @@ use App\Models\Sdp;
 use App\Models\QuestionResponse;
 use App\Models\Section;
 use App\Models\Answer;
+use App\Models\Level;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -505,7 +506,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = round(Answer::find(Answer::idByName($option))->column($column->id)*100/$column->column(), 2);
+	        			$data = $column->column()!=0?round(Answer::find(Answer::idByName($option))->column($column->id)*100/$column->column(), 2):0.00;
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -678,7 +679,27 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find(2);
-		return view('report.pt.period', compact('checklist'));
+		//	Columns array
+		$columns = array(Lang::choice('messages.sites-enrolled', 1), Lang::choice('messages.pt-results', 1), Lang::choice('messages.satisfactory-results', 1), Lang::choice('messages.corrective-feedback', 1));
+		//	Periods
+		$periods = array('Baseline', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		return view('report.pt.period', compact('checklist', 'columns', 'periods'));
+	}
+	/**
+	 * Return pt-sdp report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function ptSdp()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get sdps
+		$sdps = array_unique($checklist->surveys->lists('sdp_id'));
+		//	Periods
+		$periods = array('Baseline', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		return view('report.pt.sdp', compact('checklist', 'sdps', 'periods'));
 	}
 	/**
 	 * Return logbook report
@@ -689,8 +710,54 @@ class ReportController extends Controller {
 	public function logbook()
 	{
 		//	Get checklist
-		$checklist = Checklist::find(2);
-		return view('report.logbook.period', compact('checklist'));
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get columns
+		$columns = array(Lang::choice('messages.sites-using-htc', 1), Lang::choice('messages.sites-stock-out', 1), Lang::choice('messages.consistent-agreement-rate', 1), Lang::choice('messages.htc-data-reviewed', 1), Lang::choice('messages.sites-received-feedback', 1));
+		//	Periods
+		$periods = array('Baseline', 'Previous Quarter', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		return view('report.logbook.period', compact('checklist', 'columns', 'periods'));
+	}
+	/**
+	 * Return logbook - sdp report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function logSdp()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get sdps
+		$sdps = array_unique($checklist->surveys->lists('sdp_id'));
+		//	Agreement rates
+		$rates = array('< 95%', '95 - 98%', '> 98%');
+		return view('report.logbook.sdp', compact('checklist', 'sdps', 'rates'));
+	}
+	/**
+	 * Return logbook - region report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function logRegion()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get regions
+		$regions = array();
+		$subs = array();
+		$facility = $checklist->surveys->lists('facility_id');
+		foreach ($facility as $id) {
+			array_push($subs, Facility::find($id)->subCounty->id);
+		}
+		$subs = array_unique($subs);
+		foreach ($subs as $sub) {
+			array_push($regions, SubCounty::find($sub)->county->id);
+		}
+		$regions = array_unique($regions);
+		//	Agreement rates
+		$rates = array('< 95%', '95 - 98%', '> 98%');
+		return view('report.logbook.region', compact('checklist', 'regions', 'rates'));
 	}
 	/**
 	 * Return sprt report
@@ -787,6 +854,64 @@ class ReportController extends Controller {
 		        $chart.="],
 	    }";
 		return view('report.spirt.section', compact('checklist', 'columns', 'periods', 'chart'));
+	}
+	/**
+	 * Return partner period report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function period()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get levels
+		$levels = Level::all();
+		//	Get periods
+		$periods = array('Baseline', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
+		return view('report.spirt.period', compact('checklist', 'levels', 'periods'));
+	}	
+	/**
+	 * Return partner region report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function region()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get levels
+		$levels = Level::all();
+		//	Get regions
+		$regions = array();
+		$subs = array();
+		$facility = $checklist->surveys->lists('facility_id');
+		foreach ($facility as $id) {
+			array_push($subs, Facility::find($id)->subCounty->id);
+		}
+		$subs = array_unique($subs);
+		foreach ($subs as $sub) {
+			array_push($regions, SubCounty::find($sub)->county->id);
+		}
+		$regions = array_unique($regions);
+		return view('report.spirt.region', compact('checklist', 'levels', 'regions'));
+	}
+	/**
+	 * Return partner sdp report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function sdp()
+	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		//	Get levels
+		$levels = Level::all();
+		//	Get sdps
+		$sdps = array_unique($checklist->surveys->lists('sdp_id'));
+		return view('report.spirt.sdp', compact('checklist', 'levels', 'sdps'));
 	}
 	/**
 	 * Return eval report
