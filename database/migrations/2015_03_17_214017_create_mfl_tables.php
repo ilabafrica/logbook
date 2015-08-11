@@ -305,13 +305,15 @@ class CreateMflTables extends Migration {
 			$table->timestamps();
 		});
 
-		 //	possible responses to the questions
+		//	possible responses to the questions
 		Schema::create('responses', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
             $table->float('score')->nullable();
+            $table->float('range_lower')->nullable();
+            $table->float('range_upper')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
@@ -496,6 +498,21 @@ class CreateMflTables extends Migration {
 
             $table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('affiliation_id')->references('id')->on('affiliations');
+        });
+        //	Levels
+		Schema::create('levels', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->float('range_lower')->nullable();
+            $table->float('range_upper')->nullable();
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
 	}
 

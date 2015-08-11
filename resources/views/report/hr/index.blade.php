@@ -20,10 +20,6 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
-            <li><a href="#"></a></li>
-        </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
@@ -53,7 +49,66 @@
                 </div>
                 <hr >
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 300px"></div>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover">
+                            <tbody>
+                                <tr>
+                                    <td colspan="6">Total Number</td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Counsellor</td>
+                                    <td>Midwife</td>
+                                    <td>Doctor</td>
+                                    <td>Lab Tech</td>
+                                    <td>Others</td>
+                                </tr>
+                                <tr>
+                                    <td>Baseline</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Previous Quarter</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Q 1</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Q 2</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>Q 3</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <div id="chart" style="height: 400px"></div>
                 </div>
             </div>
         </div>
@@ -66,8 +121,5 @@
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
 <script type="text/javascript">
-    $(function () {
-        $('#chart').highcharts(<?php echo $chart ?>);  
-    });
 </script>
 @stop

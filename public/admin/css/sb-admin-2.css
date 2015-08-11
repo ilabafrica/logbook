@@ -369,3 +369,23 @@ table.dataTable thead .sorting:after {
 .panel-yellow a:hover {
     color: #df8a13;
 }
+.does-not-exist{
+    border-color: #d9534f;
+    color: #fff;
+    background-color: #d9534f;
+}
+.in-development{
+    border-color: #f0ad4e;
+    color: #fff;
+    background-color: #f0ad4e;
+}
+.being-implemented{
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+.completed{
+    border-color: #5cb85c;
+    color: #fff;
+    background-color: #5cb85c;   
+}

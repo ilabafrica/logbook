@@ -140,6 +140,7 @@ return [
 		'Zizaco\Entrust\EntrustServiceProvider',
 		'Laracasts\Flash\FlashServiceProvider',
 		'Maatwebsite\Excel\ExcelServiceProvider',
+		'Jenssegers\Date\DateServiceProvider',
 		/*
 		 * Application Service Providers...
 		 */
