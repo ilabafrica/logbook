@@ -1,13 +1,38 @@
 <?php namespace App\Models;
 
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
+use Sofa\Revisionable\Revisionable; // interface
 
-class Facility extends Model {
-	use SoftDeletes;
- 	protected $dates = ['deleted_at'];
- 	protected $table = 'facilities';
+class Facility extends Model implements Revisionable {
+    use SoftDeletes;
+    protected $dates = ['deleted_at'];
+	protected $table = 'facilities';
+	use RevisionableTrait;
 
+    /*
+     * Set revisionable whitelist - only changes to any
+     * of these fields will be tracked during updates.
+     */
+    protected $revisionable = [
+        'code',
+        'name',
+        'sub_county_id',
+        'facility_type_id',
+        'facility_owner_id',
+        'reporting_site',
+        'nearest_town',
+        'landline',
+        'mobile',
+        'address',
+        'in_charge',
+        'operational_status',
+        'longitude',
+        'latitude',
+        'user_id',
+    ];
 	/**
 	* Operational Status
 	*/
