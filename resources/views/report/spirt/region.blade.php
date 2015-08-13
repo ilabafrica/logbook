@@ -72,7 +72,7 @@
                                 <tr>
                                     <td>{!! App\Models\County::find($region)->name !!}</td>
                                     @foreach($levels as $level)
-                                        <td></td>
+                                        <td>{!! $checklist->level() !!}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach
@@ -94,5 +94,8 @@
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
 <script type="text/javascript">
+    $(function () {
+        $('#chart').highcharts(<?php echo $chart ?>);  
+    });
 </script>
 @stop
