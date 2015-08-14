@@ -97,7 +97,7 @@
             <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.data-management', 2) !!}</a>
         </li>
         <!-- Local partner analysis -->
-        <li>
+        <li style="display:none;">
             <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.local-partner-analysis', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('partner/accomplishment') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.accomplishment', 1) !!}</a></li>
@@ -110,7 +110,7 @@
         </li>
         <!-- Summary and Data Analysis -->
         <li>
-            <a href="#"><i class="fa fa-stethoscope"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('analysis/data') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.analysis', 2) !!}</a></li>
                 <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
