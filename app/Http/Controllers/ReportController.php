@@ -12,6 +12,8 @@ use App\Models\QuestionResponse;
 use App\Models\Section;
 use App\Models\Answer;
 use App\Models\Level;
+use App\Models\SubCounty;
+use App\Models\County;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -292,18 +294,27 @@ class ReportController extends Controller {
 		//	Get facility
 		$facility = Facility::find(1);
 		$categories = array();
-		foreach ($checklist->sections as $section){
+		$options = array();
+		foreach ($checklist->sections as $section) 
+		{
 			if($section->isScorable())
-				array_push($categories, $section->id);
+				array_push($categories, $section);
 		}
-		//	Get distinct responses
-		$options = QuestionResponse::join('questions', 'question_responses.question_id', '=', 'questions.id')
-									->join('responses', 'question_responses.response_id', '=', 'responses.id')
-									->join('sections', 'questions.section_id', '=', 'sections.id')
-									->where('sections.checklist_id', $checklist->id)
-									->whereNotNull('responses.score')
-									->groupBy('response_id')
-									->get();
+		foreach ($categories as $category) {
+			foreach ($category->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}
+			}
+		}
+		$options = array_unique($options);
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -314,7 +325,7 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            	foreach ($categories as $category) {
-	            		$chart.="'".Section::find($category)->label."',";
+	            		$chart.="'".$category->label."',";
 	            	}
 	            $chart.="]
 	        },
@@ -336,10 +347,10 @@ class ReportController extends Controller {
 	        series: [";
 	        	$counts = count($options);
 		        foreach ($options as $option) {
-		        	$chart.="{name:"."'".Answer::find($option->response_id)->name."'".", data:[";
+		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
 	        		$counter = count($categories);
 	        		foreach ($categories as $category) {
-	        			$data = Answer::find($option->response_id)->column($category);
+	        			$data = Answer::find(Answer::idByName($option))->column($category->id);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -357,7 +368,7 @@ class ReportController extends Controller {
         				}
             			$counter--;
             		}
-            		$chart.="]";
+            		$chart.="], color:"."'".$colors[$counts-1]."'";
 	            	if($counts==1)
 						$chart.="}";
 					else
@@ -869,7 +880,81 @@ class ReportController extends Controller {
 		$levels = Level::all();
 		//	Get periods
 		$periods = array('Baseline', 'Quarter 1', 'Quarter 2', 'Quarter 3', 'Quarter 4');
-		return view('report.spirt.period', compact('checklist', 'levels', 'periods'));
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'bar'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	        },
+	        subtitle: {
+	            text: 'Source: HIV-QA Kenya'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($periods as $period) {
+	            		$chart.="'".$period."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Percentage'
+	            }
+	        },
+	        tooltip: {
+	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
+	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
+	                '<td style=\"padding:0\"><b>{point.y:.1f} %</b></td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
+	        plotOptions: {
+	            column: {
+	                pointPadding: 0.2,
+	                borderWidth: 0,
+	                colorByPoint: true
+	            }
+	        },
+	        colors: ['red', 'orange', 'yellow', '#90ED7D', 'green'],
+	        series: [";
+	        	$counts = count($levels);
+		        foreach ($levels as $level) {
+		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
+	        		$counter = count($periods);
+	        		foreach ($periods as $period) {
+	        			$data = $checklist->level();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.spirt.period', compact('checklist', 'levels', 'periods', 'chart'));
 	}	
 	/**
 	 * Return partner region report
@@ -895,7 +980,81 @@ class ReportController extends Controller {
 			array_push($regions, SubCounty::find($sub)->county->id);
 		}
 		$regions = array_unique($regions);
-		return view('report.spirt.region', compact('checklist', 'levels', 'regions'));
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'bar'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	        },
+	        subtitle: {
+	            text: 'Source: HIV-QA Kenya'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($regions as $region) {
+	            		$chart.="'".County::find($region)->name."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Percentage'
+	            }
+	        },
+	        tooltip: {
+	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
+	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
+	                '<td style=\"padding:0\"><b>{point.y:.1f} %</b></td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
+	        plotOptions: {
+	            column: {
+	                pointPadding: 0.2,
+	                borderWidth: 0,
+	                colorByPoint: true
+	            }
+	        },
+	        colors: ['red', 'orange', 'yellow', '#90ED7D', 'green'],
+	        series: [";
+	        	$counts = count($levels);
+		        foreach ($levels as $level) {
+		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
+	        		$counter = count($regions);
+	        		foreach ($regions as $region) {
+	        			$data = $checklist->level();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.spirt.region', compact('checklist', 'levels', 'regions', 'chart'));
 	}
 	/**
 	 * Return partner sdp report
@@ -911,7 +1070,81 @@ class ReportController extends Controller {
 		$levels = Level::all();
 		//	Get sdps
 		$sdps = array_unique($checklist->surveys->lists('sdp_id'));
-		return view('report.spirt.sdp', compact('checklist', 'levels', 'sdps'));
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'bar'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	        },
+	        subtitle: {
+	            text: 'Source: HIV-QA Kenya'
+	        },
+	        xAxis: {
+	            categories: [";
+	            	foreach ($sdps as $sdp) {
+	            		$chart.="'".Sdp::find($sdp)->name."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: 'Percentage'
+	            }
+	        },
+	        tooltip: {
+	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
+	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
+	                '<td style=\"padding:0\"><b>{point.y:.1f} %</b></td></tr>',
+	            footerFormat: '</table>',
+	            shared: true,
+	            useHTML: true
+	        },
+	        plotOptions: {
+	            column: {
+	                pointPadding: 0.2,
+	                borderWidth: 0,
+	                colorByPoint: true
+	            }
+	        },
+	        colors: ['red', 'orange', 'yellow', '#90ED7D', 'green'],
+	        series: [";
+	        	$counts = count($levels);
+		        foreach ($levels as $level) {
+		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
+	        		$counter = count($sdps);
+	        		foreach ($sdps as $sdp) {
+	        			$data = $checklist->level();
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="]";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		        $chart.="],
+	    }";
+		return view('report.spirt.sdp', compact('checklist', 'levels', 'sdps', 'chart'));
 	}
 	/**
 	 * Return eval report
