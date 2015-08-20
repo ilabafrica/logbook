@@ -283,6 +283,6 @@ function sub_county(id){
     $('.sub_county'+id).toggle(this.checked);
 }
 function county(id){
-    $('#county'+id).toggle(this.checked);
+    $('.kaunti'+id).toggle(this.checked);
 }
 /*End toggle susceptibility*/

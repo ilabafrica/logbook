@@ -53,4 +53,42 @@ class Checklist extends Model {
 			return null;
 		}
 	}
+	/**
+	 * Function to calculate level
+	 */
+	public function level()
+	{
+		//	Initialize variables
+		$total = 0.0;
+		$qstns = array();
+		$questions = array();
+		foreach ($this->surveys as $survey) 
+		{
+			foreach ($survey->sqs as $sq) 
+			{
+				$qstns = $sq->lists('question_id');
+			}
+			$questions = array_merge($questions, $qstns);
+		}
+		$questions = array_unique($questions);
+		foreach ($this->sections as $section) 
+		{
+			if($section->isScorable())
+			{
+				foreach ($section->questions as $question) 
+				{
+					if(in_array($question->id, $questions))
+					{
+						$sqs = SurveyQuestion::where('question_id', $question->id)->get();
+						foreach ($sqs as $sq) 
+						{
+							if($sq->ss)
+								$total+=$sq->ss->score;
+						}
+					}
+				}
+			}
+		}
+		return $total;
+	}
 }

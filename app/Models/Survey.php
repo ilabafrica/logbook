@@ -79,4 +79,12 @@ class Survey extends Model {
 	{
 		return $this->hasMany('App\Models\SpirtInfo');
 	}
+
+	/**
+	 * survey-question relationship
+	 */
+	public function sqs()
+	{
+		return $this->hasMany('App\Models\SurveyQuestion');
+	}
 }
