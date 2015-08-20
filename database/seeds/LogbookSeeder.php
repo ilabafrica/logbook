@@ -269,19 +269,20 @@ class LogbookSeeder extends Seeder
 
         /* SDPs table */
         $sdps= array(
-            array("name" => "Laboratory", "description" => "", "user_id" => "1"),
-            array("name" => "TB Clinic", "description" => "", "user_id" => "1"),          
-            array("name" => "CCC", "description" => "", "user_id" => "1"),  
-            array("name" => "OPD", "description" => "", "user_id" => "1"),  
-            array("name" => "STI Clinic", "description" => "", "user_id" => "1"),  
-            array("name" => "PMTCT", "description" => "", "user_id" => "1"),  
-            array("name" => "IPD (Ward)", "description" => "", "user_id" => "1"),  
-            array("name" => "Patient Support Center (PSC)", "description" => "", "user_id" => "1"),  
-            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "user_id" => "1"),
-            array("name" => "VMMC", "description" => "", "user_id" => "1"),
-            array("name" => "Pediatric department", "description" => "", "user_id" => "1"),
-            array("name" => "Youth Centre", "description" => "", "user_id" => "1"),
-            array("name" => "Others", "description" => "", "user_id" => "1")
+            array("name" => "Laboratory", "description" => "", "identifier" => "Laboratory", "user_id" => "1"),
+            array("name" => "TB Clinic", "description" => "", "identifier" => "TBClinic", "user_id" => "1"),          
+            array("name" => "ART Clinic", "description" => "", "identifier" => "art", "user_id" => "1"), 
+            array("name" => "CCC", "description" => "", "identifier" => "", "user_id" => "1"),  
+            array("name" => "OPD", "description" => "", "identifier" => "OPD", "user_id" => "1"),  
+            array("name" => "STI Clinic", "description" => "", "identifier" => "STIclinic", "user_id" => "1"),  
+            array("name" => "PMTCT", "description" => "", "identifier" => "PMTCT", "user_id" => "1"),  
+            array("name" => "IPD (Ward)", "description" => "", "identifier" => "IPD", "user_id" => "1"),  
+            array("name" => "Patient Support Center (PSC)/CCC", "description" => "", "identifier" => "PatientSupportCenter", "user_id" => "1"),  
+            array("name" => "VCT", "description" => "Voluntary Counselling and Testing", "identifier" => "VCT", "user_id" => "1"),
+            array("name" => "VMMC", "description" => "", "identifier" => "VMMC", "user_id" => "1"),
+            array("name" => "Pediatric department", "description" => "", "identifier" => "Pediatricdepartment", "user_id" => "1"),
+            array("name" => "Youth Centre", "description" => "", "identifier" => "YouthCentre", "user_id" => "1"),
+            array("name" => "Others", "description" => "", "identifier" => "Other", "user_id" => "1")
 
         );
         foreach ($sdps as $sdp) {

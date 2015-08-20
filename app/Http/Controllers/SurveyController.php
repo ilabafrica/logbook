@@ -496,7 +496,7 @@ class SurveyController extends Controller {
 					$survey->latitude = $specter[1];
 				}
 				//	Save survey at this point	
-				if(is_array($specter))
+				/*if(is_array($specter))
 				{
 					foreach ($specter as $mike => $ross) 
 					{
@@ -525,54 +525,33 @@ class SurveyController extends Controller {
 							//var_dump('*********************************************************************');
 						}
 					}	
-				}
+				}*/
         	}
 			$survey->save();
-			/*foreach ($value as $harvey => $specter) 
+			foreach ($value as $harvey => $specter) 
         	{
-        		$facility_id = NULL;
-        		$checklist_id = Checklist::idByName('HTC Lab Register (MOH 362)');
-        		$qa_officer = NULL;
-        		$comment = NULL;
-        		if(strpos($harvey, 'mysites') !== false)
-        		{
-					$facility_id = Facility::idByName(str_replace('_', ' ', $specter));
-				}
-				if(strpos($harvey, 'nameoftheauditor') !== false)
-				{
-					$qa_officer = $specter;
-				}
-				if(strpos($harvey, 'addtionalcomments') !== false)
-				{
-					$comment = $specter;
-				}
-				if(strpos($harvey, '_geolocation') !== false)
-				{
-					$longitude = $specter[0];
-					$latitude = $specter[1];
-				}
-
         		if(strpos($harvey, '_geolocation') === false && is_array($specter))
 				{
 
-					$survey = Survey::where('checklist_id', $checklist_id)
-									->where('qa_officer', $qa_officer)
-									->where('facility_id', $facility_id)
-									->where('comment', $comment)
-									->first();
 					foreach ($specter as $mike => $ross) 
 					{
 						$surveySdp = new SurveySdp;
 						$surveySdp->survey_id = $survey->id;
+						$sdp_id = NULL;
+						$comment = NULL;
 						if(is_array($ross))
 						{
 							foreach ($ross as $rachel => $zane) 
 							{
 								if(strpos($rachel, 'hh_testing_site') !== false)
 								{
-									$surveySdp->sdp_id = Sdp::idByName($zane);
+									$sdp_id = Sdp::idById($zane);
 								}
-								if(is_array($zane))
+								if((strpos($rachel, 'opd') !== false) || (strpos($rachel, 'pmtct') !== false) || (strpos($rachel, 'othersdp') !== false))
+								{
+									$comment = $zane;
+								}
+								/*if(is_array($zane))
 								{
 									foreach ($zane as $louis => $litt) 
 									{
@@ -584,11 +563,16 @@ class SurveyController extends Controller {
 											//var_dump('###############################################################################');
 										}
 									}
-								}
+								}*/
 							}
 							//var_dump('*********************************************************************');
 						}
-						$surveySdp->save();
+						$surveySdp->sdp_id = $sdp_id;
+						$surveySdp->comment = $comment;
+						if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->first())
+							$surveySdp = SurveySdp::find($ss->id);
+						else
+							$surveySdp->save();
 						foreach ($specter as $mike => $ross) 
 						{
 							if(is_array($ross))
@@ -597,13 +581,10 @@ class SurveyController extends Controller {
 								{
 									if(strpos($rachel, 'hh_testing_site') !== false)
 									{
-										$sdp_id = Sdp::idByName($zane);
+										$sdp_id = Sdp::idById($zane);
 									}
 									if(is_array($zane))
 									{
-										$surveySdp = SurveySdp::where('survey_id', $survey->id)
-															  ->where('sdp_id', $sdp_id)
-															  ->first();
 										$page = 1;
 										foreach ($zane as $louis => $litt) 
 										{
@@ -615,15 +596,15 @@ class SurveyController extends Controller {
 												foreach ($litt as $ned => $stark) 
 												{
 													//	htc-survey-page-question
-													$surveyPageQstn = new HtcSurveyPageQuestion;
+													/*$surveyPageQstn = new HtcSurveyPageQuestion;
 													$surveyPageQstn->htc_survey_page_id = $surveyPage->id
 													$surveyPageQstn->question_id = 1;
-													$surveyPageQstn->save();
+													$surveyPageQstn->save();*/
 													//	htc-survey-page-data
-													$pageData = new HtcSurveyPageData;
+													/*$pageData = new HtcSurveyPageData;
 													$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
 													$pageData->answer = $stark;
-													$pageData->save();
+													$pageData->save();*/
 													//var_dump("  =>  ".$stark);
 												}
 												//var_dump('###############################################################################');
@@ -634,11 +615,10 @@ class SurveyController extends Controller {
 								}
 								//var_dump('*********************************************************************');
 							}
+						}
 					}
 				}
-        	}			
-			dd();*/
-        	
+        	}
         	//var_dump('===================================================================');
 		}
     }

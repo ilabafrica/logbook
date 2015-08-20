@@ -202,6 +202,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->string('name');
 			$table->string('description', 100);
+			$table->string('identifier', 100)->nullable();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -370,6 +371,7 @@ class CreateMflTables extends Migration {
 			$table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('sdp_id')->references('id')->on('sdps');
             $table->unique(array('survey_id', 'sdp_id'));
+            $table->string('comment')->nullable();
 
             $table->softDeletes();
 			$table->timestamps();
