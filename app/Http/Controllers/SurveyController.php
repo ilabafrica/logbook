@@ -470,7 +470,7 @@ class SurveyController extends Controller {
     */
     public function hivqa($checklistData)
     {
-        //  Get all the data.
+    	//  Get all the data.
         //	dd($checklistData);
         foreach ($checklistData as $key => $value) 
         {
@@ -579,10 +579,6 @@ class SurveyController extends Controller {
 							{
 								foreach ($ross as $rachel => $zane) 
 								{
-									if(strpos($rachel, 'hh_testing_site') !== false)
-									{
-										$sdp_id = Sdp::idById($zane);
-									}
 									if(is_array($zane))
 									{
 										$page = 1;
@@ -593,19 +589,53 @@ class SurveyController extends Controller {
 											$surveyPage->page = $page;
 											$surveyPage->save();
 											if(is_array($litt)){
+												//	dd($litt);
+												//	Get questions from database
+												$questions = array();
+												foreach (Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'))->sections as $section) 
+												{
+													foreach ($section->questions as $question) 
+													{
+														if($question->identifier)
+														{
+															array_push($questions, $question->identifier);
+														}
+													}
+												}
+												//	End get questions
 												foreach ($litt as $ned => $stark) 
 												{
-													//	htc-survey-page-question
-													/*$surveyPageQstn = new HtcSurveyPageQuestion;
-													$surveyPageQstn->htc_survey_page_id = $surveyPage->id
-													$surveyPageQstn->question_id = 1;
-													$surveyPageQstn->save();*/
-													//	htc-survey-page-data
-													/*$pageData = new HtcSurveyPageData;
-													$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
-													$pageData->answer = $stark;
-													$pageData->save();*/
-													//var_dump("  =>  ".$stark);
+													$surveyPageQstn = new HtcSurveyPageQuestion;
+													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
+													$question_id = NULL;
+													if((strpos($ned, 'youdone') !== false) || strpos($ned, 'newpage') !== false)
+													{
+														continue;
+													}
+													else
+													{
+														foreach ($questions as $question) 
+														{
+															if(strpos($ned, $question) !== false)
+															{
+																$question_id = Question::idById($question);
+															}
+														}
+													}
+													$surveyPageQstn->question_id = $question_id;
+													if(empty($surveyPageQstn->question_id))
+													{
+														continue;
+													}
+													else
+													{
+														$surveyPageQstn->save();
+														//	htc-survey-page-data
+														$pageData = new HtcSurveyPageData;
+														$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
+														$pageData->answer = $stark;
+														$pageData->save();													
+													}
 												}
 												//var_dump('###############################################################################');
 											}
