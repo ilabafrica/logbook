@@ -128,4 +128,26 @@ class Sdp extends Model {
 		else*/
 			return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
 	}
+	/**
+	* Return Sdp ID given the identifier
+	* @param $name the identifier of the sdp
+	*/
+	public static function idById($id=NULL)
+	{
+		if($id!=NULL){
+			try 
+			{
+				$sdp = Sdp::where('identifier', $id)->orderBy('name', 'asc')->firstOrFail();
+				return $sdp->id;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The sdp with identifier ` $id ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }
