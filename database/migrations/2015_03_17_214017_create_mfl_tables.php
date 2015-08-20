@@ -288,6 +288,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->integer('section_id')->unsigned();
 			$table->string('name')->nullable();
+			$table->string('identifier')->nullable();
 			$table->string('title')->nullable();
 			$table->text('description')->nullable();			
 			$table->tinyInteger('question_type');
