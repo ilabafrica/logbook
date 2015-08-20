@@ -49,6 +49,7 @@
                                 @else
                                     <a href="{!! url('/report/'.$checklist->id) !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
                                 @endif
+                                <a href="{!! url('/api/'.$checklist->id) !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></a>
                             </p>
                         </div>
                     </div>
