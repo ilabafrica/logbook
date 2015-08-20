@@ -87,4 +87,11 @@ class Survey extends Model {
 	{
 		return $this->hasMany('App\Models\SurveyQuestion');
 	}
+	/**
+	 * SurveySdps relationship
+	 */
+	public function sdps()
+	{
+		return $this->hasMany('App\Models\SurveySdp');
+	}
 }

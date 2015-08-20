@@ -383,3 +383,7 @@ Route::any('analysis/snapshot', array(
     "as"    =>  "reports.snapshot",
     "uses"  =>  "ReportController@snapshot"
 ));
+Route::any('api/{id}', array(
+    "as"    =>  "survey.import",
+    "uses"  =>  "SurveyController@api"
+));

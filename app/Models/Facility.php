@@ -41,5 +41,29 @@ class Facility extends Model {
 	{
 		return $this->belongsTo('App\Models\SubCounty');
 	}
-
+	/**
+	* Return Facility ID given the name
+	* @param $name the name of the facility
+	*/
+	public static function idByName($name=NULL)
+	{
+		if($name!=NULL){
+			try 
+			{
+				$facility = Facility::where('name', $name)->orderBy('name', 'asc')->first();
+				if($facility)
+					return $facility->id;
+				else
+					return 1;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The facility ` $name ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }

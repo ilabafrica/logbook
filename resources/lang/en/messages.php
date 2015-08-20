@@ -3,7 +3,7 @@
 return [
 	/*	General terms */
 	'dashboard'	=>	'Dashboard',
-
+	'import-submitted-data'	=>	'Import Submitted Data',
 
 	/* HIV Logbook */
 	'hiv-logbook'	=>	'HTC Lab Register',

@@ -83,7 +83,7 @@ class LogbookSeeder extends Seeder
        
         /* MFL seeds */
         //  Facility Types
-        $facilityTypes = array(
+        /*$facilityTypes = array(
             array("name" => "Medical Clinic", "user_id" => "1"),
             array("name" => "Training Institution in Health (Stand-alone)", "user_id" => "1"),
             array("name" => "Dispensary", "user_id" => "1"),
@@ -103,10 +103,10 @@ class LogbookSeeder extends Seeder
         foreach ($facilityTypes as $facilityType) {
             FacilityType::create($facilityType);
         }
-        $this->command->info('Facility Types table seeded');
+        $this->command->info('Facility Types table seeded');*/
 
         //  Facility Owners
-        $facilityOwners = array(
+        /*$facilityOwners = array(
             array("name" => "Christian Health Association of Kenya", "user_id" => "1"),
             array("name" => "Private Enterprise (Institution)", "user_id" => "1"),
             array("name" => "Ministry of Health", "user_id" => "1"),
@@ -120,7 +120,7 @@ class LogbookSeeder extends Seeder
         foreach ($facilityOwners as $facilityOwner) {
             FacilityOwner::create($facilityOwner);
         }
-        $this->command->info('Facility Owners table seeded');
+        $this->command->info('Facility Owners table seeded');*/
         //  Counties
         $counties = array(
             array("name" => "Baringo", "hq" => "Kabarnet", "user_id" => "1"),
@@ -178,7 +178,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Counties table seeded');
 
         /* sub-counties table */
-        $subCounties = array(
+        /*$subCounties = array(
             array("name" => "Kiharu", "county_id" => "29", "user_id" => "1"),
             array("name" => "Kandara", "county_id" => "29", "user_id" => "1"),
             array("name" => "Kangema", "county_id" => "29", "user_id" => "1"),
@@ -194,7 +194,7 @@ class LogbookSeeder extends Seeder
             array("name" => "Kasarani", "county_id" => "30", "user_id" => "1"),
             array("name" => "Langata", "county_id" => "30", "user_id" => "1"),
             array("name" => "Kamukunji", "county_id" => "30", "user_id" => "1"),
-            array("name" => "Makandara", "county_id" => "30", "user_id" => "1"),
+            array("name" => "Makadara", "county_id" => "30", "user_id" => "1"),
             array("name" => "Dagoretti", "county_id" => "30", "user_id" => "1"),
             array("name" => "Bomet East", "county_id" => "2", "user_id" => "1"),
             array("name" => "Bomet Central", "county_id" => "2", "user_id" => "1"),
@@ -211,17 +211,17 @@ class LogbookSeeder extends Seeder
         foreach ($subCounties as $subCounty) {
             SubCounty::create($subCounty);
         }
-        $this->command->info('subcounties table seeded');
+        $this->command->info('subcounties table seeded');*/
        
          /* Facilities table */
-        $facilities = array(
+        /*$facilities = array(
             array("code" => "19704", "name" => "ACK Nyandarua Medical Clinic", "sub_county_id" => "1",  "facility_type_id" => "13", "facility_owner_id" => "3", "reporting_site"=> "Test Test","nearest_town" => "Captain","landline" => " ", "mobile" => " ", "email" => "", "address" => "P.O Box 48",  "in_charge" => "Eliud Mwangi Kithaka",  "operational_status" => "1", "user_id" => "1")
 
             );
         foreach ($facilities as $facility) {
             Facility::create($facility);
         }
-        $this->command->info('Facilities table seeded');
+        $this->command->info('Facilities table seeded');*/
 
         /* Approval Agencies table */
         $agencies = array(
@@ -243,13 +243,13 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Site types table seeded');
         /* Sites table */
-        $sites = array(
+        /*$sites = array(
             array("facility_id" => "1", "site_type_id" => "1", "local_id" => "002", "name" => "Kaptembwa",  "department" => "VCT", "mobile" => "0729333333", "email" => "lmbugua@strathmore.edu", "in_charge" => "Pius Mathii", "user_id" => "1")
         );
         foreach ($sites as $site) {
             Site::create($site);
         }
-        $this->command->info('Sites table seeded');
+        $this->command->info('Sites table seeded');*/
         /* Test kits table */
         /*$tkits = array(
             array("full_name" => "Unigold", "short_name" => "Unigold", "manufacturer" => "Lancet Kenya", "approval_status" => "2", "approval_agency_id" => "3", "incountry_approval" => "2", "user_id" => "1")
