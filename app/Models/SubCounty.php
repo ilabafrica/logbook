@@ -1,13 +1,5 @@
 <?php namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-
-class SubCounty extends Model {
-    use SoftDeletes;
-    protected $dates = ['deleted_at'];
-	protected $table = 'sub_counties';
-
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -38,4 +30,13 @@ class SubCounty extends Model implements Revisionable {
 		return $this->belongsTo('App\Models\County');
 
 	}
+    /**
+    * Relationship with facilities
+    */
+    public function facilities()
+    {
+
+        return $this->hasMany('App\Models\Facility');
+
+    }
 }
