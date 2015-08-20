@@ -133,4 +133,26 @@ class Question extends Model {
 	{
 		return $this->hasMany('App\Models\SurveyQuestion');
 	}
+	/**
+	* Return Question ID given the identifier
+	* @param $name the identifier of the question
+	*/
+	public static function idById($id=NULL)
+	{
+		if($id!=NULL){
+			try 
+			{
+				$question = Question::where('identifier', $id)->orderBy('name', 'asc')->firstOrFail();
+				return $question->id;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The question with identifier ` $id ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }
