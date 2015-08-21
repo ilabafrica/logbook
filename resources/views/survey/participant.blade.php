@@ -58,7 +58,7 @@
                                 <td>{!! $counter !!}</td>
                                 <td>{!! $facility->code !!}</td>
                                 <td>{!! $facility->name !!}</td>
-                                <td>{!! $facility->surveys->count() !!}</td>
+                                <td>{!! $facility->submissions($checklist->id) !!}</td>
                             </tr>
                         @endforeach
                         </tbody>

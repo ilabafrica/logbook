@@ -23,6 +23,7 @@ use App\Models\HtcSurveyPage;
 use App\Models\HtcSurveyPageQuestion;
 use App\Models\HtcSurveyPageData;
 use App\Models\County;
+use App\Models\SubCounty;
 
 use Illuminate\Http\Request;
 use Response;
@@ -676,8 +677,8 @@ class SurveyController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		//	Get counties
-		$counties = County::all();
-		return view('survey.subcounty', compact('checklist', 'counties'));
+		//	Get sub-counties
+		$subCounties = SubCounty::all();
+		return view('survey.subcounty', compact('checklist', 'subCounties'));
 	}
 }

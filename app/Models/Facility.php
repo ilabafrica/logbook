@@ -79,15 +79,6 @@ class Facility extends Model {
 	public function submissions($id)
 	{
 		//	Initialize counter		
-		$count = 0;
-		//	Get surveys and count if in array
-		foreach (Checklist::find($id)->surveys as $survey) 
-		{
-			if(in_array($survey->facility_id, [$this->id]))
-			{
-				$count++;
-			}
-		}
-		return $count;
+		return $this->surveys->where('checklist_id', 2)->count();
 	}
 }

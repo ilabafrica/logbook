@@ -34,7 +34,7 @@
                                     </tr>
                                     <tr>
                                         <td>{!! Lang::choice('messages.no-of-qa', 1) !!}</td>
-                                        <td>3</td>
+                                        <td>{!! $checklist->officers() !!}</td>
                                     </tr>
                                 </tbody>
                             </table>

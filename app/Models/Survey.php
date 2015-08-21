@@ -47,7 +47,7 @@ class Survey extends Model {
 	 */
 	public static function questionnaires($officer)
 	{
-		return count(Survey::where('qa_officer', '=', $officer));
+		return Survey::where('qa_officer', $officer)->count();
 	}
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ]

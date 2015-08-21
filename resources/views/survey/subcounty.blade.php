@@ -41,26 +41,19 @@
             </p>
             <div class="row">
                 <div class="col-sm-12">
-                    <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover search-table">
                         <thead>
                             <tr>
-                                <th>{{ Lang::choice('messages.county', 1) }}</th>
                                 <th>{{ Lang::choice('messages.sub-county', 1) }}</th>
                                 <th>{{ Lang::choice('messages.number', 1) }}</th>
                             </tr>
                         </thead>
-                         <tbody>
-                            @foreach($counties as $county)
-                            <tr>
-                                <td rowspan="{!! $county->subCounties->count()+1 !!}">{!! $county->name !!}</td>
-                                <?php if($county->subCounties->count() == 0){ echo "<td></td><td></td>"; } ?>
-                            </tr>                            
-                                @foreach($county->subCounties as $subCounty)
+                         <tbody>                          
+                            @foreach($subCounties as $subCounty)
                                 <tr>
                                     <td>{!! $subCounty->name !!}</td>
                                     <td>{!! $subCounty->submissions($checklist->id) !!}</td>
                                 </tr>
-                                @endforeach
                             @endforeach
                         </tbody>
                     </table>
