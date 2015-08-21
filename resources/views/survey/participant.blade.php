@@ -24,7 +24,9 @@
         <ul class="nav nav-tabs">
             <li><a href="{!! url('survey/'.$checklist->id.'/collection') !!}">{!! Lang::choice('messages.data-collection-summary', 1) !!}</a>
             </li>
-            <li><a href="{!! url('survey/'.$checklist->id.'/summary') !!}">{!! Lang::choice('messages.survey-summary', 1) !!}</a>
+            <li class=""><a href="{!! url('survey/'.$checklist->id.'/summary') !!}">{!! Lang::choice('messages.county-summary', 1) !!}</a>
+            </li>
+            <li class=""><a href="{!! url('survey/'.$checklist->id.'/subcounty') !!}">{!! Lang::choice('messages.sub-county-summary', 1) !!}</a>
             </li>
             <li class="active"><a href="{!! url('survey/'.$checklist->id.'/participant') !!}">{!! Lang::choice('messages.participants', 1) !!}</a>
             </li>
@@ -45,16 +47,18 @@
                                 <th>{{ Lang::choice('messages.count', 1) }}</th>
                                 <th>{{ Lang::choice('messages.facility', 1) }}</th>
                                 <th>{{ Lang::choice('messages.name', 1) }}</th>
+                                <th>{{ Lang::choice('messages.number', 1) }}</th>
                             </tr>
                         </thead>
                          <tbody>
                          <?php $counter = 0; ?>
-                         @foreach($checklist->surveys as $survey)
+                         @foreach($facilities as $facility)
                          <?php $counter++; ?>
                             <tr>
                                 <td>{!! $counter !!}</td>
-                                <td>{!! $survey->facility->code !!}</td>
-                                <td>{!! $survey->facility->name !!}</td>
+                                <td>{!! $facility->code !!}</td>
+                                <td>{!! $facility->name !!}</td>
+                                <td>{!! $facility->surveys->count() !!}</td>
                             </tr>
                         @endforeach
                         </tbody>

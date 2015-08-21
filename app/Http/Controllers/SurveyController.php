@@ -22,6 +22,7 @@ use App\Models\SurveySdp;
 use App\Models\HtcSurveyPage;
 use App\Models\HtcSurveyPageQuestion;
 use App\Models\HtcSurveyPageData;
+use App\Models\County;
 
 use Illuminate\Http\Request;
 use Response;
@@ -387,7 +388,8 @@ class SurveyController extends Controller {
 	{
 		//	Get specific checklist
 		$checklist = Checklist::find($id);
-		return view('survey.participant', compact('checklist'));
+		$facilities = Facility::all();
+		return view('survey.participant', compact('checklist', 'facilities'));
 	}
 	/**
 	 * Remove the specified begining of text to get Id alone.
@@ -652,4 +654,30 @@ class SurveyController extends Controller {
         	//var_dump('===================================================================');
 		}
     }
+	/**
+	 * Return summary by county
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function county($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get counties
+		$counties = County::all();
+		return view('survey.county', compact('checklist', 'counties'));
+	}
+	/**
+	 * Return summary by sub-county
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function subcounty($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get counties
+		$counties = County::all();
+		return view('survey.subcounty', compact('checklist', 'counties'));
+	}
 }

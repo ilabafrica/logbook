@@ -231,10 +231,10 @@ Route::any('survey/{id}/update', array(
     "uses"  =>  "SurveyController@update"
 ));
 
-Route::get('survey/{id}/{checklist_id}', array(
+/*Route::get('survey/{id}/{checklist_id}', array(
     "as"    =>  "survey.show",
     "uses"  =>  "SurveyController@show"
-));
+));*/
 Route::get('survey/{id}/summary', array(
     "as"    =>  "survey.summary",
     "uses"  =>  "SurveyController@summary"
@@ -246,6 +246,14 @@ Route::get('survey/{id}/collection', array(
 Route::get('survey/{id}/participant', array(
     "as"    =>  "survey.participant",
     "uses"  =>  "SurveyController@participant"
+));
+Route::get('survey/{id}/county', array(
+    "as"    =>  "survey.county.summary",
+    "uses"  =>  "SurveyController@county"
+));
+Route::get('survey/{id}/subcounty', array(
+    "as"    =>  "survey.subcounty.summary",
+    "uses"  =>  "SurveyController@subcounty"
 ));
 /* Reports */
 Route::get('report', array(

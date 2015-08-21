@@ -66,4 +66,28 @@ class Facility extends Model {
 			return null;
 		}
 	}
+	/**
+	* Relationship with surveys
+	*/
+	public function surveys()
+	{
+		return $this->hasMany('App\Models\Survey');
+	}
+	/**
+	* Function to get counts per checklist
+	*/
+	public function submissions($id)
+	{
+		//	Initialize counter		
+		$count = 0;
+		//	Get surveys and count if in array
+		foreach (Checklist::find($id)->surveys as $survey) 
+		{
+			if(in_array($survey->facility_id, [$this->id]))
+			{
+				$count++;
+			}
+		}
+		return $count;
+	}
 }

@@ -22,9 +22,9 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="{!! url('survey/'.$checklist->id.'/collection') !!}">{!! Lang::choice('messages.data-collection-summary', 1) !!}</a>
+            <li><a href="{!! url('survey/'.$checklist->id.'/collection') !!}">{!! Lang::choice('messages.data-collection-summary', 1) !!}</a>
             </li>
-            <li class=""><a href="{!! url('survey/'.$checklist->id.'/county') !!}">{!! Lang::choice('messages.county-summary', 1) !!}</a>
+            <li class="active"><a href="{!! url('survey/'.$checklist->id.'/county') !!}">{!! Lang::choice('messages.county-summary', 1) !!}</a>
             </li>
             <li class=""><a href="{!! url('survey/'.$checklist->id.'/subcounty') !!}">{!! Lang::choice('messages.sub-county-summary', 1) !!}</a>
             </li>
@@ -36,7 +36,7 @@
         <div class="tab-content">
             <br />
             <p>
-                <a href="javascript::history.back()" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
+                <a href="#" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
                 <a href="#" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
             </p>
             <div class="row">
@@ -44,15 +44,15 @@
                     <table class="table table-striped table-bordered table-hover search-table">
                         <thead>
                             <tr>
-                                <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
-                                <th>{{ Lang::choice('messages.no-of-questionnaire', 1) }}</th>
+                                <th>{{ Lang::choice('messages.county', 1) }}</th>
+                                <th>{{ Lang::choice('messages.number', 1) }}</th>
                             </tr>
                         </thead>
                          <tbody>
-                            @foreach($qa as $officer)
+                            @foreach($counties as $county)
                             <tr>
-                                <td>{!! $officer->qa_officer !!}</td>
-                                <td>{!! App\Models\Survey::questionnaires($officer->qa_officer) !!}</td>
+                                <td>{!! $county->name !!}</td>
+                                <td>{!! $county->submissions($checklist->id) !!}</td>
                             </tr>
                             @endforeach
                         </tbody>
