@@ -12,7 +12,7 @@ class Sdp extends Model {
 	 */
 	public function surveys()
 	{
-		return $this->hasMany('App\Models\Survey');
+		return $this->hasMany('App\Models\SurveySdp');
 	}
 	/**
 	* Return Sdp ID given the name
@@ -39,12 +39,24 @@ class Sdp extends Model {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($from = NULL, $to = NULL, $testTypeID = NULL, $name = NULL, $surveys = NULL)
+	public function positivePercent($checklist = NULL, $from = NULL, $to = NULL, $testTypeID = NULL, $name = NULL, $surveys = NULL)
 	{
 		//	Initialize counts
 		$positive = 0;
 		$total = 0;
 		//	Get sdp surveys
+		$qstns = array();
+		foreach ($this->surveys as $survey)
+		{
+			foreach ($survey->pages as $page)
+			{
+				foreach ($page->questions as $question)
+				{
+					array_push($qstns, $question->question_id);
+				}
+			}
+		}
+		dd($qstns);
 		$surveys = $this->surveys->lists('id');
 		//	Declare questions to be used in calculation of both positive and total values
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
