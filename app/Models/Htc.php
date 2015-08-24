@@ -2,11 +2,23 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
+use Sofa\Revisionable\Revisionable; // interface
 
-class Htc extends Model {
+class Htc extends Model implements Revisionable  {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'htc';
+	use RevisionableTrait;
+
+    /*
+     * Set revisionable whitelist - only changes to any
+     * of these fields will be tracked during updates.
+     */
+    protected $revisionable = [
+        'name',
+        'user_id',
+    ];
 	//	Constants for test 1, 2 and 3
 	const TESTKIT1 = 1;
 	const TESTKIT2 = 2;
