@@ -47,7 +47,34 @@ class LogbookSeeder extends Seeder
             $users[] = User::create($user);
         }
         $this->command->info('Users table seeded');
-        
+
+        /* Permissions table */
+        $permissions = array(
+            array("name" => "all", "display_name" => "All"),
+            array("name" => "create-user", "display_name" => "Can create user"),
+            array("name" => "edit-user", "display_name" => "Can edit user"),
+            array("name" => "create-facility", "display_name" => "Can create facility"),
+            array("name" => "edit-facility", "display_name" => "Can edit facility"),
+            array("name" => "view-summary", "display_name" => "Can view summary"),
+            array("name" => "view-reports", "display_name" => "Can view reports"),
+            array("name" => "fill-questionnaire", "display_name" => "Can fill questionnaire"),
+            array("name" => "edit-checklist-data", "display_name" => "Can edit checklist data"),
+            array("name" => "import-data", "display_name" => "Can import submitted data"),
+            //managing permissions
+            array("name" => "manage-checklist-config", "display_name" => "Can manage checklist configuration"),
+            array("name" => "manage-facility-config", "display_name" => "Can manage facility configuration"),
+            array("name" => "manage-site-catalog", "display_name" => "Can manage site catalog"),
+            array("name" => "manage-testkits", "display_name" => "Can manage testkits"),
+            array("name" => "manage-users", "display_name" => "Can manage users"),
+            array("name" => "manage-access-controls", "display_name" => "Can manage access controls"),
+            array("name" => "manage-data-analysis", "display_name" => "Can manage data analysis")
+            
+        );
+        foreach ($permissions as $permission) {
+            Permission::create($permission);
+        }
+        $this->command->info('Permissions table seeded');
+
         /* Roles table */
         $roles = array(
             array("name" => "Superadmin", "display_name" => "Overall Administrator"),
@@ -72,18 +99,18 @@ class LogbookSeeder extends Seeder
         //Assign role Superadmin to all permissions
         User::find(1)->attachRole($role1);
 
-        $role2 = Role::find(4);//Assessor
+        $role2 = Role::find(6);//QA supervisor
 
         //Assign technologist's permissions to role technologist
-        $role2->attachPermission(Permission::find(2));
-        $role2->attachPermission(Permission::find(3));
-        $role2->attachPermission(Permission::find(8));
+        $role2->attachPermission(Permission::find(6));
+        $role2->attachPermission(Permission::find(7));
+        $role2->attachPermission(Permission::find(11));
 
         //Assign roles to the other users
        
         /* MFL seeds */
         //  Facility Types
-        /*$facilityTypes = array(
+        $facilityTypes = array(
             array("name" => "Medical Clinic", "user_id" => "1"),
             array("name" => "Training Institution in Health (Stand-alone)", "user_id" => "1"),
             array("name" => "Dispensary", "user_id" => "1"),
@@ -103,10 +130,10 @@ class LogbookSeeder extends Seeder
         foreach ($facilityTypes as $facilityType) {
             FacilityType::create($facilityType);
         }
-        $this->command->info('Facility Types table seeded');*/
+        $this->command->info('Facility Types table seeded');
 
         //  Facility Owners
-        /*$facilityOwners = array(
+        $facilityOwners = array(
             array("name" => "Christian Health Association of Kenya", "user_id" => "1"),
             array("name" => "Private Enterprise (Institution)", "user_id" => "1"),
             array("name" => "Ministry of Health", "user_id" => "1"),
@@ -120,7 +147,7 @@ class LogbookSeeder extends Seeder
         foreach ($facilityOwners as $facilityOwner) {
             FacilityOwner::create($facilityOwner);
         }
-        $this->command->info('Facility Owners table seeded');*/
+        $this->command->info('Facility Owners table seeded');
         //  Counties
         $counties = array(
             array("name" => "Baringo", "hq" => "Kabarnet", "user_id" => "1"),
@@ -178,7 +205,7 @@ class LogbookSeeder extends Seeder
         $this->command->info('Counties table seeded');
 
         /* sub-counties table */
-        /*$subCounties = array(
+        $subCounties = array(
             array("name" => "Kiharu", "county_id" => "29", "user_id" => "1"),
             array("name" => "Kandara", "county_id" => "29", "user_id" => "1"),
             array("name" => "Kangema", "county_id" => "29", "user_id" => "1"),
@@ -211,7 +238,7 @@ class LogbookSeeder extends Seeder
         foreach ($subCounties as $subCounty) {
             SubCounty::create($subCounty);
         }
-        $this->command->info('subcounties table seeded');*/
+        $this->command->info('subcounties table seeded');
        
          /* Facilities table */
         /*$facilities = array(
