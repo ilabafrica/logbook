@@ -70,7 +70,7 @@ class Survey extends Model {
 	 */
 	public function me()
 	{
-		return $this->hasMany('App\Models\MeInfo');
+		return $this->hasOne('App\Models\MeInfo');
 	}
 	/**
 	 * survey-spirt-info relationship
@@ -78,5 +78,20 @@ class Survey extends Model {
 	public function spirt()
 	{
 		return $this->hasMany('App\Models\SpirtInfo');
+	}
+
+	/**
+	 * survey-question relationship
+	 */
+	public function sqs()
+	{
+		return $this->hasMany('App\Models\SurveyQuestion');
+	}
+	/**
+	 * SurveySdps relationship
+	 */
+	public function sdps()
+	{
+		return $this->hasMany('App\Models\SurveySdp');
 	}
 }

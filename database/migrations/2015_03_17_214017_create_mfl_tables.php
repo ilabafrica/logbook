@@ -84,7 +84,7 @@ class CreateMflTables extends Migration {
 		Schema::create('facilities', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();
-			$table->string('code', 20);
+			$table->string('code', 20)->nullable();
 			$table->string('name', 100);
 			$table->integer('sub_county_id')->unsigned(); 
 			$table->integer('facility_type_id')->unsigned();
@@ -202,6 +202,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->string('name');
 			$table->string('description', 100);
+			$table->string('identifier', 100)->nullable();
 			$table->integer('user_id')->unsigned();
 
             $table->foreign('user_id')->references('id')->on('users');
@@ -288,6 +289,7 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->integer('section_id')->unsigned();
 			$table->string('name')->nullable();
+			$table->string('identifier')->nullable();
 			$table->string('title')->nullable();
 			$table->text('description')->nullable();			
 			$table->tinyInteger('question_type');
@@ -305,13 +307,15 @@ class CreateMflTables extends Migration {
 			$table->timestamps();
 		});
 
-		 //	possible responses to the questions
+		//	possible responses to the questions
 		Schema::create('responses', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->string('description');
             $table->float('score')->nullable();
+            $table->float('range_lower')->nullable();
+            $table->float('range_upper')->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
@@ -347,12 +351,67 @@ class CreateMflTables extends Migration {
 			$table->string('longitude')->nullable();
 			$table->string('latitude')->nullable();
 			$table->integer('checklist_id')->unsigned();
-			$table->integer('sdp_id')->unsigned();
+			//$table->integer('sdp_id')->unsigned();
 			$table->string('comment')->nullable();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
             $table->foreign('facility_id')->references('id')->on('facilities');
+            //$table->foreign('sdp_id')->references('id')->on('sdps');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	Survey-sdps
+		Schema::create('survey_sdps', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('survey_id')->unsigned();
+			$table->integer('sdp_id')->unsigned();
+
+			$table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('sdp_id')->references('id')->on('sdps');
+            $table->unique(array('survey_id', 'sdp_id'));
+            $table->string('comment')->nullable();
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	htc-survey-sdp-pages
+		Schema::create('htc_survey_pages', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('survey_sdp_id')->unsigned();
+			$table->integer('page');
+
+			$table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+		//	htc-survey-sdp-page-questions
+		Schema::create('htc_survey_page_questions', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();
+			$table->integer('htc_survey_page_id')->unsigned();
+			$table->integer('question_id')->unsigned();
+
+			$table->foreign('htc_survey_page_id')->references('id')->on('htc_survey_pages');
+            $table->foreign('question_id')->references('id')->on('questions');
+            $table->unique(array('htc_survey_page_id', 'question_id'));
+
+            $table->softDeletes();
+			$table->timestamps();
+		});
+
+		//	htc-survey-page-data
+		Schema::create('htc_survey_page_data', function(Blueprint $table)
+		{
+			$table->increments('id')->unsigned();			
+			$table->integer('htc_survey_page_question_id')->unsigned();
+			$table->string('answer');
+			$table->string('comment')->nullable();
+
+            $table->foreign('htc_survey_page_question_id')->references('id')->on('htc_survey_page_questions');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -361,12 +420,12 @@ class CreateMflTables extends Migration {
 		Schema::create('survey_questions', function(Blueprint $table)
 		{
 			$table->increments('id')->unsigned();
-			$table->integer('survey_id')->unsigned();
+			$table->integer('survey_sdp_id')->unsigned();
 			$table->integer('question_id')->unsigned();
 
-			$table->foreign('survey_id')->references('id')->on('surveys');
+			$table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
             $table->foreign('question_id')->references('id')->on('questions');
-            $table->unique(array('survey_id', 'question_id'));
+            $table->unique(array('survey_sdp_id', 'question_id'));
 
             $table->softDeletes();
 			$table->timestamps();
@@ -496,6 +555,21 @@ class CreateMflTables extends Migration {
 
             $table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('affiliation_id')->references('id')->on('affiliations');
+        });
+        //	Levels
+		Schema::create('levels', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->string('name');
+            $table->string('description');
+            $table->float('range_lower')->nullable();
+            $table->float('range_upper')->nullable();
+            $table->integer('user_id')->unsigned();
+
+            $table->softDeletes();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
 	}
 

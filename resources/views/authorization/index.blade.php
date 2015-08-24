@@ -69,10 +69,10 @@
                                             {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "county('$user->id')")) !!}
                                             @if($user->id != App\Models\User::getAdminUser()->id)
                                                 <br />
-                                                <div class="county">
+                                                <div class="kaunti{!! $user->id !!}" <?php if(!$user->hasRole('County Lab Coordinator')){ ?>style="display:none" <?php } ?>>
                                                     <div class="form-group">
                                                         <div class="col-sm-8">
-                                                            {!! Form::select('county'.$user->id, array(''=>trans('messages.select-county'))+$counties, $user->tier?$user->tier->tier:'', 
+                                                            {!! Form::select('county'.$user->id, array(''=>trans('messages.select-county'))+$counties, ($user->tier && $user->hasRole('County Lab Coordinator'))?$user->tier->tier:'', 
                                                                 array('class' => 'form-control', 'id' => 'county'.$user->id)) !!}
                                                         </div>
                                                     </div>
@@ -82,15 +82,17 @@
                                             {!! Form::checkbox('userRoles['.$userKey.']['.$roleKey.']', '1', $user->hasRole($role->name), array('onclick' => "sub_county('$user->id')")) !!}
                                             @if($user->id != App\Models\User::getAdminUser()->id)
                                                 <br />
-                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
+                                                    <div class="form-group sub_county{!! $user->id !!}" <?php if(!$user->hasRole('Sub-County Lab Coordinator')){ ?>style="display:none"<?php } ?>>
                                                         <div class="col-sm-8">
-                                                            {!! Form::select('county_'.$user->id, array(''=>trans('messages.select-county'))+$counties, '', 
+                                                            {!! Form::select('county_'.$user->id, array(''=>trans('messages.select-county'))+$counties, 
+                                                                $user->tier?App\Models\SubCounty::find($user->tier->tier)->county->id:'', 
                                                                 array('class' => 'form-control', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
                                                         </div>
                                                     </div>
-                                                    <div class="form-group sub_county{!! $user->id !!}" style="display:none">
+                                                    <div class="form-group sub_county{!! $user->id !!}" <?php if(!$user->hasRole('Sub-County Lab Coordinator')){ ?>style="display:none"<?php } ?>>
                                                         <div class="col-sm-8">
-                                                            {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
+                                                            {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select-sub-county'))+$subCounties, 
+                                                                $user->tier?$user->tier->tier:'', 
                                                                 array('class' => 'form-control', 'id' => 'sub_county'.$user->id)) !!}
                                                         </div>
                                                     </div>

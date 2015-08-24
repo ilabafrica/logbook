@@ -141,6 +141,9 @@ Route::get("/agency/{id}/delete", array(
 //  Role controller
 Route::resource('role', 'RoleController');
 
+//  Level controller
+Route::resource('level', 'LevelController');
+
 //  Permission controller
 Route::resource('permission', 'PermissionController');
 
@@ -298,6 +301,10 @@ Route::any('report/{id}/me', array(
     "as"    =>  "reports.me.mscolumn",
     "uses"  =>  "ReportController@me"
 ));
+Route::any('report/{id}/stage', array(
+    "as"    =>  "reports.me.stages",
+    "uses"  =>  "ReportController@stage"
+));
 /* *
 *
 * SPI-RT reports
@@ -306,4 +313,77 @@ Route::any('report/{id}/me', array(
 Route::any('report/{id}/spirt', array(
     "as"    =>  "reports.spirt.spider",
     "uses"  =>  "ReportController@spirt"
+));
+/* *
+*
+* Local partner
+*
+*/
+Route::any('report/{id}/periodic', array(
+    "as"    =>  "reports.partner.periodic",
+    "uses"  =>  "ReportController@periodic"
+));
+Route::any('partner/accomplishment', array(
+    "as"    =>  "reports.accomplishment",
+    "uses"  =>  "ReportController@accomplishment"
+));
+Route::any('partner/hr', array(
+    "as"    =>  "reports.hr",
+    "uses"  =>  "ReportController@hr"
+));
+Route::any('partner/pt', array(
+    "as"    =>  "reports.pt",
+    "uses"  =>  "ReportController@pt"
+));
+Route::any('partner/logbook', array(
+    "as"    =>  "reports.logbook",
+    "uses"  =>  "ReportController@logbook"
+));
+Route::any('partner/logSdp', array(
+    "as"    =>  "reports.logSdp",
+    "uses"  =>  "ReportController@logSdp"
+));
+Route::any('partner/logRegion', array(
+    "as"    =>  "reports.logRegion",
+    "uses"  =>  "ReportController@logRegion"
+));
+Route::any('partner/spirt', array(
+    "as"    =>  "reports.spirt",
+    "uses"  =>  "ReportController@sprt"
+));
+Route::any('partner/me', array(
+    "as"    =>  "reports.eval",
+    "uses"  =>  "ReportController@evaluation"
+));
+Route::any('partner/period', array(
+    "as"    =>  "reports.partner.period",
+    "uses"  =>  "ReportController@period"
+));
+Route::any('partner/region', array(
+    "as"    =>  "reports.partner.region",
+    "uses"  =>  "ReportController@region"
+));
+Route::any('partner/sdp', array(
+    "as"    =>  "reports.partner.sdp",
+    "uses"  =>  "ReportController@sdp"
+));
+Route::any('partner/ptSdp', array(
+    "as"    =>  "reports.partner.ptSdp",
+    "uses"  =>  "ReportController@ptSdp"
+));
+Route::any('analysis/data', array(
+    "as"    =>  "reports.data",
+    "uses"  =>  "ReportController@data"
+));
+Route::any('analysis/chart', array(
+    "as"    =>  "reports.chart",
+    "uses"  =>  "ReportController@chart"
+));
+Route::any('analysis/snapshot', array(
+    "as"    =>  "reports.snapshot",
+    "uses"  =>  "ReportController@snapshot"
+));
+Route::any('api/{id}', array(
+    "as"    =>  "survey.import",
+    "uses"  =>  "SurveyController@api"
 ));

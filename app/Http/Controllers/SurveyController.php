@@ -16,8 +16,12 @@ use App\Models\AuditType;
 use App\Models\TestKit;
 use App\Models\MeInfo;
 use App\Models\SpirtInfo;
-use App\Models\surveyScore;
+use App\Models\SurveyScore;
 use App\Models\Answer;
+use App\Models\SurveySdp;
+use App\Models\HtcSurveyPage;
+use App\Models\HtcSurveyPageQuestion;
+use App\Models\HtcSurveyPageData;
 
 use Illuminate\Http\Request;
 use Response;
@@ -115,7 +119,7 @@ class SurveyController extends Controller {
 		//	ME info
 		if($checklist_id == Checklist::idByName('M & E Checklist')){
 			$me_info = $survey->me;
-			if($me_info->count() == 0){
+			if(count($me_info) == 0){
 				$me_info = new MeInfo;
 				$me_info->survey_id = $survey->id;
 				$me_info->audit_type_id = $audit_type;
@@ -129,7 +133,7 @@ class SurveyController extends Controller {
 		//	SPI-RT info
 		if($checklist_id == Checklist::idByName('SPI-RT Checklist')){
 			$spirt_info = $survey->spirt;
-			if($spirt_info->count() == 0){
+			if(count($spirt_info) == 0){
 				$spirt_info = new SpirtInfo;
 				$spirt_info->survey_id = $survey->id;
 				$spirt_info->affiliation_id = $affiliation;
@@ -396,4 +400,256 @@ class SurveyController extends Controller {
 		if(($pos = strpos($field, '_')) !== FALSE)
 		return substr($field, $pos+1);
 	}
+	/**
+	 * Function to call api to import data
+	 *
+	 * @param  int  $id of checklist
+	 * @return Response
+	 */
+	public function api($id)
+	{
+		//	Get specific checklist
+		$checklist = Checklist::find($id);
+		if($checklist->name == 'M & E Checklist')
+			$checklist_id = 69519;
+		else if($checklist->name == 'HTC Lab Register (MOH 362)')
+			$checklist_id = 69514;
+		else if($checklist->name == 'SPI-RT Checklist')
+			$checklist_id = 69683;
+		return $this->onadata($checklist_id);
+	}
+	/**
+    * CURL funtion to login and process the data to be imported
+    *
+    * @param 
+    */
+    public function onadata($id)
+    {
+        /* Run curl request */
+        //  Initiate curl
+        $ch = curl_init('https://ona.io/api/v1/data/'.$id);
+        //  Set all applicable options
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, '');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        //  Authentication by authorization token
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Authorization: Token 9cbbf702f821cf84f3875da4aef80915f3bae6ce'));
+        //  Execute curl request
+        $result=curl_exec($ch);
+        //  Throw any errors of any
+        if(curl_error($ch))
+            echo curl_error($ch);
+        //  Close curl operation
+        curl_close($ch);
+        //  Get the data returned
+        $checklist_data = json_decode($result, true);
+        //  Process the data appropriately
+        $this->process($checklist_data);
+    }
+     /**
+     * Function for processing the requests we receive from the external system
+     * and putting the data into our system.
+     *
+     * @var array lab_requests
+     */
+    public function process($data)
+    {
+        //  Cleanup the data first to do away with unwanted variables
+        //  Save the data to the database tables
+        $this->hivqa($data);
+    }
+
+    /**
+    * Function for saving the data to externalDump table
+    * 
+    * @param $labrequest the labrequest in array format
+    * @param $testId the testID to save with the labRequest or 0 if we do not have the test
+    *        in our systems.
+    */
+    public function hivqa($checklistData)
+    {
+    	//  Get all the data.
+        //	dd($checklistData);
+        foreach ($checklistData as $key => $value) 
+        {
+        	$survey = new Survey;
+        	foreach ($value as $harvey => $specter) 
+        	{        		
+        		$survey->checklist_id = Checklist::idByName('HTC Lab Register (MOH 362)');
+        		if(strpos($harvey, 'mysites') !== false)
+        		{
+					$survey->facility_id = Facility::idByName(str_replace('_', ' ', $specter));
+				}
+				if(strpos($harvey, 'nameoftheauditor') !== false)
+				{
+					$survey->qa_officer = $specter;
+				}
+				if(strpos($harvey, 'addtionalcomments') !== false)
+				{
+					$survey->comment = $specter;
+				}
+				if(strpos($harvey, '_geolocation') !== false)
+				{
+					$survey->longitude = $specter[0];
+					$survey->latitude = $specter[1];
+				}
+				//	Save survey at this point	
+				/*if(is_array($specter))
+				{
+					foreach ($specter as $mike => $ross) 
+					{
+						if(is_array($ross))
+						{
+							foreach ($ross as $rachel => $zane) 
+							{
+								if(strpos($rachel, 'hh_testing_site') !== false)
+								{
+									//$sdp_id = Sdp::idByName($zane);
+								}
+								if(is_array($zane))
+								{
+									foreach ($zane as $louis => $litt) 
+									{
+										if(is_array($litt)){
+											foreach ($litt as $ned => $stark) 
+											{
+												//var_dump("  =>  ".$stark);
+											}
+											//var_dump('###############################################################################');
+										}
+									}
+								}
+							}
+							//var_dump('*********************************************************************');
+						}
+					}	
+				}*/
+        	}
+			$survey->save();
+			foreach ($value as $harvey => $specter) 
+        	{
+        		if(strpos($harvey, '_geolocation') === false && is_array($specter))
+				{
+
+					foreach ($specter as $mike => $ross) 
+					{
+						$surveySdp = new SurveySdp;
+						$surveySdp->survey_id = $survey->id;
+						$sdp_id = NULL;
+						$comment = NULL;
+						if(is_array($ross))
+						{
+							foreach ($ross as $rachel => $zane) 
+							{
+								if(strpos($rachel, 'hh_testing_site') !== false)
+								{
+									$sdp_id = Sdp::idById($zane);
+								}
+								if((strpos($rachel, 'opd') !== false) || (strpos($rachel, 'pmtct') !== false) || (strpos($rachel, 'othersdp') !== false))
+								{
+									$comment = $zane;
+								}
+								/*if(is_array($zane))
+								{
+									foreach ($zane as $louis => $litt) 
+									{
+										if(is_array($litt)){
+											foreach ($litt as $ned => $stark) 
+											{
+												//var_dump("  =>  ".$stark);
+											}
+											//var_dump('###############################################################################');
+										}
+									}
+								}*/
+							}
+							//var_dump('*********************************************************************');
+						}
+						$surveySdp->sdp_id = $sdp_id;
+						$surveySdp->comment = $comment;
+						if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->first())
+							$surveySdp = SurveySdp::find($ss->id);
+						else
+							$surveySdp->save();
+						foreach ($specter as $mike => $ross) 
+						{
+							if(is_array($ross))
+							{
+								foreach ($ross as $rachel => $zane) 
+								{
+									if(is_array($zane))
+									{
+										$page = 1;
+										foreach ($zane as $louis => $litt) 
+										{
+											$surveyPage = new HtcSurveyPage;
+											$surveyPage->survey_sdp_id = $surveySdp->id;
+											$surveyPage->page = $page;
+											$surveyPage->save();
+											if(is_array($litt)){
+												//	dd($litt);
+												//	Get questions from database
+												$questions = array();
+												foreach (Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'))->sections as $section) 
+												{
+													foreach ($section->questions as $question) 
+													{
+														if($question->identifier)
+														{
+															array_push($questions, $question->identifier);
+														}
+													}
+												}
+												//	End get questions
+												foreach ($litt as $ned => $stark) 
+												{
+													$surveyPageQstn = new HtcSurveyPageQuestion;
+													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
+													$question_id = NULL;
+													if((strpos($ned, 'youdone') !== false) || strpos($ned, 'newpage') !== false)
+													{
+														continue;
+													}
+													else
+													{
+														foreach ($questions as $question) 
+														{
+															if(strpos($ned, $question) !== false)
+															{
+																$question_id = Question::idById($question);
+															}
+														}
+													}
+													$surveyPageQstn->question_id = $question_id;
+													if(empty($surveyPageQstn->question_id))
+													{
+														continue;
+													}
+													else
+													{
+														$surveyPageQstn->save();
+														//	htc-survey-page-data
+														$pageData = new HtcSurveyPageData;
+														$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
+														$pageData->answer = $stark;
+														$pageData->save();													
+													}
+												}
+												//var_dump('###############################################################################');
+											}
+											$page++;
+										}
+									}
+								}
+								//var_dump('*********************************************************************');
+							}
+						}
+					}
+				}
+        	}
+        	//var_dump('===================================================================');
+		}
+    }
 }

@@ -141,6 +141,8 @@ return [
 		'Laracasts\Flash\FlashServiceProvider',
 		'Maatwebsite\Excel\ExcelServiceProvider',
 		'Sofa\Revisionable\Laravel\ServiceProvider',
+		'Jenssegers\Date\DateServiceProvider',
+
 		/*
 		 * Application Service Providers...
 		 */

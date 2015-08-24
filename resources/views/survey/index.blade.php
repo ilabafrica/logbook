@@ -42,7 +42,14 @@
                                 <a href="{!! url('/survey/'.$checklist->id.'/create') !!}" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i><span> {!! Lang::choice('messages.fill-questionnaire', 1) !!}</span></a>
                                 <a href="{!! url('/survey/'.$checklist->id.'/list') !!}" class="btn btn-default"><i class="fa fa-book"></i><span> {!! Lang::choice('messages.view-collected-data', 1) !!}</span></a>
                                 <a href="{!! url('/survey/'.$checklist->id.'/summary') !!}" class="btn btn-success"><i class="fa fa-database"></i><span> {!! Lang::choice('messages.view-summary', 1) !!}</span></a>
-                                <a href="{!! url('/report/'.$checklist->id) !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
+                                @if($checklist->id == App\Models\Checklist::idByName('M & E Checklist'))
+                                    <a href="{!! url('/report/'.$checklist->id.'/me') !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
+                                @elseif($checklist->id == App\Models\Checklist::idByName('SPI-RT Checklist'))
+                                    <a href="{!! url('/report/'.$checklist->id.'/spirt') !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
+                                @else
+                                    <a href="{!! url('/report/'.$checklist->id) !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
+                                @endif
+                                <a href="{!! url('/api/'.$checklist->id) !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></a>
                             </p>
                         </div>
                     </div>

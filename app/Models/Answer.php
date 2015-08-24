@@ -51,4 +51,20 @@ class Answer extends Model {
 		}
 		return $total;
 	}
+	/**
+	 * Function to return range given the name
+	 */
+	public static function range($id)
+	{
+		$range = '';
+		if($id === 'Does Not Exist')
+			$range = Lang::choice('messages.dne-range', 1);
+		else if($id === 'In Development')
+			$range = Lang::choice('messages.id-range', 1);
+		else if($id === 'Being Implemented')
+			$range = Lang::choice('messages.bi-range', 1);
+		else if($id === 'Completed')
+			$range = Lang::choice('messages.c-range', 1);
+		return $range;
+	}
 }
