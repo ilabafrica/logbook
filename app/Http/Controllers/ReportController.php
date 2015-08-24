@@ -320,7 +320,9 @@ class ReportController extends Controller {
 	            type: 'column'
 	        },
 	        title: {
+
 	            text: '".$facility->name."'
+
 	        },
 	        xAxis: {
 	            categories: [";

@@ -23,6 +23,7 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li><a href="#"></a></li>
+
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
