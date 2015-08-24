@@ -18,6 +18,7 @@ class HtcData extends Model implements Revisionable {
     protected $revisionable = [
         'name',
         'description',
+        
     ];
 
 	/**

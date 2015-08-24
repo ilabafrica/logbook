@@ -5,7 +5,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
 
-
 class Algorithm extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];

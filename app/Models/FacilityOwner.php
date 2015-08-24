@@ -18,5 +18,6 @@ class FacilityOwner extends Model implements Revisionable {
     protected $revisionable = [
         'name',
         'description',
+        'user_id',
     ];
 }

@@ -10,6 +10,17 @@ class AuditType extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'audit_types';
+	use RevisionableTrait;
+
+    /*
+     * Set revisionable whitelist - only changes to any
+     * of these fields will be tracked during updates.
+     */
+    protected $revisionable = [
+        'name',
+        'description',
+        'user_id',
+         ];
 	/**
 	* Return audit_type_id given the name
 	* @param $name the name of the audit type
