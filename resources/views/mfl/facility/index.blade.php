@@ -17,14 +17,18 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.facility', 2) }} <span class="panel-btn">
+      @if(Auth::user()->can('create-facility'))
       <a class="btn btn-sm btn-info" href="{{ URL::to("facility/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.create-facility') }}
           </a>
+          @endif
+          @if(Auth::user()->can('import-facility-data'))
           <a class="btn btn-sm btn-info" href="{{ URL::to("import/facility") }}" >
             <span class="glyphicon glyphicon-download"></span>
                 {{ trans('messages.import-facility-data') }}
               </a>
+          @endif    
         </span>
     </div>
     <div class="panel-body">
@@ -58,11 +62,13 @@
                           
                             <td>
                               <a href="{!! url("facility/" . $facility->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              @if(Auth::user()->can('manage-facilty'))
                               <a href="{!! url("facility/" . $facility->id . "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{!! url("facility/" . $facility->id . "/delete") !!}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
+                              @endif
+                              @if(Auth::user()->can('view-reports'))
                               <a href="{!! url("htc/" . $facility->id) !!}" class="btn btn-danger btn-sm"><i class="fa fa-edit"></i><span> Run Reports</span></a>
-                             <!-- <a href="{!! url("customreport/" . $facility->id . "/index ") !!}" class="btn btn-default btn-sm"><i class="fa fa-edit"></i><span> Reports</span></a>
-                             -->
+                             @endif
                             </td>
                         </tr>
                         @empty

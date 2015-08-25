@@ -16,10 +16,12 @@
 @endif
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {!! Lang::choice('messages.level', 2) !!} <span class="panel-btn">
+      @if(Auth::user()->can('create-level'))
       <a class="btn btn-sm btn-info" href="{!! url("level/create") !!}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ Lang::choice('messages.create-level', 1) }}
           </a>
+      @endif
         </span>
     </div>
     <div class="panel-body">
@@ -53,9 +55,10 @@
                             <td>{!! $level->range_upper !!}</td>
                             <td>
                               <a href="{!! url("level/" . $level->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              @if(Auth::user()->can('manage-level'))
                               <a href="{!! url("level/" . $level->id . "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{!! url("level/" . $level->id . "/delete") !!}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
-                              
+                              @endif
                             </td>
                         </tr>
                         @empty
