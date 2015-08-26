@@ -67,4 +67,26 @@ class Answer extends Model {
 			$range = Lang::choice('messages.c-range', 1);
 		return $range;
 	}
+	/**
+	* Return response name given the score
+	* @param $score the score of the response
+	*/
+	public static function nameByScore($score=NULL)
+	{
+		if($score!=NULL){
+			try 
+			{
+				$response = Answer::where('score', $score)->orderBy('name', 'asc')->firstOrFail();
+				return $response->name;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The score ` $score ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }
