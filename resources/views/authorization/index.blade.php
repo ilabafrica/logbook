@@ -85,14 +85,14 @@
                                                     <div class="form-group sub_county{!! $user->id !!}" <?php if(!$user->hasRole('Sub-County Lab Coordinator')){ ?>style="display:none"<?php } ?>>
                                                         <div class="col-sm-8">
                                                             {!! Form::select('county_'.$user->id, array(''=>trans('messages.select-county'))+$counties, 
-                                                                $user->tier?App\Models\SubCounty::find($user->tier->tier)->county->id:'', 
+                                                                ($user->tier&& $user->hasRole('Sub-County Lab Coordinator'))?App\Models\SubCounty::find($user->tier->tier)->county->id:'', 
                                                                 array('class' => 'form-control', 'id' => 'county_'.$user->id, 'onchange' => "load('$user->id')")) !!}
                                                         </div>
                                                     </div>
                                                     <div class="form-group sub_county{!! $user->id !!}" <?php if(!$user->hasRole('Sub-County Lab Coordinator')){ ?>style="display:none"<?php } ?>>
                                                         <div class="col-sm-8">
                                                             {!! Form::select('sub_county'.$user->id, array(''=>trans('messages.select-sub-county'))+$subCounties, 
-                                                                $user->tier?$user->tier->tier:'', 
+                                                                ($user->tier&& $user->hasRole('Sub-County Lab Coordinator'))?$user->tier->tier:'', 
                                                                 array('class' => 'form-control', 'id' => 'sub_county'.$user->id)) !!}
                                                         </div>
                                                     </div>
