@@ -673,7 +673,7 @@ class SurveyController extends Controller {
 									{
 										$ss = new SurveyScore;
 										$ss->survey_question_id = $surveyQstn->id;
-										$ss->score = = $litt;
+										$ss->score = $litt;
 										$ss->save();
 									}
 								}
