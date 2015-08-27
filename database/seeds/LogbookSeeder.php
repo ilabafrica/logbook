@@ -85,6 +85,12 @@ class LogbookSeeder extends Seeder
             array("name" => "manage-test-kit", "display_name" => "Can manage test kit"),
             array("name" => "create-user", "display_name" => "Can create user"),
             array("name" => "manage-user", "display_name" => "Can manage user"),
+            array("name" => "create-permission", "display_name" => "Can create permission"),
+            array("name" => "manage-permission", "display_name" => "Can manage permission"),
+            array("name" => "create-role", "display_name" => "Can create role"),
+            array("name" => "manage-role", "display_name" => "Can manage role"),
+            array("name" => "create-privilege", "display_name" => "Can create privilege"),
+            array("name" => "manage-privilege", "display_name" => "Can manage privilege"),
             
             array("name" => "view-summary", "display_name" => "Can view summary"),
             array("name" => "view-reports", "display_name" => "Can view reports"),

@@ -13,16 +13,20 @@
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.authorization', '2') }}
         <span class="panel-btn">
+            @if(Auth::user()->can('create-user'))
             <a class="btn btn-sm btn-info" href="{{ URL::to("user/create") }}" >
                 <span class="glyphicon glyphicon-plus-sign"></span>
                 {{ Lang::choice('messages.create-user', '1') }}
             </a>
+            @endif
         </span> 
         <span class="panel-btn">
+            @if(Auth::user()->can('create-role'))
             <a class="btn btn-sm btn-info" href="{{ URL::to("role/create") }}" >
                 <span class="glyphicon glyphicon-plus-sign"></span>
                 {{ Lang::choice('messages.create-role', '1') }}
             </a>
+            @endif
         </span>
     </div>
     <div class="panel-body">
