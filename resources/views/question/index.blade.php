@@ -19,10 +19,12 @@
     @endif
         <div class="panel panel-primary">
             <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.question', 2) }} <span class="panel-btn">
+              @if(Auth::user()->can('create-question'))
               <a class="btn btn-sm btn-info" href="{{ URL::to("question/create") }}" >
                 <span class="glyphicon glyphicon-plus-sign"></span>
                     {{ Lang::choice('messages.create-question', 1) }}
                   </a>
+              @endif
                 </span>
             </div>
             <div class="panel-body">
@@ -54,8 +56,10 @@
                                     <td>{{ $question->section->name }}</td>
                                     <td>
                                       <a href="{{ URL::to("question/" . $question->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
+                                       @if(Auth::user()->can('manage-question'))
                                       <a href="{{ URL::to("question/" . $question->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
                                       <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> {{ Lang::choice('messages.delete', 1) }}</span></a>
+                                   @endif
                                     </td>
                                 </tr>
                                 @empty

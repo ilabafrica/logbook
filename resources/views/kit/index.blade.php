@@ -16,10 +16,12 @@
 @endif
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.test-kit', 2) }} <span class="panel-btn">
+     @if(Auth::user()->can('create-test-kit'))
       <a class="btn btn-sm btn-info" href="{{ URL::to("testKit/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ Lang::choice('messages.create-test-kit', 1) }}
           </a>
+    @endif
         </span>
     </div>
     <div class="panel-body">
@@ -49,9 +51,10 @@
                             <td>{{ $testKit->description }}</td>
                             <td>
                               <a href="{{ URL::to("testKit/" . $testKit->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              @if(Auth::user()->can('manage-test-kit'))
                               <a href="{{ URL::to("testKit/" . $testKit->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{{ URL::to("testKit/" . $testKit->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
-                             
+                              @endif
                             </td>
                         </tr>
                         @empty

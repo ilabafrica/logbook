@@ -2,11 +2,28 @@
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
+use Sofa\Revisionable\Revisionable; // interface
 
-class Survey extends Model {
+class Survey extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'surveys';
+	use RevisionableTrait;
+
+    /*
+     * Set revisionable whitelist - only changes to any
+     * of these fields will be tracked during updates.
+     */
+    protected $revisionable = [
+        'qa_officer',
+        'facility_id',
+        'longitude',
+        'latitude',
+        'checklist_id',
+        'comment',
+        'user_id',
+    ];
 	/**
 	 * Checklist relationship
 	 */

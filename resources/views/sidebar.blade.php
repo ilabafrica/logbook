@@ -1,37 +1,4 @@
 @section("sidebar")
-<?php
-	$active = array("","","","","","","","","");
-	$key = explode("?",str_replace("/", "?", Request::path()));
-	switch ($key[0]) {
-		case 'home': $active[0] = "active"; break;
-		case 'facility': $active[1] = "active"; break;
-		case 'permission': $active[2] = "active"; break;
-		case 'role':
-		case 'privilege':
-		case 'authorization': $active[3] = "active"; break;
-		case 'user': 
-		case 'facilityType': 
-		case 'facilityOwner': 
-		case 'title': 
-		case 'county': 
-		case 'constituency':
-		case 'town':$active[4] = "active"; break;
-		case 'labLevel': 
-		case 'labAffiliation': 
-		case 'labType':
-		case 'lab':
-		case 'auditType':
-		case 'section':
-		case 'auditField':
-		case 'review':
-		case 'answer':$active[5] = "active"; break;
-		case 'note': 
-		case 'assessment':
-		case 'question': 
-		
-	}
-?>
-
     <ul class="nav" id="side-menu">
         <li class="sidebar-search">
             <div class="input-group custom-search-form">
@@ -44,6 +11,7 @@
             </div>
             <!-- /input-group -->
         </li>
+        @if(Entrust::can('access-checklist-config'))
         <!-- Checklist config -->
         <li>
             <a href="#"><i class="fa fa-sliders"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
@@ -58,6 +26,8 @@
                 <li><a href="{!! url('level') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.level', 2) !!}</a></li>
             </ul>
         </li>
+        @endif
+        @if(Entrust::can('access-facility-config'))
         <!-- Facility configuration -->
         <li>
             <a href="#"><i class="fa fa-database"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
@@ -69,6 +39,8 @@
                 <li><a href="{!! url('subCounty') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.sub-county', 2) !!}</a></li>
             </ul>
         </li>
+        @endif
+         @if(Entrust::can('access-site-catalog'))
         <!-- Site catalog -->
         <li>
             <a href="#"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.site-catalog', 1) !!}<span class="fa arrow"></span></a>
@@ -77,25 +49,38 @@
                 <li><a href="{!! url('siteType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site-type', 2) !!}</a></li>
             </ul>
         </li>
+        @endif
         <!-- Test kits -->
+        @if(Entrust::can('access-testkits'))
         <li>
             <a href="{!! url('testKit') !!}"><i class="fa fa-book"></i> {!! Lang::choice('messages.test-kit', 2) !!}</a>
         </li>
+         @endif
+        
+        @if(Entrust::can('access-users'))
         <!-- User management -->
         <li>
-            <a href="#"><i class="fa fa-users"></i> {!! Lang::choice('messages.user-management', 1) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('user') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.user', 2) !!}</a></li>
-                <li><a href="{!! url('role') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.role', 2) !!}</a></li>
-                <li><a href="{!! url('permission') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.permission', 2) !!}</a></li>
-                <li><a href="{!! url('privilege') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.privilege', 2) !!}</a></li>
-                <li><a href="{!! url('authorization') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.authorization', 2) !!}</a></li>
-            </ul>
+        <a href="{!! url('user') !!}"><i class="fa fa-users"></i> {{ Lang::choice('messages.user', 2) }}</a>
         </li>
-         <!-- Data management -->
+    @endif
+    @if(Entrust::can('access-access-controls'))
+    <li>
+        <a href="#"><i class="fa fa-database"></i> {{ Lang::choice('messages.access-controls', 1) }}<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li><a href="{!! url('permission') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.permission', 2) }}</a></li>
+            <li><a href="{!! url('role') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.role', 2) }}</a></li>
+            <li><a href="{!! url('privilege') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.privilege', 2) }}</a></li>
+            <li><a href="{!! url('authorization') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.authorization', 2) }}</a></li>
+        </ul>
+    </li>
+    @endif
+    @if(Entrust::can('access-data'))
+        <!-- Data management -->
         <li>
             <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.data-management', 2) !!}</a>
         </li>
+    @endif
+    @if(Entrust::can('access-data-analysis'))
         <!-- Local partner analysis -->
         <li style="display:none;">
             <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.local-partner-analysis', 1) !!}<span class="fa arrow"></span></a>
@@ -108,6 +93,7 @@
                 <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.m-e', 1) !!}</a></li>
             </ul>
         </li>
+
         <!-- Summary and Data Analysis -->
         <li>
             <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}<span class="fa arrow"></span></a>
@@ -116,5 +102,7 @@
                 <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
             </ul>
         </li>
+        @endif
+    
     </ul>
 @show

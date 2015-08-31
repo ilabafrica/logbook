@@ -8,7 +8,7 @@ use App\Models\Facility;
 use App\Models\SubCounty;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
-use App\Models\Town;
+use App\Models\County;
 use App\Models\Title;
 use Response;
 use Auth;
@@ -22,8 +22,32 @@ class FacilityController extends Controller {
 	 */
 	public function index()
 	{
-		//	Get all facilities
-		$facilities = Facility::all();
+		if(Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator'))
+		{
+			$facilities = array();
+			if(Auth::user()->hasRole('County Lab Coordinator'))
+			{
+				foreach (County::find(Auth::user()->tier->tier)->subCounties as $subCounty) 
+				{
+					foreach ($subCounty->facilities as $facility) 
+					{
+						array_push($facilities, $facility);
+					}
+				}
+			}
+			else
+			{
+				foreach (SubCounty::find(Auth::user()->tier->tier)->facilities as $facility) 
+				{
+					array_push($facilities, $facility);
+				}
+			}
+		}
+		else
+		{
+			//	Get all facilities
+			$facilities = Facility::all();
+		}
 		return view('mfl.facility.index', compact('facilities'));
 	}
 
