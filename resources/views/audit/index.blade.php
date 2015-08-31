@@ -16,10 +16,12 @@
 @endif
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.audit-type', 2) }} <span class="panel-btn">
+     @if(Auth::user()->can('create-audit-type'))
       <a class="btn btn-sm btn-info" href="{{ URL::to("auditType/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ Lang::choice('messages.create-audit-type', 1) }}
           </a>
+     @endif
         </span>
     </div>
     <div class="panel-body">
@@ -49,9 +51,10 @@
                             <td>{{ $auditType->description }}</td>
                             <td>
                               <a href="{{ URL::to("auditType/" . $auditType->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              @if(Auth::user()->can('manage-audit-type'))
                               <a href="{{ URL::to("auditType/" . $auditType->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{{ URL::to("auditType/" . $auditType->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
-                             
+                              @endif
                             </td>
                         </tr>
                         @empty

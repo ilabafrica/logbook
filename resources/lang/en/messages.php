@@ -4,6 +4,9 @@ return [
 	/*	General terms */
 	'dashboard'	=>	'Dashboard',
 	'import-submitted-data'	=>	'Import Submitted Data',
+	'county-summary'	=>	'Counties Submission',
+	'sub-county-summary'	=>	'Sub-Counties Submission',
+	'facility-summary'	=>	'Facility Submission',
 
 	/* HIV Logbook */
 	'hiv-logbook'	=>	'HTC Lab Register',

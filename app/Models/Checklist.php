@@ -104,4 +104,11 @@ class Checklist extends Model implements Revisionable {
 		}
 		return $total;
 	}
+	/**
+	 * Count unique officers who participated in survey
+	 */
+	public function officers()
+	{
+		return $this->surveys->groupBy('qa_officer')->count();
+	}
 }

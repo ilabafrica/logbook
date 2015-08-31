@@ -30,6 +30,7 @@ class SubCounty extends Model implements Revisionable {
 		return $this->belongsTo('App\Models\County');
 
 	}
+
     /**
     * Relationship with facilities
     */

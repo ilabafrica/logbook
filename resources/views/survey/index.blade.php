@@ -34,14 +34,14 @@
                                     </tr>
                                     <tr>
                                         <td>{!! Lang::choice('messages.no-of-qa', 1) !!}</td>
-                                        <td>3</td>
+                                        <td>{!! $checklist->officers() !!}</td>
                                     </tr>
                                 </tbody>
                             </table>
                             <p>
                                 <a href="{!! url('/survey/'.$checklist->id.'/create') !!}" class="btn btn-info"><i class="glyphicon glyphicon-pencil"></i><span> {!! Lang::choice('messages.fill-questionnaire', 1) !!}</span></a>
                                 <a href="{!! url('/survey/'.$checklist->id.'/list') !!}" class="btn btn-default"><i class="fa fa-book"></i><span> {!! Lang::choice('messages.view-collected-data', 1) !!}</span></a>
-                                <a href="{!! url('/survey/'.$checklist->id.'/summary') !!}" class="btn btn-success"><i class="fa fa-database"></i><span> {!! Lang::choice('messages.view-summary', 1) !!}</span></a>
+                                <a href="{!! url('/survey/'.$checklist->id.'/collection') !!}" class="btn btn-success"><i class="fa fa-database"></i><span> {!! Lang::choice('messages.view-summary', 1) !!}</span></a>
                                 @if($checklist->id == App\Models\Checklist::idByName('M & E Checklist'))
                                     <a href="{!! url('/report/'.$checklist->id.'/me') !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
                                 @elseif($checklist->id == App\Models\Checklist::idByName('SPI-RT Checklist'))

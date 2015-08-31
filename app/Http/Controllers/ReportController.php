@@ -32,7 +32,15 @@ class ReportController extends Controller {
 		//	Retrieve HTC Lab Register
 		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
 		//	Get sdps
-		$sdps = $checklist->sdps();
+		$sdps = array();
+		foreach ($checklist->surveys as $survey) 
+		{
+			foreach ($survey->sdps as $sdp) 
+			{
+				array_push($sdps, $sdp->sdp_id);
+			}
+		}
+		$sdps = array_unique($sdps);
 		
 		//	Define months array
 		$monthNames = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
@@ -86,10 +94,10 @@ class ReportController extends Controller {
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
-		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp->sdp_id)->positivePercent();
+	        			$data = Sdp::find($sdp)->positivePercent();
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)

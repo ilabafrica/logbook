@@ -13,10 +13,12 @@
 </div>
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> Roles <span class="panel-btn">
-      <a class="btn btn-sm btn-info" href="{{ URL::to("role/create") }}" >
-        <span class="glyphicon glyphicon-plus-sign"></span>
+        @if(Auth::user()->can('create-role'))
+          <a class="btn btn-sm btn-info" href="{{ URL::to("role/create") }}" >
+          <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.create-role') }}
           </a>
+        @endif
         </span>
     </div>
     <div class="panel-body">
@@ -46,9 +48,10 @@
                             <td>{{ $role->description }}</td>
                             <td>
                               <a href="{{ URL::to("role/" . $role->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                             @if(Auth::user()->can('manage-role'))
                               <a href="{{ URL::to("role/" . $role->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
-                            <!-- <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>-->
-                              
+                              <!-- <a href="#" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>-->
+                              @endif
                             </td>
                         </tr>
                         @empty

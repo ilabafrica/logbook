@@ -91,4 +91,19 @@ class Facility extends Model implements Revisionable {
 			return null;
 		}
 	}
+	/**
+	* Relationship with surveys
+	*/
+	public function surveys()
+	{
+		return $this->hasMany('App\Models\Survey');
+	}
+	/**
+	* Function to get counts per checklist
+	*/
+	public function submissions($id)
+	{
+		//	Initialize counter		
+		return $this->surveys->where('checklist_id', 2)->count();
+	}
 }

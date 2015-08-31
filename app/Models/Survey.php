@@ -50,7 +50,7 @@ class Survey extends Model implements Revisionable {
 	 */
 	public function sdp()
 	{
-		return $this->belongsTo('App\Models\Sdp');
+		return $this->hasMany('App\Models\SurveySdp');
 	}
 	/**
 	 * SurveyQuestions relationship
@@ -64,7 +64,7 @@ class Survey extends Model implements Revisionable {
 	 */
 	public static function questionnaires($officer)
 	{
-		return count(Survey::where('qa_officer', $officer));
+		return Survey::where('qa_officer', $officer)->count();
 	}
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ]

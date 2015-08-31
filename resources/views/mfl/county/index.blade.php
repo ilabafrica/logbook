@@ -15,10 +15,12 @@
 @endif
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.county', 2) }} <span class="panel-btn">
+      @if(Auth::user()->can('create-county'))
       <a class="btn btn-sm btn-info" href="{{ URL::to("county/create") }}" >
         <span class="glyphicon glyphicon-plus-sign"></span>
             {{ trans('messages.create-county') }}
           </a>
+      @endif
         </span>
     </div>
     <div class="panel-body">
@@ -39,9 +41,10 @@
                             <td>{{ $county->hq }}</td>
                             <td>
                               <a href="{{ URL::to("county/" . $county->id) }}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
+                              @if(Auth::user()->can('manage-county'))
                               <a href="{{ URL::to("county/" . $county->id . "/edit") }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{{ URL::to("county/" . $county->id . "/delete") }}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
-                             
+                              @endif
                             </td>
                         </tr>
                         @empty
