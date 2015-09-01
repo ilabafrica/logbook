@@ -169,4 +169,20 @@ class Question extends Model implements Revisionable  {
 			return null;
 		}
 	}
+	/**
+	 * Check if question has scorable answers
+	 */
+	public function isScorable()
+	{
+		$scorables = array();
+		foreach ($this->answers as $response)
+		{
+			if($response->score>0)
+				array_push($scorables, $response->id);
+		}
+		if(count($scorables)>0)
+			return true;
+		else
+			return false;
+	}
 }

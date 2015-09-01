@@ -351,12 +351,13 @@ class CreateMflTables extends Migration {
 			$table->string('longitude')->nullable();
 			$table->string('latitude')->nullable();
 			$table->integer('checklist_id')->unsigned();
-			//$table->integer('sdp_id')->unsigned();
 			$table->string('comment')->nullable();
 
             $table->foreign('checklist_id')->references('id')->on('checklists');
             $table->foreign('facility_id')->references('id')->on('facilities');
-            //$table->foreign('sdp_id')->references('id')->on('sdps');
+            $table->dateTime('date_started')->nullable();
+            $table->dateTime('date_ended')->nullable();
+            $table->dateTime('date_submitted')->nullable();
 
             $table->softDeletes();
 			$table->timestamps();
@@ -526,7 +527,7 @@ class CreateMflTables extends Migration {
 		Schema::create('survey_me_info', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
-            $table->integer('survey_id')->unsigned();
+            $table->integer('survey_sdp_id')->unsigned();
             $table->integer('audit_type_id')->unsigned();
             $table->integer('algorithm_id')->unsigned();
             $table->integer('screening')->unsigned();
@@ -536,7 +537,7 @@ class CreateMflTables extends Migration {
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('survey_id')->references('id')->on('surveys');
+            $table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
             $table->foreign('audit_type_id')->references('id')->on('audit_types');
             $table->foreign('algorithm_id')->references('id')->on('algorithms');
             $table->foreign('screening')->references('id')->on('hiv_test_kits');

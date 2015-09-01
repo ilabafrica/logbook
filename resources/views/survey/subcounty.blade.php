@@ -30,6 +30,8 @@
             </li>
             <li><a href="{!! url('survey/'.$checklist->id.'/participant') !!}">{!! Lang::choice('messages.participants', 1) !!}</a>
             </li>
+            <li class=""><a href="{!! url('survey/'.$checklist->id.'/sdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a>
+            </li>
         </ul>
 
         <!-- Tab panes -->

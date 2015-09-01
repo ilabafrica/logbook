@@ -255,6 +255,10 @@ Route::get('survey/{id}/subcounty', array(
     "as"    =>  "survey.subcounty.summary",
     "uses"  =>  "SurveyController@subcounty"
 ));
+Route::get('survey/{id}/sdp', array(
+    "as"    =>  "survey.sdp.summary",
+    "uses"  =>  "SurveyController@sdp"
+));
 /* Reports */
 Route::get('report', array(
     "as"    =>  "reports",

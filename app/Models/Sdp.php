@@ -59,31 +59,32 @@ class Sdp extends Model implements Revisionable {
 		$positive = 0;
 		$total = 0;
 		//	Get sdp surveys
-		$qstns = array();
+		$questions = array();
 		foreach ($this->surveys as $survey)
 		{
 			foreach ($survey->pages as $page)
 			{
 				foreach ($page->questions as $question)
 				{
-					array_push($qstns, $question->question_id);
+					array_push($questions, Question::find($question->question_id)->name);
 				}
 			}
 		}
-		dd($qstns);
-		$surveys = $this->surveys->lists('id');
+		$questions = array_unique($questions);
+		//dd($questions);
 		//	Declare questions to be used in calculation of both positive and total values
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
 		//	Get the counts
 		foreach ($qstns as $qstn) {
 			$question = Question::idByName($qstn);
-			$value = SurveyQuestion::where('question_id', $question)
-								   ->whereIn('survey_id', $surveys)
-								   ->first();
-			if(substr_count($qstn, 'Test-1')>0)
-				$total+=$value->sd->answer;
-			else
-				$positive+=$value->sd->answer;
+			$values = HtcSurveyPageQuestion::where('question_id', $question)->lists('id');
+			foreach ($values as $key => $value) 
+			{
+				if(substr_count($qstn, 'Test-1')>0)
+					$total+=HtcSurveyPageQuestion::find($value)->data->answer;
+				else
+					$positive+=HtcSurveyPageQuestion::find($value)->data->answer;
+			}			
 		}
 		return $total>0?round((int)$positive*100/(int)$total, 2):0;
 	}
