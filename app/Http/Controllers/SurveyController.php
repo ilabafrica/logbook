@@ -631,7 +631,11 @@ class SurveyController extends Controller {
 									$me_info->confirmatory = $confirmatory;
 									$me_info->tie_breaker = $tie_breaker;
 									//	Save survey-me-info
-									if($me_info->audit_type_id)
+									if($me_info->audit_type_id && 
+									   $me_info->algorithm_id && 
+									   $me_info->screening &&
+									   $me_info->confirmatory &&
+									   $me_info->tie_breaker)
 										$me_info->save();
 									else
 										continue;

@@ -62,7 +62,7 @@
                           
                             <td>
                               <a href="{!! url("facility/" . $facility->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
-                              @if(Auth::user()->can('manage-facilty'))
+                              @if(Auth::user()->can('manage-facility'))
                               <a href="{!! url("facility/" . $facility->id . "/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
                               <a href="{!! url("facility/" . $facility->id . "/delete") !!}" class="btn btn-warning btn-sm"><i class="fa fa-trash-o"></i><span> Delete</span></a>
                               @endif
