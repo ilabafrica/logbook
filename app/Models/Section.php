@@ -82,7 +82,7 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate the snapshot given section
 	 */
-	public function snapshot()
+	public function snapshot($county = null, $subCounty = null)
 	{
 		//	Initialize variables
 		$count = Checklist::find(Checklist::idByName('M & E Checklist'))->surveys->count();
@@ -93,7 +93,24 @@ class Section extends Model implements Revisionable {
 			{
 				if($question->answers->count()>0)
 				{
-					foreach ($question->sqs as $sq) 
+					$sqs = SurveyQuestion::where('question_id', $question->id);
+					if($county || $subCounty)
+					{
+						$sqs = $sqs->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+								->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
+								if($subCounty)
+								{
+									$sqs = $sqs->where('facilities.sub_county_id', $subCounty);
+								}
+								if($county)
+								{
+									$sqs = $sqs->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+											   ->where('sub_counties.county_id', $county);
+								}
+					}
+				$sqs = $sqs->get();
+					foreach ($sqs as $sq) 
 					{
 						$total+=$sq->ss->score;
 					}
@@ -121,13 +138,29 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate number of specific responses
 	 */
-	public function column()
+	public function column($county = null, $subCounty = null)
 	{
 		//	Initialize variables
 		$total = 0;
 		foreach ($this->questions as $question) {
 			$questions = array();
-			$sqs = SurveyQuestion::where('question_id', $question->id)->get();
+			$sqs = SurveyQuestion::where('question_id', $question->id);
+				if($county || $subCounty)
+				{
+					$sqs = $sqs->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+							->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+							->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
+							if($subCounty)
+							{
+								$sqs = $sqs->where('facilities.sub_county_id', $subCounty);
+							}
+							if($county)
+							{
+								$sqs = $sqs->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+										   ->where('sub_counties.county_id', $county);
+							}
+				}
+			$sqs = $sqs->get();
 			foreach ($sqs as $sq) {
 				if($sq->sd->answer)
 					$total++;
