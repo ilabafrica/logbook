@@ -469,6 +469,16 @@ class ReportController extends Controller {
 	 */
 	public function chart()
 	{
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
+		$county = NULL;
+		$subCounty = NULL;
+		if(Input::get('county') && !(Input::get('sub_county')))
+			$county = Input::get('county');
+		else if(Input::get('county') && !(Input::get('sub_county')))
+			$subCounty = Input::get('sub_county');
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
@@ -527,7 +537,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = $column->column()!=0?round(Answer::find(Answer::idByName($option))->column($column->id)*100/$column->column(), 2):0.00;
+	        			$data = $column->column($county, $subCounty)!=0?round(Answer::find(Answer::idByName($option))->column($column->id, $county, $subCounty)*100/$column->column(), 2):0.00;
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -554,7 +564,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart'));
+		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'county', 'subCounty'));
 	}
 
 	/**
@@ -563,7 +573,17 @@ class ReportController extends Controller {
 	 * @return Response
 	 */
 	public function snapshot()
-	{
+	{	//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
+		$county = NULL;
+		$subCounty = NULL;
+		if(Input::get('county') && !(Input::get('sub_county')))
+			$county = Input::get('county');
+		else if(Input::get('county') && !(Input::get('sub_county')))
+			$subCounty = Input::get('sub_county');
+		
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
@@ -615,7 +635,7 @@ class ReportController extends Controller {
 				$counter = count($columns);
 				$color = NULL;
 				foreach ($columns as $column) {
-					$value = $column->snapshot($checklist->id);
+					$value = $column->snapshot($checklist->id, $county, $subCounty);
 					if($value >= 0 && $value <25)
 						$color = '#d9534f';
 					else if($value >=25 && $value <50)
@@ -625,7 +645,7 @@ class ReportController extends Controller {
 					else if($value >=75 && $value <=100)
 						$color = '#5cb85c';
 					array_push($colors, $color);
-					$chart.= $column->snapshot($checklist->id);
+					$chart.= $column->snapshot($checklist->id, $county, $subCounty);
 					if($counter==1)
     					$chart.="";
     				else
@@ -636,7 +656,7 @@ class ReportController extends Controller {
 			}],
 			colors:["."'".implode("','", $colors)."'"."]          
 		}";
-		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart'));
+		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'county', 'subCounty'));
 	}
 
 	/**

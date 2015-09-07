@@ -25,10 +25,30 @@
             <li class="active"><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
-        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'analysis/chart', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
+                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
@@ -82,7 +102,7 @@
                                     <tr>
                                         <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
                                         @foreach($columns as $column)
-                                            <td>{!! $column->column()!=0?round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id)*100/$column->column(), 2).'%':0.00; !!}</td>
+                                            <td>{!! $column->column($county, $subCounty)!=0?round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id, $county, $subCounty)*100/$column->column($county, $subCounty), 2).'%':0.00; !!}</td>
                                         @endforeach
                                     </tr>
                                 @endforeach

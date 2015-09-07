@@ -25,10 +25,30 @@
             <li><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li class="active"><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
-        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'analysis/snapshot', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
+                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
@@ -70,8 +90,8 @@
                                 <tr>
                                     <td>{!! $option.' ('.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower.'%-'.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper.'%)' !!}</td>
                                     @foreach ($columns as $column)
-                                        @if($column->snapshot()>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot() < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
-                                            <td class="{{ $column->color($column->snapshot()) }}">{!! $column->snapshot() !!}</td>
+                                        @if($column->snapshot($county, $subCounty)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($county, $subCounty) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
+                                            <td class="{{ $column->color($column->snapshot($county, $subCounty)) }}">{!! $column->snapshot($county, $subCounty) !!}</td>
                                         @else
                                             <td></td>
                                         @endif
