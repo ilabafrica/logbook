@@ -94,8 +94,26 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Count unique officers who participated in survey
 	 */
-	public function officers()
+	public function officers($county = null, $subCounty = null)
 	{
-		return $this->surveys->groupBy('qa_officer')->count();
+		$data = null;
+		if($county || $subCounty)
+		{
+			$data = $this->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
+			if($subCounty)
+			{
+				$data = $data->where('facilities.sub_county_id', $subCounty->id);
+			}
+			else
+			{
+				$data = $data->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+							 ->where('sub_counties.county_id', $county->id);
+			}
+		}
+		else
+		{
+			$data = $this->surveys;
+		}
+		return $data->groupBy('qa_officer')->count();
 	}
 }

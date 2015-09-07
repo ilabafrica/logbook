@@ -44,7 +44,30 @@ class SurveyController extends Controller {
 		//	Get all users
 		$users = User::all();
 		//	return view with the data
-		return view('survey.index', compact('checklists', 'users'));
+		$county = null;
+		$subCounty = null;
+		$surveys = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		//dd($county);
+		if($county || $subCounty){
+			foreach ($checklists as $checklist)
+			{
+				$surveys[$checklist->id] = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
+				if($subCounty)
+				{
+					$surveys[$checklist->id] = $surveys[$checklist->id]->where('facilities.sub_county_id', $subCounty->id)->get();
+				}
+				if($county)
+				{
+					$surveys[$checklist->id] = $surveys[$checklist->id]->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+																  ->where('sub_counties.county_id', $county->id)->get();
+				}
+			}
+		}
+		return view('survey.index', compact('checklists', 'users', 'county', 'subCounty', 'surveys'));
 	}
 
 	/**
