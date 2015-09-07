@@ -405,16 +405,19 @@ class SurveyController extends Controller {
 		$checklist = Checklist::find($id);
 		$facilities = Facility::all();
 		$surveys = array();
+		$total = array();
 		foreach ($facilities as $facility)
 		{
 			$sdps = array();
+			$total[$facility->id] = 0;
 			$surveys[$facility->id] = $facility->surveys->where('checklist_id', $checklist->id)->lists('id');
 			foreach ($surveys[$facility->id] as $key)
 			{
 				$sdps[$key] = Survey::find($key)->sdps->lists('sdp_id');
+				$total[$facility->id] = count($sdps[$key]);
 			}
 		}
-		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'sdps'));
+		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'sdps', 'total'));
 	}
 	/**
 	 * Remove the specified begining of text to get Id alone.
@@ -493,7 +496,7 @@ class SurveyController extends Controller {
         //  Cleanup the data first to do away with unwanted variables
         //  Save the data to the database tables
         //	$this->htc($data);
-        //dd($data);
+        dd($data);
         foreach ($data as $key => $value)
         {
         	$survey = new Survey;
@@ -590,16 +593,16 @@ class SurveyController extends Controller {
 							//	Save specific me/spi-rt info
 							if($checklist == Checklist::idByName('M & E Checklist'))
 							{
+								$me_info = new MeInfo;
+								$me_info->survey_sdp_id = $surveySdp->id;
+								//	variables to be used
+								$audit_type_id = null;
+								$algorithm_id = null;
+								$screening = null;
+								$confirmatory = null;
+								$tie_breaker = null;
 								foreach ($ross as $louis => $litt)
 								{
-									$me_info = new MeInfo;
-									$me_info->survey_sdp_id = $surveySdp->id;
-									//	variables to be used
-									$audit_type_id = null;
-									$algorithm_id = null;
-									$screening = null;
-									$confirmatory = null;
-									$tie_breaker = null;
 									//	Get baseline id
 									if(strpos($louis, 'audittype') !== false)
 									{
@@ -625,89 +628,141 @@ class SurveyController extends Controller {
 									{
 										$tie_breaker = TestKit::idByName($litt);
 									}
-									$me_info->audit_type_id = $audit_type_id;
-									$me_info->algorithm_id = $algorithm_id;
-									$me_info->screening = $screening;
-									$me_info->confirmatory = $confirmatory;
-									$me_info->tie_breaker = $tie_breaker;
-									//	Save survey-me-info
-									if($me_info->audit_type_id && 
-									   $me_info->algorithm_id && 
-									   $me_info->screening &&
-									   $me_info->confirmatory &&
-									   $me_info->tie_breaker)
-										$me_info->save();
-									else
-										continue;
 								}
-							}
-							else
-							{
-								foreach ($ross as $louis => $litt)
+								$me_info->audit_type_id = $audit_type_id;
+								$me_info->algorithm_id = $algorithm_id;
+								$me_info->screening = $screening;
+								$me_info->confirmatory = $confirmatory;
+								$me_info->tie_breaker = $tie_breaker;
+								//	Save survey-me-info
+								if(($audit_type_id!=NULL) && ($algorithm_id!=NULL) && ($screening!=NULL) && ($confirmatory!=NULL) && ($tie_breaker!=NULL))
 								{
-									$spirt_info = new SpirtInfo;
-									$spirt_info->survey_sdp_id = $surveySdp->id;
-									$affiliation_id = null;
-									//	Get affiliation id
-									if(strpos($louis, 'affiliation') !== false)
+									$me_info->save();
+									dd($me_info);
+									foreach ($ross as $louis => $litt)
 									{
-										$affiliation_id = Affiliation::idByName($litt);
-									}
-									$spirt_info->affiliation_id = $affiliation_id;
-									//	Save survey-spirt-info
-									if($spirt_info->affiliation_id)
-										$spirt_info->save();
-									else
-										continue;
-								}
-							}
-							if($me_info = MeInfo::where('survey_sdp_id', $surveySdp->id)->first() || $spirt_info = SpirtInfo::where('survey_sdp_id', $surveySdp->id)->first())
-							{
-								foreach ($ross as $louis => $litt)
-								{
-									$surveyQstn = new SurveyQuestion;
-									$surveyQstn->survey_sdp_id = $surveySdp->id;
-									$question_id = NULL;
-									if((strpos($louis, 'youdone') !== false) || strpos($louis, 'newpage') !== false)
-									{
-										continue;
-									}
-									else
-									{
-										foreach ($questions as $question) 
+										$surveyQstn = new SurveyQuestion;
+										$surveyQstn->survey_sdp_id = $surveySdp->id;
+										$question_id = NULL;
+										if((strpos($louis, 'youdone') !== false) || strpos($louis, 'newpage') !== false)
 										{
-											if(strpos($louis, $question) !== false)
+											continue;
+										}
+										else
+										{
+											foreach ($questions as $question) 
 											{
-												$question_id = Question::idById($question);
+												if(strpos($louis, $question) !== false)
+												{
+													$question_id = Question::idById($question);
+												}
+											}
+										}
+										$surveyQstn->question_id = $question_id;
+										if(empty($surveyQstn->question_id))
+										{
+											continue;
+										}
+										else
+										{
+											if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
+												$surveyQstn = SurveyQuestion::find($sq->id);
+											else
+												$surveyQstn->save();
+											//	survey-data
+											$surveyData = new SurveyData;
+											$surveyData->survey_question_id = $surveyQstn->id;
+											Question::find($surveyQstn->question_id)->isScorable()?$surveyData->answer = Answer::nameByScore($litt):$surveyData->answer = $litt;
+											$surveyData->save();
+											//	survey-score
+											if(Question::find($surveyQstn->question_id)->isScorable())
+											{
+												$ss = new SurveyScore;
+												$ss->survey_question_id = $surveyQstn->id;
+												$ss->score = $litt;
+												$ss->save();
 											}
 										}
 									}
-									$surveyQstn->question_id = $question_id;
-									if(empty($surveyQstn->question_id))
+								}
+								else
+									continue;
+							}
+							else
+							{		
+								$spirt_info = new SpirtInfo;
+								$spirt_info->survey_sdp_id = $surveySdp->id;
+								$affiliation_id = null;
+								foreach ($ross as $louis => $litt)
+								{
+									//	Get affiliation id
+									if(strpos($louis, 'affiliation') !== false)
 									{
-										continue;
-									}
-									else
-									{
-										if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
-											$surveyQstn = SurveyQuestion::find($sq->id);
-										else
-											$surveyQstn->save();
-										//	survey-data
-										$surveyData = new SurveyData;
-										$surveyData->survey_question_id = $surveyQstn->id;
-										Question::find($surveyQstn->question_id)->isScorable()?$surveyData->answer = Answer::nameByScore($litt):$surveyData->answer = $litt;
-										$surveyData->save();
-										//	survey-score
-										if(Question::find($surveyQstn->question_id)->isScorable())
+										if(strpos($litt, '_') !== false)
 										{
-											$ss = new SurveyScore;
-											$ss->survey_question_id = $surveyQstn->id;
-											$ss->score = $litt;
-											$ss->save();
+											if(str_replace('_', ' ', $litt) === 'faith based organisation')
+												$affiliation_id = Affiliation::idByName('Faith Based Organization');
+											else if(str_replace('_', ' ', $litt) === 'non governmental organisation')
+												$affiliation_id = Affiliation::idByName('Non Governmental Organization');
+										}
+										else
+										{
+											$affiliation_id = Affiliation::idByName($litt);
 										}
 									}
 								}
+								$spirt_info->affiliation_id = $affiliation_id;
+								//	Save survey-spirt-info
+								if($spirt_info->affiliation_id!=NULL)
+								{
+									$spirt_info->save();
+									foreach ($ross as $louis => $litt){
+										$surveyQstn = new SurveyQuestion;
+										$surveyQstn->survey_sdp_id = $surveySdp->id;
+										$question_id = NULL;
+										if((strpos($louis, 'youdone') !== false) || strpos($louis, 'newpage') !== false)
+										{
+											continue;
+										}
+										else
+										{
+											foreach ($questions as $question) 
+											{
+												if(strpos($louis, $question) !== false)
+												{
+													$question_id = Question::idById($question);
+												}
+											}
+										}
+										$surveyQstn->question_id = $question_id;
+										if(empty($surveyQstn->question_id))
+										{
+											continue;
+										}
+										else
+										{
+											if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
+												$surveyQstn = SurveyQuestion::find($sq->id);
+											else
+												$surveyQstn->save();
+											//	survey-data
+											$surveyData = new SurveyData;
+											$surveyData->survey_question_id = $surveyQstn->id;
+											Question::find($surveyQstn->question_id)->isScorable()?$surveyData->answer = Answer::nameByScore($litt):$surveyData->answer = $litt;
+											$surveyData->save();
+											//	survey-score
+											if(Question::find($surveyQstn->question_id)->isScorable())
+											{
+												$ss = new SurveyScore;
+												$ss->survey_question_id = $surveyQstn->id;
+												$ss->score = $litt;
+												$ss->save();
+											}
+										}
+									}
+								}
+								else
+									continue;
 							}
 						}
 					}

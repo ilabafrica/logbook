@@ -49,26 +49,27 @@
                                 <th>{{ Lang::choice('messages.count', 1) }}</th>
                                 <th>{{ Lang::choice('messages.facility', 1) }}</th>
                                 <th>{{ Lang::choice('messages.sdp', 1) }}</th>
-                                <th>{{ Lang::choice('messages.number', 1) }}</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php $counter = 0; ?>
                         @foreach($facilities as $facility)
-                        <?php $counter++; ?>
+                            <?php $counter++; $total = 0; if($facility->sdps($checklist->id)!=0){ $total = $facility->sdps($checklist->id)+1; } ?>
                             <tr>
-                                <td rowspan="{!! count($surveys[$facility->id])+1 !!}">{!! $counter !!}</td>
-                                <td rowspan="{!! count($surveys[$facility->id])+1 !!}">{!! $facility->name !!}</td>
-                                <td></td>
+                                <td rowspan="{!! $total !!}">{!! $counter !!}</td>
+                                <td rowspan="{!! $total !!}">{!! $facility->name !!}</td>
                             </tr>
-                            @foreach($surveys[$facility->id] as $survey)
-                                <tr>
-                                @foreach(App\Models\Survey::find($survey)->sdps as $sdp)
-                                    <td>{!! App\Models\Sdp::find($sdp->sdp_id)->name !!}</td>
+                            @if(count($facility->perchecklist($checklist->id))!=0)
+                                @foreach($facility->perchecklist($checklist->id) as $survey)
+                                    @foreach($survey->sdps as $sdp)
+                                    <tr>
+                                        <td>{!! App\Models\Sdp::find($sdp->sdp_id)->name.'<br />' !!}</td>
+                                    </tr>
+                                    @endforeach
                                 @endforeach
-                                </tr>
-                            @endforeach
+                            @endif
                         @endforeach
+                        </tbody>
                      </table>
                 </div>
             </div>

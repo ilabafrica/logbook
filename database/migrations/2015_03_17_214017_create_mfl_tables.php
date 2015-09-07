@@ -548,13 +548,13 @@ class CreateMflTables extends Migration {
 		Schema::create('survey_spirt_info', function(Blueprint $table)
         {
             $table->increments('id')->unsigned();
-            $table->integer('survey_id')->unsigned();
+            $table->integer('survey_sdp_id')->unsigned();
             $table->integer('affiliation_id')->unsigned();
 
             $table->softDeletes();
             $table->timestamps();
 
-            $table->foreign('survey_id')->references('id')->on('surveys');
+            $table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
             $table->foreign('affiliation_id')->references('id')->on('affiliations');
         });
         //	Levels

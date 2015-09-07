@@ -72,7 +72,7 @@
                                 <tr>
                                     <td>{!! $period !!}</td>
                                     @foreach($levels as $level)
-                                        <td>{!! $checklist->level() !!}</td>
+                                        <td>{!! $checklist->level($level) !!}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach

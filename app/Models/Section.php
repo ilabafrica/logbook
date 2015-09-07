@@ -141,9 +141,13 @@ class Section extends Model implements Revisionable {
 	public function quarter($period)
 	{
 		$checklist = $this->checklist;
-		$survey_ids = NULL;
+		$survey_sdp_ids = NULL;
+		$counter = 0;
 		if($period === 'Baseline')
-			$survey_ids = SpirtInfo::lists('survey_id');
+		{
+			$survey_sdp_ids = SpirtInfo::lists('survey_sdp_id');
+			$counter = count($survey_sdp_ids);
+		}
 		else
 		{
 			$start_date = NULL;
@@ -168,7 +172,11 @@ class Section extends Model implements Revisionable {
 				$start_date = date('Y-07-01');
 				$end_date = date('Y-09-30');	
 			}
-			$survey_ids = SpirtInfo::/*whereBetween('created_at', [$start_date, $end_date])->*/lists('survey_id');
+			$survey_sdp_ids = SpirtInfo::join('survey_sdps', 'survey_sdps.id', '=', 'survey_spirt_info.survey_sdp_id')
+										->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+										->whereBetween('date_started', [$start_date, $end_date])
+										->lists('survey_spirt_info.survey_sdp_id');
+			$counter = count($survey_sdp_ids);
 		}
 		if($this->isScorable())
 		{
@@ -179,12 +187,12 @@ class Section extends Model implements Revisionable {
 				{
 					foreach ($question->sqs as $sq) 
 					{
-						if(in_array($sq->survey_id, $survey_ids))
+						if(in_array($sq->survey_sdp_id, $survey_sdp_ids))
 							$total+=$sq->ss->score;
 					}
 				}
 			}
-			return round(($total*100)/($this->total_points), 2);
+			return $counter!=0?round(($total*100)/($this->total_points*$counter), 2):0.00;
 		}
 	}
 }

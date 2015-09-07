@@ -104,6 +104,25 @@ class Facility extends Model implements Revisionable {
 	public function submissions($id)
 	{
 		//	Initialize counter		
-		return $this->surveys->where('checklist_id', 2)->count();
+		return $this->surveys->where('checklist_id', $id)->count();
+	}
+	/**
+	* Function to get counts per checklist
+	*/
+	public function perchecklist($id)
+	{
+		//	Initialize counter		
+		return $this->surveys->where('checklist_id', $id);
+	}	
+	/**
+	* Function to get counts per checklist for sdps
+	*/
+	public function sdps($id)
+	{
+		//	Initialize counter
+		return SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+						->where('facility_id', $this->id)
+						->where('checklist_id', $id)
+						->count();
 	}
 }
