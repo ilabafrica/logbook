@@ -41,4 +41,11 @@ class SurveySdp extends Model implements Revisionable {
     {
         return $this->hasMany('App\Models\HtcSurveyPage');
     }
+    /**
+     * survey-question relationship
+     */
+    public function sqs()
+    {
+        return $this->hasMany('App\Models\SurveyQuestion');
+    }
 }

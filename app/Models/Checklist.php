@@ -69,40 +69,27 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to calculate level
 	 */
-	public function level()
+	public function level($level)
 	{
-		//	Initialize variables
-		$total = 0.0;
-		$qstns = array();
-		$questions = array();
-		foreach ($this->surveys as $survey) 
+		$data = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+						 ->where('surveys.checklist_id', $this->id)
+						 ->get();
+		$counter = 0;
+		$total = 0.00;
+		$total_points = $this->sections->sum('total_points');
+		foreach ($data as $datum)
 		{
-			foreach ($survey->sqs as $sq) 
+			foreach ($datum->sqs as $sq)
 			{
-				$qstns = $sq->lists('question_id');
+				if($sq->question->answers->count()>0)
+					$total+=$sq->ss->score;
 			}
-			$questions = array_merge($questions, $qstns);
-		}
-		$questions = array_unique($questions);
-		foreach ($this->sections as $section) 
-		{
-			if($section->isScorable())
+			if(($total*100/$total_points >= $level->range_lower) && ($total*100/$total_points <= $level->range_upper))
 			{
-				foreach ($section->questions as $question) 
-				{
-					if(in_array($question->id, $questions))
-					{
-						$sqs = SurveyQuestion::where('question_id', $question->id)->get();
-						foreach ($sqs as $sq) 
-						{
-							if($sq->ss)
-								$total+=$sq->ss->score;
-						}
-					}
-				}
+				$counter++;
 			}
 		}
-		return $total;
+		return round($counter/count($data), 2);
 	}
 	/**
 	 * Count unique officers who participated in survey

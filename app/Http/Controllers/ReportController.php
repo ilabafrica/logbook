@@ -937,7 +937,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
 	        		$counter = count($periods);
 	        		foreach ($periods as $period) {
-	        			$data = $checklist->level();
+	        			$data = $checklist->level($level);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)

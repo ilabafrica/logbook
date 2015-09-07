@@ -96,7 +96,6 @@ class Survey extends Model implements Revisionable {
 	{
 		return $this->hasMany('App\Models\SpirtInfo');
 	}
-
 	/**
 	 * survey-question relationship
 	 */

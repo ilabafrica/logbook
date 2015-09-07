@@ -82,7 +82,7 @@
     @endif
     @if(Entrust::can('access-data-analysis'))
         <!-- Local partner analysis -->
-        <li style="display:none;">
+        <li>
             <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.local-partner-analysis', 1) !!}<span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('partner/accomplishment') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.accomplishment', 1) !!}</a></li>
