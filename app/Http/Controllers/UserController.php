@@ -51,7 +51,7 @@ class UserController extends Controller {
         if($request->default_password)
         	$user->password = Hash::make(User::DEFAULT_PASSWORD);
         else
-        	$user->password = $request->password;
+        	$user->password = Hash::make($request->password);
         if(Input::hasFile('photo'))
         	$user->image = $this->imageModifier($request, $request->all()['photo']);
         $user->save();
@@ -104,7 +104,7 @@ class UserController extends Controller {
         if($request->default_password)
         	$user->password = Hash::make(User::DEFAULT_PASSWORD);
         else
-        	$user->password = $request->password;
+        	$user->password = Hash::make($request->password);
         if(Input::hasFile('photo'))
         	$user->image = $this->imageModifier($request, $request->all()['photo']);
         $user->save();
