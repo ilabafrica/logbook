@@ -30,11 +30,15 @@
                                 <tbody>
                                     <tr>
                                         <td>{!! Lang::choice('messages.no-of-questionnaire', 1) !!}</td>
-                                        <td>{!! $checklist->surveys->count() !!}</td>                                        
+                                        @if($county || $subCounty)
+                                            <td>{!! count($surveys[$checklist->id]) !!}</td>
+                                        @else
+                                            <td>{!! $checklist->surveys->count() !!}</td>
+                                        @endif                                        
                                     </tr>
                                     <tr>
                                         <td>{!! Lang::choice('messages.no-of-qa', 1) !!}</td>
-                                        <td>{!! $checklist->officers() !!}</td>
+                                        <td>{!! $checklist->officers($county, $subCounty) !!}</td>
                                     </tr>
                                 </tbody>
                             </table>
