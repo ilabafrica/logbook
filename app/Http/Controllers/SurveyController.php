@@ -519,7 +519,7 @@ class SurveyController extends Controller {
         //  Cleanup the data first to do away with unwanted variables
         //  Save the data to the database tables
         //	$this->htc($data);
-        dd($data);
+        //dd($data);
         foreach ($data as $key => $value)
         {
         	$survey = new Survey;
@@ -661,7 +661,7 @@ class SurveyController extends Controller {
 								if(($audit_type_id!=NULL) && ($algorithm_id!=NULL) && ($screening!=NULL) && ($confirmatory!=NULL) && ($tie_breaker!=NULL))
 								{
 									$me_info->save();
-									dd($me_info);
+									//dd($me_info);
 									foreach ($ross as $louis => $litt)
 									{
 										$surveyQstn = new SurveyQuestion;
