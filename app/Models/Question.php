@@ -185,4 +185,26 @@ class Question extends Model implements Revisionable  {
 		else
 			return false;
 	}
+	/**
+	* Return Question name given the identifier
+	* @param $id the identifier of the question
+	*/
+	public static function nameById($id=NULL)
+	{
+		if($id!=NULL){
+			try 
+			{
+				$question = Question::where('id', $id)->orderBy('name', 'asc')->firstOrFail();
+				return $question->name;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The question with id ` $id ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
+		}
+	}
 }

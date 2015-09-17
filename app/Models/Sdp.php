@@ -53,14 +53,15 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($checklist = NULL, $from = NULL, $to = NULL, $testTypeID = NULL, $name = NULL, $surveys = NULL)
+	public function positivePercent($facility, $checklist = NULL, $from = NULL, $to = NULL, $testTypeID = NULL, $name = NULL, $surveys = NULL)
 	{
 		//	Initialize counts
 		$positive = 0;
 		$total = 0;
 		//	Get sdp surveys
 		$questions = array();
-		foreach ($this->surveys as $survey)
+		dd($this->surveys()->where('facility_id', $facility)->count());
+		foreach ($this->surveys->where('facility_id', $facility) as $survey)
 		{
 			foreach ($survey->pages as $page)
 			{

@@ -31,9 +31,12 @@ class ReportController extends Controller {
 	{
 		//	Retrieve HTC Lab Register
 		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
+		//	Get checklist
+		//$checklist = Checklist::find($id);
+		$facility = Facility::find(2);
 		//	Get sdps
 		$sdps = array();
-		foreach ($checklist->surveys as $survey) 
+		foreach ($facility->surveys as $survey) 
 		{
 			foreach ($survey->sdps as $sdp) 
 			{
@@ -44,9 +47,6 @@ class ReportController extends Controller {
 		
 		//	Define months array
 		$monthNames = array('Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec');
-		//	Get checklist
-		//$checklist = Checklist::find($id);
-		$facility = Facility::find(1);
 		/*//$sdps = array();
 		$tests = array('Test-1', 'Test-2');
 		$survey_ids = array();
@@ -97,7 +97,7 @@ class ReportController extends Controller {
 		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp)->positivePercent();
+	        			$data = $facility->positivePercent($sdp);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -137,10 +137,19 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		//	Get sdps
-		$sdps = $checklist->sdps();
 		//	Get facility
-		$facility = Facility::find(1);
+		$facility = Facility::find(2);
+		//	Get sdps
+		$sdps = array();
+		foreach ($facility->surveys as $survey) 
+		{
+			foreach ($survey->sdps as $sdp) 
+			{
+				array_push($sdps, $sdp->sdp_id);
+			}
+		}
+		$sdps = array_unique($sdps);
+		//	Get months
 		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
 		$chart = "{
 		        chart: {
@@ -170,10 +179,10 @@ class ReportController extends Controller {
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
-		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp->sdp_id)->positiveAgreement();
+	        			$data = $facility->positiveAgreement($sdp);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -213,10 +222,18 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		//	Get sdps
-		$sdps = $checklist->sdps();
 		//	Get facility
-		$facility = Facility::find(1);
+		$facility = Facility::find(2);		
+		//	Get sdps
+		$sdps = array();
+		foreach ($facility->surveys as $survey) 
+		{
+			foreach ($survey->sdps as $sdp) 
+			{
+				array_push($sdps, $sdp->sdp_id);
+			}
+		}
+		$sdps = array_unique($sdps);
 		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
 		$chart = "{
 		        chart: {
@@ -246,10 +263,10 @@ class ReportController extends Controller {
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
-		        	$chart.="{name:"."'".Sdp::find($sdp->sdp_id)->name."'".", data:[";
+		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp->sdp_id)->overallAgreement();
+	        			$data = $facility->overallAgreement($sdp);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
