@@ -336,7 +336,7 @@ class LogbookSeeder extends Seeder
             array("name" => "Laboratory", "description" => "", "identifier" => "Laboratory", "user_id" => "1"),
             array("name" => "TB Clinic", "description" => "", "identifier" => "TBClinic", "user_id" => "1"),          
             array("name" => "ART Clinic", "description" => "", "identifier" => "art", "user_id" => "1"), 
-            array("name" => "CCC", "description" => "", "identifier" => "", "user_id" => "1"),  
+            array("name" => "CCC", "description" => "", "identifier" => "CCC", "user_id" => "1"),  
             array("name" => "OPD", "description" => "", "identifier" => "OPD", "user_id" => "1"),  
             array("name" => "STI Clinic", "description" => "", "identifier" => "STIclinic", "user_id" => "1"),  
             array("name" => "PMTCT", "description" => "", "identifier" => "PMTCT", "user_id" => "1"),  
