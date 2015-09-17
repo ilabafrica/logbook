@@ -137,15 +137,74 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
+		//	Get all facilities
+		$facilities = Facility::lists('name', 'id');
+		//	Declare variables
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
 		//	Get facility
-		$facility = Facility::find(2);
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+			$site = Input::get('facility');
+		if(Input::get('sub_county'))
+			$sub_county = Input::get('sub_county');
+		if(Input::get('county'))
+			$jimbo = Input::get('county');
 		//	Get sdps
 		$sdps = array();
-		foreach ($facility->surveys as $survey) 
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
 		{
-			foreach ($survey->sdps as $sdp) 
+			if($sub_county!=NULL || $site!=NULL)
 			{
-				array_push($sdps, $sdp->sdp_id);
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+					foreach (Facility::find($site)->surveys as $survey) 
+					{
+						foreach ($survey->sdps as $sdp) 
+						{
+							array_push($sdps, $sdp->sdp_id);
+						}
+					}
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name;
+					foreach (SubCounty::find($sub_county)->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name;
+				foreach (County::find($jimbo)->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
 			}
 		}
 		$sdps = array_unique($sdps);
@@ -156,7 +215,7 @@ class ReportController extends Controller {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$facility->name."'
+		            text: '".$title."'
 		        },
 		        xAxis: {
 		            categories: [";
@@ -182,7 +241,7 @@ class ReportController extends Controller {
 		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = $facility->positiveAgreement($sdp);
+	        			$data = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -209,7 +268,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.agreement', compact('checklist', 'chart'));
+		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties'));
 	}
 
 	/**

@@ -27,10 +27,39 @@
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'report/'.$checklist->id.'/agreement', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county')), '', 
+                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('facility', array(''=>trans('messages.select-facility')), '', 
+                                array('class' => 'form-control', 'id' => 'facility')) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
