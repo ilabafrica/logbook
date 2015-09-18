@@ -175,7 +175,6 @@ class Sdp extends Model implements Revisionable {
 			$values = HtcSurveyPageQuestion::where('question_id', $question)
 											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
 											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
-											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 											->where('sdp_id', $this->id);
 											if($county || $subCounty || $facility)
 											{
