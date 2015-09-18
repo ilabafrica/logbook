@@ -64,20 +64,66 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate scores per section
 	 */
-	public function spider()
+	public function spider($site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
 	{
-		//dd($this->label);
 		$points = 0.0;
 		$array = array();
-		foreach ($this->questions as $question) {
+		foreach ($this->questions as $question)
+		{
 			if($question->answers->count()>0)
 				array_push($array, $question);
 		}
-		//dd($questions);
-		foreach ($array as $question) {
-			$points+=SurveyQuestion::where('question_id', $question->id)->first()->ss->score;
+		$counter = 0;
+		foreach ($array as $question)
+		{
+			$values=SurveyQuestion::where('question_id', $question->id)
+									->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+									->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
+									if($county || $sub_county || $site)
+									{
+										if($sub_county || $site)
+										{
+											if(isset($site))
+											{
+												dd($site);
+												$values = $values->where('facility_id', $site);
+												$counter = Facility::find($site)->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+											}
+											else
+											{
+												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 		 ->where('sub_county_id', $sub_county);
+												foreach (SubCounty::find($sub_county)->facilities as $facility)
+												{
+													$counter+=$facility->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+												}
+											}
+										}
+										else
+										{
+											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+															 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+															 ->where('county_id', $county);
+											foreach (County::find($county)->subCounties as $subCounty)
+											{
+												foreach ($subCounty->facilities as $facility)
+												{
+													$counter+=$facility->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+												}
+											}
+										}
+									}
+									else
+									{
+										$counter = Checklist::find(Checklist::idByName('SPI-RT Checklist'))->surveys->count();
+									}
+			$values = $values->get(array('survey_questions.*'));
+			foreach ($values as $key => $value) 
+			{
+				$points+=SurveyQuestion::find($value->id)->ss->score;
+			}
 		}
-		return $points;
+		return round($points*100/($this->total_points*$counter), 2);
 	}
 	/**
 	 * Function to calculate the snapshot given section
