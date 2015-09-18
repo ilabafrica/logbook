@@ -588,12 +588,40 @@ class ReportController extends Controller {
 		//	Get counties
 		$counties = County::lists('name', 'id');
 		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-			$title = Facility::find($site)->name;
+		}
+		elseif(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+		}
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+			}
 		}
 		$chart = "{
 
@@ -603,7 +631,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison for '".$title.",
+	            text: 'SPI-RT Scores Comparison for $title',
 	            x: -80
 	        },
 
@@ -643,7 +671,7 @@ class ReportController extends Controller {
 	            name: 'Score',
 	            data: [";
 	            	foreach ($categories as $category) {
-	   					$chart.=round($category->spider()*100/$category->total_points, 2).',';
+	   					$chart.=$category->spider($site, $sub_county, $jimbo).',';
 	   				}
 	   				$chart.="],
 	            pointPlacement: 'on'
