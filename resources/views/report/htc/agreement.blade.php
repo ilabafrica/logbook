@@ -46,7 +46,7 @@
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
                             {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county')), '', 
-                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
                 </div>
