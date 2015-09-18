@@ -195,6 +195,11 @@ class ReportController extends Controller {
 			$sub_county = Input::get('sub_county');
 		if(Input::get('county'))
 			$jimbo = Input::get('county');
+		//	
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$jimbo = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$sub_county = SubCounty::find(Auth::user()->tier->tier);
 		//	Get sdps
 		$sdps = array();
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
