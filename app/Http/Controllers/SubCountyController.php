@@ -10,6 +10,7 @@ use App\Models\SubCounty;
 use App\Models\County;
 use Response;
 use Auth;
+use Input;
 
 class SubCountyController extends Controller {
 
@@ -119,6 +120,15 @@ class SubCountyController extends Controller {
 	public function destroy($id)
 	{
 		//
-	}
-
+	}	
+	/**
+	*	Function to return facilities of a particular sub-county to fill facilities dropdown
+	*/
+	public function dropdown()
+	{
+		$input = Input::get('sub_county_id');
+        $sub_county = SubCounty::find($input);
+        $facilities = $sub_county->facilities;
+        return json_encode($facilities);
+    }
 }

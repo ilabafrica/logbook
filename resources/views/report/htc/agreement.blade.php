@@ -46,7 +46,7 @@
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
                             {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county')), '', 
-                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,8 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <hr >
+            </div>
+            <div class="row">                
                 <div class="col-sm-12">
                     <div id="chart" style="height: 300px"></div>
                 </div>
