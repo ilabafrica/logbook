@@ -287,7 +287,8 @@ function county(id){
 }
 /*End toggle susceptibility*/
 /*Dynamic loading of select list options for counties-sub-counties in reports*/
-function dyn(){
+function dyn()
+{
     cId = $('#county').val();
     var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
     _token: JSON.stringify($('input[name=_token]').val());
@@ -302,6 +303,27 @@ function dyn(){
             sub_county.append("<option value=''>Select Sub-County</option>");
             $.each(data, function(index, element) {
                 sub_county.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+            });
+        }
+    });
+}
+/* Dynamic loading of facilities given the sub-county */
+function drop()
+{
+    cId = $('#sub_county').val();
+    var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
+    _token: JSON.stringify($('input[name=_token]').val());
+    $.ajax({
+        dataType: 'json',
+        type: 'POST',
+        url:  URL_ROOT+'facility/dropdown',
+        data: {sub_county_id: cId, '_token': $('input[name=_token]').val()},
+        success: function(data){
+            var facility = $('#facility');
+            facility.empty();
+            facility.append("<option value=''>Select Facility</option>");
+            $.each(data, function(index, element) {
+                facility.append("<option value='"+ element.id +"'>" + element.name + "</option>");
             });
         }
     });

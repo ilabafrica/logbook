@@ -290,6 +290,10 @@ Route::any('/sub_county/dropdown', array(
     "as"    =>  "subCounty.dropdown",
     "uses"  =>  "CountyController@dropdown"
 ));
+Route::any('/facility/dropdown', array(
+    "as"    =>  "facility.dropdown",
+    "uses"  =>  "SubCountyController@dropdown"
+));
 /* Algorithms */
 Route::resource('algorithm', 'AlgorithmController');
 /* Audit Types controller */
