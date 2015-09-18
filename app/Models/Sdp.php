@@ -73,17 +73,20 @@ class Sdp extends Model implements Revisionable {
 												{
 													if($facility)
 													{
-														$values = $values->where('facility_id', $facility);
+														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		 ->where('facility_id', $facility);
 													}
 													else
 													{
-														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																 ->where('sub_county_id', $subCounty);
+														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																 		 ->where('sub_county_id', $subCounty);
 													}
 												}
 												else
 												{
-													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																	 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 																	 ->where('county_id', $county);
 												}
@@ -180,17 +183,20 @@ class Sdp extends Model implements Revisionable {
 												{
 													if($facility)
 													{
-														$values = $values->where('facility_id', $facility);
+														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		 ->where('facility_id', $facility);
 													}
 													else
 													{
-														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																 ->where('sub_county_id', $subCounty);
+														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																 		 ->where('sub_county_id', $subCounty);
 													}
 												}
 												else
 												{
-													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																	 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 																	 ->where('county_id', $county);
 												}

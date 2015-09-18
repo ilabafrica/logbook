@@ -83,7 +83,8 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <hr >
+            </div>
+            <div class="row">                
                 <div class="col-sm-12">
                     <div id="chart" style="height: 300px"></div>
                 </div>

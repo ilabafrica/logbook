@@ -32,6 +32,36 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
+                        {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county')), '', 
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('facility', array(''=>trans('messages.select-facility')), '', 
+                                array('class' => 'form-control', 'id' => 'facility')) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <div class='form-group'>
                         {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
                             {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
@@ -52,7 +82,8 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <hr >
+            </div>
+            <div class="row">                
                 <div class="col-sm-12">
                     <div id="chart" style="height: 350px"></div>
                 </div>
