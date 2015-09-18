@@ -6,7 +6,7 @@ use App\Models\Checklist;
 use App\Models\User;
 use App\Models\Question;
 use App\Models\Survey;
-use App\Models\surveyData;
+use App\Models\SurveyData;
 use App\Models\Facility;
 use App\Models\Sdp;
 use App\Models\SurveyQuestion;
@@ -522,42 +522,66 @@ class SurveyController extends Controller {
         //dd($data);
         foreach ($data as $key => $value)
         {
-        	$survey = new Survey;
+        	$checklist_id = $checklist;
+        	$facility_id = NULL;
+        	$qa_officer = NULL;
+        	$comment = NULL;
+        	$date_started = NULL;
+        	$date_ended = NULL;
+        	$date_submitted = NULL;
+        	$longitude = NULL;
+        	$latitude = NULL;
         	foreach ($value as $harvey => $specter) 
         	{
-        		$survey->checklist_id = $checklist;
         		if(strpos($harvey, 'mysites') !== false)
         		{
-					$survey->facility_id = Facility::idByName(str_replace('_', ' ', $specter));
+					$facility_id = Facility::idByName(str_replace('_', ' ', $specter));
 				}
 				if(strpos($harvey, 'nameoftheauditor') !== false)
 				{
-					$survey->qa_officer = $specter;
+					$qa_officer = $specter;
 				}
 				if(strpos($harvey, 'addtionalcomments') !== false)
 				{
-					$survey->comment = $specter;
+					$comment = $specter;
 				}
 				if(strpos($harvey, 'start') !== false)
 				{
-					$survey->date_started = $specter;
+					$date_started = $specter;
 				}
 				if(strpos($harvey, 'end') !== false)
 				{
-					$survey->date_ended = $specter;
+					$date_ended = $specter;
 				}
 				if(strpos($harvey, '_submission_time') !== false)
 				{
-					$survey->date_submitted = $specter;
+					$date_submitted = $specter;
 				}
 				if(strpos($harvey, '_geolocation') !== false)
 				{
-					$survey->longitude = $specter[0];
-					$survey->latitude = $specter[1];
+					$longitude = $specter[0];
+					$latitude = $specter[1];
 				}				
         	}
-        	//	Save survey at this point
-			$survey->save();
+        	//	Save survey at this point after checking for existence
+        	if($srvy = Survey::where('checklist_id', $checklist)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', $date_started)->where('date_ended', $date_ended)->where('date_submitted', $date_submitted)->first())
+        	{
+        		$survey = Survey::find($srvy)->id;
+        	}
+        	else
+        	{
+        		$survey = new Survey;        	
+        		$survey->checklist_id = $checklist_id;
+        		$survey->facility_id = $facility_id;
+        		$survey->qa_officer = $qa_officer;
+        		$survey->comment = $comment;
+        		$survey->date_started = $date_started;
+        		$survey->date_ended = $date_ended;
+        		$survey->date_submitted = $date_submitted;
+        		$survey->longitude = $longitude;
+        		$survey->latitude = $latitude;
+				$survey->save();
+        	}
 			//	Proceed to save the rest of the data.
 			foreach ($value as $harvey => $specter)
 			{
@@ -807,75 +831,69 @@ class SurveyController extends Controller {
         //	dd($checklistData);
         foreach ($checklistData as $key => $value) 
         {
-        	$survey = new Survey;
+        	$checklist_id = $checklist;
+        	$facility_id = NULL;
+        	$qa_officer = NULL;
+        	$comment = NULL;
+        	$date_started = NULL;
+        	$date_ended = NULL;
+        	$date_submitted = NULL;
+        	$longitude = NULL;
+        	$latitude = NULL;
         	foreach ($value as $harvey => $specter) 
-        	{        		
-        		$survey->checklist_id = Checklist::idByName('HTC Lab Register (MOH 362)');
+        	{
         		if(strpos($harvey, 'mysites') !== false)
         		{
         			if(str_replace('_', ' ', $specter) === 'makandara health center')
-        				$survey->facility_id = Facility::idByName('Makadara Health Center');
+        				$facility_id = Facility::idByName('Makadara Health Center');
         			else
-						$survey->facility_id = Facility::idByName(str_replace('_', ' ', $specter));
+						$facility_id = Facility::idByName(str_replace('_', ' ', $specter));
 				}
 				if(strpos($harvey, 'nameoftheauditor') !== false)
 				{
-					$survey->qa_officer = $specter;
+					$qa_officer = $specter;
 				}
 				if(strpos($harvey, 'addtionalcomments') !== false)
 				{
-					$survey->comment = $specter;
+					$comment = $specter;
 				}
 				if(strpos($harvey, 'start') !== false)
 				{
-					$survey->date_started = $specter;
+					$date_started = $specter;
 				}
 				if(strpos($harvey, 'end') !== false)
 				{
-					$survey->date_ended = $specter;
+					$date_ended = $specter;
 				}
 				if(strpos($harvey, '_submission_time') !== false)
 				{
-					$survey->date_submitted = $specter;
+					$date_submitted = $specter;
 				}
 				if(strpos($harvey, '_geolocation') !== false)
 				{
-					$survey->longitude = $specter[0];
-					$survey->latitude = $specter[1];
-				}
-				//	Save survey at this point	
-				/*if(is_array($specter))
-				{
-					foreach ($specter as $mike => $ross) 
-					{
-						if(is_array($ross))
-						{
-							foreach ($ross as $rachel => $zane) 
-							{
-								if(strpos($rachel, 'hh_testing_site') !== false)
-								{
-									//$sdp_id = Sdp::idByName($zane);
-								}
-								if(is_array($zane))
-								{
-									foreach ($zane as $louis => $litt) 
-									{
-										if(is_array($litt)){
-											foreach ($litt as $ned => $stark) 
-											{
-												//var_dump("  =>  ".$stark);
-											}
-											//var_dump('###############################################################################');
-										}
-									}
-								}
-							}
-							//var_dump('*********************************************************************');
-						}
-					}	
-				}*/
+					$longitude = $specter[0];
+					$latitude = $specter[1];
+				}				
         	}
-			$survey->save();
+        	//	Save survey at this point after checking for existence
+        	if($srvy = Survey::where('checklist_id', $checklist)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', $date_started)->where('date_ended', $date_ended)->where('date_submitted', $date_submitted)->first())
+        	{
+        		$survey = Survey::find($srvy)->id;
+        	}
+        	else
+        	{
+        		$survey = new Survey;        	
+        		$survey->checklist_id = $checklist_id;
+        		$survey->facility_id = $facility_id;
+        		$survey->qa_officer = $qa_officer;
+        		$survey->comment = $comment;
+        		$survey->date_started = $date_started;
+        		$survey->date_ended = $date_ended;
+        		$survey->date_submitted = $date_submitted;
+        		$survey->longitude = $longitude;
+        		$survey->latitude = $latitude;
+				$survey->save();
+        	}
 			foreach ($value as $harvey => $specter) 
         	{
         		if(strpos($harvey, '_geolocation') === false && is_array($specter))
@@ -904,21 +922,7 @@ class SurveyController extends Controller {
 								{
 									$comment = $zane;
 								}
-								/*if(is_array($zane))
-								{
-									foreach ($zane as $louis => $litt) 
-									{
-										if(is_array($litt)){
-											foreach ($litt as $ned => $stark) 
-											{
-												//var_dump("  =>  ".$stark);
-											}
-											//var_dump('###############################################################################');
-										}
-									}
-								}*/
 							}
-							//var_dump('*********************************************************************');
 						}
 						$surveySdp->sdp_id = $sdp_id;
 						$surveySdp->comment = $comment;
@@ -942,7 +946,6 @@ class SurveyController extends Controller {
 											$surveyPage->page = $page;
 											$surveyPage->save();
 											if(is_array($litt)){
-												//	dd($litt);
 												//	Get questions from database
 												$questions = array();
 												foreach (Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'))->sections as $section) 
@@ -990,19 +993,16 @@ class SurveyController extends Controller {
 														$pageData->save();													
 													}
 												}
-												//var_dump('###############################################################################');
 											}
 											$page++;
 										}
 									}
 								}
-								//var_dump('*********************************************************************');
 							}
 						}
 					}
 				}
         	}
-        	//var_dump('===================================================================');
 		}
     }
 	/**
