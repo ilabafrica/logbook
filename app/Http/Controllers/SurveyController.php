@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-
+set_time_limit(0); //60 seconds = 1 minute
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Checklist;
@@ -831,7 +831,7 @@ class SurveyController extends Controller {
         //	dd($checklistData);
         foreach ($checklistData as $key => $value) 
         {
-        	$checklist_id = $checklist;
+        	$checklist_id = Checklist::idByName('HTC Lab Register (MOH 362)');
         	$facility_id = NULL;
         	$qa_officer = NULL;
         	$comment = NULL;
@@ -876,7 +876,7 @@ class SurveyController extends Controller {
 				}				
         	}
         	//	Save survey at this point after checking for existence
-        	if($srvy = Survey::where('checklist_id', $checklist)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', $date_started)->where('date_ended', $date_ended)->where('date_submitted', $date_submitted)->first())
+        	if($srvy = Survey::where('checklist_id', $checklist_id)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', $date_started)->where('date_ended', $date_ended)->where('date_submitted', $date_submitted)->first())
         	{
         		$survey = Survey::find($srvy)->id;
         	}
