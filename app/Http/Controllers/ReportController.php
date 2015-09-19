@@ -129,6 +129,9 @@ class ReportController extends Controller {
 		                text: '".Lang::choice('messages.percent-positive', 1)."'
 		            }
 		        },
+		        credits: {
+				    enabled: false
+				},
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
@@ -523,6 +526,9 @@ class ReportController extends Controller {
 	                text: '% Score'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
 	            shared: true
@@ -654,7 +660,9 @@ class ReportController extends Controller {
 	            lineWidth: 0,
 	            min: 0
 	        },
-
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            shared: true,
 	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
@@ -741,6 +749,9 @@ class ReportController extends Controller {
 	                text: '% Score'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b>%<br/>'
 	        },
@@ -843,6 +854,9 @@ class ReportController extends Controller {
 	                text: '% Score'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 			plotOptions: {
 				column: {
 					colorByPoint: true
@@ -1067,7 +1081,9 @@ class ReportController extends Controller {
 	            lineWidth: 0,
 	            min: 0
 	        },
-
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            shared: true,
 	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
@@ -1153,6 +1169,9 @@ class ReportController extends Controller {
 	                text: 'Percentage'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
 	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
@@ -1253,6 +1272,9 @@ class ReportController extends Controller {
 	                text: 'Percentage'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
 	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
@@ -1343,6 +1365,9 @@ class ReportController extends Controller {
 	                text: 'Percentage'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
 	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
@@ -1445,6 +1470,9 @@ class ReportController extends Controller {
 	                text: '% Score'
 	            }
 	        },
+	        credits: {
+			    enabled: false
+			},
 	        tooltip: {
 	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
 	            shared: true
