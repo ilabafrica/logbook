@@ -27,6 +27,7 @@
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
         </ul>
+        <div class="container-fluid">
         {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
@@ -60,12 +61,13 @@
                     </div>
                 </div>
             </div>
+            <hr />
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('from', isset($from)?$from:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -74,7 +76,7 @@
                     <div class='form-group'>
                         {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('to', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -84,6 +86,7 @@
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
             </div>
+            <hr />
             <div class="row">
                 <div class="col-sm-12">
                     <div id="chart" style="height: 300px"></div>
