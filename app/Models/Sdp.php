@@ -53,11 +53,22 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Initialize counts
 		$positive = 0;
-		$total = 0;
+		$total = 0;		
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Declare questions to be used in calculation of both positive and total values
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
 		//	Get the counts
@@ -66,6 +77,7 @@ class Sdp extends Model implements Revisionable {
 			$values = HtcSurveyPageQuestion::where('question_id', $question)
 											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
 											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 											->where('sdp_id', $this->id);
 											if($county || $subCounty || $facility)
 											{
@@ -73,23 +85,23 @@ class Sdp extends Model implements Revisionable {
 												{
 													if($facility)
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->where('facility_id', $facility);
+														$values = $values->where('facility_id', $facility);
 													}
 													else
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																 		 ->where('sub_county_id', $subCounty);
 													}
 												}
 												else
 												{
-													$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 																	 ->where('county_id', $county);
 												}
+											}
+											if (strlen($theDate)>0) {
+												$values = $values->where('date_submitted', 'LIKE', $theDate."%");
 											}
 											$values = $values->get(array('htc_survey_page_questions.*'));
 			foreach ($values as $key => $value) 
@@ -105,11 +117,22 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
 	*/
-	public function positiveAgreement($facility = NULL, $subCounty = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function positiveAgreement($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Initialize counts
 		$testOne = 0;
-		$testTwo = 0;
+		$testTwo = 0;		
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Declare questions to be used in calculation of both values
 		$qstns = array('Test-1 Total Positive', 'Test-2 Total Positive');
 		foreach ($qstns as $qstn) 
@@ -118,6 +141,7 @@ class Sdp extends Model implements Revisionable {
 			$values = HtcSurveyPageQuestion::where('question_id', $question)
 											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
 											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 											->where('sdp_id', $this->id);
 											if($county || $subCounty || $facility)
 											{
@@ -125,23 +149,23 @@ class Sdp extends Model implements Revisionable {
 												{
 													if($facility)
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->where('facility_id', $facility);
+														$values = $values->where('facility_id', $facility);
 													}
 													else
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																 		 ->where('sub_county_id', $subCounty);
 													}
 												}
 												else
 												{
-													$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 																	 ->where('county_id', $county);
 												}
+											}
+											if (strlen($theDate)>0) {
+												$values = $values->where('date_submitted', 'LIKE', $theDate."%");
 											}
 											$values = $values->get(array('htc_survey_page_questions.*'));
 			foreach ($values as $key => $value) 
@@ -157,7 +181,7 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]
 	*/
-	public function overallAgreement($facility = NULL, $subCounty = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function overallAgreement($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Initialize variables
 		$total = 0;
@@ -165,7 +189,18 @@ class Sdp extends Model implements Revisionable {
 		$reactiveOne = 0;
 		$nonReactiveOne = 0;
 		$reactiveTwo = 0;
-		$nonReactiveTwo = 0;
+		$nonReactiveTwo = 0;		
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Get questions to be used in the math
 		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-1 Total Invalid', 'Test-2 Total Positive', 'Test-2 Total Negative', 'Test-2 Total Invalid');
 		//	Math
@@ -175,6 +210,7 @@ class Sdp extends Model implements Revisionable {
 			$values = HtcSurveyPageQuestion::where('question_id', $question)
 											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
 											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 											->where('sdp_id', $this->id);
 											if($county || $subCounty || $facility)
 											{
@@ -182,23 +218,23 @@ class Sdp extends Model implements Revisionable {
 												{
 													if($facility)
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->where('facility_id', $facility);
+														$values = $values->where('facility_id', $facility);
 													}
 													else
 													{
-														$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																 		 ->where('sub_county_id', $subCounty);
 													}
 												}
 												else
 												{
-													$values = $values->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	 ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 																	 ->where('county_id', $county);
 												}
+											}
+											if (strlen($theDate)>0) {
+												$values = $values->where('date_submitted', 'LIKE', $theDate."%");
 											}
 											$values = $values->get(array('htc_survey_page_questions.*'));
 			foreach ($values as $key => $value) 

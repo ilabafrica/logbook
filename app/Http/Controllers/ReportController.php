@@ -18,6 +18,8 @@ use App\Models\County;
 use Illuminate\Http\Request;
 use Lang;
 use Input;
+use Auth;
+use DateTime;
 use Jenssegers\Date\Date as Carbon;
 
 class ReportController extends Controller {
@@ -71,7 +73,7 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -86,7 +88,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -103,7 +105,9 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 		        chart: {
 		            type: 'column'
@@ -111,6 +115,13 @@ class ReportController extends Controller {
 		        title: {
 		            text: '".$title."'
 		        },
+			    subtitle: {
+			        text:"; 
+			        if($from==$to)
+			        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+			        else
+			        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+			    $chart.="},
 		        xAxis: {
 		            categories: [";
 		            $count = count($months);
@@ -138,7 +149,7 @@ class ReportController extends Controller {
 		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo);
+	        			$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $month->annum, $month->months);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -165,7 +176,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.positive', compact('checklist', 'chart', 'counties'));
+		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'from', 'to'));
 	}
 
 	/**
@@ -222,7 +233,7 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -237,7 +248,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -254,8 +265,9 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		//	Get months
-		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 		        chart: {
 		            type: 'column'
@@ -263,6 +275,13 @@ class ReportController extends Controller {
 		        title: {
 		            text: '".$title."'
 		        },
+			    subtitle: {
+			        text:"; 
+			        if($from==$to)
+			        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+			        else
+			        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+			    $chart.="},
 		        xAxis: {
 		            categories: [";
 		            $count = count($months);
@@ -281,13 +300,16 @@ class ReportController extends Controller {
 		                text: '".Lang::choice('messages.percent-positiveAgr', 1)."'
 		            }
 		        },
+		        credits: {
+				    enabled: false
+				},
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
 		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo);
+	        			$data = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo, $month->annum, $month->months);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -314,7 +336,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.agreement', compact('checklist', 'chart', 'counties'));
+		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'from', 'to'));
 	}
 
 	/**
@@ -366,7 +388,7 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -381,7 +403,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -398,7 +420,9 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		$months = json_decode(self::getMonths($from = NULL, $to = NULL));
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 		        chart: {
 		            type: 'column'
@@ -406,6 +430,13 @@ class ReportController extends Controller {
 		        title: {
 		            text: '".$title."'
 		        },
+			    subtitle: {
+			        text:"; 
+			        if($from==$to)
+			        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+			        else
+			        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+			    $chart.="},
 		        xAxis: {
 		            categories: [";
 		            $count = count($months);
@@ -424,13 +455,16 @@ class ReportController extends Controller {
 		                text: '".Lang::choice('messages.percent-overallAgr', 1)."'
 		            }
 		        },
+		        credits: {
+				    enabled: false
+				},
 		        series: [";
 		        $counts = count($sdps);
 		        foreach ($sdps as $sdp) {
 		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
 	        		$counter = count($months);
 	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp)->overallAgreement($site, $sub_county, $jimbo);
+	        			$data = Sdp::find($sdp)->overallAgreement($site, $sub_county, $jimbo, $month->annum, $month->months);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -457,7 +491,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.overall', compact('checklist', 'chart', 'counties'));
+		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'from', 'to'));
 	}/**
 	 * Invalid results report
 	 *
@@ -513,6 +547,13 @@ class ReportController extends Controller {
 	            text: '".$facility->name."'
 
 	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
 	        xAxis: {
 	            categories: [";
 	            	foreach ($categories as $category) {
@@ -596,6 +637,9 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
@@ -629,6 +673,10 @@ class ReportController extends Controller {
 				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+		}
 		$chart = "{
 
 	        chart: {
@@ -639,8 +687,14 @@ class ReportController extends Controller {
 	        title: {
 	            text: 'SPI-RT Scores Comparison for $title',
 	            x: -80
-	        },
-
+	        },	        
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
 	        pane: {
 	            size: '80%'
 	        },
@@ -679,14 +733,20 @@ class ReportController extends Controller {
 	            name: 'Score',
 	            data: [";
 	            	foreach ($categories as $category) {
-	   					$chart.=$category->spider($site, $sub_county, $jimbo).',';
+	   					$chart.=$category->spider($site, $sub_county, $jimbo, $from, $toPlusOne).',';
 	   				}
 	   				$chart.="],
 	            pointPlacement: 'on'
 	        }]
 
 	    }";
-	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties'));
+	    //	Get data for table
+	    $data = array();
+	    foreach ($categories as $category)
+	    {
+	    	$data[$category->id] = $category->spider($site, $sub_county, $jimbo, $from, $toPlusOne);
+	    }
+	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 	/**
 	 * Show the table for current stage of sites implementing RTQII priority activities in Country X (percentage of sites)..
@@ -736,6 +796,13 @@ class ReportController extends Controller {
 	        title: {
 	            text: '".Lang::choice('messages.current-implementing-stage-chart', 1)."'
 	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
 	        xAxis: {
 	            categories: [";
 	            	foreach ($columns as $column) {
@@ -1534,21 +1601,26 @@ class ReportController extends Controller {
 	*/	
 	public static function getMonths($from, $to)
 	{
-		$from = "'".date("Y-m-d")."'";
+		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
 		$today = "'".date("Y-m-d")."'";
 		$year = date('Y');
-		$surveys = Survey::select('created_at')->distinct();
+		$surveys = $checklist->surveys()->select('date_submitted')->distinct();
 
 		if(strtotime($from)===strtotime($today)){
-			$surveys = $surveys->where('created_at', 'LIKE', $year.'%');
+			$surveys = $surveys->where('date_submitted', 'LIKE', $year.'%');
 		}
 		else
 		{
 			$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-			$surveys = $surveys->whereBetween('created_at', array($from, $toPlusOne));
+			$surveys = $surveys->whereBetween('date_submitted', array($from, $toPlusOne));
 		}
-
-		$allDates = $surveys->lists('created_at');
+		$allDates = array();
+		$allSurveyDates = $surveys->lists('date_submitted');
+		foreach ($allSurveyDates as $surveyDate)
+		{
+			array_push($allDates, Carbon::createFromFormat('Y-m-d H:i:s', $surveyDate)->toDateString());
+		}
+		$allDates = array_unique($allDates);
 		asort($allDates);
 		$yearMonth = function($value){return strtotime(substr($value, 0, 7));};
 		$allDates = array_map($yearMonth, $allDates);
