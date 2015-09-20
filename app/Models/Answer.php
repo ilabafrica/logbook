@@ -55,29 +55,25 @@ class Answer extends Model implements Revisionable {
 	/**
 	 * Function to calculate number of specific responses
 	 */
-	public function column($id, $county = null, $subCounty = null)
+	public function column($id, $facility = null, $from = null, $to = null)
 	{
 		//	Initialize variables
 		$total = 0;
-		foreach (Section::find($id)->questions as $question) {
+		foreach (Section::find($id)->questions as $question)
+		{
 			$questions = array();
 			$sqs = SurveyQuestion::where('question_id', $question->id);
-				if($county || $subCounty)
+				if($facility)
 				{
 					$sqs = $sqs->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-							->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-							->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
-							if($subCounty)
+							   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+							   ->where('facility_id', $facility);
+							if($from && $to)
 							{
-								$sqs = $sqs->where('facilities.sub_county_id', $subCounty);
-							}
-							if($county)
-							{
-								$sqs = $sqs->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-										   ->where('sub_counties.county_id', $county);
+								$sqs = $sqs->whereBetween('date_submitted', [$from, $to]);
 							}
 				}
-			$sqs = $sqs->get();
+			$sqs = $sqs->get(array('survey_questions.*'));
 			foreach ($sqs as $sq) {
 				if($sq->sd->answer == $this->name)
 					$total++;

@@ -514,8 +514,29 @@ class ReportController extends Controller {
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = SubCounty::lists('name', 'id');
+		//	Get all facilities
+		$facilities = Facility::lists('name', 'id');
+		//	Declare variables
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
 		//	Get facility
-		$facility = Facility::find(1);
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+			$title = Facility::find($site)->name;
+		}
+		if(Input::get('sub_county'))
+			$sub_county = Input::get('sub_county');
+		if(Input::get('county'))
+			$jimbo = Input::get('county');
 		$categories = array();
 		$options = array();
 		foreach ($checklist->sections as $section) 
@@ -536,6 +557,8 @@ class ReportController extends Controller {
 			}
 		}
 		$options = array_unique($options);
+		$from = Input::get('from');
+		$to = Input::get('to');
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -544,7 +567,7 @@ class ReportController extends Controller {
 	        },
 	        title: {
 
-	            text: '".$facility->name."'
+	            text: '".$title."'
 
 	        },
 		    subtitle: {
@@ -585,7 +608,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
 	        		$counter = count($categories);
 	        		foreach ($categories as $category) {
-	        			$data = Answer::find(Answer::idByName($option))->column($category->id);
+	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $site, $from, $to);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -612,7 +635,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.me.mscolumn', compact('checklist', 'chart'));
+		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'from', 'to'));
 	}
 	/**
 	 * SPI-RT spider chart report
