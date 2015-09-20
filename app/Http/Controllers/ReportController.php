@@ -39,9 +39,13 @@ class ReportController extends Controller {
 		//	Get counties
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
-		$subCounties = SubCounty::lists('name', 'id');
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
 		//	Get all facilities
-		$facilities = Facility::lists('name', 'id');
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
 		//	Declare variables
 		$site = NULL;
 		$sub_county = NULL;
@@ -176,7 +180,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'from', 'to'));
+		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 
 	/**
@@ -194,9 +198,13 @@ class ReportController extends Controller {
 		//	Get counties
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
-		$subCounties = SubCounty::lists('name', 'id');
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
 		//	Get all facilities
-		$facilities = Facility::lists('name', 'id');
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
 		//	Declare variables
 		$site = NULL;
 		$sub_county = NULL;
@@ -336,7 +344,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'from', 'to'));
+		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 
 	/**
@@ -354,9 +362,13 @@ class ReportController extends Controller {
 		//	Get counties
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
-		$subCounties = SubCounty::lists('name', 'id');
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
 		//	Get all facilities
-		$facilities = Facility::lists('name', 'id');
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
 		//	Declare variables
 		$site = NULL;
 		$sub_county = NULL;
@@ -491,7 +503,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'from', 'to'));
+		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}/**
 	 * Invalid results report
 	 *
@@ -519,9 +531,13 @@ class ReportController extends Controller {
 		//	Get counties
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
-		$subCounties = SubCounty::lists('name', 'id');
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
 		//	Get all facilities
-		$facilities = Facility::lists('name', 'id');
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
 		//	Declare variables
 		$site = NULL;
 		$sub_county = NULL;
@@ -635,7 +651,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'from', 'to'));
+		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 	/**
 	 * SPI-RT spider chart report
@@ -657,6 +673,14 @@ class ReportController extends Controller {
 		$title = '';
 		//	Get counties
 		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -769,7 +793,7 @@ class ReportController extends Controller {
 	    {
 	    	$data[$category->id] = $category->spider($site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
-	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site'));
+	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 	/**
 	 * Show the table for current stage of sites implementing RTQII priority activities in Country X (percentage of sites)..
