@@ -98,7 +98,7 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="5"><strong>{!! Lang::choice('messages.snapshot-label', 1) !!}</strong></td>
+                                    <td colspan="5"><strong>{!! Lang::choice('messages.snapshot-label', 1).$title !!}</strong></td>
                                 </tr>
                                 <tr>
                                     <td></td>

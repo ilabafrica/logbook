@@ -693,7 +693,7 @@ class ReportController extends Controller {
 		{
 			$site = Input::get('facility');
 		}
-		elseif(Input::get('sub_county'))
+		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
 		}
@@ -858,7 +858,7 @@ class ReportController extends Controller {
 		{
 			$site = Input::get('facility');
 		}
-		elseif(Input::get('sub_county'))
+		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
 		}
@@ -1023,7 +1023,7 @@ class ReportController extends Controller {
 		{
 			$site = Input::get('facility');
 		}
-		elseif(Input::get('sub_county'))
+		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
 		}
@@ -1032,6 +1032,29 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 		}
 		
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+		}
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
@@ -1060,6 +1083,16 @@ class ReportController extends Controller {
 			chart: {
 				type: 'column'
 			},
+	        title: {
+	            text: '".Lang::choice('messages.snapshot-label', 1).$title."'
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
 	        xAxis: {
 	            categories: [";
 	            	foreach ($columns as $column) {
@@ -1107,7 +1140,7 @@ class ReportController extends Controller {
 			}],
 			colors:["."'".implode("','", $colors)."'"."]          
 		}";
-		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne'));
+		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title'));
 	}
 
 	/**
