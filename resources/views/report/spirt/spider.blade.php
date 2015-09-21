@@ -34,7 +34,7 @@
                     </div>
                 </div>
                 @endif
-                @if(Auth::user()->hasRole('County Lab Coordinator'))
+                @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
@@ -45,7 +45,7 @@
                     </div>
                 </div>
                 @endif
-                @if(Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator'))
+                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
