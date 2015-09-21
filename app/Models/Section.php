@@ -79,15 +79,18 @@ class Section extends Model implements Revisionable {
 			$values=SurveyQuestion::where('question_id', $question->id)
 									->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
 									->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
+									if($from && $to)
+									{
+										$values = $values->whereBetween('date_submitted', [$from, $to]);
+									}
 									if($county || $sub_county || $site)
 									{
 										if($sub_county || $site)
 										{
 											if(isset($site))
 											{
-												dd($site);
 												$values = $values->where('facility_id', $site);
-												$counter = Facility::find($site)->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+												$counter = Facility::find($site)->surveys()->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->whereBetween('date_submitted', [$from, $to])->count();
 											}
 											else
 											{
@@ -95,7 +98,7 @@ class Section extends Model implements Revisionable {
 														 		 ->where('sub_county_id', $sub_county);
 												foreach (SubCounty::find($sub_county)->facilities as $facility)
 												{
-													$counter+=$facility->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+													$counter+=$facility->surveys()->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->whereBetween('date_submitted', [$from, $to])->count();
 												}
 											}
 										}
@@ -108,7 +111,7 @@ class Section extends Model implements Revisionable {
 											{
 												foreach ($subCounty->facilities as $facility)
 												{
-													$counter+=$facility->surveys->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->count();
+													$counter+=$facility->surveys()->where('checklist_id', Checklist::idByName('SPI-RT Checklist'))->whereBetween('date_submitted', [$from, $to])->count();
 												}
 											}
 										}
