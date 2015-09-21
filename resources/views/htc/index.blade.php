@@ -35,10 +35,10 @@
                             <th rowspan="2">{{ Lang::choice('messages.site', 1) }}</th>                        
                             <th rowspan="2">{{ Lang::choice('messages.start-date', 1) }}</th>
                             <th rowspan="2">{{ Lang::choice('messages.end-date', 1) }}</th>
-                            <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>
                             <th rowspan="1" colspan="3" class="success">{{ Lang::choice('messages.test1', 1) }}</th>
                             <th rowspan="1" colspan="3" class="danger">{{ Lang::choice('messages.test2', 1) }}</th>
-                            <th rowspan="1" colspan="3" class="info">{{ Lang::choice('messages.test3', 1) }}</th>                                                                              
+                            <th rowspan="1" colspan="3" class="info">{{ Lang::choice('messages.test3', 1) }}</th>
+                            <th rowspan="2">{{ Lang::choice('messages.total-tests', 1) }}</th>                                                                              
                             <th rowspan="2">{{ Lang::choice('messages.%pos', 1) }}</th>
                             <th rowspan="2">{{ Lang::choice('messages.positive-agr', 1) }}</th>
                             <th rowspan="2">{{ Lang::choice('messages.overall-agr', 1) }}</th>
@@ -61,34 +61,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                    @foreach($sites as $site)
-                        @foreach($site->htc as $htc)
-                        <tr>
-                            <td>{!! $site->siteType->name !!}</td>
-                            <td>{!! $htc->start_date !!}</td>
-                            <td>{!! $htc->end_date !!}</td>
-                            <td>{!! $htc->positive+$htc->negative+$htc->indeterminate !!}</td>
-                            @foreach($testKits as $testKit)
-                                <?php
-                                    if($testKit['id'] == App\Models\Htc::TESTKIT1)
-                                        $class = 'success';
-                                    else if($testKit['id'] == App\Models\Htc::TESTKIT2)
-                                        $class = 'danger';
-                                    else if($testKit['id'] == App\Models\Htc::TESTKIT3)
-                                        $class = 'info';
-                                ?>
-                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->reactive !!}</td>
-                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->non_reactive !!}</td>
-                                <td class="{!! $class !!}">{!! $htc->htcData->first()->testKit($testKit['id'])->invalid !!}</td>
+                    @foreach($surveys as $survey)
+                        @foreach($survey->sdps as $sdp)
+                            @foreach($sdp->pages as $page)
+                            <tr>
+                                <td>{!! App\Models\SurveySdp::find($page->survey_sdp_id)->sdp->name !!}</td>
+                                @foreach($page->questions as $question)
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'registerstartdate')
+                                        <td>{!! $question->data->answer !!}</td>
+                                    @endif
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'enddate')
+                                        <td>{!! $question->data->answer !!}</td>
+                                    @endif                                  
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'testreactive')
+                                        <td class="success">{!! $question->data->answer !!}</td>
+                                    @endif                                                                       
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'nonreactive')
+                                        <td class="success">{!! $question->data->answer !!}</td>
+                                    @endif                                   
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'totalinvalid')
+                                        <td class="success">{!! $question->data->answer !!}</td>
+                                    @endif                                    
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'testreactive1')
+                                        <td class="danger">{!! $question->data->answer !!}</td>
+                                    @endif                                                                       
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'nonreactive1')
+                                        <td class="danger">{!! $question->data->answer !!}</td>
+                                    @endif                                   
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'totalinvalid1')
+                                        <td class="danger">{!! $question->data->answer !!}</td>
+                                    @endif                                    
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'testreactive2')
+                                        <td class="info">{!! $question->data->answer !!}</td>
+                                    @endif                                                                       
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'nonreactive2')
+                                        <td class="info">{!! $question->data->answer !!}</td>
+                                    @endif                                   
+                                    @if(App\Models\Question::find($question->question_id)->identifier === 'totalinvalid2')
+                                        <td class="info">{!! $question->data->answer !!}</td>
+                                    @endif
+                                @endforeach
+                                <td>{!! $page->totalTests() !!}</td>
+                                <td>{!! $page->posPercent() !!}</td>
+                                <td>{!! $page->posAgreement() !!}</td>
+                                <td>{!! $page->overAgreement() !!}</td>
+                                <td></td>
+                            </tr>
                             @endforeach
-                            <td>{!! $htc->positivePercent() !!}</td>
-                            <td>{!! $htc->positiveAgreement() !!}</td>
-                            <td>{!! $htc->overallAgreement() !!}</td>
-                            <td>
-                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/show") !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> View</span></a>
-                                <a href="{!! url("htc/".$facility->id."/".$htc->id."/edit") !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> Edit</span></a>
-                            </td>
-                        </tr>
                         @endforeach
                     @endforeach
                     </tbody>

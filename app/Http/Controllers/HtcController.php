@@ -12,6 +12,7 @@ use App\Models\Facility;
 use App\Models\SiteKit;
 use App\Models\TestKit;
 use App\Models\Site;
+use App\Models\Checklist;
 use Response;
 use Auth;
 use Lang;
@@ -34,7 +35,11 @@ class HtcController extends Controller {
 		$testKits = array(['id' => Htc::TESTKIT1, 'name' => Lang::choice('messages.s-kit-1', 1)], ['id' => Htc::TESTKIT2, 'name' => Lang::choice('messages.s-kit-2', 1)], ['id' => Htc::TESTKIT3, 'name' => Lang::choice('messages.s-kit-3', 1)]);
 		//	Create color variable
 		$class = NULL;
-		return view('htc.index', compact('facility', 'sites', 'testKits', 'class'));
+		//	Get checklist
+		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
+		//	Get surveys
+		$surveys = $facility->surveys()->where('checklist_id', $checklist)->get();
+		return view('htc.index', compact('facility', 'sites', 'testKits', 'class', 'surveys'));
 	}
 
 	/**
