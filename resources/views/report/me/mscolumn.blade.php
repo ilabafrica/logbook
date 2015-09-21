@@ -23,7 +23,8 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li class="active"><a href="{!! url('report/'.$checklist->id.'/me') !!}">Chart Summary</a></li>
-            <li style="display:none;"><a href="{!! url('report/'.$checklist->id.'/stage') !!}">Stage of Implementation</a></li>
+            <li><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
+            <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
         <div class="container-fluid">
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/me', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}

@@ -22,6 +22,7 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
+            <li><a href="{!! url('report/'.$checklist->id.'/me') !!}">Chart Summary</a></li>
             <li class="active"><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
