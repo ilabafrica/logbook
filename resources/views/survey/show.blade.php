@@ -16,7 +16,7 @@
 </div>
 <div class="panel panel-primary">
   <div class="panel-heading"><i class="fa fa-tags"></i> {!! $survey->checklist->name !!} <span class="panel-btn">
-  <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id."/". $checklist_id. "/edit") !!}" >
+  <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id.'/edit') !!}" >
     <i class="fa fa-edit"></i><span> {{ trans('messages.edit-questionnaire') }}</span>
   </a>
   </span></div>
@@ -24,39 +24,77 @@
       <table class="table table-striped table-bordered table-hover">
           <thead>
               <tr>
-                  <th>{{ Lang::choice('messages.count', 1) }}</th>
                   <th>{{ Lang::choice('messages.question', 1) }}</th>
                   <th>{{ Lang::choice('messages.response', 1) }}</th>
               </tr>
           </thead>
-           <tbody>
-            <?php $counter = 0; ?>
-              @foreach($survey->checklist->sections as $section)
-                <tr>
-                  <td colspan="3">{!! $section->name !!}</td>
-                </tr>
-                @foreach($section->questions as $question)
-                <?php $counter++; ?>
-                <tr>
-                    <td>{!! $counter !!}</td>
-                    <td>{!! $question->name !!}</td>
-                    @if($question->id == App\Models\Question::idByName('Name of the QA Officer', $question->section->checklist->id))
+          <tbody>
+                  <tr>
+                      <td>{{ Lang::choice('messages.checklist', 1) }}</td>
+                      <td>{!! $survey->checklist->name !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.start-time', 1) }}</td>
+                      <td>{!! $survey->date_started !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.qa-officer', 1) }}</td>
                       <td>{!! $survey->qa_officer !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.county', 1) }}</td>
+                      <td>{!! $survey->facility->subCounty->county->name !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.sub-county', 1) }}</td>
+                      <td>{!! $survey->facility->subCounty->name !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.facility', 1) }}</td>
                       <td>{!! $survey->facility->name !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)' , $question->section->checklist->id))
-                      <td>{!! $survey->sdp->name !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('GPS Latitude', $question->section->checklist->id))
-                      <td>{!! $survey->latitude !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('GPS Longitude', $question->section->checklist->id))
-                      <td>{!! $survey->longitude !!}</td>
-                    @elseif($question->id == App\Models\Question::idByName('Additional Comments'))
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.gps', 1) }}</td>
+                      <td>{!! $survey->latitude.' '.$survey->longitude !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.comment', 1) }}</td>
                       <td>{!! $survey->comment !!}</td>
-                    @else
-                      <td>{!! $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'' !!}</td>
-                    @endif
-                </tr>
-                @endforeach
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.end-time', 1) }}</td>
+                      <td>{!! $survey->date_ended !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.submit-time', 1) }}</td>
+                      <td>{!! $survey->date_submitted !!}</td>
+                  </tr>
+          </tbody>
+      </table>
+      <table class="table table-striped table-bordered table-hover">
+          <thead>
+              <tr>
+                  <th>{{ Lang::choice('messages.sdp', 1) }}</th>
+                  <th>{{ Lang::choice('messages.description', 1) }}</th>
+                  @if($survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
+                      <th>{{ Lang::choice('messages.page-no', 1) }}</th>
+                  @endif
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody>
+              @foreach($survey->sdps as $sdp)
+              <tr>
+                  <td>{!! $sdp->sdp->name !!}</td>
+                  <td>{!! $sdp->comment !!}</td>
+                  @if($survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
+                      <td>{!! $sdp->pages->count() !!}</td>
+                  @endif
+                  <td>
+                      <a href="{!! url('surveysdp/'.$sdp->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
+                      <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                  </td>
+              </tr>
               @endforeach
           </tbody>
       </table>

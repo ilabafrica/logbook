@@ -224,7 +224,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.list",
         "uses"  =>  "SurveyController@listing"
     ));
-    Route::get('survey/{id}/{checklist_id}/edit', array(
+    Route::get('survey/{id}/edit', array(
         "as"    =>  "survey.edit",
         "uses"  =>  "SurveyController@edit"
     ));
@@ -233,10 +233,10 @@ Route::group(['middleware' => 'auth'], function(){
         "uses"  =>  "SurveyController@update"
     ));
 
-    /*Route::get('survey/{id}/{checklist_id}', array(
+    Route::get('survey/{id}', array(
         "as"    =>  "survey.show",
         "uses"  =>  "SurveyController@show"
-    ));*/
+    ));
     Route::get('survey/{id}/summary', array(
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@summary"
@@ -404,5 +404,24 @@ Route::group(['middleware' => 'auth'], function(){
     Route::any('api/{id}', array(
         "as"    =>  "survey.import",
         "uses"  =>  "SurveyController@api"
+    ));
+    /**
+    *
+    *   Survey sdp routes
+    *
+    */
+    Route::get('surveysdp/{id}', array(
+        "as"    =>  "survey.sdp.show",
+        "uses"  =>  "SurveyController@showSdp"
+    ));
+
+    /**
+    *
+    *   htc survey sdp pages routes
+    *
+    */
+    Route::get('page/{id}', array(
+        "as"    =>  "survey.sdp.page.show",
+        "uses"  =>  "SurveyController@page"
     ));
 });

@@ -370,6 +370,10 @@ return [
 	'from'	=>	'From',
 	'to'	=>	'To',
 	'for-the-year'	=>	'For the year',
+	'start-time'	=>	'Start Time',
+	'end-time'	=>	'End Time',
+	'submit-time'	=>	'Submission Time',
+	'gps'	=>	'GPS Coordinates',
 	/**
 	*
 	* Data management
