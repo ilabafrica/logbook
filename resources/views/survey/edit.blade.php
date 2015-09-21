@@ -27,98 +27,67 @@
             <!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
-            <!-- Hidden fields for audit_type_id -->
-            {!! Form::hidden('checklist_id', $checklist->id, array('id' => 'checklist_id')) !!}
-            @foreach($checklist->sections as $section)
-                <legend><h5 class="text-primary"><strong>{!! $section->name !!}</strong></h5></legend>
-                 
-                @foreach($section->questions as $question)
-                    @if($question->question_type == App\Models\Question::CHOICE)
-                        <div class='form-group'>
-                            {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            <div class='col-sm-6'>
-                            @foreach($question->answers as $response)
-                                <label class='radio-inline'>{!! Form::radio('radio_'.$question->id, $response->name, ($question->sq($survey->id) && ($question->sq($survey->id)->sd->answer == $response->name))?true:false) !!}{!! $response->name !!}</label>
-                            @endforeach
-                            </div>
-                        </div>
-                    @elseif($question->question_type == App\Models\Question::DATE)
-                        <div class='form-group'>
-                            {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            <div class="col-sm-6 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                                {!! Form::text('date_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', array('class' => 'form-control')) !!}
-                                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
-                            </div>
-                        </div>
-                    @elseif($question->question_type == App\Models\Question::FIELD)
-
-                        <div class='form-group'>
-                            {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            @if($question->id == App\Models\Question::idByName('Name of the QA Officer' , $question->section->checklist->id))
-                            <div class='col-sm-6'>
-                                {!! Form::text('qa_officer', old('qa_officer') , array('class' => 'form-control')) !!}
-                            </div>
-                            @elseif($question->id == App\Models\Question::idByName('GPS Latitude' , $question->section->checklist->id))
-                            <div class='col-sm-6'>
-                                {!! Form::text('latitude', old('latitude'), array('class' => 'form-control')) !!}
-                            </div>
-                            @elseif($question->id == App\Models\Question::idByName('GPS Longitude' , $question->section->checklist->id))
-                            <div class='col-sm-6'>
-                                {!! Form::text('longitude', old('longitude'), array('class' => 'form-control')) !!}
-                            </div>
-                            @else
-                            <div class='col-sm-6'>
-                                {!! Form::text('textfield_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', array('class' => 'form-control')) !!}
-                            </div>
-                            @endif
-                        </div>
-                    @elseif($question->question_type == App\Models\Question::TEXTAREA)
-                        <div class='form-group'>
-                            {!! Form::label('name', $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            <div class='col-sm-6'>
-                                @if($question->id == App\Models\Question::idByName('Additional Comments'))
-                                    {!! Form::textarea('comments_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', 
-                                        array('class' => 'form-control', 'rows' => '3')) !!}
-
-                              
-                                @else
-                                    {!! Form::textarea('textarea_'.$question->id, $question->sq($survey->id)?$question->sq($survey->id)->sd->answer:'', 
-                                        array('class' => 'form-control', 'rows' => '3')) !!}
-                                @endif
-                            </div>
-                        </div>
-                    @elseif($question->question_type == App\Models\Question::SELECT)
-                       <div class="form-group">
-                            {!! Form::label('select_'.$question->id, $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
-                            <div class="col-sm-6">
-                                @if($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
-                                   {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,
-                                   old('facility') ? old('facility') : $facility,  
-                                    array('class' => 'form-control')) !!}
-                                @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)', $question->section->checklist->id))
-                                    {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,
-                                    old('sdp') ? old('sdp') : $sdp,
-                                    array('class' => 'form-control')) !!}
-                                @elseif($question->id == App\Models\Question::idByName('Type of Audit', $question->section->checklist->id))
-                                    {!! Form::select('audit_type', array(''=>trans('messages.select'))+$auditTypes,
-                                    old('audit_type') ? old('audit_type') : $audit_type, 
-                                    array('class' => 'form-control')) !!}
-                                @elseif($question->id == App\Models\Question::idByName('Current testing strategy used at the site (Serial vs. Parallel)', $question->section->checklist->id))
-                                    {!! Form::select('algorithm', array(''=>trans('messages.select'))+$algorithms,
-                                    old('algorithm') ? old('algorithm') : $algorithm, 
-                                    array('class' => 'form-control')) !!}
-                                @elseif($question->id == App\Models\Question::idByName('Affilliation (Circle One)', $question->section->checklist->id))
-                                    {!! Form::select('affiliation', array(''=>trans('messages.select'))+$affiliations,
-                                    old('affiliation') ? old('affiliation') : $affiliation, 
-                                    array('class' => 'form-control')) !!}
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-                <hr>
-                @endforeach
-            
+            <div class="form-group">
+                {!! Form::label('checklist', Lang::choice('messages.checklist', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('checklist', $survey->checklist->name, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('start-time', Lang::choice('messages.start-time', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('start_time', $survey->date_started, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('end-time', Lang::choice('messages.end-time', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('end_time', $survey->date_ended, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('submit-time', Lang::choice('messages.submit-time', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('submission_time', $survey->date_submitted, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('qa-officer', Lang::choice('messages.qa-officer', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('qa_officer', $survey->qa_officer, array('class' => 'form-control')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('facility', Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('facility', $survey->facility->name, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('sub-county', Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('sub_county', $survey->facility->subCounty->name, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('facility', $survey->facility->subCounty->county->name, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('gps', Lang::choice('messages.gps', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::text('gps', (isset($survey->latitude) && isset($survey->longitude))?$survey->latitude.', '.$survey->longitude:'', array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('comments', Lang::choice('messages.comment', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                    {!! Form::textarea('comments', isset($survey->comments)?$survey->comments:'', 
+                        array('class' => 'form-control', 'rows' => '3')) !!}
+                </div>
+            </div>
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-8">
                 {!! Form::button("<i class='glyphicon glyphicon-ok-circle'></i> ".Lang::choice('messages.save', 1), 
