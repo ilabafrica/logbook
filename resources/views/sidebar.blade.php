@@ -93,12 +93,7 @@
                 <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.m-e', 1) !!}</a></li>
             </ul>
         </li>
-
-        <!-- Summary and Data Analysis -->
-        <li>
-            <a href="{!! url('analysis/chart') !!}"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}</a>
-        </li>
-        @endif
+    @endif
     
     </ul>
 @show
