@@ -96,11 +96,7 @@
 
         <!-- Summary and Data Analysis -->
         <li>
-            <a href="#"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('analysis/data') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.analysis', 2) !!}</a></li>
-                <li><a href="{!! url('analysis/chart') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
-            </ul>
+            <a href="{!! url('analysis/chart') !!}"><i class="fa fa-barcode"></i> {!! Lang::choice('messages.summary-analysis', 1) !!}</a>
         </li>
         @endif
     

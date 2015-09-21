@@ -25,36 +25,53 @@
             <li><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li class="active"><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
+        <div class="container-fluid"> 
         {!! Form::open(array('url' => 'analysis/snapshot', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
             <div class="row">
-                <div class="col-sm-6">
+                @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, isset($jimbo)?$jimbo:'', 
                                 array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                @endif
+                @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
-                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, isset($sub_county)?$sub_county:'', 
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
                 </div>
+                @endif
+                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
+                                array('class' => 'form-control', 'id' => 'facility')) !!}
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
+            <hr />
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('from', isset($from)?$from:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -63,7 +80,7 @@
                     <div class='form-group'>
                         {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('to', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -72,7 +89,10 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <hr >
+            </div>
+        </div>
+        {!! Form::close() !!}
+            <div class="row">
                 <div class="col-sm-12">
                     <div class="table-responsive">
                         <table class="table table-striped table-bordered table-hover">
@@ -90,8 +110,8 @@
                                 <tr>
                                     <td>{!! $option.' ('.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower.'%-'.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper.'%)' !!}</td>
                                     @foreach ($columns as $column)
-                                        @if($column->snapshot($county, $subCounty)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($county, $subCounty) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
-                                            <td class="{{ $column->color($column->snapshot($county, $subCounty)) }}">{!! $column->snapshot($county, $subCounty) !!}</td>
+                                        @if($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
+                                            <td class="{{ $column->color($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)) }}">{!! $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) !!}</td>
                                         @else
                                             <td></td>
                                         @endif
@@ -102,12 +122,10 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-sm-12">
-                    <div id="chart" style="height: 400px"></div>
-                </div>
             </div>
-        </div>
-        {!! Form::close() !!}
+            <div class="col-sm-12">
+                <div id="chart" style="height: 400px"></div>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->

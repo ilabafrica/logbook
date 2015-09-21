@@ -90,14 +90,14 @@
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
             </div>
+        </div>
+        {!! Form::close() !!}
             <hr />
             <div class="row">                
                 <div class="col-sm-12">
                     <div id="chart" style="height: 300px"></div>
                 </div>
             </div>
-        </div>
-        {!! Form::close() !!}
         </div>
     </div>
     <!-- /.panel-body -->
