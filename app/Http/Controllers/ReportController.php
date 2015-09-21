@@ -806,12 +806,12 @@ class ReportController extends Controller {
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
 		$subCounties = SubCounty::lists('name', 'id');
-		$county = NULL;
-		$subCounty = NULL;
+		$jimbo = NULL;
+		$sub_county = NULL;
 		if(Input::get('county') && !(Input::get('sub_county')))
-			$county = Input::get('county');
+			$jimbo = Input::get('county');
 		else if(Input::get('county') && !(Input::get('sub_county')))
-			$subCounty = Input::get('sub_county');
+			$sub_county = Input::get('sub_county');
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
@@ -834,6 +834,90 @@ class ReportController extends Controller {
 			}
 		}
 		$options = array_unique($options);
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		}
+		elseif(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+		}
+		$n = 0;
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					
+						$n = $checklist->surveys()->where('facility_id', $site);
+						if($from && $to)
+						{
+							$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
+						}
+						$n = $n->count();
+					$title = Facility::find($site)->name.'(N='.$n.')';
+				}
+				else
+				{					
+					$n = $checklist->surveys()->join('facilities', 'surveys.facility_id', '=', 'facilities.id')
+								->where('sub_county_id', $sub_county);
+								if($from && $to)
+								{
+									$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
+								}
+								$n = $n->count();				
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
+				}
+			}
+			else
+			{
+				$n = $checklist->surveys()->join('facilities', 'surveys.facility_id', '=', 'facilities.id')
+							->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+							->where('county_id', $jimbo);
+							if($from && $to)
+							{
+								$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
+							}
+							$n = $n->count();
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';
+			}
+		}
+		else
+		{
+			$n = $checklist->surveys;
+			if($from && $to)
+			{
+				$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
+			}
+			$n = $n->count();
+			$title = 'Kenya'.'(N='.$n.')';
+		}
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -841,7 +925,7 @@ class ReportController extends Controller {
 	            type: 'bar'
 	        },
 	        title: {
-	            text: '".Lang::choice('messages.current-implementing-stage-chart', 1)."'
+	            text: '".Lang::choice('messages.current-implementing-stage-chart', 1).$title."'
 	        },
 		    subtitle: {
 		        text:"; 
@@ -880,7 +964,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = $column->column($county, $subCounty)!=0?round(Answer::find(Answer::idByName($option))->column($column->id, $county, $subCounty)*100/$column->column(), 2):0.00;
+	        			$data = $column->column($jimbo, $sub_county, $site, $from, $toPlusOne)!=0?round(Answer::find(Answer::idByName($option))->column($column->id, $jimbo, $sub_county, $site, $from, $toPlusOne)*100/$column->column($jimbo, $sub_county, $site, $from, $toPlusOne), 2):0.00;
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -907,7 +991,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'county', 'subCounty'));
+		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'title', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
@@ -917,15 +1001,36 @@ class ReportController extends Controller {
 	 */
 	public function snapshot()
 	{	//	Get counties
+		//	Get counties
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
-		$subCounties = SubCounty::lists('name', 'id');
-		$county = NULL;
-		$subCounty = NULL;
-		if(Input::get('county') && !(Input::get('sub_county')))
-			$county = Input::get('county');
-		else if(Input::get('county') && !(Input::get('sub_county')))
-			$subCounty = Input::get('sub_county');
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		}
+		elseif(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+		}
 		
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
@@ -981,7 +1086,7 @@ class ReportController extends Controller {
 				$counter = count($columns);
 				$color = NULL;
 				foreach ($columns as $column) {
-					$value = $column->snapshot($checklist->id, $county, $subCounty);
+					$value = $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne);
 					if($value >= 0 && $value <25)
 						$color = '#d9534f';
 					else if($value >=25 && $value <50)
@@ -991,7 +1096,7 @@ class ReportController extends Controller {
 					else if($value >=75 && $value <=100)
 						$color = '#5cb85c';
 					array_push($colors, $color);
-					$chart.= $column->snapshot($checklist->id, $county, $subCounty);
+					$chart.= $value;
 					if($counter==1)
     					$chart.="";
     				else
@@ -1002,7 +1107,7 @@ class ReportController extends Controller {
 			}],
 			colors:["."'".implode("','", $colors)."'"."]          
 		}";
-		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'county', 'subCounty'));
+		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
