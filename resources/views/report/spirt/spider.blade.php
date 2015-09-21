@@ -23,6 +23,7 @@
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/spirt', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
             <div class="row">
+                @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
@@ -32,24 +33,29 @@
                         </div>
                     </div>
                 </div>
+                @endif
+                @if(Auth::user()->hasRole('County Lab Coordinator'))
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county')), isset($sub_county)?$sub_county:'', 
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, isset($sub_county)?$sub_county:'', 
                                 array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
                 </div>
+                @endif
+                @if(Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator'))
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('facility', array(''=>trans('messages.select-facility')), isset($site)?$site:'', 
-                                array('class' => 'form-control', 'data-width' => '20%', 'id' => 'facility')) !!}
+                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
+                                array('class' => 'form-control', 'id' => 'facility')) !!}
                         </div>
                     </div>
                 </div>
+                @endif
             </div>
             <hr />
             <div class="row">
