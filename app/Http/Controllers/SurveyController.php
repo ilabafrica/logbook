@@ -235,12 +235,10 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function show($id, $checklist_id)
+	public function show($id)
 	{
 		//	Get survey
-		//$checklist_id= '1';
 		$survey = Survey::find($id);
-		
 		return view('survey.show', compact('survey', 'checklist_id'));
 	}
 
@@ -250,29 +248,11 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function edit($id, $checklist_id)
+	public function edit($id)
 	{
 		//	Get survey
 		$survey = Survey::find($id);
-		$surveyquestion = $survey->questions;
-		$facility=$survey->facility_id;
-		$sdp=$survey->sdp_id;
-		$algorithm=$survey->sdp_id;
-		$affiliation=$survey->sdp_id;
-		$audit_type=$survey->sdp_id;
-		//	Get specific checklist
-		$checklist = Checklist::find($checklist_id);
-		//	Get list of facilities
-		$facilities = Facility::lists('name', 'id');
-		//	Get list of service delivery points
-		$sdps = Sdp::lists('name', 'id');
-		//	Get list of algorithms
-		$algorithms = Algorithm::lists('name', 'id');
-		//	Get list of affiliations
-		$affiliations = Affiliation::lists('name', 'id');
-		//	Get list of audit-types
-		$auditTypes = AuditType::lists('name', 'id');
-		return view('survey.edit', compact('survey','facilities','checklist', 'sdps','facility', 'sdp', 'algorithms', 'algorithm', 'affiliations', 'affiliation', 'auditTypes', 'audit_type'));
+		return view('survey.edit', compact('survey'));
 	}
 
 	/**
@@ -283,7 +263,11 @@ class SurveyController extends Controller {
 	 */
 	public function update($id)
 	{
-		$checklist_id = Input::get('checklist_id');
+		$survey = Survey::findOrFail($id);
+		$survey->comment = Input::get('comments');
+        $survey->save();
+        //$url = session('SOURCE_URL');
+		/*$checklist_id = Input::get('checklist_id');
 		$facility_id = Input::get('facility');
 		$qa_officer = Input::get('qa_officer');
 		$longitude = Input::get('longitude');
@@ -349,7 +333,7 @@ class SurveyController extends Controller {
 					}
 				}
 			}
-		}
+		}*/
 		return redirect('survey');
 	}
 
@@ -1030,5 +1014,29 @@ class SurveyController extends Controller {
 		//	Get sub-counties
 		$subCounties = SubCounty::all();
 		return view('survey.subcounty', compact('checklist', 'subCounties'));
+	}
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function showSdp($id)
+	{
+		//	Get survey
+		$surveysdp = SurveySdp::find($id);
+		return view('survey.surveysdp', compact('surveysdp'));
+	}
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function page($id)
+	{
+		//	Get page
+		$page = HtcSurveyPage::find($id);
+		return view('survey.page', compact('page'));
 	}
 }
