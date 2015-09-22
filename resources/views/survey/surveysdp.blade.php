@@ -20,18 +20,16 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
-            
-        </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            @if(!$surveysdp->survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
             <p>
                 <a href="#" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
-                <a href="#" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
+                <a href="{!! url('surveysdp/'.$surveysdp->id.'/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
             </p>
+            @endif
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table table-striped table-bordered table-hover">
@@ -97,7 +95,6 @@
                      </table>
                 </div>
             </div>
-          </div>
         </div>
     </div>
     <!-- /.panel-body -->

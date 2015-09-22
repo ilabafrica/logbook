@@ -424,4 +424,37 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.page.show",
         "uses"  =>  "SurveyController@page"
     ));
+    /**
+    *
+    *   Download summaries in excel.
+    *
+    */
+    Route::get('survey/{id}/collection/download', array(
+        "as"    =>  "survey.collection.download",
+        "uses"  =>  "SurveyController@collectionDownload"
+    ));
+    Route::get('survey/{id}/county/download', array(
+        "as"    =>  "survey.county.download",
+        "uses"  =>  "SurveyController@countyDownload"
+    ));
+    Route::get('survey/{id}/subcounty/download', array(
+        "as"    =>  "survey.subcounty.download",
+        "uses"  =>  "SurveyController@subcountyDownload"
+    ));
+    Route::get('survey/{id}/participant/download', array(
+        "as"    =>  "survey.participant.download",
+        "uses"  =>  "SurveyController@facilityDownload"
+    ));
+    Route::get('survey/{id}/sdp/download', array(
+        "as"    =>  "survey.sdp.download",
+        "uses"  =>  "SurveyController@sdpDownload"
+    ));
+    Route::get('surveysdp/{id}/download', array(
+        "as"    =>  "survey.sdp.download",
+        "uses"  =>  "SurveyController@surveyDownload"
+    ));
+    Route::get('page/{id}/download', array(
+        "as"    =>  "survey.sdp.page.download",
+        "uses"  =>  "SurveyController@pageDownload"
+    ));
 });
