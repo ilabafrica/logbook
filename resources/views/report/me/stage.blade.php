@@ -22,39 +22,57 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
+            <li><a href="{!! url('report/'.$checklist->id.'/me') !!}">Chart Summary</a></li>
             <li class="active"><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
         </ul>
+        <div class="container-fluid">
         {!! Form::open(array('url' => 'analysis/chart', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
             <div class="row">
-                <div class="col-sm-6">
+                @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, '', 
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, isset($jimbo)?$jimbo:'', 
                                 array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                @endif
+                @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, '', 
-                                array('class' => 'form-control', 'id' => 'sub_county')) !!}
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, isset($sub_county)?$sub_county:'', 
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
                 </div>
+                @endif
+                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                <div class="col-sm-4">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
+                                array('class' => 'form-control', 'id' => 'facility')) !!}
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
+            <hr />
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('from', isset($from)?$from:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -63,7 +81,7 @@
                     <div class='form-group'>
                         {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('to', old('from'), array('class' => 'form-control')) !!}
+                            {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
                             <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                         </div>
                     </div>
@@ -72,50 +90,50 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <hr >
-                <div class="col-sm-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <tbody>
-                                <tr>
-                                    <td colspan="5"><strong>{!! Lang::choice('messages.current-implementing-stage', 1) !!}</strong></td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    @foreach ($columns as $column)
-                                            <td><strong>{!! $column->label !!}</strong></td>
-                                    @endforeach
-                                </tr>
-                                @foreach ($options as $option)
-                                    <?php
-                                        $class = '';
-                                        $answer = $option;
-                                        if($answer == 'Does Not Exist')
-                                            $class = 'does-not-exist';
-                                        else if($answer == 'In Development')
-                                            $class = 'in-development';
-                                        else if($answer == 'Being Implemented')
-                                            $class = 'being-implemented';
-                                        else if($answer == 'Completed')
-                                            $class = 'completed';
-                                    ?>
-                                    <tr>
-                                        <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
-                                        @foreach($columns as $column)
-                                            <td>{!! $column->column($county, $subCounty)!=0?round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id, $county, $subCounty)*100/$column->column($county, $subCounty), 2).'%':0.00; !!}</td>
-                                        @endforeach
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="col-sm-12">
-                    <div id="chart" style="height: 400px"></div>
-                </div>
             </div>
         </div>
         {!! Form::close() !!}
+            <hr >
+            <div class="col-sm-12">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered table-hover">
+                        <tbody>
+                            <tr>
+                                <td colspan="5"><strong>{!! Lang::choice('messages.current-implementing-stage-chart', 1).$title !!}</strong></td>
+                            </tr>
+                            <tr>
+                                <td></td>
+                                @foreach ($columns as $column)
+                                        <td><strong>{!! $column->label !!}</strong></td>
+                                @endforeach
+                            </tr>
+                            @foreach ($options as $option)
+                                <?php
+                                    $class = '';
+                                    $answer = $option;
+                                    if($answer == 'Does Not Exist')
+                                        $class = 'does-not-exist';
+                                    else if($answer == 'In Development')
+                                        $class = 'in-development';
+                                    else if($answer == 'Being Implemented')
+                                        $class = 'being-implemented';
+                                    else if($answer == 'Completed')
+                                        $class = 'completed';
+                                ?>
+                                <tr>
+                                    <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
+                                    @foreach($columns as $column)
+                                        <td>{!! $column->column($jimbo, $sub_county, $site, $from, $toPlusOne)!=0?round(App\Models\Answer::find(App\Models\Answer::idByName($option))->column($column->id, $jimbo, $sub_county, $site, $from, $toPlusOne)*100/$column->column($jimbo, $sub_county, $site, $from, $toPlusOne), 2).'%':0.00; !!}</td>
+                                    @endforeach
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div id="chart" style="height: 400px"></div>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->

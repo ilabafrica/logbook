@@ -55,26 +55,43 @@ class Answer extends Model implements Revisionable {
 	/**
 	 * Function to calculate number of specific responses
 	 */
-	public function column($id, $facility = null, $from = null, $to = null)
+	public function column($id, $county = null, $sub_county = null, $site = null, $from = NULL, $to = NULL)
 	{
 		//	Initialize variables
 		$total = 0;
 		foreach (Section::find($id)->questions as $question)
 		{
 			$questions = array();
-			$sqs = SurveyQuestion::where('question_id', $question->id);
-				if($facility)
-				{
-					$sqs = $sqs->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-							   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-							   ->where('facility_id', $facility);
-							if($from && $to)
-							{
-								$sqs = $sqs->whereBetween('date_submitted', [$from, $to]);
-							}
-				}
-			$sqs = $sqs->get(array('survey_questions.*'));
-			foreach ($sqs as $sq) {
+			$values=SurveyQuestion::where('question_id', $question->id)
+									->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+									->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
+									if($from && $to)
+									{
+										$values = $values->whereBetween('date_submitted', [$from, $to]);
+									}
+									if($county || $sub_county || $site)
+									{
+										if($sub_county || $site)
+										{
+											if(isset($site))
+											{
+												$values = $values->where('facility_id', $site);
+											}
+											else
+											{
+												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 		 ->where('sub_county_id', $sub_county);
+											}
+										}
+										else
+										{
+											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+															 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+															 ->where('county_id', $county);
+										}
+									}
+			$values = $values->get(array('survey_questions.*'));
+			foreach ($values as $sq) {
 				if($sq->sd->answer == $this->name)
 					$total++;
 			}

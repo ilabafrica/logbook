@@ -414,8 +414,8 @@ return [
 	*
 	*/
 	'current-implementing-stage'	=>	'Current stage of sites implementing RTQII priority activities in Country X (percentage of sites).',
-	'current-implementing-stage-chart'	=>	'Monitoring and Evaluation at Site Level for Country X (N=15)',
-	'snapshot-label'	=>	'Snap shot representing National Level (based on average score of all sites for each pillar',
+	'current-implementing-stage-chart'	=>	'Monitoring and Evaluation at Site Level for-',
+	'snapshot-label'	=>	'Snapshot (based on average score of all sites for each pillar) representing-',
 	'percentage'	=>	'Percentage',
 	'spirt-scores-comparison'	=>	'SPI-RT Scores Comparison',
 	/**
