@@ -629,9 +629,9 @@ class SurveyController extends Controller {
 								//	variables to be used
 								$audit_type_id = null;
 								$algorithm_id = null;
-								$screening = null;
-								$confirmatory = null;
-								$tie_breaker = null;
+								$screening = 4;
+								$confirmatory = 4;
+								$tie_breaker = 4;
 								foreach ($ross as $louis => $litt)
 								{
 									//	Get baseline id
