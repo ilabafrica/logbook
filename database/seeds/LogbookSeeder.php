@@ -336,7 +336,7 @@ class LogbookSeeder extends Seeder
             array("name" => "Laboratory", "description" => "", "identifier" => "Laboratory", "user_id" => "1"),
             array("name" => "TB Clinic", "description" => "", "identifier" => "TBClinic", "user_id" => "1"),          
             array("name" => "ART Clinic", "description" => "", "identifier" => "art", "user_id" => "1"), 
-            array("name" => "CCC", "description" => "", "identifier" => "", "user_id" => "1"),  
+            array("name" => "CCC", "description" => "", "identifier" => "CCC", "user_id" => "1"),  
             array("name" => "OPD", "description" => "", "identifier" => "OPD", "user_id" => "1"),  
             array("name" => "STI Clinic", "description" => "", "identifier" => "STIclinic", "user_id" => "1"),  
             array("name" => "PMTCT", "description" => "", "identifier" => "PMTCT", "user_id" => "1"),  
@@ -499,7 +499,7 @@ class LogbookSeeder extends Seeder
         $question_MEfacility = Question::create(array("section_id" => $sec_MEsurvey->id,"identifier"=>"",  "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEsdp = Question::create(array("section_id" => $sec_MEregister->id, "identifier"=>"hh_testing_site", "name" => "Service Delivery Points (SDP)", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
         $question_auditType= Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"audittype",  "name" => "Type of Audit", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
-        $question_MEsupervisor = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"nameoftheauditor",  "name" => "Name of supervisor being interviewed", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_MEsupervisor = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"namesurp",  "name" => "Name of supervisor being interviewed", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEIndividualsTested = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"noofindividuals",  "name" => "Number of individuals tested by rapid testing (previous year) at this site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEpersonnel = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"personnelno",  "name" => "Number of personnel authorized to offer HIV testing and counseling services at the site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEcadres = Question::create(array("section_id" => $sec_MEregister->id, "identifier"=>"cadres", "name" => "Cadres authorized to offer HIV testing and counseling services at the site", "description" => "(Please check box where applicable)","question_type" =>"5", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
