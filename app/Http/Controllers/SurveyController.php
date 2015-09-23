@@ -29,6 +29,9 @@ use Illuminate\Http\Request;
 use Response;
 use Auth;
 use Input;
+use Lang;
+use App;
+use Excel;
 
 class SurveyController extends Controller {
 
@@ -629,9 +632,9 @@ class SurveyController extends Controller {
 								//	variables to be used
 								$audit_type_id = null;
 								$algorithm_id = null;
-								$screening = null;
-								$confirmatory = null;
-								$tie_breaker = null;
+								$screening = 4;
+								$confirmatory = 4;
+								$tie_breaker = 4;
 								foreach ($ross as $louis => $litt)
 								{
 									//	Get baseline id
@@ -1039,4 +1042,220 @@ class SurveyController extends Controller {
 		$page = HtcSurveyPage::find($id);
 		return view('survey.page', compact('page'));
 	}
+	/**
+	 * Function to download collection summary
+	 *
+	 */
+	public function collectionDownload($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get QA Officers
+		$qa = Survey::select('qa_officer')
+					->where('checklist_id', $checklist->id)
+					->groupBy('qa_officer')
+					->get();
+		Excel::create('QA Officer Collection Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($qa)
+		{
+
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($qa)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.qa-officer', 1), Lang::choice('messages.no-of-questionnaire', 1)));
+		    	foreach ($qa as $officer)
+		    	{
+		    		$sheet->appendRow(array($officer->qa_officer, Survey::questionnaires($officer->qa_officer)));
+		    	}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download county submission summary 
+	 *
+	 */
+	public function countyDownload($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get counties
+		$counties = County::all();
+		Excel::create('County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($counties, $checklist)
+		{
+
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($counties, $checklist)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.county', 1), Lang::choice('messages.no-of-questionnaire', 1)));
+		    	foreach ($counties as $county)
+		    	{
+		    		$sheet->appendRow(array($county->name, $county->submissions($checklist->id)));
+		    	}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download sub-county submission summary 
+	 *
+	 */
+	public function subcountyDownload($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get sub-counties
+		$subCounties = SubCounty::all();
+		Excel::create('Sub-County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($subCounties, $checklist)
+		{
+
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($subCounties, $checklist)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.sub-county', 1), Lang::choice('messages.no-of-questionnaire', 1)));
+		    	foreach ($subCounties as $subCounty)
+		    	{
+		    		$sheet->appendRow(array($subCounty->name, $subCounty->submissions($checklist->id)));
+		    	}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download facility submission summary 
+	 *
+	 */
+	public function facilityDownload($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get facilities
+		$facilities = Facility::all();
+		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist)
+		{
+
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.facility', 1), Lang::choice('messages.no-of-questionnaire', 1)));
+		    	foreach ($facilities as $facility)
+		    	{
+		    		$sheet->appendRow(array($facility->name, $facility->submissions($checklist->id)));
+		    	}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download facility submission summary per sdp
+	 *
+	 */
+	public function sdpDownload($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Get facilities
+		$facilities = Facility::all();
+		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist)
+		{
+
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist)
+		    {
+		    	$counter = 0;
+		    	$sheet->appendRow(array(Lang::choice('messages.count', 1), Lang::choice('messages.facility', 1), Lang::choice('messages.sdp', 1), Lang::choice('messages.comment', 1)));
+		    	foreach ($facilities as $facility)
+		    	{
+		    		foreach ($facility->surveys()->where('checklist_id', $checklist->id)->get() as $survey)
+		    		{
+		    			foreach ($survey->sdps as $ssdp)
+		    			{	
+		    				$counter++;	    				
+		    				$sheet->appendRow(array($counter, $facility->name, $ssdp->sdp->name, $ssdp->comment));
+		    			}
+		    		}
+		    	}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download survey as submitted by the QA officer
+	 *
+	 */
+	public function surveyDownload($id)
+	{
+		//	Get survey-sdp
+		$ssdp = SurveySdp::find($id);
+		//	Get summary of the ssdp
+		$summary = array(
+			array(Lang::choice('messages.checklist', 1), $ssdp->survey->checklist->name),
+			array(Lang::choice('messages.start-time', 1), $ssdp->survey->date_started),
+			array(Lang::choice('messages.qa-officer', 1), $ssdp->survey->qa_officer),
+			array(Lang::choice('messages.county', 1), $ssdp->survey->facility->subCounty->county->name),
+			array(Lang::choice('messages.sub-county', 1), $ssdp->survey->facility->subCounty->name),
+			array(Lang::choice('messages.facility', 1), $ssdp->survey->facility->name),
+			array(Lang::choice('messages.sdp', 1), $ssdp->sdp->name),
+			array(Lang::choice('messages.gps', 1), $ssdp->survey->latitude.' '.$ssdp->survey->longitude),
+			array(Lang::choice('messages.comment', 1), $ssdp->survey->comment),
+			array(Lang::choice('messages.end-time', 1), $ssdp->survey->date_ended),
+			array(Lang::choice('messages.submit-time', 1), $ssdp->survey->date_submitted),
+			array('', '')
+		);
+		Excel::create('Data submitted for SDP for '.$ssdp->survey->checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($ssdp, $summary)
+		{
+
+		    $excel->sheet($ssdp->survey->facility->name.' for '.$ssdp->sdp->name, function($sheet) use($ssdp, $summary)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.question', 1), Lang::choice('messages.response', 1)));
+		    	foreach ($summary as $data)
+		    	{
+		    		$sheet->appendRow($data);
+		    	}
+		    	foreach ($ssdp->sqs as $sq)
+    			{	
+    				$sheet->appendRow(array(Question::find($sq->question_id)->name, $sq->sd->answer));
+    			}
+		    });
+
+		})->export('xlsx');
+	}
+	/**
+	 * Function to download page data for HTC as submitted by the QA officer
+	 *
+	 */
+	public function pageDownload($id)
+	{
+		//	Get page
+		$page = HtcSurveyPage::find($id);
+		//	Get summary of the ssdp
+		$ssdp = surveySdp::find($page->survey_sdp_id);
+		$summary = array(
+			array(Lang::choice('messages.checklist', 1), $ssdp->survey->checklist->name),
+			array(Lang::choice('messages.start-time', 1), $ssdp->survey->date_started),
+			array(Lang::choice('messages.qa-officer', 1), $ssdp->survey->qa_officer),
+			array(Lang::choice('messages.county', 1), $ssdp->survey->facility->subCounty->county->name),
+			array(Lang::choice('messages.sub-county', 1), $ssdp->survey->facility->subCounty->name),
+			array(Lang::choice('messages.facility', 1), $ssdp->survey->facility->name),
+			array(Lang::choice('messages.sdp', 1), $ssdp->sdp->name),
+			array(Lang::choice('messages.gps', 1), $ssdp->survey->latitude.' '.$ssdp->survey->longitude),
+			array(Lang::choice('messages.comment', 1), $ssdp->survey->comment),
+			array(Lang::choice('messages.end-time', 1), $ssdp->survey->date_ended),
+			array(Lang::choice('messages.submit-time', 1), $ssdp->survey->date_submitted),
+			array('', '')
+		);
+		Excel::create('Data submitted for SDP for '.$ssdp->survey->checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($page, $ssdp, $summary)
+		{
+
+		    $excel->sheet($ssdp->sdp->name, function($sheet) use($page, $summary)
+		    {
+		    	$sheet->appendRow(array(Lang::choice('messages.question', 1), Lang::choice('messages.response', 1)));
+		    	foreach ($summary as $data)
+		    	{
+		    		$sheet->appendRow($data);
+		    	}
+		    	foreach ($page->questions as $question)
+    			{	
+    				$qstn = Question::find($question->question_id);
+    				$sheet->appendRow(array($qstn->name, $question->data->answer));
+    			}
+		    });
+
+		})->export('xlsx');
+	}
 }
+$excel = App::make('excel');
