@@ -40,7 +40,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "user.delete",
         "uses" => "UserController@delete"
     ));
-
+Route::resource('home', 'SurveyController');
 
     //  Facility Types controller
     Route::resource('facilityType', 'FacilityTypeController');

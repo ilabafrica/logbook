@@ -53,7 +53,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">{!! Config::get('logbook.name') !!}</a>
+                <a class="navbar-brand" href="{{ url('home') }}">{!! Config::get('logbook.name') !!}</a>
                 <a class="navbar-brand" id="menu-toggle" href="#"><i class="fa fa-exchange"></i></a>
             </div>
             <!-- /.navbar-header -->

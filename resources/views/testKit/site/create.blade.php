@@ -4,8 +4,8 @@
 <div class="row">
     <div class="col-lg-12">
         <ol class="breadcrumb">
-            <li class="active">
-                <i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}
+             <li class="active">
+                <a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}</a>
             </li>
         </ol>
     </div>
