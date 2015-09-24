@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'WelcomeController@index');
+Route::any('/home', 'ReportController@dashboard');
+Route::any('/dashboard', 'ReportController@dashboard');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

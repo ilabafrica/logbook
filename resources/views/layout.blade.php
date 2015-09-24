@@ -94,13 +94,20 @@
             </ul>
            
             <!-- /.navbar-top-links -->
-<div class="navbar-default sidebar" role="navigation">
+        <!-- Check when to show sidebar -->
+        @if(!Auth::user()->isAdmin())
+		<div class="navbar-default sidebar" role="navigation">
 
-   @include("sidebar")
-</div>
+		   @include("sidebar")
+		</div>
+		@endif
          <!-- /.navbar-static-side -->
         </nav>
+        @if(Auth::user()->isAdmin())
+        <div class="container-fluid">
+        @else
         <div id="page-wrapper">
+        @endif
             @yield('content')
         <hr>
         <p>Copyright &copy; {{ date('Y') }} | <a href="http://www.ilabafrica.ac.ke">@iLabAfrica</a></p>

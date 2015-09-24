@@ -1835,4 +1835,494 @@ class ReportController extends Controller {
 		else if($n > 9)
 			return '1';
     }
+	/**
+	 * Show the application landing page upon successful signin.
+	 *
+	 * @return Response
+	 */
+	public function dashboard()
+	{
+		//	Get complete sites
+		$counter = 0;
+		$facilities = Survey::lists('facility_id');
+		$htc = Checklist::idByName('HTC Lab Register (MOH 362)');
+		$me = Checklist::idByName('M & E Checklist');
+		$spi = Checklist::idByName('SPI-RT Checklist');
+		foreach ($facilities as $key => $value)
+		{
+			//	Variables
+			$facility = Facility::find($value);
+			if(($facility->sdps($htc) == $facility->sdps($me)) && ($facility->sdps($me) == $facility->sdps($spi)))
+				$counter++;
+		}
+		//	Get checklists
+		$checklists = Checklist::all();
+		//	Get dates and months
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$months = json_decode(self::getMonths($from, $to));
+		$drill = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.complete-check', 1)."'
+	        },
+	        yAxis: {
+	            title: {
+	                text: '".Lang::choice('messages.complete-sdp', 1)."'
+	            }
+	        },
+	        xAxis: {
+	            type: 'category'
+	        },
+
+	        legend: {
+	            enabled: false
+	        },
+
+	        credits: {
+	            enabled: false
+	        },
+
+	        plotOptions: {
+	            series: {
+	                borderWidth: 0,
+	                dataLabels: {
+	                    enabled: true
+	                }
+	            }
+	        },
+
+	        series: [{
+	            name: '".Lang::choice('messages.complete', 1)."',
+	            colorByPoint: true,
+	            data: [{
+	                name: '".Lang::choice('messages.sdp', 2)."',
+	                y: ".$counter.",
+	                drilldown: 'complete'
+	            }]
+	        }],
+	        drilldown: {
+	            series: [{
+	                id: 'complete',
+	                data: [";
+	                $count = count($checklists);
+	                foreach ($checklists as $checklist)
+	                {
+	                	$drill.="["."'".$checklist->name."'".", ".$checklist->ssdps()."]";
+	                	if($count==1)
+	    					$drill.="";
+	    				else
+	    					$drill.=",";
+	    				$count--;
+	                }
+	                $drill.="]
+	            }]
+	        }
+	    }";
+	    //	Pie chart for county submissions
+	    $htc_pie = "{
+	        chart: {
+	            type: 'pie'
+	        },
+	        title: {
+	            text: 'HTC Lab Register (MoH 362)'
+	        },
+	        xAxis: {
+	            type: 'category'
+	        },
+
+	        legend: {
+	            enabled: false
+	        },
+	        credits: {
+	            enabled: false
+	        },
+	        plotOptions: {
+	            series: {
+	                borderWidth: 0,
+	                dataLabels: {
+	                    enabled: true,
+	                }
+	            }
+	        },
+
+	        series: [{
+	            name: 'Total',
+	            colorByPoint: true,
+	            data: [";
+	            	foreach (Checklist::find($htc)->distCount($htc) as $key)
+	            	{
+	            		$county = County::find($key);
+	            		$htc_pie.="{
+			                name: '".$county->name."',
+			                y: ".$county->submissions($htc).",
+			                drilldown: '".$county->id."'
+			            },";
+	            	}
+	            	$htc_pie.="
+	            ]
+	        }],
+	        drilldown: {
+	            series: [";
+	            foreach (Checklist::find($htc)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+            		$htc_pie.="{
+		                id: '".$county->id."',
+		                name: 'Total',
+		                data: [";
+		                foreach ($county->subCounties as $subCounty)
+		                {
+		                	$htc_pie.="{
+			                    name: '".$subCounty->name."',
+			                    y: ".$subCounty->submissions($htc).",
+			                    drilldown: '".$subCounty->name."'
+			                },";
+		                }
+		                $htc_pie.="]
+		            },";
+            	}
+            	foreach (Checklist::find($htc)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	$htc_pie.="{
+			                id: '".$subCounty->name."',
+			                name: 'Total',
+			                data: [";
+		                	foreach ($subCounty->facilities as $facility)
+		                	{
+		                		$htc_pie.="{
+				                    name: '".$facility->name."',
+				                    y: ".$facility->sdps($htc).",
+				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
+				                },";
+				            }
+				            $htc_pie.="]
+			            },";
+	                }
+            	}
+            	foreach (Checklist::find($htc)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	foreach ($subCounty->facilities as $facility)
+		                {
+		                	$htc_pie.="{
+				                id: '".$facility->id.'_'.$subCounty->id."',
+				                data: [";
+			                	foreach ($facility->ssdps($htc) as $ssdp)
+			                	{
+			                		$sdp = Sdp::find($ssdp);
+			                		$htc_pie.="{
+					                    name: '".$sdp->name."',
+					                    y: ".$sdp->submissions($facility->id, $htc).",
+					                    drilldown: '".$sdp->name."'
+					                },";
+					            }
+					            $htc_pie.="]
+				            },";
+			        	}
+	                }
+            	}
+            	$htc_pie.="]
+	        }
+	    }";
+	    //	M&E pie
+	    $me_pie = "{
+	        chart: {
+	            type: 'pie'
+	        },
+	        title: {
+	            text: 'M&E Checklist'
+	        },
+	        xAxis: {
+	            type: 'category'
+	        },
+
+	        legend: {
+	            enabled: false
+	        },
+	        credits: {
+	            enabled: false
+	        },
+	        plotOptions: {
+	            series: {
+	                borderWidth: 0,
+	                dataLabels: {
+	                    enabled: true,
+	                }
+	            }
+	        },
+
+	        series: [{
+	            name: 'Total',
+	            colorByPoint: true,
+	            data: [";
+	            	foreach (Checklist::find($me)->distCount($me) as $key)
+	            	{
+	            		$county = County::find($key);
+	            		$me_pie.="{
+			                name: '".$county->name."',
+			                y: ".$county->submissions($me).",
+			                drilldown: '".$county->id."'
+			            },";
+	            	}
+	            	$me_pie.="
+	            ]
+	        }],
+	        drilldown: {
+	            series: [";
+	            foreach (Checklist::find($me)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+            		$me_pie.="{
+		                id: '".$county->id."',
+		                name: 'Total',
+		                data: [";
+		                foreach ($county->subCounties as $subCounty)
+		                {
+		                	$me_pie.="{
+			                    name: '".$subCounty->name."',
+			                    y: ".$subCounty->submissions($me).",
+			                    drilldown: '".$subCounty->name."'
+			                },";
+		                }
+		                $me_pie.="]
+		            },";
+            	}
+            	foreach (Checklist::find($me)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	$me_pie.="{
+			                id: '".$subCounty->name."',
+			                name: 'Total',
+			                data: [";
+		                	foreach ($subCounty->facilities as $facility)
+		                	{
+		                		$me_pie.="{
+				                    name: '".$facility->name."',
+				                    y: ".$facility->sdps($me).",
+				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
+				                },";
+				            }
+				            $me_pie.="]
+			            },";
+	                }
+            	}
+            	foreach (Checklist::find($me)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	foreach ($subCounty->facilities as $facility)
+		                {
+		                	$me_pie.="{
+				                id: '".$facility->id.'_'.$subCounty->id."',
+				                data: [";
+			                	foreach ($facility->ssdps($me) as $ssdp)
+			                	{
+			                		$sdp = Sdp::find($ssdp);
+			                		$me_pie.="{
+					                    name: '".$sdp->name."',
+					                    y: ".$sdp->submissions($facility->id, $me).",
+					                    drilldown: '".$sdp->name."'
+					                },";
+					            }
+					            $me_pie.="]
+				            },";
+			        	}
+	                }
+            	}
+            	$me_pie.="]
+	        }
+	    }";
+	    //	SPI-RT pie
+	    $spi_pie = "{
+	        chart: {
+	            type: 'pie'
+	        },
+	        title: {
+	            text: 'SPI-RT Checklist'
+	        },
+	        xAxis: {
+	            type: 'category'
+	        },
+
+	        legend: {
+	            enabled: false
+	        },
+
+	        plotOptions: {
+	            series: {
+	                borderWidth: 0,
+	                dataLabels: {
+	                    enabled: true,
+	                }
+	            }
+	        },
+	        credits: {
+	            enabled: false
+	        },
+	        series: [{
+	            name: 'Total',
+	            colorByPoint: true,
+	            data: [";
+	            	foreach (Checklist::find($spi)->distCount($spi) as $key)
+	            	{
+	            		$county = County::find($key);
+	            		$spi_pie.="{
+			                name: '".$county->name."',
+			                y: ".$county->submissions($spi).",
+			                drilldown: '".$county->id."'
+			            },";
+	            	}
+	            	$spi_pie.="
+	            ]
+	        }],
+	        drilldown: {
+	            series: [";
+	            foreach (Checklist::find($spi)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+            		$spi_pie.="{
+		                id: '".$county->id."',
+		                name: 'Total',
+		                data: [";
+		                foreach ($county->subCounties as $subCounty)
+		                {
+		                	$spi_pie.="{
+			                    name: '".$subCounty->name."',
+			                    y: ".$subCounty->submissions($spi).",
+			                    drilldown: '".$subCounty->name."'
+			                },";
+		                }
+		                $spi_pie.="]
+		            },";
+            	}
+            	foreach (Checklist::find($spi)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	$spi_pie.="{
+			                id: '".$subCounty->name."',
+			                name: 'Total',
+			                data: [";
+		                	foreach ($subCounty->facilities as $facility)
+		                	{
+		                		$spi_pie.="{
+				                    name: '".$facility->name."',
+				                    y: ".$facility->sdps($spi).",
+				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
+				                },";
+				            }
+				            $spi_pie.="]
+			            },";
+	                }
+            	}
+            	foreach (Checklist::find($spi)->distCount() as $key)
+            	{
+            		$county = County::find($key);
+	                foreach ($county->subCounties as $subCounty)
+	                {
+	                	foreach ($subCounty->facilities as $facility)
+		                {
+		                	$spi_pie.="{
+				                id: '".$facility->id.'_'.$subCounty->id."',
+				                data: [";
+			                	foreach ($facility->ssdps($spi) as $ssdp)
+			                	{
+			                		$sdp = Sdp::find($ssdp);
+			                		$spi_pie.="{
+					                    name: '".$sdp->name."',
+					                    y: ".$sdp->submissions($facility->id, $spi).",
+					                    drilldown: '".$sdp->name."'
+					                },";
+					            }
+					            $spi_pie.="]
+				            },";
+			        	}
+	                }
+            	}
+            	$spi_pie.="]
+	        }
+	    }";
+	    //	Combination chart
+	    $combination = "{
+	        title: {
+	            text: '".Lang::choice('messages.sdp-comparison-overtime', 1)."'
+	        },
+	        yAxis: {
+	            title: {
+	                text: '".Lang::choice('messages.complete-sdp', 1)."'
+	            }
+	        },
+	        xAxis: {
+	            categories: [";
+		            $count = count($months);
+	            	foreach ($months as $month) {
+	    				$combination.= "'".$month->label.' '.$month->annum;
+	    				if($count==1)
+	    					$combination.="' ";
+	    				else
+	    					$combination.="' ,";
+	    				$count--;
+	    			}
+	            $combination.="]
+	        },
+
+	        credits: {
+	            enabled: false
+	        },
+	        series: [";
+	        $counts = count($checklists);
+	        foreach ($checklists as $checklist) {
+	        	$combination.="{type:'column',name:"."'".$checklist->name."'".", data:[";
+        		$counter = count($months);
+        		foreach ($months as $month) {
+        			$data = $checklist->ssdps();
+        			if($data==0){
+        					$chart.= '0.00';
+        					if($counter==1)
+            					$combination.="";
+            				else
+            					$combination.=",";
+    				}
+    				else{
+        				$combination.= $data;
+
+        				if($counter==1)
+        					$combination.="";
+        				else
+        					$combination.=",";
+    				}
+        			$counter--;
+        		}
+        		$combination.="]";
+            	if($counts==1)
+					$combination.="}";
+				else
+					$combination.="},";
+				$counts--;
+	        }
+	        $combination.=",{
+	            type: 'spline',
+	            name: 'Average',
+	            data: [135],
+	            marker: {
+	                lineWidth: 2,
+	                lineColor: Highcharts.getOptions().colors[3],
+	                fillColor: 'white'
+	            }
+	        }]
+	    }";
+		return view('dashboard', compact('drill', 'pie', 'combination', 'htc_pie', 'me_pie', 'spi_pie'));
+	}
 }

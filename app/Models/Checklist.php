@@ -38,11 +38,11 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function sdps($from = NULL, $to = NULL)
+	public function ssdps($from = NULL, $to = NULL)
 	{
-		return $sdps = Survey::select('sdp_id')
-					  		 ->where('checklist_id', $this->id)
-					  		 ->get();
+		return SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+						->where('checklist_id', $this->id)
+						->count();
 	}
 	/**
 	* Return Checklist ID given the name
@@ -115,5 +115,39 @@ class Checklist extends Model implements Revisionable {
 			$data = $this->surveys;
 		}
 		return $data->groupBy('qa_officer')->count();
+	}
+	/**
+	 * Return distinct facilities with submitted data in surveys
+	 */
+	public function distFac()
+	{
+		$facilities = $this->surveys->lists('facility_id');
+		return array_unique($facilities);
+	}
+	/**
+	 * Return distinct sub-counties with submitted data in surveys
+	 */
+	public function distSub()
+	{
+		$subs = array();
+		$facilities = $this->distFac();
+		foreach ($facilities as $facility)
+		{
+			array_push($subs, Facility::find($facility)->subCounty->id);
+		}
+		return array_unique($subs);
+	}
+	/**
+	 * Return counties with submitted data in surveys
+	 */
+	public function distCount()
+	{
+		$counties = array();
+		$subs = $this->distSub();
+		foreach ($subs as $sub)
+		{
+			array_push($counties, SubCounty::find($sub)->county->id);
+		}
+		return array_unique($counties);
 	}
 }
