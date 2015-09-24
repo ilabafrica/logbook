@@ -279,4 +279,15 @@ class Sdp extends Model implements Revisionable {
 			return null;
 		}
 	}
+	/**
+	* Function to return counts of data submiited
+	*/
+	public function submissions($id, $check)
+	{
+		$ssdps = $this->surveys()->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+					  ->where('facility_id', $id)
+					  ->where('checklist_id', $check)
+					  ->count();
+		return $ssdps;
+	}
 }

@@ -228,5 +228,16 @@ class Facility extends Model implements Revisionable {
 			return ($total - $invalid)>0?round((($total - $invalid) - ($absReactive + $absNonReactive)) * 100 / ($total - $invalid), 2):0;
 		else*/
 			return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
+	}	
+	/**
+	* Function to return unique sdps submitted for given facility
+	*/
+	public function ssdps($id)
+	{
+		//	Initialize counter
+		$ssdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id')
+						->where('checklist_id', $id)
+						->lists('sdp_id');
+		return array_unique($ssdps);
 	}
 }
