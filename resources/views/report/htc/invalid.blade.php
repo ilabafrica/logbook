@@ -25,7 +25,7 @@
             <li><a href="{!! url('report/'.$checklist->id) !!}">{!! Lang::choice('messages.percent-positive', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
-            <li class="active"><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
+            <li class="active" style="display:none;"><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
         </ul>
 
         <!-- Tab panes -->

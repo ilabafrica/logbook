@@ -25,7 +25,7 @@
             <li><a href="{!! url('report/'.$checklist->id) !!}">{!! Lang::choice('messages.percent-positive', 1) !!}</a></li>
             <li class="active"><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
-            <li><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
+            <li style="display:none;"><a href="{!! url('report/'.$checklist->id.'/invalid') !!}">{!! Lang::choice('messages.percent-invalidResult', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/agreement', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}

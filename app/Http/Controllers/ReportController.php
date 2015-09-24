@@ -108,16 +108,37 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 		        chart: {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-positive', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -272,6 +293,26 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
@@ -281,7 +322,7 @@ class ReportController extends Controller {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-positiveAgr', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -431,6 +472,26 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
@@ -440,7 +501,7 @@ class ReportController extends Controller {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-overallAgr', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -880,9 +941,6 @@ class ReportController extends Controller {
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$today = "'".date("Y-m-d")."'";
-		if(strtotime($from)===strtotime($today))
-		{
-		}
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
@@ -923,7 +981,11 @@ class ReportController extends Controller {
 		}
 		else
 		{
-			$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
 			$title = 'Kenya'.'(N='.$n.')';
 		}
 		//	Colors to be used in the series
