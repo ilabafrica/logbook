@@ -108,16 +108,37 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 		        chart: {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-positive', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -272,6 +293,26 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
@@ -281,7 +322,7 @@ class ReportController extends Controller {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-positiveAgr', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -431,6 +472,26 @@ class ReportController extends Controller {
 				}
 			}
 		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		$to = Input::get('to');
@@ -440,7 +501,7 @@ class ReportController extends Controller {
 		            type: 'column'
 		        },
 		        title: {
-		            text: '".$title."'
+		            text: '".Lang::choice('messages.percent-overallAgr', 1).'-'.$title."'
 		        },
 			    subtitle: {
 			        text:"; 
@@ -542,17 +603,46 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-			$title = Facility::find($site)->name;
 		}
 		if(Input::get('sub_county'))
+		{
 			$sub_county = Input::get('sub_county');
+		}
 		if(Input::get('county'))
+		{
 			$jimbo = Input::get('county');
+		}
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+		}
 		$categories = array();
 		$options = array();
 		foreach ($checklist->sections as $section) 
@@ -573,8 +663,6 @@ class ReportController extends Controller {
 			}
 		}
 		$options = array_unique($options);
-		$from = Input::get('from');
-		$to = Input::get('to');
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -583,7 +671,7 @@ class ReportController extends Controller {
 	        },
 	        title: {
 
-	            text: '".$title."'
+	            text: '".Lang::choice('messages.summary-chart', 1).'-'.$title."'
 
 	        },
 		    subtitle: {
@@ -624,7 +712,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
 	        		$counter = count($categories);
 	        		foreach ($categories as $category) {
-	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $site, $from, $to);
+	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $from, $toPlusOne);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -852,6 +940,7 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
@@ -875,47 +964,28 @@ class ReportController extends Controller {
 				if($site!=NULL)
 				{
 					
-						$n = $checklist->surveys()->where('facility_id', $site);
-						if($from && $to)
-						{
-							$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
-						}
-						$n = $n->count();
+					$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
 					$title = Facility::find($site)->name.'(N='.$n.')';
 				}
 				else
 				{					
-					$n = $checklist->surveys()->join('facilities', 'surveys.facility_id', '=', 'facilities.id')
-								->where('sub_county_id', $sub_county);
-								if($from && $to)
-								{
-									$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
-								}
-								$n = $n->count();				
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);				
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 				}
 			}
 			else
 			{
-				$n = $checklist->surveys()->join('facilities', 'surveys.facility_id', '=', 'facilities.id')
-							->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-							->where('county_id', $jimbo);
-							if($from && $to)
-							{
-								$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
-							}
-							$n = $n->count();
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
 				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';
 			}
 		}
 		else
 		{
-			$n = $checklist->surveys;
-			if($from && $to)
-			{
-				$n = $n->whereBetween('date_submitted', [$from, $toPlusOne]);
-			}
-			$n = $n->count();
+
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
 			$title = 'Kenya'.'(N='.$n.')';
 		}
 		//	Colors to be used in the series

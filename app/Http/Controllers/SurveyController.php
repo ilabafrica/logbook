@@ -58,7 +58,8 @@ class SurveyController extends Controller {
 		if($county || $subCounty){
 			foreach ($checklists as $checklist)
 			{
-				$surveys[$checklist->id] = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
+				$surveys[$checklist->id] = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
 				if($subCounty)
 				{
 					$surveys[$checklist->id] = $surveys[$checklist->id]->where('facilities.sub_county_id', $subCounty->id)->get();

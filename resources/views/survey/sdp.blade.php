@@ -49,6 +49,7 @@
                                 <th>{{ Lang::choice('messages.count', 1) }}</th>
                                 <th>{{ Lang::choice('messages.facility', 1) }}</th>
                                 <th>{{ Lang::choice('messages.sdp', 1) }}</th>
+                                <th>{{ Lang::choice('messages.comment', 1) }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -64,6 +65,7 @@
                                     @foreach($survey->sdps as $sdp)
                                     <tr>
                                         <td>{!! App\Models\Sdp::find($sdp->sdp_id)->name.'<br />' !!}</td>
+                                        <td>{!! $sdp->comment.'<br />' !!}</td>
                                     </tr>
                                     @endforeach
                                 @endforeach
