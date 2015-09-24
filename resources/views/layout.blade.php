@@ -95,7 +95,7 @@
            
             <!-- /.navbar-top-links -->
         <!-- Check when to show sidebar -->
-        @if(!Auth::user()->isAdmin())
+        @if(!Auth::user()->hasRole('QA Supervisor'))
 		<div class="navbar-default sidebar" role="navigation">
 
 		   @include("sidebar")
@@ -103,7 +103,7 @@
 		@endif
          <!-- /.navbar-static-side -->
         </nav>
-        @if(Auth::user()->isAdmin())
+        @if(Auth::user()->hasRole('QA Supervisor'))
         <div class="container-fluid">
         @else
         <div id="page-wrapper">

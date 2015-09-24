@@ -104,7 +104,8 @@ class LogbookSeeder extends Seeder
             array("name" => "access-testkits", "display_name" => "Can manage testkits"),
             array("name" => "access-users", "display_name" => "Can manage users"),
             array("name" => "access-access-controls", "display_name" => "Can manage access controls"),
-            array("name" => "access-data-analysis", "display_name" => "Can manage data analysis")
+            array("name" => "access-data-analysis", "display_name" => "Can manage data analysis"),
+            array("name" => "access-dashboard", "display_name" => "Can access dashboard")
             
         );
         foreach ($permissions as $permission) {
