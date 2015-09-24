@@ -38,11 +38,36 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function ssdps($from = NULL, $to = NULL)
+	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL)
 	{
-		return SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-						->where('checklist_id', $this->id)
-						->count();
+		$ssdps =  $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+					if($from && $to)
+					{
+						$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+					}
+					if($county || $sub_county || $site)
+					{
+						if($sub_county || $site)
+						{
+							if(isset($site))
+							{
+								$ssdps = $ssdps->where('facility_id', $site);
+							}
+							else
+							{
+								$ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+										 		 ->where('sub_county_id', $sub_county);
+							}
+						}
+						else
+						{
+							$ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+											 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+											 ->where('county_id', $county);
+						}
+					}
+					$ssdps = $ssdps->count();
+		return $ssdps;
 	}
 	/**
 	* Return Checklist ID given the name

@@ -161,16 +161,20 @@ class Section extends Model implements Revisionable {
 							if(isset($site))
 							{
 								$values = $values->where('facility_id', $site);
-								$counter = Facility::find($site)->surveys()->where('checklist_id', $checklist)->whereBetween('date_submitted', [$from, $to])->count();
+								$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+													->where('checklist_id', $checklist)
+													->where('facility_id', $site)
+													->whereBetween('date_submitted', [$from, $to])->count();
 							}
 							else
 							{
 								$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 										 		 ->where('sub_county_id', $sub_county);
-								foreach (SubCounty::find($sub_county)->facilities as $facility)
-								{
-									$counter+=$facility->surveys()->where('checklist_id', $checklist)->whereBetween('date_submitted', [$from, $to])->count();
-								}
+								$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+													->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													->where('checklist_id', $checklist)
+													->where('sub_county_id', $sub_county)
+													->whereBetween('date_submitted', [$from, $to])->count();
 							}
 						}
 						else
@@ -178,13 +182,12 @@ class Section extends Model implements Revisionable {
 							$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 											 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 											 ->where('county_id', $county);
-							foreach (County::find($county)->subCounties as $subCounty)
-							{
-								foreach ($subCounty->facilities as $facility)
-								{
-									$counter+=$facility->surveys()->where('checklist_id', $checklist)->whereBetween('date_submitted', [$from, $to])->count();
-								}
-							}
+							$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+													->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+													->where('checklist_id', $checklist)
+													->where('county_id', $county)
+													->whereBetween('date_submitted', [$from, $to])->count();
 						}
 					}
 					else
