@@ -55,7 +55,7 @@ class Answer extends Model implements Revisionable {
 	/**
 	 * Function to calculate number of specific responses
 	 */
-	public function column($id, $county = null, $sub_county = null, $site = null, $from = NULL, $to = NULL)
+	public function column($id, $county = null, $sub_county = null, $sdp =null, $site = null, $from = NULL, $to = NULL)
 	{
 		//	Initialize variables
 		$total = 0;
@@ -69,20 +69,26 @@ class Answer extends Model implements Revisionable {
 									{
 										$values = $values->whereBetween('date_submitted', [$from, $to]);
 									}
-									if($county || $sub_county || $site)
+									if($county || $sub_county || $site ||$sdp)
 									{
-										if($sub_county || $site)
+										if($sub_county || $site ||$sdp)
 										{
-											if(isset($site))
+											if($site ||$sdp)
 											{
-												$values = $values->where('facility_id', $site);
+											$values = $values->where('facility_id', $site);	
+
+											if(isset($sdp))
+											{
+												$values = $values->where('sdp_id', $sdp);
 											}
+										}
 											else
 											{
 												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 														 		 ->where('sub_county_id', $sub_county);
 											}
-										}
+										}										
+
 										else
 										{
 											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
@@ -90,6 +96,7 @@ class Answer extends Model implements Revisionable {
 															 ->where('county_id', $county);
 										}
 									}
+									
 			$values = $values->get(array('survey_questions.*'));
 			foreach ($values as $sq) {
 				if($sq->sd->answer == $this->name)

@@ -447,6 +447,7 @@ return [
 	'period'	=>	'Period',
 	'region'	=>	'Region',
 	'sdp'	=>	'SDP',
+	'select-sdp'	=>	'Select SDP',
 	'sites-enrolled'	=>	'Sites/Providers enrolled',
 	'pt-results'	=>	'Sites/Providers with PT results in each round',
 	'satisfactory-results'	=>	'Sites/Providers with satisfactory reults in each round',

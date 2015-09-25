@@ -64,7 +64,7 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate scores per section
 	 */
-	public function spider($site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
 	{
 		$points = 0.0;
 		$array = array();
@@ -84,18 +84,27 @@ class Section extends Model implements Revisionable {
 									{
 										$values = $values->whereBetween('date_submitted', [$from, $to]);
 									}
-									if($county || $sub_county || $site)
+									if($county || $sub_county || $site ||$sdp)
 									{
-										if($sub_county || $site)
+										if($sub_county || $site || $sdp)
 										{
-											if(isset($site))
+											if( $site || $sdp)  
 											{
 												$values = $values->where('facility_id', $site);
 												$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 																	->where('checklist_id', $checklist)
 																	->where('facility_id', $site)
+																    ->whereBetween('date_submitted', [$from, $to])->count();
+											if(isset($sdp))
+											{
+												$values = $values->where('sdp_id', $sdp);
+												$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																	->where('checklist_id', $checklist)
+																	->where('facility_id', $site)
+																	->where('sdp_id', $sdp)
 																	->whereBetween('date_submitted', [$from, $to])->count();
 											}
+										}
 											else
 											{
 												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
@@ -106,6 +115,7 @@ class Section extends Model implements Revisionable {
 																	->where('sub_county_id', $sub_county)
 																	->whereBetween('date_submitted', [$from, $to])->count();
 											}
+										
 										}
 										else
 										{
@@ -120,6 +130,7 @@ class Section extends Model implements Revisionable {
 																	->whereBetween('date_submitted', [$from, $to])->count();
 										}
 									}
+								
 									else
 									{
 										$counter = $values->count();

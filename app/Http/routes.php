@@ -296,6 +296,10 @@ Route::resource('home', 'SurveyController');
         "as"    =>  "facility.dropdown",
         "uses"  =>  "SubCountyController@dropdown"
     ));
+    Route::any('/sdp/dropdown', array(
+        "as"    =>  "sdp.dropdown",
+        "uses"  =>  "FacilityController@dropdown"
+    ));
     /* Algorithms */
     Route::resource('algorithm', 'AlgorithmController');
     /* Audit Types controller */

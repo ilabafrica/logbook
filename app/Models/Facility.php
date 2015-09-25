@@ -229,4 +229,16 @@ class Facility extends Model implements Revisionable {
 		else*/
 			return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
 	}
+
+	public function ssdps($id = null)
+	{
+		//	Get surveys_sdps
+		$survey_sdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+							if($id)
+							{
+								$survey_sdps = $survey_sdps->where('checklist_id', $id);
+							}
+							$survey_sdps = $survey_sdps->lists('sdp_id');
+		return array_unique($survey_sdps);
+	}
 }

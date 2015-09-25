@@ -260,7 +260,7 @@ function set_total(id) {
 /*Dynamic loading of select list options for counties-sub-counties*/
 function load(id){
     cId = $('#county_'+id).val();
-    var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -290,7 +290,7 @@ function county(id){
 function dyn()
 {
     cId = $('#county').val();
-    var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -311,7 +311,7 @@ function dyn()
 function drop()
 {
     cId = $('#sub_county').val();
-    var URL_ROOT = 'http://127.0.0.1/rtqii/public/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -324,6 +324,28 @@ function drop()
             facility.append("<option value=''>Select Facility</option>");
             $.each(data, function(index, element) {
                 facility.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+            });
+        }
+    });
+}
+
+/* Dynamic loading of sdps given the facility */
+function ssdp()
+{
+    cId = $('#facility').val();
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
+    _token: JSON.stringify($('input[name=_token]').val());
+    $.ajax({
+        dataType: 'json',
+        type: 'POST',
+        url:  URL_ROOT+'sdp/dropdown',
+        data: {facility_id: cId, '_token': $('input[name=_token]').val()},
+        success: function(data){
+            var sdp = $('#sdp');
+            sdp.empty();
+            sdp.append("<option value=''>Select SDP</option>");
+            $.each(data, function(index, element) {
+                sdp.append("<option value='"+ element.id +"'>" + element.name + "</option>");
             });
         }
     });
