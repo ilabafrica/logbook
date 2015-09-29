@@ -88,7 +88,7 @@
                             <?php $qstn = App\Models\Question::find($sq->question_id); ?>
                             <tr>
                                 <td>{!! $qstn->name !!}</td>
-                                <td>{!! $qstn->question_type == App\Models\Question::CHOICE?App\Models\Answer::nameByScore($sq->sd->answer):$sq->sd->answer !!}</td>
+                                <td>{!! $qstn->question_type == App\Models\Question::CHOICE?App\Models\Answer::nameByScore($surveysdp->survey->checklist->id == App\Models\Checklist::idByName('M & E Checklist')?'nthenya':NULL, $sq->sd->answer):$sq->sd->answer !!}</td>
                             </tr>
                             @endforeach
                         </tbody>
