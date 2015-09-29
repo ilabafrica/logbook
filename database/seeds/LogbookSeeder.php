@@ -467,6 +467,7 @@ class LogbookSeeder extends Seeder
       
        //test kit consumption summary
         //Test 1
+        $question_consumption_summary = Question::create(array("section_id" => $sec_consumption->id,"identifier"=>"summary", "name" => "Copy the test kit consumption summary", "description" => "Copy the test kit consumption summary","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_totalTest1Positive = Question::create(array("section_id" => $sec_consumption->id,"identifier"=>"tpostive1", "name" => "Total Test-1 Positive", "description" => "Total Test-1 Positive","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_totalTest1Negative = Question::create(array("section_id" => $sec_consumption->id,"identifier"=>"tnegative1", "name" => "Total Test-1 Negative", "description" => "Total Test-1 Negative", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_totalTest1Invalid = Question::create(array("section_id" => $sec_consumption->id,"identifier"=>"tinvalid1", "name" => "Total Test-1 Invalid", "description" => "Total Test-1 Invalid", "question_type" =>"2","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
@@ -489,6 +490,8 @@ class LogbookSeeder extends Seeder
       
         $question_supervisorReview = Question::create(array("section_id" => $sec_other->id,"identifier"=>"surpervisor","name" => "Supervisor Reviewed Done? ( check for supervisor signature)", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_algorithmFollowed = Question::create(array("section_id" => $sec_other->id,"identifier"=>"algorithm", "name" => "Algorithm Followed?", "description" => "Aligorithm Followed?", "question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_algorithmNotFollowed = Question::create(array("section_id" => $sec_other->id,"identifier"=>"no", "name" => "If no, select  reason below", "description" => "If no, select  reason below", "question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_nocomments = Question::create(array("section_id" => $sec_other->id, "identifier"=>"nocomments","name" => "Comments", "description" => "", "question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_lat = Question::create(array("section_id" => $sec_other->id, "identifier"=>"","name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_long = Question::create(array("section_id" => $sec_other->id,"identifier"=>"", "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_addComm = Question::create(array("section_id" => $sec_other->id, "identifier"=>"","name" => "Additional Comments", "description" => "", "question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
@@ -502,8 +505,11 @@ class LogbookSeeder extends Seeder
         $question_auditType= Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"audittype",  "name" => "Type of Audit", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
         $question_MEsupervisor = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"namesurp",  "name" => "Name of supervisor being interviewed", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEIndividualsTested = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"noofindividuals",  "name" => "Number of individuals tested by rapid testing (previous year) at this site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_otherSpecify = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"otherspecify",  "name" => "If Others: specify", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEpersonnel = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"personnelno",  "name" => "Number of personnel authorized to offer HIV testing and counseling services at the site", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+
         $question_MEcadres = Question::create(array("section_id" => $sec_MEregister->id, "identifier"=>"cadres", "name" => "Cadres authorized to offer HIV testing and counseling services at the site", "description" => "(Please check box where applicable)","question_type" =>"5", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_otherSpecify19 = Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"otherspecify19",  "name" => "If Others: specify", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_MEstrategy= Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"algorithm",  "name" => "Current testing strategy used at the site (Serial vs. Parallel)", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest1= Question::create(array("section_id" => $sec_MEregister->id,"identifier"=>"screen",  "name" => "Screening or Test - 1:", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_METest1Other= Question::create(array("section_id" => $sec_MEregister->id, "identifier"=>"other22", "name" => "Screening or Test - 1 Other:", "description" => "","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
@@ -550,7 +556,7 @@ class LogbookSeeder extends Seeder
         $question_feedback = Question::create(array("section_id" =>$sec_sec3 ->id, "identifier"=>"Ptprogram","name" => "3.3 Is feedback of PT program provided by the reference laboratory or PT provider?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
         $question_feedbackComment= Question::create(array("section_id" => $sec_sec3->id,"identifier"=>"coments15", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_ack = Question::create(array("section_id" =>$sec_sec3 ->id,"identifier"=>"testingpersonnel", "name" => "3.4 Is testing personnel with satisfactory PT score acknowledged by site supervisor?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
-        $question_ackComment= Question::create(array("section_id" => $sec_sec3->id, "identifier"=>"coment16","name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_ackComment= Question::create(array("section_id" => $sec_sec3->id, "identifier"=>"coments16","name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_issues = Question::create(array("section_id" =>$sec_sec3 ->id,"identifier"=>"properly", "name" => "3.5 Are issues identified by the PT program properly investigated by site supervisor and documented?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
         $question_issuesComment= Question::create(array("section_id" => $sec_sec3->id,"identifier"=>"coments17", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_correctiveAction = Question::create(array("section_id" =>$sec_sec3 ->id,"identifier"=>"Ptscore", "name" => "3.6 Are appropriate corrective actions implemented for HIV testing personnel with unsatisfactory PT score as instructed by the national reference lab?", "description" => "", "question_type" =>"0","required" => "1", "info" => "", "score" => "3", "user_id" => "1"));
@@ -582,6 +588,7 @@ class LogbookSeeder extends Seeder
         $question_Spifacility = Question::create(array("section_id" => $sec_Spisurvey->id,"identifier"=>"", "name" => "Facility", "description" => "Facility","question_type" =>"4",  "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_Spisdp = Question::create(array("section_id" => $sec_Spiregister->id,"identifier"=>"hh_testing_site", "name" => "Service Delivery Points (SDP)", "description" => "","question_type" =>"4",  "required" => "1", "info" => "Select One", "score" => "0", "user_id" => "1"));
         $question_affiliation= Question::create(array("section_id" => $sec_Spiregister->id,"identifier"=>"affiliation", "name" => "Affilliation (Circle One)", "description" => "","question_type" =>"4", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_otheraffiliation = Question::create(array("section_id" => $sec_Spiregister->id,"identifier"=>"otheraffiliation",  "name" => "If Others: specify", "description" => "","question_type" =>"2", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_collectionDate= Question::create(array("section_id" => $sec_Spiregister->id,"identifier"=>"dateofsubmission", "name" => "Date of Collection", "description" => "","question_type" =>"1", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
          //section1
         $question_comprehensiveTraining= Question::create(array("section_id" => $sec_Spisec1->id,"identifier"=>"providers_recieved_training", "name" => "1.1 Have the providers received a comprehensive training on HIV rapid test?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "1", "user_id" => "1"));
@@ -708,6 +715,7 @@ class LogbookSeeder extends Seeder
         $question_ptEnrolled= Question::create(array("section_id" => $sec_Spisec8->id, "identifier"=>"siteenrolled", "name" => "8.1 (a) Is the testing site enrolled in the PT program?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "1", "user_id" => "1"));
         $question_ptEnrolledComment= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"comments59", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_enrolled= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"providersenrolled", "name" => "8.1 (b) Are all providers enrolled in the PT program?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_areEnrolled= Question::create(array("section_id" => $sec_Spisec8->id, "identifier"=>"areenolled","name" => "If no, how many are enrolled", "description" => "If no, how many are enrolled","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_enrolledComment= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"comments60", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_eqa= Question::create(array("section_id" => $sec_Spisec8->id, "identifier"=>"participateEQA","name" => "8.2 Do all providers at the testing site participate in the EQA/PT program?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "1", "user_id" => "1"));
         $question_eqaComment= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"comments61", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
@@ -718,6 +726,7 @@ class LogbookSeeder extends Seeder
         $question_siteCorrectiveAction= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"correctiveaction", "name" => "8.5 (a) Does the site implement corrective actions in case unsatisfactory", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "1", "user_id" => "1"));
         $question_siteCorrectiveActionComment= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"comments64", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_unsatisfactory= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"correctiveactionproviders", "name" => "8.5 (b) Is corrective action implemented for all providers with unsatisfactory results?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
+        $question_unsaManyPeople= Question::create(array("section_id" => $sec_Spisec8->id, "identifier"=>"manypeople","name" => "How many people implement corrective action?", "description" => "How many people implement corrective action?","question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_unsatisfactoryComment= Question::create(array("section_id" => $sec_Spisec8->id, "identifier"=>"comments65","name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_dbs= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"dbsapply", "name" => "Does DBS for external qualityquality assurance apply on this site?", "description" => "","question_type" =>"0", "required" => "1", "info" => "", "score" => "0", "user_id" => "1"));
         $question_dbsComment= Question::create(array("section_id" => $sec_Spisec8->id,"identifier"=>"", "name" => "Comments", "description" => "Comments","question_type" =>"3", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
@@ -764,7 +773,18 @@ class LogbookSeeder extends Seeder
         //HTC lab register
         $response_provided = Answer::create(array("name" => "Provided", "description" => "Provided", "user_id" => "1"));
         $response_notProvided = Answer::create(array("name" => "Not Provided", "description" => "Not Provided", "user_id" => "1"));
-         $this->command->info('Answers table seeded');
+        $response_available = Answer::create(array("name" => "Available", "description" => "Available", "user_id" => "1"));
+        $response_notavailable = Answer::create(array("name" => "Not Available", "description" => "Not Available", "user_id" => "1"));
+
+        $response_kits = Answer::create(array("name" => "Kits used are not in the national algorithm", "description" => "kits", "user_id" => "1"));
+        $response_testkits = Answer::create(array("name" => "Wrong sequence of test kits", "description" => "testkits", "user_id" => "1"));        
+        $response_confirmationtest1 = Answer::create(array("name" => "Confirmation of Test 1 reactive/postive not done", "description" => "confirmationtest1", "user_id" => "1"));
+        $response_test2done = Answer::create(array("name" => "Test 2 done when Test 1 was negative/ non reactive", "description" => "test2done", "user_id" => "1"));
+        $response_test3done = Answer::create(array("name" => "Test 3 done when Test 1 and Test 2 were postive ", "description" => "test3done", "user_id" => "1"));
+        $response_test3negative = Answer::create(array("name" => "Test 3 done when Test 1 and Test 2 were negative", "description" => "test3negative", "user_id" => "1"));
+        $response_tie = Answer::create(array("name" => "Tie breaking for discrepant results not done", "description" => "tie", "user_id" => "1"));
+
+        $this->command->info('Answers table seeded');
         //M&E
         $response_baseline = AuditType::create(array("name" => "Baseline", "description" => "", "user_id" => "1"));
         $response_followUp = AuditType::create(array("name" => "Follow Up", "description" => "", "user_id" => "1"));
@@ -1567,6 +1587,26 @@ class LogbookSeeder extends Seeder
             array("question_id" => $question_providers ->id, "response_id" => $response_yes->id));
         DB::table('question_responses')->insert(
             array("question_id" => $question_providers ->id, "response_id" => $response_partial->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_consumption_summary ->id, "response_id" => $response_available->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_consumption_summary ->id, "response_id" => $response_notavailable->id));
+
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_kits->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_testkits->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_confirmationtest1->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_test2done->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_test3done->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_test3negative->id));
+        DB::table('question_responses')->insert(
+            array("question_id" => $question_algorithmNotFollowed ->id, "response_id" => $response_tie->id));
         
         $this->command->info('Question-responses table seeded');
         //  Levels table

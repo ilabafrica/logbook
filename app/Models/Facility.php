@@ -117,13 +117,18 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to get counts per checklist for sdps
 	*/
-	public function sdps($id)
+	public function sdps($id, $sdpId = null)
 	{
 		//	Initialize counter
-		return SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+		$counter  =  SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 						->where('facility_id', $this->id)
-						->where('checklist_id', $id)
-						->count();
+						->where('checklist_id', $id);
+						if($sdpId)
+						{
+							$counter = $counter->where('sdp_id', $sdpId);
+						}
+						$counter = $counter->count();
+		return $counter;
 	}
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
@@ -232,12 +237,18 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to return unique sdps submitted for given facility
 	*/
-	public function ssdps($id)
+	public function ssdps($id = null, $unique = null)
 	{
 		//	Initialize counter
-		$ssdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id')
-						->where('checklist_id', $id)
-						->lists('sdp_id');
-		return array_unique($ssdps);
+		$ssdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+						if($id)
+						{
+							$ssdps = $ssdps->where('checklist_id', $id);
+						}
+						$ssdps = $ssdps->lists('sdp_id');
+		if($unique)
+			return array_unique($ssdps);
+		else
+			return $ssdps;
 	}
 }

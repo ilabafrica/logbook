@@ -38,7 +38,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL)
+	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $list = NULL)
 	{
 		$ssdps =  $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
 					if($from && $to)
@@ -66,7 +66,14 @@ class Checklist extends Model implements Revisionable {
 											 ->where('county_id', $county);
 						}
 					}
-					$ssdps = $ssdps->count();
+					if($list)
+					{
+						$ssdps = $ssdps->get(array('survey_sdps.*'));
+					}
+					else
+					{
+						$ssdps = $ssdps->count();
+					}
 		return $ssdps;
 	}
 	/**

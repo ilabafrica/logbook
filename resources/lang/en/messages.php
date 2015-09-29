@@ -425,6 +425,11 @@ return [
 	'sdp-comparison-overtime'	=>	'Submission Comparison Overtime',
 	'checklist-comparison'	=>	'Checklist Comparison',
 	'completion-status'	=>	'Completion Status',
+	'compiled-by'	=>	'Compiled by',
+	'checklist-submit-comparison'	=>	'Checklist submission comparison per facility',
+	'me-spirt'	=>	'M&E and SPI-RT',
+	'me-htc'	=>	'M&E and HTC Lab Register',
+	'htc-spirt'	=>	'HTC Lab Register and SPI-RT',
 	/**
 	*
 	* Local partner analysis
