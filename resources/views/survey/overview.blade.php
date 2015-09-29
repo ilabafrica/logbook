@@ -39,88 +39,15 @@
                 <a href="javascript::history.back()" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
                 <a href="{!! url('survey/overview/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
             </p>
-            <div class="row">
-                <div class="col-sm-12">
-                    <table class="table table-striped table-bordered table-hover">
-                        <thead>
-                            <tr>
-                                <th>{!! Lang::choice('messages.count', 1) !!}</th>
-                                <th>{!! Lang::choice('messages.facility', 1) !!}</th>
-                                @foreach($checklists as $checklist)
-                                    <th>{{ $checklist->name }}</th>
-                                @endforeach
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php $counter = 0; $span = 0; ?>
-                            @foreach($facility_ids as $facility_id)
-                            <?php $counter++; $facility = App\Models\Facility::find($facility_id); $me_c = App\Models\Checklist::find($me); $spirt_c = App\Models\Checklist::find($spi); $htc_c = App\Models\Checklist::find($htc);?>
-                                <?php 
-                                    if($me_c->ssdps(null, null, null, null, $facility_id, null) > $spirt_c->ssdps(null, null, null, null, $facility_id, null))
-                                    {
-                                        if($me_c->ssdps(null, null, null, null, $facility_id, null) > $htc_c->ssdps(null, null, null, null, $facility_id, null))
-                                        {
-                                            $span = $me_c->ssdps(null, null, null, null, $facility_id, null);
-                                        }
-                                        else
-                                        {
-                                            $span = $htc_c->ssdps(null, null, null, null, $facility_id, null);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $span = $spirt_c->ssdps(null, null, null, null, $facility_id, null);
-                                    }
-                                ?>
-                                <tr>
-                                    <td rowspan="{{$span-1}}">{!! $span !!}</td>
-                                    <th rowspan="{{$span-1}}">{!! $facility->name !!}</th>
-                                </tr>                                
-                                @foreach($htc_c->ssdps(null, null, null, null, $facility_id, 1) as $ssdp)
-                                    <tr><td>{!! App\Models\Sdp::find($ssdp->sdp_id)->name !!}</td></tr>
-                                @endforeach 
-                                <?php 
-                                    if((int)$htc_c->ssdps(null, null, null, null, $facility_id, null)<$span)
-                                    {
-                                        for($i=0; $i<($span-(int)$htc_c->ssdps(null, null, null, null, $facility_id, null)); $i++)
-                                        {
-                                            echo '<tr><td></td></tr>';
-                                        }
-                                    }
-                                ?>
-                                @foreach($me_c->ssdps(null, null, null, null, $facility_id, 1) as $ssdp)
-                                    <tr><td>{!! App\Models\Sdp::find($ssdp->sdp_id)->name !!}</td></tr>
-                                @endforeach
-                                <?php 
-                                    if((int)$me_c->ssdps(null, null, null, null, $facility_id, null)<$span)
-                                    {
-                                        for($i=0; $i<($span-(int)$me_c->ssdps(null, null, null, null, $facility_id, null)); $i++)
-                                        {
-                                            echo '<tr><td></td></tr>';
-                                        }
-                                    }
-                                ?>
-                                @foreach($spirt_c->ssdps(null, null, null, null, $facility_id, 1) as $ssdp)
-                                    <tr><td>{!! App\Models\Sdp::find($ssdp->sdp_id)->name !!}</td></tr>
-                                @endforeach
-                                <?php 
-                                    if((int)$spirt_c->ssdps(null, null, null, null, $facility_id, null)<$span)
-                                    {
-                                        for($i=0; $i<($span-(int)$spirt_c->ssdps(null, null, null, null, $facility_id, null)); $i++)
-                                        {
-                                            echo '<tr><td></td></tr>';
-                                        }
-                                    }
-                                ?>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+            
             <div class="row">                
                 <div class="col-sm-12">
                     <table class="table table-striped table-bordered table-hover">
                         <tbody>
+                            <tr>
+                                <td>{!! 'All' !!}</td>
+                                <td>{!! $all !!}</td>
+                            </tr>
                             <tr>
                                 <td>{!! Lang::choice('messages.me-spirt', 1) !!}</td>
                                 <td>{!! $spirt_me !!}</td>
@@ -132,6 +59,18 @@
                             <tr>
                                 <td>{!! Lang::choice('messages.htc-spirt', 1) !!}</td>
                                 <td>{!! $htc_spirt !!}</td>
+                            </tr>
+                            <tr>
+                                <td>{!! 'PMTCT - SPIRT and M&E' !!}</td>
+                                <td>{!! $pmtcts !!}</td>
+                            </tr>
+                            <tr>
+                                <td>{!! 'PMTCT - HTC, SPIRT and M&E' !!}</td>
+                                <td>{!! $pmtctMeSpi !!}</td>
+                            </tr>
+                            <tr>
+                                <td>{!! Lang::choice('messages.complete', 1) !!}</td>
+                                <td>{!! $all+($pmtcts-$pmtctMeSpi) !!}</td>
                             </tr>
                         </tbody>
                     </table>

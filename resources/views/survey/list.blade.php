@@ -33,6 +33,7 @@
                             <th>{{ Lang::choice('messages.response-no', 1) }}</th>
                             <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility', 1) }}</th>
+                            <th>{{ Lang::choice('messages.sdp', 2) }}</th>
                             <th>{{ Lang::choice('messages.date', 1) }}</th>
                             <th>{{ Lang::choice('messages.status', 1) }}</th>
                             <th>{{ Lang::choice('messages.action', 2) }}</th>
@@ -46,6 +47,7 @@
                             <td>{{ $counter }}</td>
                             <td>{{ $survey->qa_officer }}</td>
                             <td>{{ $survey->facility->name }}</td>
+                            <td>{{ implode(", ", $survey->ssdps()) }}</td>
                             <td>{{ $survey->created_at }}</td>
                             <td></td>
                             <td>

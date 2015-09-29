@@ -1154,52 +1154,60 @@ class SurveyController extends Controller {
 	 *
 	 */
 	public function overview()
-	{
-		//	Get facilities
-		$facility_ids = array_unique(Survey::lists('facility_id'));
-		//	List of checklists
-		$checklists = Checklist::all();
-		//	Get sdps for each facility regardless of checklist
-		$ssdps = array();
-		$name = array();
-		foreach ($facility_ids as $facility_id)
-		{
-			$facility = Facility::find($facility_id);
-			$ssdps[$facility_id] = $facility->ssdps(null, 1);
-			$name[$facility_id] = $facility->name;
-			$sdp_name = array();
-			foreach ($ssdps[$facility_id] as $sdpId)
-			{
-				$sdp_name[$facility_id][$sdpId] = Sdp::find($sdpId)->name;
-				foreach ($checklists as $checklist)
-				{
-					$matches = array();
-					$facility->sdps($checklist->id, $sdpId)>0?$matches[$sdpId][$checklist->id] = 'Yes':$matches[$sdpId][$checklist->id] = 'No';
-				}
-			}
-		}
-		//	Get counts
-		//	Get complete sites
+	{	
 		$htc_me = 0;
-		$htc_spirt = 0;
-		$spirt_me = 0;
-		$facilities = Survey::lists('facility_id');
-		$surveySdps = SurveySdp::lists('survey_id');
-		$htc = Checklist::idByName('HTC Lab Register (MOH 362)');
-		$me = Checklist::idByName('M & E Checklist');
-		$spi = Checklist::idByName('SPI-RT Checklist');
-		foreach ($surveySdps as $key => $value)
-		{
-			$me_sdps = SurveySdp::find($value)->survey()->where('checklist_id', $me)->get();
-			$spi_sdps = SurveySdp::find($value)->survey()->where('checklist_id', $spi)->get();
-			$htc_sdps = SurveySdp::find($value)->survey()->where('checklist_id', $htc)->get();
-			if(count($me_sdps)>0 && count($spi_sdps)>0)
-			{
-				if(count($me_sdps) == count($spi_sdps))
-					$spirt_me++;
-			}
-		}
-		return view('survey.overview', compact('checklists', 'facility_ids', 'ssdps', 'name', 'sdp_name', 'matches', 'htc_me', 'htc_spirt', 'spirt_me', 'me', 'spi', 'htc'));
+       	$htc_spirt = 0;
+       	$spirt_me = 0;
+       	$htc = Checklist::idByName('HTC Lab Register (MOH 362)');
+       	$me = Checklist::idByName('M & E Checklist');
+       	$spi = Checklist::idByName('SPI-RT Checklist');
+       	//        Facilities
+       	$facilities = Facility::all();
+       	//        Complete counts
+       	$complete = 0;
+       	$all = 0;
+       	$pmtcts = 0;
+       	$pmtctMeSpi = 0;
+       	//	PMTCT
+       	$pmtct = Sdp::idByName('PMTCT');
+       	foreach ($facilities as $facility)
+       	{
+           	$bothMeSpirt = array();
+           	$spirt_sdps = $facility->ssdps($spi);
+           	$me_sdps = $facility->ssdps($me);
+           	$htc_sdps = $facility->ssdps($htc);
+           	//	get survey-sdp ids for use in getting PMTCT records
+           	if($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct))
+           	{
+           		$pmtcts++;
+           	}
+           	if(($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct)) && ($facility->sdps($me, $pmtct) == $facility->sdps($htc, $pmtct)))
+           	{
+           		$pmtctMeSpi++;
+           	}
+           	foreach ($me_sdps as $me_sdp)
+           	{
+               	if(in_array($me_sdp, $spirt_sdps))
+                {
+                    $complete++;
+                    $spirt_me++;
+                    $bothMeSpirt = array_merge($bothMeSpirt, [$me_sdp]);
+                }
+           	}
+           	foreach ($htc_sdps as $htc_sdp)
+            {
+                if(in_array($htc_sdp, $me_sdps))
+                    $htc_me++;
+                if(in_array($htc_sdp, $bothMeSpirt))
+                    $all++;
+            }
+           	foreach ($htc_sdps as $htc_sdp)
+            {
+                if(in_array($htc_sdp, $spirt_sdps))
+                    $htc_spirt++;
+            }
+       	}
+       	return view('survey.overview', compact('checklists', 'htc_me', 'htc_spirt', 'spirt_me', 'complete', 'all', 'pmtcts', 'pmtctMeSpi'));
 	}
 }
 $excel = App::make('excel');
