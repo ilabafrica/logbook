@@ -17,6 +17,11 @@
             {{ trans('messages.fill-questionnaire') }}
           </a>
         </span>
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
     </div>
     <div class="panel-body">
         @if(session()->has('message'))

@@ -16,7 +16,12 @@
 @endif
 <div class="panel panel-default">
     <div class="panel-heading">
-        {!! Lang::choice('messages.checklist-submit-comparison', 1) !!}
+    <i class="fa fa-tags"></i> {!! Lang::choice('messages.checklist-submit-comparison', 1) !!}
+        <span class="panel-btn">
+            <a class="btn btn-outline btn-primary btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
@@ -36,7 +41,7 @@
             <div class="tab-content">
             <br />
             <p>
-                <a href="javascript::history.back()" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
+                <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
                 <a href="{!! url('survey/overview/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
             </p>
             
