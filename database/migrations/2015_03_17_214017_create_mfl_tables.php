@@ -316,6 +316,7 @@ class CreateMflTables extends Migration {
             $table->float('score')->nullable();
             $table->float('range_lower')->nullable();
             $table->float('range_upper')->nullable();
+            $table->string('identifier', 100)->nullable();
             $table->integer('user_id')->unsigned();
 
             $table->softDeletes();
@@ -352,12 +353,12 @@ class CreateMflTables extends Migration {
 			$table->string('latitude')->nullable();
 			$table->integer('checklist_id')->unsigned();
 			$table->string('comment')->nullable();
-
-            $table->foreign('checklist_id')->references('id')->on('checklists');
-            $table->foreign('facility_id')->references('id')->on('facilities');
             $table->dateTime('date_started')->nullable();
             $table->dateTime('date_ended')->nullable();
             $table->dateTime('date_submitted')->nullable();
+
+            $table->foreign('checklist_id')->references('id')->on('checklists');
+            $table->foreign('facility_id')->references('id')->on('facilities');
 
             $table->softDeletes();
 			$table->timestamps();
@@ -368,11 +369,11 @@ class CreateMflTables extends Migration {
 			$table->increments('id')->unsigned();
 			$table->integer('survey_id')->unsigned();
 			$table->integer('sdp_id')->unsigned();
+            $table->string('comment')->nullable();
 
 			$table->foreign('survey_id')->references('id')->on('surveys');
             $table->foreign('sdp_id')->references('id')->on('sdps');
-            $table->unique(array('survey_id', 'sdp_id'));
-            $table->string('comment')->nullable();
+            $table->unique(array('survey_id', 'sdp_id', 'comment'));
 
             $table->softDeletes();
 			$table->timestamps();
@@ -556,6 +557,17 @@ class CreateMflTables extends Migration {
 
             $table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
             $table->foreign('affiliation_id')->references('id')->on('affiliations');
+        });
+        //	survey_spirt_comments
+		Schema::create('survey_spirt_comments', function(Blueprint $table)
+        {
+            $table->increments('id')->unsigned();
+            $table->integer('survey_sdp_id')->unsigned();
+            $table->smallInteger('section_id');
+            $table->text('comments');
+
+            $table->softDeletes();
+            $table->foreign('survey_sdp_id')->references('id')->on('survey_sdps');
         });
         //	Levels
 		Schema::create('levels', function(Blueprint $table)

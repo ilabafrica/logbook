@@ -107,26 +107,6 @@ Route::group(['middleware' => 'auth'], function(){
     ));
     //assign testkit
     Route::resource('siteKit', 'SiteKitController');
-    //result
-    Route::resource('result', 'ResultController');
-    //nationalreport
-    Route::resource('nationalreport', 'NationalReportController');
-    //countyreport
-    Route::resource('countyreport', 'CountyReportController');
-    //subcountyreport
-    Route::resource('subCountyreport', 'SubCountyReportController');
-    //countyreport
-    Route::resource('facilityreport', 'FacilityReportController');
-    //nationalreport
-    Route::resource('nationalreport', 'NationalReportController');
-    //%pos
-    Route::resource('positive', 'PositiveReportController');
-    //posAgreement
-    Route::resource('positiveAgr', 'PositiveAgrReportController');
-    //overallAgreement
-    Route::resource('overallAgr', 'OverallAgrReportController');
-    //inv
-    Route::resource('invalidresult', 'InvalidReportController');
     //  Site Types controller
     Route::resource('siteType', 'SiteTypeController');
     Route::get("/siteType/{id}/delete", array(
@@ -457,5 +437,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('page/{id}/download', array(
         "as"    =>  "survey.sdp.page.download",
         "uses"  =>  "SurveyController@pageDownload"
+    ));    
+    Route::get('overview', array(
+        "as"    =>  "survey.summary",
+        "uses"  =>  "SurveyController@overview"
     ));
 });

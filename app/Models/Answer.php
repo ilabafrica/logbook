@@ -91,9 +91,14 @@ class Answer extends Model implements Revisionable {
 										}
 									}
 			$values = $values->get(array('survey_questions.*'));
-			foreach ($values as $sq) {
-				if($sq->sd->answer == $this->name)
+			foreach ($values as $key => $value)
+			{
+				$sq = SurveyQuestion::find($value->id);
+				if($sq->sd)
+				{
+					if($sq->sd->answer == $this->score)
 					$total++;
+				}
 			}
 		}
 		return $total;

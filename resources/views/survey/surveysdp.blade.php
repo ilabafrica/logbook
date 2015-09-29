@@ -85,9 +85,10 @@
                         <?php $counter = 0; ?>
                         <tbody>
                             @foreach($surveysdp->sqs as $sq)
+                            <?php $qstn = App\Models\Question::find($sq->question_id); ?>
                             <tr>
-                                <td>{!! App\Models\Question::find($sq->question_id)->name !!}</td>
-                                <td>{!! $sq->sd->answer !!}</td>
+                                <td>{!! $qstn->name !!}</td>
+                                <td>{!! $qstn->question_type == App\Models\Question::CHOICE?App\Models\Answer::nameByScore($sq->sd->answer):$sq->sd->answer !!}</td>
                             </tr>
                             @endforeach
                         </tbody>

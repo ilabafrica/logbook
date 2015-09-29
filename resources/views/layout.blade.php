@@ -77,6 +77,11 @@
                     </a>
                 </li>
 
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="{!! url('overview') !!}" role="button" aria-expanded="false">
+                        <span class="fa fa-circle-o-notch"></span> {!! Lang::choice('messages.summary', 1) !!}
+                    </a>
+                </li>
              </ul>   
               <ul class="nav navbar-top-links navbar-right">
                     <li class="dropdown">

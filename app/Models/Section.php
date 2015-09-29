@@ -70,7 +70,7 @@ class Section extends Model implements Revisionable {
 		$array = array();
 		foreach ($this->questions as $question)
 		{
-			if($question->answers->count()>0)
+			if($question->question_type == Question::CHOICE)
 				array_push($array, $question);
 		}
 		$counter = 0;
@@ -127,7 +127,9 @@ class Section extends Model implements Revisionable {
 			$values = $values->get(array('survey_questions.*'));
 			foreach ($values as $key => $value) 
 			{
-				$points+=SurveyQuestion::find($value->id)->ss->score;
+				$sq = SurveyQuestion::find($value->id);
+				if($sq->sd)
+					$points+=(int)$sq->sd->answer;
 			}
 		}
 		return round($points*100/($this->total_points*$counter), 2);
@@ -195,9 +197,11 @@ class Section extends Model implements Revisionable {
 						$counter = $values->count();
 					}
 					$values = $values->get(array('survey_questions.*'));
-					foreach ($values as $sq) 
+					foreach ($values as $key => $value) 
 					{
-						$total+=$sq->ss->score;
+						$sq = SurveyQuestion::find($value->id);
+						if($sq->sd)
+							$total+=(int)$sq->sd->answer;
 					}
 				}
 			}
@@ -258,8 +262,10 @@ class Section extends Model implements Revisionable {
 										}
 									}
 			$values = $values->get(array('survey_questions.*'));
-			foreach ($values as $sq) {
-				if($sq->sd->answer)
+			foreach ($values as $key => $value) 
+			{
+				$sq = SurveyQuestion::find($value->id);
+				if($sq->sd)
 					$total++;
 			}
 		}
@@ -318,11 +324,33 @@ class Section extends Model implements Revisionable {
 					foreach ($question->sqs as $sq) 
 					{
 						if(in_array($sq->survey_sdp_id, $survey_sdp_ids))
-							$total+=$sq->ss->score;
+							$total+=$sq->sd->answer;
 					}
 				}
 			}
 			return $counter!=0?round(($total*100)/($this->total_points*$counter), 2):0.00;
+		}
+	}
+	/**
+	* Return Section ID given the name
+	* @param $name the name of the section
+	*/
+	public static function idByName($name=NULL)
+	{
+		if($name!=NULL){
+			try 
+			{
+				$section = Section::where('name', $name)->orderBy('name', 'asc')->firstOrFail();
+				return $section->id;
+			} catch (ModelNotFoundException $e) 
+			{
+				Log::error("The section ` $name ` does not exist:  ". $e->getMessage());
+				//TODO: send email?
+				return null;
+			}
+		}
+		else{
+			return null;
 		}
 	}
 }
