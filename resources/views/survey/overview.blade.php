@@ -45,7 +45,7 @@
                     <table class="table table-striped table-bordered table-hover">
                         <tbody>
                             <tr>
-                                <td>{!! 'All' !!}</td>
+                                <td>{!! 'M&E, SPIRT and HTC Lab Register' !!}</td>
                                 <td>{!! $all !!}</td>
                             </tr>
                             <tr>
