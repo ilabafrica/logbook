@@ -17,6 +17,11 @@
             {{ trans('messages.fill-questionnaire') }}
           </a>
         </span>
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
     </div>
     <div class="panel-body">
         @if(session()->has('message'))
@@ -33,6 +38,7 @@
                             <th>{{ Lang::choice('messages.response-no', 1) }}</th>
                             <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility', 1) }}</th>
+                            <th>{{ Lang::choice('messages.sdp', 2) }}</th>
                             <th>{{ Lang::choice('messages.date', 1) }}</th>
                             <th>{{ Lang::choice('messages.status', 1) }}</th>
                             <th>{{ Lang::choice('messages.action', 2) }}</th>
@@ -46,6 +52,7 @@
                             <td>{{ $counter }}</td>
                             <td>{{ $survey->qa_officer }}</td>
                             <td>{{ $survey->facility->name }}</td>
+                            <td>{{ implode(", ", $survey->ssdps()) }}</td>
                             <td>{{ $survey->created_at }}</td>
                             <td></td>
                             <td>

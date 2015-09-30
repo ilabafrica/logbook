@@ -615,10 +615,12 @@ class ReportController extends Controller {
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
@@ -636,7 +638,8 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+				$cc = County::find($jimbo);
+				$title = $cc->name.' '.Lang::choice('messages.county', 1);				
 			}
 		}
 		else
@@ -739,6 +742,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
+	    //dd($subCounties);
 		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
 	}
 	/**

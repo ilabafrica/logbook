@@ -16,10 +16,16 @@
 </div>
 <div class="panel panel-primary">
   <div class="panel-heading"><i class="fa fa-tags"></i> {!! $survey->checklist->name !!} <span class="panel-btn">
-  <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id.'/edit') !!}" >
-    <i class="fa fa-edit"></i><span> {{ trans('messages.edit-questionnaire') }}</span>
-  </a>
-  </span></div>
+      <a class="btn btn-sm btn-info" href="{!! url('survey/'.$survey->id.'/edit') !!}" >
+          <i class="fa fa-edit"></i><span> {{ trans('messages.edit-questionnaire') }}</span>
+      </a>
+  </span>
+    <span class="panel-btn">
+        <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+            <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+        </a>
+    </span>
+  </div>
   <div class="panel-body">
       <table class="table table-striped table-bordered table-hover">
           <thead>

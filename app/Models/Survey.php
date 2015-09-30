@@ -110,4 +110,20 @@ class Survey extends Model implements Revisionable {
 	{
 		return $this->hasMany('App\Models\SurveySdp');
 	}
+    /**
+     * Get sdps in a list e.g. VCT, PMTC, OPD...
+     */
+    public function ssdps()
+    {
+        $ssdps = array();
+        foreach ($this->sdps as $key => $value)
+        {
+            $sdp = Sdp::find($value->sdp_id);
+            $data = $sdp->name;
+            if($value->comment)
+            	$data = $sdp->name.' ('.$value->comment.')';
+            array_push($ssdps, $data);
+        }
+        return $ssdps;
+    }
 }
