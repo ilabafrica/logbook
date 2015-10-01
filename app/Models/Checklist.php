@@ -102,28 +102,112 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to calculate level
 	 */
-	public function level($level = null)
+	public function level($county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $year = 0, $month = 0)
 	{
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		$scores = Answer::lists('score');
 		$providersenrolled = Question::idById('providersenrolled');
 		$correctiveactionproviders = Question::idById('correctiveactionproviders');
-		$data = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-								->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-								->where('checklist_id', $this->id)
-								->whereIn('survey_data.answer', $scores)
-								->whereNotIn('question_id', [$providersenrolled, $correctiveactionproviders])
-								->get(array('survey_data.*'));
+		$data = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id');
+								if($county || $sub_county || $site || $sdp)
+								{
+									if($sub_county || $site || $sdp)
+									{
+										if($site || $sdp)
+										{
+											if($sdp)
+											{
+												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																		   ->where('sdp_id', $site);
+											}
+											else
+											{
+												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																		   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		   ->where('facility_id', $site);
+											}
+										}
+										else
+										{
+											$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																	   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																	   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 		 		   ->where('sub_county_id', $sub_county);
+										}
+									}
+									else
+									{
+										$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+														 		   ->where('county_id', $county);
+									}
+								}
+								if (strlen($theDate)>0) {
+									$values = $values->where('date_submitted', 'LIKE', $theDate."%");
+								}
+								$data = $data->where('checklist_id', $this->id)
+											 ->whereIn('survey_data.answer', $scores)
+											 ->whereNotIn('question_id', [$providersenrolled, $correctiveactionproviders])
+								 			 ->get(array('survey_data.*'));
 		$counter = 0;
 		$total = 0.00;
 		$overall_points = 0;
 		$total_points = $this->sections->sum('total_points');
 		$submissions = $this->ssdps();
 		//	Check determinant for either 65 or 72
-		$determinant = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-								->where('question_id', Question::idById('dbsapply'))
-								->where('answer', '0')
-								->count();
+		
+								
+		$determinant = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id');
+								if($county || $sub_county || $site || $sdp)
+								{
+									if($sub_county || $site || $sdp)
+									{
+										if($site || $sdp)
+										{
+											if($sdp)
+											{
+												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																		   ->where('sdp_id', $site);
+											}
+											else
+											{
+												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																		   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																		   ->where('facility_id', $site);
+											}
+										}
+										else
+										{
+											$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																	   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																	   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 		 		   ->where('sub_county_id', $sub_county);
+										}
+									}
+									else
+									{
+										$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+														 		   ->where('county_id', $county);
+									}
+								}
+								$determinant = $determinant->where('question_id', Question::idById('dbsapply'))
+														   ->where('answer', '0')
+														   ->count();
 		$total = $data->sum('answer');
 		$overall_points = ($total_points*$submissions)-(5*$determinant);
 		$score = round($total*100/$overall_points, 2);
