@@ -71,68 +71,89 @@ class Section extends Model implements Revisionable {
 		foreach ($this->questions as $question)
 		{
 			if($question->question_type == Question::CHOICE)
-				array_push($array, $question);
+				array_push($array, $question->id);
 		}
+		$providersenrolled = Question::idById('providersenrolled');
+		$correctiveactionproviders = Question::idById('correctiveactionproviders');
+		$unwanted = [$providersenrolled, $correctiveactionproviders];
+		$array = array_diff($array, $unwanted);
 		$counter = 0;
 		$checklist = Checklist::idByName('SPI-RT Checklist');
-		foreach ($array as $question)
-		{
-			$values=SurveyQuestion::where('question_id', $question->id)
-									->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-									->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
-									if($from && $to)
+		$determinants = 0;
+		$values=SurveyQuestion::whereIn('question_id', $array)
+								->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
+								if($from && $to)
+								{
+									$values = $values->whereBetween('date_submitted', [$from, $to]);
+								}
+								if($county || $sub_county || $site)
+								{
+									if($sub_county || $site)
 									{
-										$values = $values->whereBetween('date_submitted', [$from, $to]);
-									}
-									if($county || $sub_county || $site)
-									{
-										if($sub_county || $site)
+										if(isset($site))
 										{
-											if(isset($site))
-											{
-												$values = $values->where('facility_id', $site);
-												$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	->where('checklist_id', $checklist)
-																	->where('facility_id', $site)
-																	->whereBetween('date_submitted', [$from, $to])->count();
-											}
-											else
-											{
-												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-														 		 ->where('sub_county_id', $sub_county);
-												$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																	->where('checklist_id', $checklist)
-																	->where('sub_county_id', $sub_county)
-																	->whereBetween('date_submitted', [$from, $to])->count();
-											}
+											$values = $values->where('facility_id', $site);
+											$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																->where('checklist_id', $checklist)
+																->where('facility_id', $site)
+																->whereBetween('date_submitted', [$from, $to])->count();
 										}
 										else
 										{
 											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-															 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-															 ->where('county_id', $county);
+													 		 ->where('sub_county_id', $sub_county);
 											$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																	->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-																	->where('checklist_id', $checklist)
-																	->where('county_id', $county)
-																	->whereBetween('date_submitted', [$from, $to])->count();
+																->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																->where('checklist_id', $checklist)
+																->where('sub_county_id', $sub_county)
+																->whereBetween('date_submitted', [$from, $to])->count();
 										}
 									}
 									else
 									{
-										$counter = $values->count();
+										$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+														 ->where('county_id', $county);
+										$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+																->where('checklist_id', $checklist)
+																->where('county_id', $county)
+																->whereBetween('date_submitted', [$from, $to])->count();
 									}
-			$values = $values->get(array('survey_questions.*'));
-			foreach ($values as $key => $value) 
-			{
-				$sq = SurveyQuestion::find($value->id);
-				if($sq->sd)
-					$points+=(int)$sq->sd->answer;
-			}
+								}
+								else
+								{
+									$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+													->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+													->join('counties', 'counties.id', '=', 'sub_counties.county_id')
+													->where('checklist_id', $checklist)
+													->whereBetween('date_submitted', [$from, $to])->count();
+								}
+		$values = $values->get(array('survey_questions.*'));
+		//	dd(Question::find(Question::idById('dbsapply'))); id = 266
+		$determinants = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+								->where('question_id', Question::idById('dbsapply'))
+								->where('answer', '0')
+								->count();
+		foreach ($values as $key => $value) 
+		{
+			$sq = SurveyQuestion::find($value->id);
+			if($sq->sd)
+				$points+=(int)$sq->sd->answer;
 		}
-		return round($points*100/($this->total_points*$counter), 2);
+		$percentage = 0.00;
+		if($this->id == Section::idByName('Section 8.0'))
+		{
+			$percentage = round($points*100/(($this->total_points*$counter)-($determinants*5)), 2);
+		}
+		else
+		{
+			$percentage = round($points*100/($this->total_points*$counter), 2);
+		}
+		return $percentage;
 	}
 	/**
 	 * Function to calculate the snapshot given section
