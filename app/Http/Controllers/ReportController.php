@@ -777,8 +777,10 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		$from = date('Y-08-d');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$months = json_decode(self::getMonths($from, $to));
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
@@ -885,7 +887,7 @@ class ReportController extends Controller {
 	    {
 	    	$data[$category->id] = $category->spider($site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
-	    $level = $checklist->level();
+	    $level = $checklist->level($jimbo, $sub_county, $site, NULL, $month->annum, $month->months);
 	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site', 'level'));
 	}
 	/**
@@ -1666,7 +1668,63 @@ class ReportController extends Controller {
 		//	Get levels
 		$levels = Level::all();
 		//	Get sdps
-		$sdps = array_unique($checklist->surveys->lists('sdp_id'));
+		$sdps = Sdp::all();
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$from = Input::get('from');
+		$from = date('Y-08-d');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		}
+		if(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+		}
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+		}
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -1682,7 +1740,7 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            	foreach ($sdps as $sdp) {
-	            		$chart.="'".Sdp::find($sdp)->name."',";
+	            		$chart.="'".$sdp->name."',";
 	            	}
 	            $chart.="]
 	        },
@@ -1717,7 +1775,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
 	        		$counter = count($sdps);
 	        		foreach ($sdps as $sdp) {
-	        			$data = $checklist->level();
+	        			$data = $level->level($checklist->id, $jimbo, $sub_county, $site, $sdp->id, $from, $toPlusOne);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -1744,7 +1802,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.spirt.sdp', compact('checklist', 'levels', 'sdps', 'chart'));
+		return view('report.spirt.level', compact('checklist', 'levels', 'sdps', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'title', 'from', 'to'));
 	}
 	/**
 	 * Return eval report

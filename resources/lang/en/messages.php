@@ -430,6 +430,7 @@ return [
 	'me-spirt'	=>	'M&E and SPI-RT',
 	'me-htc'	=>	'M&E and HTC Lab Register',
 	'htc-spirt'	=>	'HTC Lab Register and SPI-RT',
+	'level-comparison'	=>	'Levels Comparison',
 	/**
 	*
 	* Local partner analysis
