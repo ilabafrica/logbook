@@ -103,14 +103,16 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="{!! count($categories) !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title !!}</td>
+                                    <td colspan="{!! count($categories)+1 !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title !!}</td>
                                 </tr>
                                 <tr>
+                                    <th>{!! Lang::choice('messages.level', 1) !!}</th>
                                     @foreach($categories as $category)
                                         <td>{!! $category->label !!}</td>
                                     @endforeach
                                 </tr>
                                 <tr>
+                                    <th>{!! $level !!}</th>
                                     @foreach($categories as $category)
                                         <td>{!! $data[$category->id].'%' !!}</td>
                                     @endforeach

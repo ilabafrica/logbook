@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
+use DB;
 
 class Checklist extends Model implements Revisionable {
     use SoftDeletes;
@@ -101,27 +102,32 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to calculate level
 	 */
-	public function level($level)
+	public function level($level = null)
 	{
-		$data = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-						 ->where('surveys.checklist_id', $this->id)
-						 ->get();
+		$scores = Answer::lists('score');
+		$providersenrolled = Question::idById('providersenrolled');
+		$correctiveactionproviders = Question::idById('correctiveactionproviders');
+		$data = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+								->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+								->where('checklist_id', $this->id)
+								->whereIn('survey_data.answer', $scores)
+								->whereNotIn('question_id', [$providersenrolled, $correctiveactionproviders])
+								->get(array('survey_data.*'));
 		$counter = 0;
 		$total = 0.00;
+		$overall_points = 0;
 		$total_points = $this->sections->sum('total_points');
-		foreach ($data as $datum)
-		{
-			foreach ($datum->sqs as $sq)
-			{
-				if($sq->question->answers->count()>0)
-					$total+=$sq->ss->score;
-			}
-			if(($total*100/$total_points >= $level->range_lower) && ($total*100/$total_points <= $level->range_upper))
-			{
-				$counter++;
-			}
-		}
-		return round($counter/count($data), 2);
+		$submissions = $this->ssdps();
+		//	Check determinant for either 65 or 72
+		$determinant = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+								->where('question_id', Question::idById('dbsapply'))
+								->where('answer', '0')
+								->count();
+		$total = $data->sum('answer');
+		$overall_points = ($total_points*$submissions)-(5*$determinant);
+		$score = round($total*100/$overall_points, 2);
+		return $this->levelCheck($score);
 	}
 	/**
 	 * Count unique officers who participated in survey
@@ -181,5 +187,17 @@ class Checklist extends Model implements Revisionable {
 			array_push($counties, SubCounty::find($sub)->county->id);
 		}
 		return array_unique($counties);
+	}
+	/**
+	 * Function to return level given the score
+	 */
+	public function levelCheck($score)
+	{
+		$levels = Level::all();
+		foreach ($levels as $level)
+		{
+			if(($score<=$level->range_upper) && ($score>=$level->range_lower))
+				return $level->name;
+		}
 	}
 }
