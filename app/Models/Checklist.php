@@ -39,8 +39,19 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $list = NULL)
+	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $list = NULL, $year = 0, $month = 0, $date = 0)
 	{
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		$ssdps =  $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
 					if($from && $to)
 					{
@@ -66,6 +77,10 @@ class Checklist extends Model implements Revisionable {
 											 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 											 ->where('county_id', $county);
 						}
+					}
+					if (strlen($theDate)>0)
+					{
+						$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
 					}
 					if($list)
 					{
@@ -127,19 +142,19 @@ class Checklist extends Model implements Revisionable {
 										{
 											if($sdp)
 											{
-												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																		   ->where('sdp_id', $site);
+												$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																		   ->where('sdp_id', $sdp);
 											}
 											else
 											{
-												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+												$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
 																		   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 																		   ->where('facility_id', $site);
 											}
 										}
 										else
 										{
-											$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+											$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
 																	   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 																	   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 													 		 		   ->where('sub_county_id', $sub_county);
@@ -147,15 +162,23 @@ class Checklist extends Model implements Revisionable {
 									}
 									else
 									{
-										$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+										$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
 																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
 																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
 														 		   ->where('county_id', $county);
 									}
 								}
+								else
+								{
+									$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+														 		   ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
+								}
 								if (strlen($theDate)>0) {
-									$values = $values->where('date_submitted', 'LIKE', $theDate."%");
+									$data = $data->where('date_submitted', 'LIKE', $theDate."%");
 								}
 								$data = $data->where('checklist_id', $this->id)
 											 ->whereIn('survey_data.answer', $scores)

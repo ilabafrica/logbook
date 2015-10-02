@@ -511,6 +511,7 @@ class SurveyController extends Controller {
         //	dd($data);
         foreach ($data as $key => $value)
         {
+        	//dd($value);
         	$checklist_id = $checklist;
         	$facility_id = NULL;
         	$facility = $value["mysites"];
