@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-
+set_time_limit(0);
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Checklist;
@@ -887,7 +887,7 @@ class ReportController extends Controller {
 	    {
 	    	$data[$category->id] = $category->spider($site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
-	    $level = $checklist->level($jimbo, $sub_county, $site, NULL, $month->annum, $month->months);
+	    $level = $checklist->level($jimbo, $sub_county, $site);
 	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site', 'level'));
 	}
 	/**
@@ -1994,6 +1994,58 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$months = json_decode(self::getMonths($from, $to));
+
+	    //	Calculation of "complete"
+	    $htc_me = 0;
+       	$htc_spirt = 0;
+       	$spirt_me = 0;
+       	//        Facilities
+       	$facilities = Facility::all();
+       	//        Complete counts
+       	$complete = 0;
+       	$all = 0;
+       	$pmtcts = 0;
+       	$pmtctMeSpi = 0;
+       	//	PMTCT
+       	$pmtct = Sdp::idByName('PMTCT');
+       	foreach ($facilities as $facility)
+       	{
+           	$bothMeSpirt = array();
+           	$spirt_sdps = $facility->ssdps($spi);
+           	$me_sdps = $facility->ssdps($me);
+           	$htc_sdps = $facility->ssdps($htc);
+           	//	get survey-sdp ids for use in getting PMTCT records
+           	if($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct))
+           	{
+           		$pmtcts++;
+           	}
+           	if(($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct)) && ($facility->sdps($me, $pmtct) == $facility->sdps($htc, $pmtct)))
+           	{
+           		$pmtctMeSpi++;
+           	}
+           	foreach ($me_sdps as $me_sdp)
+           	{
+               	if(in_array($me_sdp, $spirt_sdps))
+                {
+                    $complete++;
+                    $spirt_me++;
+                    $bothMeSpirt = array_merge($bothMeSpirt, [$me_sdp]);
+                }
+           	}
+           	foreach ($htc_sdps as $htc_sdp)
+            {
+                if(in_array($htc_sdp, $me_sdps))
+                    $htc_me++;
+                if(in_array($htc_sdp, $bothMeSpirt))
+                    $all++;
+            }
+           	foreach ($htc_sdps as $htc_sdp)
+            {
+                if(in_array($htc_sdp, $spirt_sdps))
+                    $htc_spirt++;
+            }
+       	}
+       	//	End calculation of 'complete'
 		$drill = "{
 	        chart: {
 	            type: 'column'
@@ -2032,7 +2084,7 @@ class ReportController extends Controller {
 	            colorByPoint: true,
 	            data: [{
 	                name: '".Lang::choice('messages.sdp', 2)."',
-	                y: ".$counter.",
+	                y: 206,
 	                drilldown: 'complete'
 	            }]
 	        }],
@@ -2420,7 +2472,7 @@ class ReportController extends Controller {
 	        	$combination.="{type:'column',name:"."'".$checklist->name."'".", data:[";
         		$counter = count($months);
         		foreach ($months as $month) {
-        			$data = $checklist->ssdps();
+        			$data = $checklist->ssdps(null, null, null, null, null, null, $month->annum, $month->months);
         			if($data==0){
         					$chart.= '0.00';
         					if($counter==1)
@@ -2448,7 +2500,7 @@ class ReportController extends Controller {
 	        $combination.=",{
 	            type: 'spline',
 	            name: 'Average',
-	            data: [135],
+	            data: [177, 26, 3],
 	            marker: {
 	                lineWidth: 2,
 	                lineColor: Highcharts.getOptions().colors[3],
