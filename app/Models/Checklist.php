@@ -117,124 +117,16 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to calculate level
 	 */
-	public function level($county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $year = 0, $month = 0)
+	public function level($categories, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
 	{
-		//	Check dates
-		$theDate = "";
-		if ($year > 0) {
-			$theDate .= $year;
-			if ($month > 0) {
-				$theDate .= "-".sprintf("%02d", $month);
-				if ($date > 0) {
-					$theDate .= "-".sprintf("%02d", $date);
-				}
-			}
+		//	Get scores for each section
+		$counter = count($categories);
+		$percentage = 0.00;
+		foreach ($categories as $section)
+		{
+			$percentage+=$section->spider($site, $sub_county, $county, $from, $to);
 		}
-		$scores = Answer::lists('score');
-		$providersenrolled = Question::idById('providersenrolled');
-		$correctiveactionproviders = Question::idById('correctiveactionproviders');
-		$data = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id');
-								if($county || $sub_county || $site || $sdp)
-								{
-									if($sub_county || $site || $sdp)
-									{
-										if($site || $sdp)
-										{
-											if($sdp)
-											{
-												$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																		   ->where('sdp_id', $sdp);
-											}
-											else
-											{
-												$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																		   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		   ->where('facility_id', $site);
-											}
-										}
-										else
-										{
-											$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																	   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													 		 		   ->where('sub_county_id', $sub_county);
-										}
-									}
-									else
-									{
-										$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-														 		   ->where('county_id', $county);
-									}
-								}
-								else
-								{
-									$data = $data->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-														 		   ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
-								}
-								if (strlen($theDate)>0) {
-									$data = $data->where('date_submitted', 'LIKE', $theDate."%");
-								}
-								$data = $data->where('checklist_id', $this->id)
-											 ->whereIn('survey_data.answer', $scores)
-											 ->whereNotIn('question_id', [$providersenrolled, $correctiveactionproviders])
-								 			 ->get(array('survey_data.*'));
-		$counter = 0;
-		$total = 0.00;
-		$overall_points = 0;
-		$total_points = $this->sections->sum('total_points');
-		$submissions = $this->ssdps();
-		//	Check determinant for either 65 or 72
-		
-								
-		$determinant = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id');
-								if($county || $sub_county || $site || $sdp)
-								{
-									if($sub_county || $site || $sdp)
-									{
-										if($site || $sdp)
-										{
-											if($sdp)
-											{
-												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																		   ->where('sdp_id', $site);
-											}
-											else
-											{
-												$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																		   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																		   ->where('facility_id', $site);
-											}
-										}
-										else
-										{
-											$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																	   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																	   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													 		 		   ->where('sub_county_id', $sub_county);
-										}
-									}
-									else
-									{
-										$determinant = $determinant->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-																   ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																   ->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-														 		   ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-														 		   ->where('county_id', $county);
-									}
-								}
-								$determinant = $determinant->where('question_id', Question::idById('dbsapply'))
-														   ->where('answer', '0')
-														   ->count();
-		$total = $data->sum('answer');
-		$overall_points = ($total_points*$submissions)-(5*$determinant);
-		$score = round($total*100/$overall_points, 2);
-		return $this->levelCheck($score);
+		return $this->levelCheck($percentage/$counter);
 	}
 	/**
 	 * Count unique officers who participated in survey
@@ -306,5 +198,45 @@ class Checklist extends Model implements Revisionable {
 			if(($score<=$level->range_upper) && ($score>=$level->range_lower))
 				return $level->name;
 		}
+	}
+	/**
+	 * Function to return percent of sites in each range - percentage
+	 */
+	public function overallAgreement($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	{
+		//	Get scores for each section
+		$counter = 0;
+		$range = $this->corrRange($percentage);
+		$total_sites = count($sdps);	
+		foreach ($sdps as $sdp)
+		{
+			$agreement = Sdp::find($sdp)->overallAgreement($site, $sub_county, $jimbo, $year, $month);
+			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+				$counter++;
+		}
+		return round($counter*100/$total_sites, 2);
+	}
+	/**
+	 * Function to return corresponding range given the percentage
+	 */
+	public function corrRange($percentage)
+	{
+		$range = array();
+		if($percentage === '<95%')
+		{
+			$range['lower'] = 0;
+			$range['upper'] = 95;
+		}
+		else if($percentage === '95-98%')
+		{
+			$range['lower'] = 95;
+			$range['upper'] = 98;
+		}
+		else if($percentage === '>98%')
+		{
+			$range['lower'] = 98;
+			$range['upper'] = 100;
+		}
+		return $range;
 	}
 }

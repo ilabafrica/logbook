@@ -97,14 +97,20 @@
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
             </div>
+        </div>
+        {!! Form::close() !!}
             <hr />
             <div class="row">
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 300px"></div>
+                    <div id="chart" style="height: 400px"></div>
                 </div>
             </div>
-        </div>
-        {!! Form::close() !!}
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="percent" style="height: 400px"></div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->
@@ -114,7 +120,8 @@
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
 <script type="text/javascript">
     $(function () {
-        $('#chart').highcharts(<?php echo $chart ?>);  
+        $('#chart').highcharts(<?php echo $chart ?>);
+        $('#percent').highcharts(<?php echo $percent ?>);
     });
 </script>
 @stop

@@ -66,94 +66,71 @@ class Section extends Model implements Revisionable {
 	 */
 	public function spider($site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
 	{
-		$points = 0.0;
-		$array = array();
-		foreach ($this->questions as $question)
-		{
-			if($question->question_type == Question::CHOICE)
-				array_push($array, $question->id);
-		}
-		$providersenrolled = Question::idById('providersenrolled');
-		$correctiveactionproviders = Question::idById('correctiveactionproviders');
-		$unwanted = [$providersenrolled, $correctiveactionproviders];
-		$array = array_diff($array, $unwanted);
-		$counter = 0;
+		//	Start optimization
 		$checklist = Checklist::idByName('SPI-RT Checklist');
-		$determinants = 0;
-		$values=SurveyQuestion::whereIn('question_id', $array)
-								->join('survey_sdps', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id');
-								if($from && $to)
-								{
-									$values = $values->whereBetween('date_submitted', [$from, $to]);
-								}
-								if($county || $sub_county || $site)
-								{
-									if($sub_county || $site)
-									{
-										if(isset($site))
-										{
-											$values = $values->where('facility_id', $site);
-											$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																->where('checklist_id', $checklist)
-																->where('facility_id', $site)
-																->whereBetween('date_submitted', [$from, $to])->count();
-										}
-										else
-										{
-											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													 		 ->where('sub_county_id', $sub_county);
-											$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																->where('checklist_id', $checklist)
-																->where('sub_county_id', $sub_county)
-																->whereBetween('date_submitted', [$from, $to])->count();
-										}
-									}
-									else
-									{
-										$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-														 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-														 ->where('county_id', $county);
-										$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-																->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-																->where('checklist_id', $checklist)
-																->where('county_id', $county)
-																->whereBetween('date_submitted', [$from, $to])->count();
-									}
-								}
-								else
-								{
-									$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-													->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-													->join('counties', 'counties.id', '=', 'sub_counties.county_id')
-													->where('checklist_id', $checklist)
-													->whereBetween('date_submitted', [$from, $to])->count();
-								}
-		$values = $values->get(array('survey_questions.*'));
-		//	dd(Question::find(Question::idById('dbsapply'))); id = 266
-		$determinants = SurveyData::join('survey_questions', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-								->where('question_id', Question::idById('dbsapply'))
-								->where('answer', '0')
-								->count();
-		foreach ($values as $key => $value) 
-		{
-			$sq = SurveyQuestion::find($value->id);
-			if($sq->sd)
-				$points+=(int)$sq->sd->answer;
-		}
-		$percentage = 0.00;
-		if($this->id == Section::idByName('Section 8.0'))
-		{
-			$percentage = round($points*100/(($this->total_points*$counter)-($determinants*5)), 2);
-		}
-		else
-		{
-			$percentage = round($points*100/($this->total_points*$counter), 2);
-		}
-		return $percentage;
+		//  Get data to be used
+        $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+                            ->where('checklist_id', $checklist);
+                            if($from && $to)
+                            {
+                                $values = $values->whereBetween('date_submitted', [$from, $to]);
+                            }
+                            if($county || $sub_county || $site)
+                            {
+                                if($sub_county || $site)
+                                {
+                                    if($site)
+                                    {
+                                        $values = $values->where('facility_id', $site);
+                                    }
+                                    else
+                                    {
+                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                         ->where('sub_county_id', $sub_county);
+                                    }
+                                }
+                                else
+                                {
+                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                                                     ->where('county_id', $county);
+                                }
+                            }
+                            else
+                            {
+                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
+                            }
+                            $values = $values->get(array('survey_sdps.*'));
+        //  Define variables for use
+        $counter = 0;
+        $total_counts = count($values);
+        $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
+        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
+        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
+        $reductions = 0;
+        $calculated_points = 0.00;
+        $percentage = 0.00;
+        //  Begin processing
+        foreach ($values as $key => $value)
+        {
+            
+            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
+                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+                                  ->whereIn('survey_data.answer', Answer::lists('score'))
+                                  ->whereIn('question_id', $this->questions->lists('id'));
+            $calculated_points+= $sqtns->sum('answer');    
+            $reductions+= $sqtns->where('question_id', $notapplicable)
+                                ->where('answer', '0')
+                                ->count();
+        }
+        if($reductions>0)
+            $percentage = round($calculated_points*100/(($this->total_points*$total_counts)-($reductions*5)), 2);
+        else
+            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
+        return $percentage;
+		//	End optimization
 	}
 	/**
 	 * Function to calculate the snapshot given section
