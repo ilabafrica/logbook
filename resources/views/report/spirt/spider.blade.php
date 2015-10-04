@@ -108,10 +108,11 @@
                 <div class="col-sm-12">
                     <div id="data">
                         <div class="table-responsive">
+                            <?php $dates = ''; if($from==$to){ $dates = trans('messages.for-the-year').' '.date('Y');}else{ $dates = trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to; }  ?>
                             <table class="table table-striped table-bordered table-hover">
                                 <tbody>
                                     <tr>
-                                        <td colspan="{!! count($categories)+1 !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title !!}</td>
+                                        <td colspan="{!! count($categories)+1 !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title.' '.$dates !!}</td>
                                     </tr>
                                     <tr>
                                         <th>{!! Lang::choice('messages.level', 1) !!}</th>
