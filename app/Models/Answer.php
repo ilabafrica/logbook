@@ -55,7 +55,7 @@ class Answer extends Model implements Revisionable {
 	/**
 	 * Function to calculate number of specific responses
 	 */
-	public function column($id, $county = null, $sub_county = null, $sdp =null, $site = null, $from = NULL, $to = NULL)
+	public function column($id, $county = null, $sub_county = null, $site = null, $sdp =null, $from = NULL, $to = NULL)
 	{
 		//	Initialize variables
 		$total = 0;
@@ -75,24 +75,22 @@ class Answer extends Model implements Revisionable {
 										{
 											if($site ||$sdp)
 											{
-											
-											if(isset($sdp))
-											{
-												$values = $values->where('sdp_id', $sdp);
-											}
-											else
+												if(isset($sdp))
+												{
+													$values = $values->where('sdp_id', $sdp);
+												}
+												else
 												{ 
-												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																 ->where('facility_id', $site);	
+													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																	 ->where('facility_id', $site);	
+												}
 											}
-										}
 											else
 											{
 												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
 														 		 ->where('sub_county_id', $sub_county);
 											}
-										}										
-
+										}
 										else
 										{
 											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')

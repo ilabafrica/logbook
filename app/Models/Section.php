@@ -114,6 +114,7 @@ class Section extends Model implements Revisionable {
                                                  ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
                             }
                             $values = $values->get(array('survey_sdps.*'));
+
         //  Define variables for use
         $counter = 0;
         $total_counts = count($values);
@@ -136,18 +137,16 @@ class Section extends Model implements Revisionable {
                                 ->where('answer', '0')
                                 ->count();
         }
-        if($reductions>0 && 'total_points'!=0)
+        if($reductions>0 && $total_counts!=0)
         {
             $percentage = round($calculated_points*100/(($this->total_points*$total_counts)-($reductions*5)), 2);
         }
-
-           else if('total_points'!=0)
-           {
-            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
-        	return $percentage;
+        else if($total_counts!=0)
+        {
+            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);        	
         }
+       	return $percentage;
 		//	End optimization
-
 	}
 	/**
 	 * Function to calculate the snapshot given section
