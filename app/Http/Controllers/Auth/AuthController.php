@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Support\Facades\Redirect;
 use App\Models\User;
+use Auth;
 
 class AuthController extends Controller {
 
@@ -49,7 +50,10 @@ class AuthController extends Controller {
 		$credentials = ['username' => $request->input('username'), 'password' => $request->input('password')];
 		if ($this->auth->attempt($credentials, $request->has('memory')))
 		{
-			return redirect('/checklist');
+			if(Auth::user()->hasRole('QA Supervisor'))
+				return redirect('dashboard');
+			else
+				return redirect('survey');
 		}
 		return redirect('/auth/login')
 		->with('error', 'Invalid credentials')

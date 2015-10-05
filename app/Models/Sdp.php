@@ -202,57 +202,62 @@ class Sdp extends Model implements Revisionable {
 			}
 		}
 		//	Get questions to be used in the math
-		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-1 Total Invalid', 'Test-2 Total Positive', 'Test-2 Total Negative', 'Test-2 Total Invalid');
+		$testOnePos = Question::idByName('Test-1 Total Positive');
+		$testOneNeg = Question::idByName('Test-1 Total Negative');
+		$testOneInv = Question::idByName('Test-1 Total Invalid');
+		$testTwoPos = Question::idByName('Test-2 Total Positive');
+		$testTwoNeg = Question::idByName('Test-2 Total Negative');
+		$testTwoInv = Question::idByName('Test-2 Total Invalid');
+		$totalTestOne = [$testOnePos, $testOneNeg, $testOneInv];
+		$invalids = [$testOneInv, $testTwoInv];
 		//	Math
-		foreach ($qstns as $qstn) 
-		{
-			$question = Question::idByName($qstn);
-			$values = HtcSurveyPageQuestion::where('question_id', $question)
-											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
-											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
-											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-											->where('sdp_id', $this->id);
-											if($county || $subCounty || $facility)
-											{
-												if($subCounty || $facility)
-												{
-													if($facility)
-													{
-														$values = $values->where('facility_id', $facility);
-													}
-													else
-													{
-														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																 		 ->where('sub_county_id', $subCounty);
-													}
-												}
-												else
-												{
-													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-																	 ->where('county_id', $county);
-												}
-											}
-											if (strlen($theDate)>0) {
-												$values = $values->where('date_submitted', 'LIKE', $theDate."%");
-											}
-											$values = $values->get(array('htc_survey_page_questions.*'));
-			foreach ($values as $key => $value) 
-			{
-				if(substr_count(Question::nameById($value->question_id), 'Test-1')>0)
-					$total+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				if(substr_count(Question::nameById($value->question_id), 'Invalid')>0)
-					$invalid+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				if(substr_count(Question::nameById($value->question_id), 'Test-1 Total Positive')>0)
-					$reactiveOne+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				if(substr_count(Question::nameById($value->question_id), 'Test-1 Total Negative')>0)
-					$nonReactiveOne+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				if(substr_count(Question::nameById($value->question_id), 'Test-2 Total Positive')>0)
-					$reactiveTwo+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				if(substr_count(Question::nameById($value->question_id), 'Test-2 Total Negative')>0)
-					$nonReactiveTwo+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-			}			
-		}
+		$values = HtcSurveyPageData::join('htc_survey_page_questions', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
+								->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
+								->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+								->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+								->where('sdp_id', $this->id);
+								if($county || $subCounty || $facility)
+								{
+									if($subCounty || $facility)
+									{
+										if($facility)
+										{
+											$values = $values->where('facility_id', $facility);
+										}
+										else
+										{
+											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 		 ->where('sub_county_id', $subCounty);
+										}
+									}
+									else
+									{
+										$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+														 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+														 ->where('county_id', $county);
+									}
+								}
+								else
+								{
+									$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+													 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
+								}
+								if (strlen($theDate)>0) {
+									$values = $values->where('date_submitted', 'LIKE', $theDate."%");
+								}
+		$clonedValue = clone $values;
+		$total=$clonedValue->whereIn('question_id', $totalTestOne)->sum('answer');
+		$clonedValue = clone $values;
+		$invalid=$clonedValue->whereIn('question_id', $invalids)->sum('answer');
+		$clonedValue = clone $values;
+		$reactiveOne=$clonedValue->where('question_id', $testOnePos)->sum('answer');
+		$clonedValue = clone $values;
+		$nonReactiveOne=$clonedValue->where('question_id', $testOneNeg)->sum('answer');
+		$clonedValue = clone $values;
+		$reactiveTwo=$clonedValue->where('question_id', $testTwoPos)->sum('answer');
+		$clonedValue = clone $values;
+		$nonReactiveTwo=$clonedValue->where('question_id', $testTwoNeg)->sum('answer');
 		$absReactive = abs($reactiveTwo-$reactiveOne);
 		$absNonReactive = abs($nonReactiveTwo-$nonReactiveOne);
 		return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
@@ -278,5 +283,16 @@ class Sdp extends Model implements Revisionable {
 		else{
 			return null;
 		}
+	}
+	/**
+	* Function to return counts of data submiited
+	*/
+	public function submissions($id, $check)
+	{
+		$ssdps = $this->surveys()->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+					  ->where('facility_id', $id)
+					  ->where('checklist_id', $check)
+					  ->count();
+		return $ssdps;
 	}
 }

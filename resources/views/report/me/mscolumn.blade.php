@@ -16,7 +16,12 @@
 @endif
 <div class="panel panel-default">
     <div class="panel-heading">
-        {!! $checklist->name !!}
+        <i class="fa fa-tags"></i> {!! $checklist->name !!}
+        <span class="panel-btn">
+            <a class="btn btn-outline btn-primary btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
@@ -37,7 +42,7 @@
                     <div class='form-group'>
                         {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, isset($jimbo)?$jimbo:'', 
+                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, old($jimbo)?old($jimbo):$jimbo, 
                                 array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
                         </div>
                     </div>
@@ -48,7 +53,7 @@
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, isset($sub_county)?$sub_county:'', 
+                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, old($sub_county)?old($sub_county):$sub_county, 
                                 array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
                         </div>
                     </div>
@@ -63,6 +68,7 @@
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
+
                             {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
                                 array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
                         </div>
@@ -76,6 +82,7 @@
                         <div class="col-sm-8">
                             {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
                                 array('class' => 'form-control', 'id' => 'sdp')) !!}
+
                         </div>
                     </div>
                 </div>

@@ -418,6 +418,19 @@ return [
 	'snapshot-label'	=>	'Snapshot (based on average score of all sites for each pillar) representing-',
 	'percentage'	=>	'Percentage',
 	'spirt-scores-comparison'	=>	'SPI-RT Scores Comparison',
+	'complete-check'	=>	'Complete Sites Check',
+	'complete-sdp'	=>	'Completed SDPs',
+	'complete'	=>	'Complete',
+	'incomplete'	=>	'Incomplete',
+	'sdp-comparison-overtime'	=>	'Submission Comparison Overtime',
+	'checklist-comparison'	=>	'Checklist Comparison',
+	'completion-status'	=>	'Completion Status',
+	'compiled-by'	=>	'Compiled by',
+	'checklist-submit-comparison'	=>	'Checklist submission comparison per facility',
+	'me-spirt'	=>	'M&E and SPI-RT',
+	'me-htc'	=>	'M&E and HTC Lab Register',
+	'htc-spirt'	=>	'HTC Lab Register and SPI-RT',
+	'level-comparison'	=>	'Levels Comparison',
 	/**
 	*
 	* Local partner analysis

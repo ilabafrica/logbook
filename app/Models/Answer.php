@@ -98,9 +98,14 @@ class Answer extends Model implements Revisionable {
 									}
 									
 			$values = $values->get(array('survey_questions.*'));
-			foreach ($values as $sq) {
-				if($sq->sd->answer == $this->name)
+			foreach ($values as $key => $value)
+			{
+				$sq = SurveyQuestion::find($value->id);
+				if($sq->sd)
+				{
+					if($sq->sd->answer == $this->score)
 					$total++;
+				}
 			}
 		}
 		return $total;
@@ -125,12 +130,17 @@ class Answer extends Model implements Revisionable {
 	* Return response name given the score
 	* @param $score the score of the response
 	*/
-	public static function nameByScore($score=NULL)
+	public static function nameByScore($checklist = null, $score=NULL)
 	{
 		if($score!=NULL){
 			try 
 			{
-				$response = Answer::where('score', $score)->orderBy('name', 'asc')->firstOrFail();
+				$response = Answer::where('score', $score);
+				if($checklist)
+					$response = $response->orderBy('name', 'asc');
+				else
+					$response = $response->orderBy('name', 'desc');
+				$response = $response->firstOrFail();
 				return $response->name;
 			} catch (ModelNotFoundException $e) 
 			{

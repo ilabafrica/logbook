@@ -33,7 +33,7 @@
                                         @if($county || $subCounty)
                                             <td>{!! count($surveys[$checklist->id]) !!}</td>
                                         @else
-                                            <td>{!! $checklist->surveys->count() !!}</td>
+                                            <td>{!! $checklist->ssdps() !!}</td>
                                         @endif                                        
                                     </tr>
                                     <tr>

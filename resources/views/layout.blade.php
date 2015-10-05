@@ -77,6 +77,11 @@
                     </a>
                 </li>
 
+                <li class="dropdown">
+                    <a class="dropdown-toggle" href="{!! url('overview') !!}" role="button" aria-expanded="false">
+                        <span class="fa fa-circle-o-notch"></span> {!! Lang::choice('messages.summary', 1) !!}
+                    </a>
+                </li>
              </ul>   
               <ul class="nav navbar-top-links navbar-right">
                     <li class="dropdown">
@@ -94,13 +99,20 @@
             </ul>
            
             <!-- /.navbar-top-links -->
-<div class="navbar-default sidebar" role="navigation">
+        <!-- Check when to show sidebar -->
+        @if(!Auth::user()->hasRole('QA Supervisor'))
+		<div class="navbar-default sidebar" role="navigation">
 
-   @include("sidebar")
-</div>
+		   @include("sidebar")
+		</div>
+		@endif
          <!-- /.navbar-static-side -->
         </nav>
+        @if(Auth::user()->hasRole('QA Supervisor'))
+        <div class="container-fluid">
+        @else
         <div id="page-wrapper">
+        @endif
             @yield('content')
         <hr>
         <p>Copyright &copy; {{ date('Y') }} | <a href="http://www.ilabafrica.ac.ke">@iLabAfrica</a></p>

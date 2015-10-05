@@ -260,7 +260,11 @@ function set_total(id) {
 /*Dynamic loading of select list options for counties-sub-counties*/
 function load(id){
     cId = $('#county_'+id).val();
+<<<<<<< HEAD
     var URL_ROOT = 'http://127.0.0.1/logbook/';
+=======
+    var URL_ROOT = 'http://www.hivqa.or.ke/';
+>>>>>>> master
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -290,7 +294,11 @@ function county(id){
 function dyn()
 {
     cId = $('#county').val();
+<<<<<<< HEAD
     var URL_ROOT = 'http://127.0.0.1/logbook/';
+=======
+    var URL_ROOT = 'http://www.hivqa.or.ke/';
+>>>>>>> master
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -311,7 +319,11 @@ function dyn()
 function drop()
 {
     cId = $('#sub_county').val();
+<<<<<<< HEAD
     var URL_ROOT = 'http://127.0.0.1/logbook/';
+=======
+    var URL_ROOT = 'http://www.hivqa.or.ke/';
+>>>>>>> master
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',

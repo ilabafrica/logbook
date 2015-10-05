@@ -15,19 +15,10 @@
 <div class="alert alert-info">{{Session::get('message')}}</div>
 @endif
 <div class="panel panel-default">
-    <div class="panel-heading">
-    </div>
-    <!-- /.panel-heading -->
     <div class="panel-body">
-        <!-- Nav tabs -->
-        <ul class="nav nav-tabs">
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content">
             <br />
             <p>
-                <a href="#" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
+                <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
                 <a href="{!! url('page/'.$page->id.'/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
             </p>
             <div class="row">
@@ -43,20 +34,17 @@
                         <tbody>
                         <?php $counter = 0; ?>
                         @foreach($page->questions as $question)
-                            <?php $counter++; ?>
+                            <?php $counter++; $qstn = App\Models\Question::find($question->question_id); ?>
                             <tr>
                                 <td>{!! $counter !!}</td>
-                                <td>{!! App\Models\Question::find($question->question_id)->name !!}</td>                                
-                                <td>{!! (App\Models\Question::find($question->question_id)->question_type == App\Models\Question::CHOICE)?App\Models\Answer::find($question->data->answer+1)->name:$question->data->answer !!}</td>
+                                <td>{!! $qstn->name !!}</td>                                
+                                <td>{!! ($qstn->question_type == App\Models\Question::CHOICE)?($question->data->answer == 0?'Yes':'No'):$question->data->answer !!}</td>
                             </tr>
                         @endforeach
                         </tbody>
                      </table>
                 </div>
             </div>
-          </div>
         </div>
     </div>
-    <!-- /.panel-body -->
-</div>
 @stop

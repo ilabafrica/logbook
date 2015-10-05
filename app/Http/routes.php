@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'WelcomeController@index');
+Route::any('/home', 'ReportController@dashboard');
+Route::any('/dashboard', 'ReportController@dashboard');
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',
@@ -40,7 +42,6 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "user.delete",
         "uses" => "UserController@delete"
     ));
-Route::resource('home', 'SurveyController');
 
     //  Facility Types controller
     Route::resource('facilityType', 'FacilityTypeController');
@@ -106,26 +107,6 @@ Route::resource('home', 'SurveyController');
     ));
     //assign testkit
     Route::resource('siteKit', 'SiteKitController');
-    //result
-    Route::resource('result', 'ResultController');
-    //nationalreport
-    Route::resource('nationalreport', 'NationalReportController');
-    //countyreport
-    Route::resource('countyreport', 'CountyReportController');
-    //subcountyreport
-    Route::resource('subCountyreport', 'SubCountyReportController');
-    //countyreport
-    Route::resource('facilityreport', 'FacilityReportController');
-    //nationalreport
-    Route::resource('nationalreport', 'NationalReportController');
-    //%pos
-    Route::resource('positive', 'PositiveReportController');
-    //posAgreement
-    Route::resource('positiveAgr', 'PositiveAgrReportController');
-    //overallAgreement
-    Route::resource('overallAgr', 'OverallAgrReportController');
-    //inv
-    Route::resource('invalidresult', 'InvalidReportController');
     //  Site Types controller
     Route::resource('siteType', 'SiteTypeController');
     Route::get("/siteType/{id}/delete", array(
@@ -460,5 +441,9 @@ Route::resource('home', 'SurveyController');
     Route::get('page/{id}/download', array(
         "as"    =>  "survey.sdp.page.download",
         "uses"  =>  "SurveyController@pageDownload"
+    ));    
+    Route::get('overview', array(
+        "as"    =>  "survey.summary",
+        "uses"  =>  "SurveyController@overview"
     ));
 });

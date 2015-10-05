@@ -27,10 +27,10 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
-            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
+            <li><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'report/'.$checklist->id.'/spirt', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'partner/sdp', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
             <!-- Tab panes -->
             <div class="tab-content">
@@ -57,34 +57,17 @@
                             </div>
                         </div>
                     </div>
-
-                @endif
-                
-            </div>
-            <hr/>
-            <div class="row">
-                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
-                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
+                    @endif
+                    @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, old($site)?old($site):$site, 
+                                    array('class' => 'form-control', 'id' => 'facility')) !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endif
-                 @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.sdp', 1), Lang::choice('messages.sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
-                                array('class' => 'form-control', 'id' => 'sdp')) !!}
-
-                        </div>
-                    </div>
-                 </div>
                     @endif
                 </div>
                 <hr />
@@ -117,61 +100,36 @@
             <hr />
             <div class="row">                
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 350px"></div>
+                    <div id="chart" style="height: 750px"></div>
                 </div>
             </div>
-<<<<<<< HEAD
-        </div>
-        <hr />
-        <div class="row">                
-            <div class="col-sm-12">
-                <div id="data">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <tbody>
-                                <tr>
-                                    <td colspan="{!! count($categories) !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title !!}</td>
-                                </tr>
-                                <tr>
-                                    @foreach($categories as $category)
-                                        <td>{!! $category->label !!}</td>
-                                    @endforeach
-                                </tr>
-                                <tr>
-                                     @foreach($categories as $category)
-                                        <td>{!! $data[$category->id].'%' !!}</td>
-                                    @endforeach
-                                </tr>
-                            </tbody>
-                        </table>
-=======
             <hr />
-            <div class="row">                
+            <div class="row" style="display:none;">                
                 <div class="col-sm-12">
                     <div id="data">
                         <div class="table-responsive">
-                            <?php $dates = ''; if($from==$to){ $dates = trans('messages.for-the-year').' '.date('Y');}else{ $dates = trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to; }  ?>
                             <table class="table table-striped table-bordered table-hover">
                                 <tbody>
                                     <tr>
-                                        <td colspan="{!! count($categories)+1 !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title.' '.$dates !!}</td>
+                                        <td colspan="6">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
                                     </tr>
                                     <tr>
-                                        <th>{!! Lang::choice('messages.level', 1) !!}</th>
-                                        @foreach($categories as $category)
-                                            <td>{!! $category->label !!}</td>
+                                        <td></td>
+                                        @foreach($levels as $level)
+                                            <td>{!! $level->name.' ('.$level->range_lower.' - '.$level->range_upper.'%)' !!}</td>
                                         @endforeach
                                     </tr>
+                                    @foreach($sdps as $sdp)
                                     <tr>
-                                        <th>{!! $level !!}</th>
-                                        @foreach($categories as $category)
-                                            <td>{!! $data[$category->id].'%' !!}</td>
+                                        <td>{!! $sdp->name !!}</td>
+                                        @foreach($levels as $level)
+                                            <td></td>
                                         @endforeach
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
->>>>>>> master
                     </div>
                 </div>
             </div>
