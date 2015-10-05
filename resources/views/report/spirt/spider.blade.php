@@ -120,31 +120,7 @@
                     <div id="chart" style="height: 350px"></div>
                 </div>
             </div>
-<<<<<<< HEAD
-        </div>
-        <hr />
-        <div class="row">                
-            <div class="col-sm-12">
-                <div id="data">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <tbody>
-                                <tr>
-                                    <td colspan="{!! count($categories) !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title !!}</td>
-                                </tr>
-                                <tr>
-                                    @foreach($categories as $category)
-                                        <td>{!! $category->label !!}</td>
-                                    @endforeach
-                                </tr>
-                                <tr>
-                                     @foreach($categories as $category)
-                                        <td>{!! $data[$category->id].'%' !!}</td>
-                                    @endforeach
-                                </tr>
-                            </tbody>
-                        </table>
-=======
+
             <hr />
             <div class="row">                
                 <div class="col-sm-12">
@@ -171,7 +147,7 @@
                                 </tbody>
                             </table>
                         </div>
->>>>>>> master
+
                     </div>
                 </div>
             </div>

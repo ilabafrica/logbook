@@ -75,11 +75,15 @@ class Answer extends Model implements Revisionable {
 										{
 											if($site ||$sdp)
 											{
-											$values = $values->where('facility_id', $site);	
-
+											
 											if(isset($sdp))
 											{
 												$values = $values->where('sdp_id', $sdp);
+											}
+											else
+												{ 
+												$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+																 ->where('facility_id', $site);	
 											}
 										}
 											else

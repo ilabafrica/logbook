@@ -83,7 +83,7 @@ class Section extends Model implements Revisionable {
                                 	if($site || $sdp)
                                 	{
 
-                                    	if(isset($site))
+                                    	if(isset($sdp))
                                     	{
                                         	$values = $values->where('sdp_id', $sdp);
                                     	}
@@ -136,11 +136,16 @@ class Section extends Model implements Revisionable {
                                 ->where('answer', '0')
                                 ->count();
         }
-        if($reductions>0)
+        if($reductions>0 && 'total_points'!=0)
+        {
             $percentage = round($calculated_points*100/(($this->total_points*$total_counts)-($reductions*5)), 2);
-        else
+        }
+
+           else if('total_points'!=0)
+           {
             $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
-        return $percentage;
+        	return $percentage;
+        }
 		//	End optimization
 
 	}
