@@ -75,19 +75,32 @@ class ReportController extends Controller {
 		}
 		//	Get sdps
 		$sdps = array();
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL|| $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-					foreach (Facility::find($site)->surveys as $survey) 
+					if($sdp!=NULL)
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
+					}
+					else
+					{
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+							array_push($sdps, $sdp->sdp_id);
+							}
+						}
+
+
 					}
 				}
 				else
@@ -283,29 +296,26 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-					$title = Sdp::find($sdp)->name;
-					foreach (Sdp::find($sdp)->surveys as $survey) 
-					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
 					}
-				}
-				else
-				{
-					$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
-					foreach (Facility::find($site)->surveys as $survey) 
+					else
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
 						{
+							foreach ($survey->sdps as $sdp) 
+							{
 							array_push($sdps, $sdp->sdp_id);
+							}
 						}
+
+
 					}
-
-
 				}
-			}
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
@@ -495,29 +505,26 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-					$title = Sdp::find($sdp)->name;
-					foreach (Sdp::find($sdp)->surveys as $survey) 
-					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
 					}
-				}
-				else
-				{
-					$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
-					foreach (Facility::find($site)->surveys as $survey) 
+					else
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
 						{
+							foreach ($survey->sdps as $sdp) 
+							{
 							array_push($sdps, $sdp->sdp_id);
+							}
 						}
+
+
 					}
-
-
 				}
-			}
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
