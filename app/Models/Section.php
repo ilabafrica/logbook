@@ -64,10 +64,11 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate scores per section
 	 */
-	public function spider($site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
 	{
 		//	Start optimization
 		$checklist = Checklist::idByName('SPI-RT Checklist');
+
 		//  Get data to be used
         $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
                             ->where('checklist_id', $checklist);
@@ -75,13 +76,23 @@ class Section extends Model implements Revisionable {
                             {
                                 $values = $values->whereBetween('date_submitted', [$from, $to]);
                             }
-                            if($county || $sub_county || $site)
+                            if($county || $sub_county || $site || $sdp)
                             {
-                                if($sub_county || $site)
+                                if($sub_county || $site || $sdp)
                                 {
-                                    if($site)
-                                    {
-                                        $values = $values->where('facility_id', $site);
+                                	if($site || $sdp)
+                                	{
+
+                                    	if(isset($sdp))
+                                    	{
+                                        	$values = $values->where('sdp_id', $sdp);
+                                    	}
+                                    	else
+                                    	{
+                                    		//$values = $values->where('facility_id', $site);
+											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                         ->where('facility_id', $site);
+                                    	}
                                     }
                                     else
                                     {
@@ -103,6 +114,7 @@ class Section extends Model implements Revisionable {
                                                  ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
                             }
                             $values = $values->get(array('survey_sdps.*'));
+
         //  Define variables for use
         $counter = 0;
         $total_counts = count($values);
@@ -125,11 +137,15 @@ class Section extends Model implements Revisionable {
                                 ->where('answer', '0')
                                 ->count();
         }
-        if($reductions>0)
+        if($reductions>0 && $total_counts!=0)
+        {
             $percentage = round($calculated_points*100/(($this->total_points*$total_counts)-($reductions*5)), 2);
-        else
-            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
-        return $percentage;
+        }
+        else if($total_counts!=0)
+        {
+            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);        	
+        }
+       	return $percentage;
 		//	End optimization
 	}
 	/**

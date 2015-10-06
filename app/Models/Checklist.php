@@ -124,7 +124,7 @@ class Checklist extends Model implements Revisionable {
 		$percentage = 0.00;
 		foreach ($categories as $section)
 		{
-			$percentage+=$section->spider($site, $sub_county, $county, $from, $to);
+			$percentage+=$section->spider($sdp, $site, $sub_county, $county, $from, $to);
 		}
 		return $this->levelCheck($percentage/$counter);
 	}

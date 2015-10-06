@@ -46,33 +46,61 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
 		//	Declare variables
+        $sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
+		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		}
 		if(Input::get('sub_county'))
+		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+		}
 		if(Input::get('county'))
+		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
+		}
 		//	Get sdps
 		$sdps = array();
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL|| $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-					foreach (Facility::find($site)->surveys as $survey) 
+					if($sdp!=NULL)
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
+					}
+					else
+					{
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+							array_push($sdps, $sdp->sdp_id);
+							}
+						}
+
+
 					}
 				}
 				else
@@ -201,7 +229,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
+		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp'));
 	}
 
 	/**
@@ -226,18 +254,33 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
 		//	Declare variables
+        $sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
+		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		}
 		if(Input::get('sub_county'))
+		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+		}
 		if(Input::get('county'))
+		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
+		}
 		//	
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$jimbo = County::find(Auth::user()->tier->tier);
@@ -245,19 +288,32 @@ class ReportController extends Controller {
 			$sub_county = SubCounty::find(Auth::user()->tier->tier);
 		//	Get sdps
 		$sdps = array();
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL|| $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-					foreach (Facility::find($site)->surveys as $survey) 
+					if($sdp!=NULL)
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
+					}
+					else
+					{
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+							array_push($sdps, $sdp->sdp_id);
+							}
+						}
+
+
 					}
 				}
 				else
@@ -385,7 +441,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 		    }";
-		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
+		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'sdps','sdp'));
 	}
 
 	/**
@@ -410,35 +466,63 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
 		//	Declare variables
+		$sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
+		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		}
 		if(Input::get('sub_county'))
+		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+		}
 		if(Input::get('county'))
+		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
+		}	
 		//	Get sdps
 		$sdps = array();
 		//	Percentages
 		$percentages = array('<95%', '95-98%', '>98%');
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL|| $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-					foreach (Facility::find($site)->surveys as $survey) 
+					if($sdp!=NULL)
 					{
-						foreach ($survey->sdps as $sdp) 
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
-							array_push($sdps, $sdp->sdp_id);
+							array_push($sdps, $survey->sdp_id);
 						}
+					}
+					else
+					{
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+							array_push($sdps, $sdp->sdp_id);
+							}
+						}
+
+
 					}
 				}
 				else
@@ -546,6 +630,7 @@ class ReportController extends Controller {
             					$chart.="";
             				else
             					$chart.=",";
+
     				}
     				else{
         				$chart.= $data;
@@ -636,7 +721,8 @@ class ReportController extends Controller {
 	        }
 	        $percent.="],
 	    }";
-		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent'));
+		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp'));
+
 	}/**
 	 * Invalid results report
 	 *
@@ -657,6 +743,7 @@ class ReportController extends Controller {
 	 */
 	public function me($id)
 	{
+		//dd(Input::all());
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Chart title
@@ -671,7 +758,10 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		
 		//	Declare variables
+		$sdps = array();
+        $sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -680,9 +770,14 @@ class ReportController extends Controller {
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
@@ -695,14 +790,21 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL || $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-				}
+					if($sdp!=NULL)
+					{
+						$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+					}
+					else
+					{
+						$title = Facility::find($site)->name;
+				    }
+				}				
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
@@ -787,7 +889,9 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
 	        		$counter = count($categories);
 	        		foreach ($categories as $category) {
-	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $from, $toPlusOne);
+
+	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -814,8 +918,10 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
+
 	    //dd($subCounties);
-		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site'));
+		return view('report.me.mscolumn', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo','sdps','sdp', 'sub_county', 'site'));
+
 	}
 	/**
 	 * SPI-RT spider chart report
@@ -845,6 +951,8 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
+        $sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -855,27 +963,41 @@ class ReportController extends Controller {
 		$months = json_decode(self::getMonths($from, $to));
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL || $sdp!=NULL)
+				{
+				 if($sdp!=NULL)
+				{
+					$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+				}
+				else 
 				{
 					$title = Facility::find($site)->name;
 				}
+			}
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
@@ -946,7 +1068,7 @@ class ReportController extends Controller {
 	            name: 'Score',
 	            data: [";
 	            	foreach ($categories as $category) {
-	   					$chart.=$category->spider($site, $sub_county, $jimbo, $from, $toPlusOne).',';
+	   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne).',';
 	   				}
 	   				$chart.="],
 	            pointPlacement: 'on'
@@ -957,10 +1079,12 @@ class ReportController extends Controller {
 	    $data = array();
 	    foreach ($categories as $category)
 	    {
-	    	$data[$category->id] = $category->spider($site, $sub_county, $jimbo, $from, $toPlusOne);
+	    	$data[$category->id] = $category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
-	    $level = $checklist->level($categories, $jimbo, $sub_county, $site);
-	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site', 'level'));
+
+	    $level = $checklist->level($categories, $jimbo, $sub_county, $site, $sdp);
+	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'level'));
+
 	}
 	/**
 	 * Show the table for current stage of sites implementing RTQII priority activities in Country X (percentage of sites)..

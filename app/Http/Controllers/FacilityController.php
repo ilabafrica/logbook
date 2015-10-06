@@ -9,9 +9,10 @@ use App\Models\SubCounty;
 use App\Models\FacilityType;
 use App\Models\FacilityOwner;
 use App\Models\County;
-use App\Models\Title;
+use App\Models\Sdp;
 use Response;
 use Auth;
+use Input;
 
 class FacilityController extends Controller {
 
@@ -194,5 +195,16 @@ class FacilityController extends Controller {
 	{
 		//	show the view 
 		return view('mfl.facility.import');
-	}
+	}	
+	/**
+	*	Function to return sdps with submitted data for a facility
+	*/
+	public function dropdown()
+	{
+		$input = Input::get('facility_id');
+        $facility = Facility::find($input);
+        $sdps = $facility->ssdps();
+        return json_encode(Sdp::whereIn('id', $sdps)->get());
+        //return json_encode($sdps);
+    }
 }
