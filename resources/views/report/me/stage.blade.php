@@ -30,6 +30,7 @@
             <li><a href="{!! url('report/'.$checklist->id.'/me') !!}">Chart Summary</a></li>
             <li class="active"><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
             <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
+            <li><a href="{!! url('analysis/breakdown') !!}">Domain Responses Breakdown</a></li>
         </ul>
         <div class="container-fluid">
         {!! Form::open(array('url' => 'analysis/chart', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}

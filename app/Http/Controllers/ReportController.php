@@ -1292,6 +1292,150 @@ class ReportController extends Controller {
 		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title'));
 	}
 
+	public function breakdown()
+	{	//	Get counties
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		}
+		if(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+		}
+		
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL)
+			{
+				if($site!=NULL)
+				{
+					$title = Facility::find($site)->name;
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+		}
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$domain = array();
+		$options = array();
+		$columns = $checklist->sections;
+		foreach ($columns as $column)
+		{
+			$domain = array_merge($domain, $column->questions()->where('score', '!=', '0')->lists('id'));
+			foreach ($column->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}/*
+				if($question->score>0)
+					array_push($domain, $question->id)*/
+			}
+		}
+		$options = array_unique($options);
+		//	Colors to be used in the series
+		$colors = array();
+		$chart = "{
+			chart: {
+				type: 'column'
+			},
+	        title: {
+	            text: '".Lang::choice('messages.snapshot-label', 1).$title."'
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
+	        xAxis: {
+	            categories: [";
+	            	foreach ($columns as $column) {
+	            		$chart.="'".$column->label."',";
+	            	}
+	            $chart.="],
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '% Score'
+	            }
+	        },
+	        credits: {
+			    enabled: false
+			},
+			plotOptions: {
+				column: {
+					colorByPoint: true
+				}
+			},
+			series: [{name: 'Snapshot',
+				data: [";
+				$counter = count($columns);
+				$color = NULL;
+				foreach ($columns as $column) {
+					$value = $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne);
+					if($value >= 0 && $value <25)
+						$color = '#d9534f';
+					else if($value >=25 && $value <50)
+						$color = '#f0ad4e';
+					else if($value >=50 && $value <75)
+						$color = '#d6e9c6';
+					else if($value >=75 && $value <=100)
+						$color = '#5cb85c';
+					array_push($colors, $color);
+					$chart.= $value;
+					if($counter==1)
+    					$chart.="";
+    				else
+    					$chart.=",";
+    				$counter--;
+				}
+				$chart.="]
+			}],
+			colors:["."'".implode("','", $colors)."'"."]          
+		}";
+		return view('report.me.breakdown', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title','domain'));
+	}
+
 	/**
 	 * Display the specified resource.
 	 *
