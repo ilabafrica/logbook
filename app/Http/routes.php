@@ -382,6 +382,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "reports.snapshot",
         "uses"  =>  "ReportController@snapshot"
     ));
+    Route::any('analysis/breakdown', array(
+        "as"    =>  "reports.breakdown",
+        "uses"  =>  "ReportController@breakdown"
+    ));
     Route::any('api/{id}', array(
         "as"    =>  "survey.import",
         "uses"  =>  "SurveyController@api"

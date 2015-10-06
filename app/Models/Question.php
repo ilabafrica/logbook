@@ -191,20 +191,62 @@ class Question extends Model implements Revisionable  {
 	*/
 	public static function nameById($id=NULL)
 	{
-		if($id!=NULL){
+		if($id!=NULL)
+		{
 			try 
 			{
 				$question = Question::where('id', $id)->orderBy('name', 'asc')->firstOrFail();
 				return $question->name;
-			} catch (ModelNotFoundException $e) 
+			}
+			catch (ModelNotFoundException $e) 
 			{
 				Log::error("The question with id ` $id ` does not exist:  ". $e->getMessage());
 				//TODO: send email?
 				return null;
 			}
 		}
-		else{
+		else
+		{
 			return null;
 		}
+	}
+	/**
+	 * counts sites for m & e domain responses
+	 */
+	public function breakdown($option, $sdp=null, $site=null, $sub_county=null, $county=null, $from=null, $to=null)
+	{
+		$response = Answer::find(Answer::idByName($option))->score;
+    	$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+    			 			->join('survey_questions', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
+    			 			->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+    			 			->where('question_id', $this->id)
+    			 			->where('answer', $response);
+    			 			if($from && $to)
+							{
+								$counter = $counter->whereBetween('date_submitted', [$from, $to]);
+							}
+							if($county || $sub_county || $site)
+							{
+								if($sub_county || $site)
+								{
+									if(isset($site))
+									{
+										$counter = $counter->where('facility_id', $site);
+									}
+									else
+									{
+										$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+												 		 ->where('sub_county_id', $sub_county);
+									}
+								}
+								else
+								{
+									$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+													 ->where('county_id', $county);
+								}
+							}
+    			 			$counter = $counter->count();
+    	return $counter;
 	}
 }

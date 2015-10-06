@@ -29,11 +29,11 @@
         <ul class="nav nav-tabs">
             <li><a href="{!! url('report/'.$checklist->id.'/me') !!}">Chart Summary</a></li>
             <li><a href="{!! url('analysis/chart') !!}">Stage of Implementation</a></li>
-            <li class="active"><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
-            <li><a href="{!! url('analysis/breakdown') !!}">Domain Responses Breakdown</a></li>
+            <li><a href="{!! url('analysis/snapshot') !!}">Snapshot</a></li>
+            <li class="active"><a href="{!! url('analysis/breakdown') !!}">Domain Responses Breakdown</a></li>
         </ul>
         <div class="container-fluid"> 
-        {!! Form::open(array('url' => 'analysis/snapshot', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'analysis/breakdown', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
@@ -105,23 +105,32 @@
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="5"><strong>{!! Lang::choice('messages.snapshot-label', 1).$title !!}</strong></td>
+                                    <td colspan="5"><strong>{!! Lang::choice('messages.domain-responses', 1).$title !!}</strong></td>
                                 </tr>
                                 <tr>
-                                    <td></td>
-                                    @foreach ($columns as $column)
-                                        <td>{!! $column->label !!}</td>
+                                    <td>{{trans('messages.breakdown')}}</td>
+                                    @foreach ($options as $option)
+                                        <?php
+                                            $class = '';
+                                            $answer = $option;
+                                            if($answer == 'Does Not Exist')
+                                                $class = 'does-not-exist';
+                                            else if($answer == 'In Development')
+                                                $class = 'in-development';
+                                            else if($answer == 'Being Implemented')
+                                                $class = 'being-implemented';
+                                            else if($answer == 'Completed')
+                                                $class = 'completed';
+                                        ?>
+                                        <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
                                     @endforeach
                                 </tr>
-                                @foreach($options as $option)
+                                @foreach($domain as $question_id)
+                                {{--*/ $question = App\Models\Question::find($question_id) /*--}}
                                 <tr>
-                                    <td>{!! $option.' ('.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower.'%-'.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper.'%)' !!}</td>
-                                    @foreach ($columns as $column)
-                                        @if($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
-                                            <td class="{{ $column->color($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)) }}">{!! $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) !!}</td>
-                                        @else
-                                            <td></td>
-                                        @endif
+                                    <td>{!! $question->description !!}</td>
+                                    @foreach ($options as $option)
+                                        <td>{!! $question->breakdown($option, null, $site, $sub_county, $jimbo, $from, $to) !!}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach
@@ -141,8 +150,8 @@
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
 <script type="text/javascript">
-    $(function () {
-        $('#chart').highcharts(<?php echo $chart ?>);  
-    });
+  //  $(function () {
+      //  $('#chart').highcharts(<?php echo $chart ?>);  
+    //});
 </script>
 @stop

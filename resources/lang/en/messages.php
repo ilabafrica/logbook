@@ -422,6 +422,7 @@ return [
 	'complete-sdp'	=>	'Completed SDPs',
 	'complete'	=>	'Complete',
 	'incomplete'	=>	'Incomplete',
+	'domain-responses'=>'Table showing a breakdown of the domain responses - ',
 	'sdp-comparison-overtime'	=>	'Submission Comparison Overtime',
 	'checklist-comparison'	=>	'Checklist Comparison',
 	'completion-status'	=>	'Completion Status',
@@ -431,6 +432,7 @@ return [
 	'me-htc'	=>	'M&E and HTC Lab Register',
 	'htc-spirt'	=>	'HTC Lab Register and SPI-RT',
 	'level-comparison'	=>	'Levels Comparison',
+	'breakdown' => 'Total number of sites that answered "Does not exist", "In-development", "Being implemented" or "Completed" for each survey question.',
 	/**
 	*
 	* Local partner analysis
