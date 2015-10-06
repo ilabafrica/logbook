@@ -99,13 +99,15 @@
             </div>
         </div>
         {!! Form::close() !!}
+        <hr />
             <div class="row">
                 <div class="col-sm-12">
                     <div class="table-responsive">
+                        <?php $dates = ''; if($from==$to){ $dates = trans('messages.for-the-year').' '.date('Y');}else{ $dates = trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to; }  ?>
                         <table class="table table-striped table-bordered table-hover">
                             <tbody>
                                 <tr>
-                                    <td colspan="5"><strong>{!! Lang::choice('messages.domain-responses', 1).$title !!}</strong></td>
+                                    <td colspan="5"><strong>{!! Lang::choice('messages.domain-responses', 1).$title.' '.$dates !!}</strong></td>
                                 </tr>
                                 <tr>
                                     <td>{{trans('messages.breakdown')}}</td>
@@ -130,7 +132,7 @@
                                 <tr>
                                     <td>{!! $question->description !!}</td>
                                     @foreach ($options as $option)
-                                        <td>{!! $question->breakdown($option, null, $site, $sub_county, $jimbo, $from, $to) !!}</td>
+                                        <td>{!! '<strong>'.$question->breakdown($option, null, $site, $sub_county, $jimbo, $from, $to).'</strong> ('.$question->domain($options, $option, null, $site, $sub_county, $jimbo, $from, $to).'%)' !!}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach
@@ -139,19 +141,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12">
-                <div id="chart" style="height: 400px"></div>
-            </div>
         </div>
     </div>
     <!-- /.panel-body -->
 </div>
-<script src="{{ URL::asset('admin/js/highcharts.js') }}"></script>
-<script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
-<script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
-<script type="text/javascript">
-  //  $(function () {
-      //  $('#chart').highcharts(<?php echo $chart ?>);  
-    //});
-</script>
 @stop

@@ -1495,69 +1495,7 @@ class ReportController extends Controller {
 		}
 		$options = array_unique($options);
 		//	Colors to be used in the series
-		$colors = array();
-		$chart = "{
-			chart: {
-				type: 'column'
-			},
-	        title: {
-	            text: '".Lang::choice('messages.snapshot-label', 1).$title."'
-	        },
-		    subtitle: {
-		        text:"; 
-		        if($from==$to)
-		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
-		        else
-		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
-		    $chart.="},
-	        xAxis: {
-	            categories: [";
-	            	foreach ($columns as $column) {
-	            		$chart.="'".$column->label."',";
-	            	}
-	            $chart.="],
-	        },
-	        yAxis: {
-	            min: 0,
-	            title: {
-	                text: '% Score'
-	            }
-	        },
-	        credits: {
-			    enabled: false
-			},
-			plotOptions: {
-				column: {
-					colorByPoint: true
-				}
-			},
-			series: [{name: 'Snapshot',
-				data: [";
-				$counter = count($columns);
-				$color = NULL;
-				foreach ($columns as $column) {
-					$value = $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne);
-					if($value >= 0 && $value <25)
-						$color = '#d9534f';
-					else if($value >=25 && $value <50)
-						$color = '#f0ad4e';
-					else if($value >=50 && $value <75)
-						$color = '#d6e9c6';
-					else if($value >=75 && $value <=100)
-						$color = '#5cb85c';
-					array_push($colors, $color);
-					$chart.= $value;
-					if($counter==1)
-    					$chart.="";
-    				else
-    					$chart.=",";
-    				$counter--;
-				}
-				$chart.="]
-			}],
-			colors:["."'".implode("','", $colors)."'"."]          
-		}";
-		return view('report.me.breakdown', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title','domain'));
+		return view('report.me.breakdown', compact('checklist', 'columns', 'options', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title','domain'));
 	}
 
 	/**
