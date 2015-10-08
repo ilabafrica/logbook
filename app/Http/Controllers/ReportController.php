@@ -1456,7 +1456,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = $column->column($jimbo, $sub_county, $site, $from, $toPlusOne)!=0?round(Answer::find(Answer::idByName($option))->column($column->id, $jimbo, $sub_county, $site, $from, $toPlusOne)*100/$column->column($jimbo, $sub_county, $site, $from, $toPlusOne), 2):0.00;
+	        			$data = $column->column($option, $jimbo, $sub_county, $site, $from, $toPlusOne);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
