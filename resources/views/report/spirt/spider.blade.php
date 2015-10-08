@@ -133,7 +133,7 @@
                                         <td colspan="{!! count($categories)+1 !!}">{!! Lang::choice('messages.spirt-scores-comparison', 1).' for '.$title.' '.$dates !!}</td>
                                     </tr>
                                     <tr>
-                                        <th>{!! Lang::choice('messages.level', 1) !!}</th>
+                                        <th>{!! Lang::choice('messages.overall-score', 1) !!}</th>
                                         @foreach($categories as $category)
                                             <td>{!! $category->label !!}</td>
                                         @endforeach

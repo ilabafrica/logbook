@@ -134,6 +134,7 @@
 <script src="{{ URL::asset('admin/js/highcharts.js') }}"></script>
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
+<script src="{{ URL::asset('admin/js/drilldown.js') }}"></script>
 <script type="text/javascript">
     $(function () {
         $('#chart').highcharts(<?php echo $chart ?>);

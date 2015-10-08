@@ -249,4 +249,20 @@ class Question extends Model implements Revisionable  {
     			 			$counter = $counter->count();
     	return $counter;
 	}
+	/**
+	 * Function to calculate percentage of response in domain
+	 */
+	public function domain($array, $answer, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
+	{
+		//	Get counts for each question per domain
+		$counter = count($array);
+		$percentage = 0.00;
+		$perAnswer = $this->breakdown($answer, null, $site, $sub_county, $county, $from, $to);
+		$overallCount = 0;
+		foreach ($array as $option)
+		{
+			$overallCount+=$this->breakdown($option, null, $site, $sub_county, $county, $from, $to);
+		}
+		return round($perAnswer*100/$overallCount, 2);
+	}
 }
