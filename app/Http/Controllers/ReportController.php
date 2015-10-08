@@ -666,19 +666,9 @@ class ReportController extends Controller {
 		        else
 		        	$percent.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
 		    $percent.="},
-	        xAxis: {
-	            categories: [";
-	            $count = count($months);
-	            	foreach ($months as $month) {
-	    				$percent.= "'".$month->label.' '.$month->annum;
-	    				if($count==1)
-	    					$percent.="' ";
-	    				else
-	    					$percent.="' ,";
-	    				$count--;
-	    			}
-	            $percent.="]
-	        },
+		    xAxis:{
+		    	type: 'category'
+		    },
 	        yAxis: {
 	            title: {
 	                text: '".Lang::choice('messages.percent-of-sites', 1)."'
@@ -688,8 +678,13 @@ class ReportController extends Controller {
 			    enabled: false
 			},
 			colors: ['#00CCFF', '#0066FF', '#0000FF'],
-			tooltip: {
-	            pointFormat: '<span style=\"color:{point.color}\">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+			plotOptions: {
+	            dataLabels:{
+	            	enabled:true
+	            }
+	        },
+	        tooltip: {
+	            valueSuffix: '%'
 	        },
 	        series: [";
 	        $counts = count($sdps);
@@ -699,7 +694,7 @@ class ReportController extends Controller {
         		$counter = count($months);
         		foreach ($months as $month)
         		{
-        			$percent.="{y:";
+        			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
         			$data = $checklist->overallAgreement($percentage, $sdps, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
