@@ -664,6 +664,12 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$kit = NULL;
+		$kit = Input::get('kit');
+		if($kit==NULL)
+		{
+			$kit = 'KHB';
+		}
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -815,7 +821,7 @@ class ReportController extends Controller {
 	        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
         		$counter = count($months);
         		foreach ($months as $month) {
-        			$data = Sdp::find($sdp)->overallAgreement($site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0){
         					$chart.= '0.00';
         					if($counter==1)
@@ -887,7 +893,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
         					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -924,7 +930,7 @@ class ReportController extends Controller {
         					$sticker = $percentage." - ".$month->label." ".$month->annum;
         					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
         					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
         					{
         						$percent.="["."'".$sdp."'".", ".$per."],";
         					}
@@ -934,7 +940,7 @@ class ReportController extends Controller {
 	            $percent.="]
 	        }
 	    }";
-		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp'));
+		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
 	}/**
 	 * Invalid results report
