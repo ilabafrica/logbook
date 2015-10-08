@@ -304,4 +304,45 @@ class Checklist extends Model implements Revisionable {
 		}
 		return $matched;
 	}
+	/**
+	 * Function to return percent of sites in each range - percentage
+	 */
+	public function positiveAgreement($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	{
+		//	Get scores for each section
+		$counter = 0;
+		$range = $this->corrRange($percentage);
+		$total_sites = count($sdps);	
+		foreach ($sdps as $sdp)
+		{
+			$agreement = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo, $year, $month);
+			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+				$counter++;
+		}
+		return round($counter*100/$total_sites, 2);
+	}
+	/**
+	 * Function to return sdp with corresponding percentage
+	 */
+	public function sdpPosAgreement($label, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	{
+		//	Split label to create variables
+		$array = explode("_", $label);
+		//	Get scores for each section
+		$counter = 0;
+		$range = $this->corrRange($array[0]);
+		$year = $array[2];
+		$month = $array[1];
+		$total_sites = count($sdps);
+		$matched = array();
+		foreach ($sdps as $sdp)
+		{
+			$point = Sdp::find($sdp);
+			$agreement = $point->positiveAgreement($site, $sub_county, $jimbo, $year, $month);
+			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+				$matched[$point->name] = $agreement;
+				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
+		}
+		return $matched;
+	}
 }
