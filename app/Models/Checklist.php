@@ -307,7 +307,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function positiveAgreement($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	public function positiveAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Get scores for each section
 		$counter = 0;
@@ -315,7 +315,7 @@ class Checklist extends Model implements Revisionable {
 		$total_sites = count($sdps);	
 		foreach ($sdps as $sdp)
 		{
-			$agreement = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo, $year, $month);
+			$agreement = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
 			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
 				$counter++;
 		}
@@ -324,7 +324,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return sdp with corresponding percentage
 	 */
-	public function sdpPosAgreement($label, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	public function sdpPosAgreement($label, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Split label to create variables
 		$array = explode("_", $label);
@@ -338,7 +338,7 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$point = Sdp::find($sdp);
-			$agreement = $point->positiveAgreement($site, $sub_county, $jimbo, $year, $month);
+			$agreement = $point->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
 			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);

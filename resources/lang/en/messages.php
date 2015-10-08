@@ -469,4 +469,6 @@ return [
 	'corrective-feedback'	=>	'Sites/Providers that received corrective actions/feedback',
 	'agreement-rate'	=>	'Agreement Rate',
 	'overall-score'	=>	'Overall Score',
+	'khb'	=>	'KHB',
+	'determine'	=>	'DETERMINE',
 ];
