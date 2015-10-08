@@ -109,6 +109,13 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
+                    <div class="input-group">
+                        <div id="radioBtn" class="btn-group">
+                            <a class="btn btn-primary btn {{($kit=='KHB')?'active':'notActive'}}" data-toggle="kit" data-title="KHB" name="kit">{!! Lang::choice('messages.khb', 1) !!}</a>
+                            <a class="btn btn-primary btn {{($kit=='DETERMINE')?'active':'notActive'}}" data-toggle="kit" data-title="DETERMINE" name="kit">{!! Lang::choice('messages.determine', 1) !!}</a>
+                        </div>
+                        <input type="hidden" name="kit" id="kit">
+                    </div>
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>

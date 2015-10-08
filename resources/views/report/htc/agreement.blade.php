@@ -109,18 +109,31 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
+                    <div class="input-group">
+                        <div id="radioBtn" class="btn-group">
+                            <a class="btn btn-primary btn {{($kit=='KHB')?'active':'notActive'}}" data-toggle="kit" data-title="KHB" name="kit">{!! Lang::choice('messages.khb', 1) !!}</a>
+                            <a class="btn btn-primary btn {{($kit=='DETERMINE')?'active':'notActive'}}" data-toggle="kit" data-title="DETERMINE" name="kit">{!! Lang::choice('messages.determine', 1) !!}</a>
+                        </div>
+                        <input type="hidden" name="kit" id="kit">
+                    </div>
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
             </div>
-            <hr />
-            <div class="row">                
-                <div class="col-sm-12">
-                    <div id="chart" style="height: 300px"></div>
-                </div>
-            </div>
         </div>
         {!! Form::close() !!}
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="chart" style="height: 400px"></div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-sm-12">
+                    <div id="percent" style="height: 400px"></div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->
@@ -128,9 +141,11 @@
 <script src="{{ URL::asset('admin/js/highcharts.js') }}"></script>
 <script src="{{ URL::asset('admin/js/highcharts-more.js') }}"></script>
 <script src="{{ URL::asset('admin/js/exporting.js') }}"></script>
+<script src="{{ URL::asset('admin/js/drilldown.js') }}"></script>
 <script type="text/javascript">
     $(function () {
-        $('#chart').highcharts(<?php echo $chart ?>);  
+        $('#chart').highcharts(<?php echo $chart ?>);
+        $('#percent').highcharts(<?php echo $percent ?>);
     });
 </script>
 @stop

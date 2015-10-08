@@ -353,6 +353,12 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$kit = NULL;
+		$kit = Input::get('kit');
+		if($kit==NULL)
+		{
+			$kit = 'KHB';
+		}
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -467,74 +473,167 @@ class ReportController extends Controller {
 		$to = Input::get('to');
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
-		        chart: {
-		            type: 'column'
-		        },
-		        title: {
-		            text: '".Lang::choice('messages.percent-positiveAgr', 1).'-'.$title."'
-		        },
-			    subtitle: {
-			        text:"; 
-			        if($from==$to)
-			        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
-			        else
-			        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
-			    $chart.="},
-		        xAxis: {
-		            categories: [";
-		            $count = count($months);
-		            	foreach ($months as $month) {
-		    				$chart.= "'".$month->label.' '.$month->annum;
-		    				if($count==1)
-		    					$chart.="' ";
-		    				else
-		    					$chart.="' ,";
-		    				$count--;
-		    			}
-		            $chart.="]
-		        },
-		        yAxis: {
-		            title: {
-		                text: '".Lang::choice('messages.percent-positiveAgr', 1)."'
-		            }
-		        },
-		        credits: {
-				    enabled: false
-				},
-		        series: [";
-		        $counts = count($sdps);
-		        foreach ($sdps as $sdp) {
-		        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
-	        		$counter = count($months);
-	        		foreach ($months as $month) {
-	        			$data = Sdp::find($sdp)->positiveAgreement($site, $sub_county, $jimbo, $month->annum, $month->months);
-	        			if($data==0){
-            					$chart.= '0.00';
-            					if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
-        				}
-        				else{
-            				$chart.= $data;
-
-            				if($counter==1)
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-positiveAgr', 1).'-'.$title."'
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
+	        xAxis: {
+	            categories: [";
+	            $count = count($months);
+	            	foreach ($months as $month) {
+	    				$chart.= "'".$month->label.' '.$month->annum;
+	    				if($count==1)
+	    					$chart.="' ";
+	    				else
+	    					$chart.="' ,";
+	    				$count--;
+	    			}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            title: {
+	                text: '".Lang::choice('messages.percent-positiveAgr', 1)."'
+	            }
+	        },
+	        credits: {
+			    enabled: false
+			},
+	        series: [";
+	        $counts = count($sdps);
+	        foreach ($sdps as $sdp) {
+	        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
+        		$counter = count($months);
+        		foreach ($months as $month) {
+        			$data = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($data==0){
+        					$chart.= '0.00';
+        					if($counter==1)
             					$chart.="";
             				else
             					$chart.=",";
+    				}
+    				else{
+        				$chart.= $data;
+
+        				if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
+    				}
+        			$counter--;
+        		}
+        		$chart.="]";
+            	if($counts==1)
+					$chart.="}";
+				else
+					$chart.="},";
+				$counts--;
+	        }
+	        $chart.="],
+	    }";
+
+	    //	Percent of sites
+	    $percentages = array('<95%', '95-98%', '>98%');
+	    $percent = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-of-sites', 1).'-'.$title."'
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$percent.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$percent.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $percent.="},
+		    xAxis:{
+		    	type: 'category'
+		    },
+	        yAxis: {
+	            title: {
+	                text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	            }
+	        },
+	        credits: {
+			    enabled: false
+			},
+			colors: ['#00CCFF', '#0066FF', '#0000FF'],
+			plotOptions: {
+	            dataLabels:{
+	            	enabled:true
+	            }
+	        },
+	        tooltip: {
+	            valueSuffix: '%'
+	        },
+	        series: [";
+	        $counts = count($sdps);
+	        foreach ($percentages as $percentage)
+	        {
+	        	$percent.="{name:"."'".$percentage."'".", data:[";
+        		$counter = count($months);
+        		foreach ($months as $month)
+        		{
+        			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
+        			$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($data==0)
+        			{
+        					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
+        					if($counter==1)
+            					$percent.="";
+            				else
+            					$percent.=",";
+    				}
+    				else
+    				{
+        				$percent.= $data.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
+
+        				if($counter==1)
+        					$percent.="";
+        				else
+        					$percent.=",";
+    				}
+        			$counter--;
+        		}
+        		$percent.="]";
+            	if($counts==1)
+					$percent.="}";
+				else
+					$percent.="},";
+				$counts--;
+	        }
+	        $percent.="],
+		        drilldown: {
+		            series: [";
+		            foreach ($percentages as $percentage)
+	        		{
+	        			foreach ($months as $month)
+        				{
+        					$sticker = $percentage." - ".$month->label." ".$month->annum;
+        					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
+        					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
+        					foreach ($checklist->sdpPosAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					{
+        						$percent.="["."'".$sdp."'".", ".$per."],";
+        					}
+        					$percent.="]},";
         				}
-            			$counter--;
-            		}
-            		$chart.="]";
-	            	if($counts==1)
-						$chart.="}";
-					else
-						$chart.="},";
-					$counts--;
-		        }
-		        $chart.="],
-		    }";
-		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'sdps','sdp'));
+	        		}
+	            $percent.="]
+	        }
+	    }";
+		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'sdps','sdp', 'percent', 'kit'));
 	}
 
 	/**
@@ -565,6 +664,12 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$kit = NULL;
+		$kit = Input::get('kit');
+		if($kit==NULL)
+		{
+			$kit = 'KHB';
+		}
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -716,7 +821,7 @@ class ReportController extends Controller {
 	        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
         		$counter = count($months);
         		foreach ($months as $month) {
-        			$data = Sdp::find($sdp)->overallAgreement($site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0){
         					$chart.= '0.00';
         					if($counter==1)
@@ -788,7 +893,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
         					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -825,7 +930,7 @@ class ReportController extends Controller {
         					$sticker = $percentage." - ".$month->label." ".$month->annum;
         					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
         					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
         					{
         						$percent.="["."'".$sdp."'".", ".$per."],";
         					}
@@ -835,7 +940,7 @@ class ReportController extends Controller {
 	            $percent.="]
 	        }
 	    }";
-		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp'));
+		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
 	}/**
 	 * Invalid results report
@@ -1351,7 +1456,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = $column->column($jimbo, $sub_county, $site, $from, $toPlusOne)!=0?round(Answer::find(Answer::idByName($option))->column($column->id, $jimbo, $sub_county, $site, $from, $toPlusOne)*100/$column->column($jimbo, $sub_county, $site, $from, $toPlusOne), 2):0.00;
+	        			$data = $column->column($option, $jimbo, $sub_county, $site, $from, $toPlusOne);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
