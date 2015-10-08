@@ -688,22 +688,30 @@ class ReportController extends Controller {
 			    enabled: false
 			},
 			colors: ['#00CCFF', '#0066FF', '#0000FF'],
+			tooltip: {
+	            pointFormat: '<span style=\"color:{point.color}\">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+	        },
 	        series: [";
 	        $counts = count($sdps);
-	        foreach ($percentages as $percentage) {
+	        foreach ($percentages as $percentage)
+	        {
 	        	$percent.="{name:"."'".$percentage."'".", data:[";
         		$counter = count($months);
-        		foreach ($months as $month) {
+        		foreach ($months as $month)
+        		{
+        			$percent.="{y:";
         			$data = $checklist->overallAgreement($percentage, $sdps, $site, $sub_county, $jimbo, $month->annum, $month->months);
-        			if($data==0){
-        					$percent.= '0.00';
+        			if($data==0)
+        			{
+        					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
         					if($counter==1)
             					$percent.="";
             				else
             					$percent.=",";
     				}
-    				else{
-        				$percent.= $data;
+    				else
+    				{
+        				$percent.= $data.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
 
         				if($counter==1)
         					$percent.="";
@@ -720,6 +728,24 @@ class ReportController extends Controller {
 				$counts--;
 	        }
 	        $percent.="],
+		        drilldown: {
+		            series: [";
+		            foreach ($percentages as $percentage)
+	        		{
+	        			foreach ($months as $month)
+        				{
+        					$sticker = $percentage." - ".$month->label." ".$month->annum;
+        					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
+        					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
+        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					{
+        						$percent.="["."'".$sdp."'".", ".$per."],";
+        					}
+        					$percent.="]},";
+        				}
+	        		}
+	            $percent.="]
+	        }
 	    }";
 		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp'));
 
