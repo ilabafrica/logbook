@@ -121,12 +121,6 @@
                     <div id="chart" style="height: 400px"></div>
                 </div>
             </div>
-            <hr />
-            <div class="row">
-                <div class="col-sm-12">
-                    <div id="percent" style="height: 400px"></div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- /.panel-body -->
@@ -138,7 +132,6 @@
 <script type="text/javascript">
     $(function () {
         $('#chart').highcharts(<?php echo $chart ?>);
-        $('#percent').highcharts(<?php echo $percent ?>);
     });
 </script>
 @stop
