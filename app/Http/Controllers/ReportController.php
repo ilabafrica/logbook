@@ -1263,6 +1263,11 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		//$sdps = Sdp::lists('name', 'id');
+		$sdps =array();
+		//	Declare variables
+		//dd($sdps);
+		$sdp =NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -1272,6 +1277,10 @@ class ReportController extends Controller {
 		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
@@ -1286,15 +1295,21 @@ class ReportController extends Controller {
 		}
 		$n = 0;
 		//	Update chart title
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL|| $sdp!=NULL)
 				{
-					
+					if($sdp!=NULL)
+					{					
+					$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+					}
+					else
+					{
 					$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
 					$title = Facility::find($site)->name.'(N='.$n.')';
+					}
 				}
 				else
 				{					
@@ -1390,7 +1405,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'title', 'from', 'to', 'toPlusOne'));
+		return view('report.me.stage', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site','sdps','sdp', 'title', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
@@ -1410,6 +1425,8 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
+		$sdp = NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -1418,6 +1435,10 @@ class ReportController extends Controller {
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
@@ -1432,14 +1453,21 @@ class ReportController extends Controller {
 		}
 		
 		//	Update chart title
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL || $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-				}
+					if($sdp!=NULL)
+					{
+						$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+					}
+					else
+					{
+						$title = Facility::find($site)->name;
+				    }
+				}				
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
@@ -1539,7 +1567,7 @@ class ReportController extends Controller {
 			}],
 			colors:["."'".implode("','", $colors)."'"."]          
 		}";
-		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title'));
+		return view('report.me.snapshot', compact('checklist', 'columns', 'options', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'from', 'to', 'toPlusOne', 'title'));
 	}
 
 	public function breakdown()
@@ -1554,6 +1582,8 @@ class ReportController extends Controller {
 		$facilities = array();
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
+		$sdp = NULL;
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
@@ -1562,6 +1592,10 @@ class ReportController extends Controller {
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
@@ -1576,14 +1610,21 @@ class ReportController extends Controller {
 		}
 		
 		//	Update chart title
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
-			if($sub_county!=NULL || $site!=NULL)
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 			{
-				if($site!=NULL)
+				if($site!=NULL || $sdp!=NULL)
 				{
-					$title = Facility::find($site)->name;
-				}
+					if($sdp!=NULL)
+					{
+						$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+					}
+					else
+					{
+						$title = Facility::find($site)->name;
+				    }
+				}	
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
@@ -1621,7 +1662,7 @@ class ReportController extends Controller {
 		}
 		$options = array_unique($options);
 		//	Colors to be used in the series
-		return view('report.me.breakdown', compact('checklist', 'columns', 'options', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'from', 'to', 'toPlusOne', 'title','domain'));
+		return view('report.me.breakdown', compact('checklist', 'columns', 'options', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'from', 'to', 'toPlusOne', 'title','domain'));
 	}
 
 	/**

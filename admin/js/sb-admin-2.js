@@ -261,7 +261,7 @@ function set_total(id) {
 function load(id){
     cId = $('#county_'+id).val();
 
-    var URL_ROOT = 'http://127.0.0.1/rtqii/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -292,7 +292,7 @@ function dyn()
 {
     cId = $('#county').val();
 
-    var URL_ROOT = 'http://127.0.0.1/rtqii/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -313,7 +313,7 @@ function dyn()
 function drop()
 {
     cId = $('#sub_county').val();
-    var URL_ROOT = 'http://127.0.0.1/rtqii/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
@@ -335,7 +335,7 @@ function drop()
 function ssdp()
 {
     cId = $('#facility').val();
-    var URL_ROOT = 'http://127.0.0.1/rtqii/';
+    var URL_ROOT = 'http://127.0.0.1/logbook/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
         dataType: 'json',
