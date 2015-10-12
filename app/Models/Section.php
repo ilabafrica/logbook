@@ -66,7 +66,8 @@ class Section extends Model implements Revisionable {
 	 */
 	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
 	{
-		//	Start optimization
+        //dd($to->format('Y-m-d H:i:s'));
+        //	Start optimization
 		$checklist = Checklist::idByName('SPI-RT Checklist');
 
 		//  Get data to be used
@@ -83,15 +84,14 @@ class Section extends Model implements Revisionable {
                                 	if($site || $sdp)
                                 	{
 
-                                    	if(isset($sdp))
+                                    	if($sdp)
                                     	{
-                                        	$values = $values->where('sdp_id', $sdp);
+                                             $values = $values->where('facility_id', $site)
+                                                          ->where('sdp_id', $sdp);
                                     	}
                                     	else
                                     	{
-                                    		//$values = $values->where('facility_id', $site);
-											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('facility_id', $site);
+                                    		$values = $values->where('facility_id', $site);
                                     	}
                                     }
                                     else
@@ -153,7 +153,7 @@ class Section extends Model implements Revisionable {
 	 */
 	public function snapshot($county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL)
 	{
-		//	Initialize variables
+       		//	Initialize variables
 		$counter = 0;
 		$checklist = Checklist::idByName('M & E Checklist');
 		$values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
@@ -169,16 +169,15 @@ class Section extends Model implements Revisionable {
                                 	if($site || $sdp)
                                 	{
 
-                                    	if(isset($sdp))
-                                    	{
-                                        	$values = $values->where('sdp_id', $sdp);
-                                    	}
-                                    	else
-                                    	{
-                                    		//$values = $values->where('facility_id', $site);
-											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('facility_id', $site);
-                                    	}
+                                    	if($sdp)
+                                        {
+                                             $values = $values->where('facility_id', $site)
+                                                          ->where('sdp_id', $sdp);
+                                        }
+                                        else
+                                        {
+                                            $values = $values->where('facility_id', $site);
+                                        }
                                     }
                                     else
                                     {
@@ -199,16 +198,27 @@ class Section extends Model implements Revisionable {
                                                  ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
                                                  ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
                             }
+                           
         $total_counts = count($values->get(array('survey_sdps.*')));
+        
         $calculated_points = $values->join('survey_questions', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
         							->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
         							->whereIn('question_id', $this->questions->lists('id'))
         							->whereIn('survey_data.answer', Answer::lists('score'))
         							->sum('answer');
-        $percentage = 0.00;
-        $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
-       	return $percentage;
-		//	End optimization
+   
+        if($total_counts!=0)
+        {
+           $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
+        }
+        else if($total_counts==0)
+        {
+            $percentage = 0.00;
+                       
+        }
+        return $percentage;
+        //  End optimization
+    
 	}
 	/**
 	 * Function to return color code given the percent value
@@ -246,16 +256,15 @@ class Section extends Model implements Revisionable {
                                 	if($site || $sdp)
                                 	{
 
-                                    	if(isset($sdp))
-                                    	{
-                                        	$values = $values->where('sdp_id', $sdp);
-                                    	}
-                                    	else
-                                    	{
-                                    		//$values = $values->where('facility_id', $site);
-											$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('facility_id', $site);
-                                    	}
+                                    if($sdp)
+                                        {
+                                             $values = $values->where('facility_id', $site)
+                                                          ->where('sdp_id', $sdp);
+                                        }
+                                        else
+                                        {
+                                            $values = $values->where('facility_id', $site);
+                                        }
                                     }
                                     else
                                     {
@@ -285,8 +294,21 @@ class Section extends Model implements Revisionable {
                                   	->whereIn('question_id', $this->questions->lists('id'))
                                   	->where('answer', $response)
                                   	->count();
-        $percentage = round(($calculated_counts*100)/($total_counts*$counter), 2);
-       	return $percentage;
+
+        //$percentage = round(($calculated_counts*100)/($total_counts*$counter), 2);
+       //	return $percentage;
+         // dd( $calculated_counts);                         
+
+          if($total_counts!=0)
+        {
+           $percentage = round(($calculated_counts*100)/($total_counts*$counter), 2);
+        }
+        else if($total_counts==0)
+        {
+            $percentage = 0.00;
+                       
+        }
+        return $percentage;
 	}
 	/**
 	 * Function to calculate percentage based on quarters

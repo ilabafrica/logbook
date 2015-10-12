@@ -125,6 +125,7 @@
                                 <tr>
                                     <td colspan="5"><strong>{!! Lang::choice('messages.domain-responses', 1).$title.' '.$dates !!}</strong></td>
                                 </tr>
+
                                 <tr>
                                     <td>{{trans('messages.breakdown')}}</td>
                                     @foreach ($options as $option)
@@ -148,7 +149,7 @@
                                 <tr>
                                     <td>{!! $question->description !!}</td>
                                     @foreach ($options as $option)
-                                        <td>{!! '<strong>'.$question->breakdown($option, null, $site, $sub_county, $jimbo, $from, $to).'</strong> ('.$question->domain($options, $option, null, $site, $sub_county, $jimbo, $from, $to).'%)' !!}</td>
+                                        <td>{!! '<strong>'.$question->breakdown($option, $sdp, $site, $sub_county, $jimbo, $from, $to).'</strong> ('.$question->domain($options, $option, $jimbo, $sub_county,  $site,  $sdp, $from, $to).'%)' !!}</td>
                                     @endforeach
                                 </tr>
                                 @endforeach

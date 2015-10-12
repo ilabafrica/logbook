@@ -225,14 +225,26 @@ class Question extends Model implements Revisionable  {
 							{
 								$counter = $counter->whereBetween('date_submitted', [$from, $to]);
 							}
-							if($county || $sub_county || $site)
+							if($county || $sub_county || $site || $sdp)
 							{
-								if($sub_county || $site)
+								if($sub_county || $site|| $sdp)
 								{
-									if(isset($site))
-									{
-										$counter = $counter->where('facility_id', $site);
+									if($site || $sdp)
+                                	{
+
+										if(isset($sdp))
+										{
+											$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                         ->where('facility_id', $site)
+                                                         ->where('sdp_id', $sdp);
+										}
+										else
+										{
+											$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+												 		      ->where('facility_id', $site);
+										}
 									}
+
 									else
 									{
 										$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
@@ -255,14 +267,26 @@ class Question extends Model implements Revisionable  {
 	public function domain($array, $answer, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
 	{
 		//	Get counts for each question per domain
+		//dd($sdp);
 		$counter = count($array);
 		$percentage = 0.00;
-		$perAnswer = $this->breakdown($answer, null, $site, $sub_county, $county, $from, $to);
+		$perAnswer = $this->breakdown($answer, $sdp, $site, $sub_county, $county, $from, $to);
 		$overallCount = 0;
 		foreach ($array as $option)
 		{
-			$overallCount+=$this->breakdown($option, null, $site, $sub_county, $county, $from, $to);
+			$overallCount+=$this->breakdown($option, $sdp, $site, $sub_county, $county, $from, $to);
 		}
-		return round($perAnswer*100/$overallCount, 2);
+		//return round($perAnswer*100/$overallCount, 2);
+
+		if($overallCount!=0)
+        {
+           return round($perAnswer*100/$overallCount, 2);
+        }
+        else if($overallCount==0)
+        {
+            return 0;
+                       
+        }
+    
 	}
 }

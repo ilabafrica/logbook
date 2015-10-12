@@ -134,8 +134,8 @@
                                 <tr>
                                     <td>{!! $option.' ('.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower.'%-'.App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper.'%)' !!}</td>
                                     @foreach ($columns as $column)
-                                        @if($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
-                                            <td class="{{ $column->color($column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne)) }}">{!! $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne) !!}</td>
+                                        @if($column->snapshot($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne)>=App\Models\Answer::find(App\Models\Answer::idByName($option))->range_lower && $column->snapshot($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne) < App\Models\Answer::find(App\Models\Answer::idByName($option))->range_upper)
+                                            <td class="{{ $column->color($column->snapshot($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne)) }}">{!! $column->snapshot($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne) !!}</td>
                                         @else
                                             <td></td>
                                         @endif

@@ -147,7 +147,7 @@
                                 <tr>
                                     <td class="{{$class}}">{!! $answer !!} ({!! App\Models\Answer::find(App\Models\Answer::idByName($answer))->score !!})</td>
                                     @foreach($columns as $column)
-                                        <td>{!! $column->column($option, $jimbo, $sub_county, $site, $from, $toPlusOne).'%' !!}</td>
+                                        <td>{!! $column->column($option, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne).'%' !!}</td>
                                     @endforeach
                                 </tr>
                             @endforeach

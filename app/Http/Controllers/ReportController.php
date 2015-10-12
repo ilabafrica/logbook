@@ -1083,7 +1083,6 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
-		$from = date('Y-08-d');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
@@ -1208,7 +1207,7 @@ class ReportController extends Controller {
 	    	$data[$category->id] = $category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
 
-	    $level = $checklist->level($categories, $jimbo, $sub_county, $site, $sdp);
+	    $level = $checklist->level($categories, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'level'));
 
 	}
@@ -1284,14 +1283,17 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		$n = 0;
 		//	Update chart title
@@ -1378,7 +1380,7 @@ class ReportController extends Controller {
 		        	$chart.="{colorByPoint: false,name:"."'".$option."'".", data:[";
 	        		$counter = count($columns);
 	        		foreach ($columns as $column) {
-	        			$data = $column->column($option, $jimbo, $sub_county, $site, $from, $toPlusOne);
+	        			$data = $column->column($option, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 	        			if($data==0){
             					$chart.= '0.00';
             					if($counter==1)
@@ -1442,14 +1444,17 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		
 		//	Update chart title
@@ -1546,7 +1551,7 @@ class ReportController extends Controller {
 				$counter = count($columns);
 				$color = NULL;
 				foreach ($columns as $column) {
-					$value = $column->snapshot($jimbo, $sub_county, $site, $from, $toPlusOne);
+					$value = $column->snapshot($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 					if($value >= 0 && $value <25)
 						$color = '#d9534f';
 					else if($value >=25 && $value <50)
@@ -1599,14 +1604,17 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		
 		//	Update chart title
@@ -2142,10 +2150,12 @@ class ReportController extends Controller {
 		if(Input::get('sub_county'))
 		{
 			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
 		}
 		if(Input::get('county'))
 		{
 			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL)
