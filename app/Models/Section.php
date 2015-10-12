@@ -136,16 +136,7 @@ class Section extends Model implements Revisionable {
             $reductions+= $sqtns->where('question_id', $notapplicable)
                                 ->where('answer', '0')
                                 ->count();
-        }
-        if($reductions>0 && $total_counts!=0)
-        {
-            $percentage = round($calculated_points*100/(($this->total_points*$total_counts)-($reductions*5)), 2);
-        }
-        else if($total_counts!=0)
-        {
-            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);        	
-        }
-       	return $percentage;
+       	return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
 		//	End optimization
 	}
 	/**
@@ -206,20 +197,9 @@ class Section extends Model implements Revisionable {
         							->whereIn('question_id', $this->questions->lists('id'))
         							->whereIn('survey_data.answer', Answer::lists('score'))
         							->sum('answer');
-   
-        if($total_counts!=0)
-        {
-           $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
-        }
-        else if($total_counts==0)
-        {
-            $percentage = 0.00;
-                       
-        }
-        return $percentage;
+        return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
         //  End optimization
-    
-	}
+    }
 	/**
 	 * Function to return color code given the percent value
 	 */
@@ -294,21 +274,7 @@ class Section extends Model implements Revisionable {
                                   	->whereIn('question_id', $this->questions->lists('id'))
                                   	->where('answer', $response)
                                   	->count();
-
-        //$percentage = round(($calculated_counts*100)/($total_counts*$counter), 2);
-       //	return $percentage;
-         // dd( $calculated_counts);                         
-
-          if($total_counts!=0)
-        {
-           $percentage = round(($calculated_counts*100)/($total_counts*$counter), 2);
-        }
-        else if($total_counts==0)
-        {
-            $percentage = 0.00;
-                       
-        }
-        return $percentage;
+        return $total_counts>0?round(($calculated_counts*100)/($total_counts*$counter), 2):$percentage;
 	}
 	/**
 	 * Function to calculate percentage based on quarters

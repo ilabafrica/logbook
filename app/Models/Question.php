@@ -267,7 +267,6 @@ class Question extends Model implements Revisionable  {
 	public function domain($array, $answer, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
 	{
 		//	Get counts for each question per domain
-		//dd($sdp);
 		$counter = count($array);
 		$percentage = 0.00;
 		$perAnswer = $this->breakdown($answer, $sdp, $site, $sub_county, $county, $from, $to);
@@ -276,17 +275,6 @@ class Question extends Model implements Revisionable  {
 		{
 			$overallCount+=$this->breakdown($option, $sdp, $site, $sub_county, $county, $from, $to);
 		}
-		//return round($perAnswer*100/$overallCount, 2);
-
-		if($overallCount!=0)
-        {
-           return round($perAnswer*100/$overallCount, 2);
-        }
-        else if($overallCount==0)
-        {
-            return 0;
-                       
-        }
-    
+		return $overallCount>0?round($perAnswer*100/$overallCount, 2):0.00;
 	}
 }
