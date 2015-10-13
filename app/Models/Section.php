@@ -136,7 +136,8 @@ class Section extends Model implements Revisionable {
             $reductions+= $sqtns->where('question_id', $notapplicable)
                                 ->where('answer', '0')
                                 ->count();
-       	return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
+        }
+        return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
 		//	End optimization
 	}
 	/**
