@@ -2138,7 +2138,6 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
-		$from = date('Y-08-d');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
