@@ -260,7 +260,6 @@ function set_total(id) {
 /*Dynamic loading of select list options for counties-sub-counties*/
 function load(id){
     cId = $('#county_'+id).val();
-
     var URL_ROOT = 'http://127.0.0.1/rtqii/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({
@@ -291,7 +290,6 @@ function county(id){
 function dyn()
 {
     cId = $('#county').val();
-
     var URL_ROOT = 'http://127.0.0.1/rtqii/';
     _token: JSON.stringify($('input[name=_token]').val());
     $.ajax({

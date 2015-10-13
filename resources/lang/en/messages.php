@@ -261,7 +261,7 @@ return [
 	'select-town' =>	'Select Town',
 	'select-job-title' =>	'Select Job Title',
 	'operational-status' =>	'Operational Status',
-	'select-facility' =>	'Select Facility',
+	'select-facility' =>	'Select Health Facility',
 	'testing-month' =>	'Month',
 	/* Sidebar */
 	'facility-configuration'	=>	'Facility Config',
