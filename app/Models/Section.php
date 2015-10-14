@@ -83,11 +83,9 @@ class Section extends Model implements Revisionable {
                                 {
                                 	if($site || $sdp)
                                 	{
-
                                     	if($sdp)
                                     	{
-                                             $values = $values->where('facility_id', $site)
-                                                          ->where('sdp_id', $sdp);
+                                             $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
                                     	}
                                     	else
                                     	{
@@ -136,6 +134,7 @@ class Section extends Model implements Revisionable {
             $reductions+= $sqtns->where('question_id', $notapplicable)
                                 ->where('answer', '0')
                                 ->count();
+        }
        	return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
 		//	End optimization
 	}
@@ -159,11 +158,9 @@ class Section extends Model implements Revisionable {
                                 {
                                 	if($site || $sdp)
                                 	{
-
                                     	if($sdp)
                                         {
-                                             $values = $values->where('facility_id', $site)
-                                                          ->where('sdp_id', $sdp);
+                                             $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
                                         }
                                         else
                                         {
@@ -235,11 +232,9 @@ class Section extends Model implements Revisionable {
                                 {
                                 	if($site || $sdp)
                                 	{
-
-                                    if($sdp)
+                                    	if($sdp)
                                         {
-                                             $values = $values->where('facility_id', $site)
-                                                          ->where('sdp_id', $sdp);
+                                            $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
                                         }
                                         else
                                         {
@@ -358,4 +353,74 @@ class Section extends Model implements Revisionable {
 			return null;
 		}
 	}
+    /**
+     * Function to calculate percentage of sites in each domain/pillar per level
+     */
+    public function level($checklist, $response, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
+    {
+        //  Get answer object from $response
+        $level = Answer::find(Answer::idByName($response));
+        //  Get data to be used
+        $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+                            ->where('checklist_id', $checklist);
+                            if($from && $to)
+                            {
+                                $values = $values->whereBetween('date_submitted', [$from, $to]);
+                            }
+                            if($county || $sub_county || $site || $sdp)
+                            {
+                                if($sub_county || $site || $sdp)
+                                {
+                                    if($site || $sdp)
+                                    {
+                                        if($sdp)
+                                        {
+                                            $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
+                                        }
+                                        else
+                                        {
+                                            $values = $values->where('facility_id', $site);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                         ->where('sub_county_id', $sub_county);
+                                    }
+                                }
+                                else
+                                {
+                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                                                     ->where('county_id', $county);
+                                }
+                            }
+                            else
+                            {
+                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
+                            }
+                            $values = $values->get(array('survey_sdps.*'));
+        //  Define variables for use
+        $counter = 0;
+        $total_counts = count($values);
+        //  Begin processing
+        foreach ($values as $key => $value)
+        {
+            $calculated_points = 0.00;
+            $percentage = 0.00;
+            $sqtns = $value->sqs()->whereIn('question_id', $this->questions->lists('id'))    //  Get questions belonging to the section
+                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+                                  ->whereIn('survey_data.answer', array_filter(Answer::lists('score')));
+            $calculated_points = $sqtns->sum('answer');
+            $percentage = round(($calculated_points*100)/$this->total_points, 2);
+            //  Check and increment counter
+            if(($percentage>$level->range_lower) && ($percentage<=$level->range_upper) || (($level->range_lower==0.00) && ($percentage==$level->range_lower)))
+            {
+                $counter++;
+            }
+        }
+        return $counter;
+    }
 }

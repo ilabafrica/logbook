@@ -231,17 +231,13 @@ class Question extends Model implements Revisionable  {
 								{
 									if($site || $sdp)
                                 	{
-
 										if(isset($sdp))
 										{
-											$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('facility_id', $site)
-                                                         ->where('sdp_id', $sdp);
+											$counter = $counter->where('facility_id', $site)->where('sdp_id', $sdp);
 										}
 										else
 										{
-											$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-												 		      ->where('facility_id', $site);
+											$counter = $counter->where('facility_id', $site);
 										}
 									}
 

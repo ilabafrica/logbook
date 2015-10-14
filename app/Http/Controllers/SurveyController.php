@@ -715,7 +715,7 @@ class SurveyController extends Controller {
     * @param $testId the testID to save with the labRequest or 0 if we do not have the test
     *        in our systems.
     */
-    public function htc($checklistData)
+    public function htc($value)
     {
     	//  Get all the data.
         //	dd($checklistData);

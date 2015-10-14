@@ -81,7 +81,7 @@ class Level extends Model implements Revisionable{
             else
                 $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
             //  Check and increment counter
-            if(($percentage>=$this->range_lower) && ($percentage<=$this->range_upper))
+            if(($percentage>$this->range_lower) && ($percentage<=$this->range_upper) || (($this->range_lower==0.00) && ($percentage==$this->range_lower)))
                 $counter++;
         }
         return $total_counts > 0?round($counter*100/$total_counts, 2):0.00;

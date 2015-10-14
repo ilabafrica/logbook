@@ -27,11 +27,11 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="{!! url('report/'.$checklist->id.'/me') !!}">{!! Lang::choice('messages.level-summary', 1) !!}</a></li>
+            <li><a href="{!! url('report/'.$checklist->id.'/me') !!}">{!! Lang::choice('messages.level-summary', 1) !!}</a></li>
             <li><a href="{!! url('analysis/chart') !!}">{!! Lang::choice('messages.stage-of-implementation', 1) !!}</a></li>
             <li><a href="{!! url('analysis/snapshot') !!}">{!! Lang::choice('messages.snapshot', 1) !!}</a></li>
             <li><a href="{!! url('analysis/breakdown') !!}">{!! Lang::choice('messages.domain-response-breakdown', 1) !!}</a></li>
-            <li><a href="{!! url('analysis/response') !!}">{!! Lang::choice('messages.domain-response-chart', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('analysis/response') !!}">{!! Lang::choice('messages.domain-response-chart', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/me', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}

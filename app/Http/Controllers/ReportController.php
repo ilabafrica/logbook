@@ -1012,11 +1012,12 @@ class ReportController extends Controller {
 	        series: [";
 	        	$counts = count($options);
 		        foreach ($options as $option) {
-		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
+		        	$response = Answer::find(Answer::idByName($option));
+		        	$chart.="{colorByPoint: false,name:"."'".$response->name." (".$response->range_lower."-".$response->range_upper."%)'".", data:[";
 	        		$counter = count($categories);
 	        		foreach ($categories as $category) {
 
-	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+	        			$data = $category->level($id, $option, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 
 	        			if($data==0){
             					$chart.= '0.00';
@@ -1674,6 +1675,192 @@ class ReportController extends Controller {
 	}
 
 	/**
+	 * M$E stacked percentages report
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function response()
+	{
+		//dd(Input::all());
+		//	Get checklist
+		$checklist_id = Checklist::idByName('M & E Checklist');
+		$checklist = Checklist::find($checklist_id);
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		
+		//	Declare variables
+		$sdps = array();
+        $sdp =NULL;
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		}
+		if(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
+		}
+		//	Update chart title
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL || $sdp!=NULL)
+			{
+				if($site!=NULL || $sdp!=NULL)
+				{
+					if($sdp!=NULL)
+					{
+						$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
+					}
+					else
+					{
+						$title = Facility::find($site)->name;
+				    }
+				}				
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				}
+			}
+			else
+			{
+				$cc = County::find($jimbo);
+				$title = $cc->name.' '.Lang::choice('messages.county', 1);				
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+		}
+		$categories = array();
+		$options = array();
+		foreach ($checklist->sections as $section) 
+		{
+			if($section->isScorable())
+				array_push($categories, $section);
+		}
+		foreach ($categories as $category) {
+			foreach ($category->questions as $question) 
+			{
+				if($question->answers->count()>0)
+				{
+					foreach ($question->answers as $answer) 
+					{
+						array_push($options, $answer->name);
+					}
+				}
+			}
+		}
+		$options = array_unique($options);
+		//	Colors to be used in the series
+		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
+		$chart = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+
+	            text: '".Lang::choice('messages.summary-chart', 1).'-'.$title."'
+
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$chart.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $chart.="},
+	        xAxis: {
+	            categories: [";
+	            	foreach ($categories as $category) {
+	            		$chart.="'".$category->label."',";
+	            	}
+	            $chart.="]
+	        },
+	        yAxis: {
+	            min: 0,
+	            title: {
+	                text: '% Score'
+	            }
+	        },
+	        credits: {
+			    enabled: false
+			},
+	        tooltip: {
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
+	            shared: true
+	        },
+	        plotOptions: {
+	            column: {
+	                stacking: 'percent'
+	            }
+	        },
+	        series: [";
+	        	$counts = count($options);
+		        foreach ($options as $option) {
+		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
+	        		$counter = count($categories);
+	        		foreach ($categories as $category) {
+
+	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+
+	        			if($data==0){
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
+        				}
+        				else{
+            				$chart.= $data;
+
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
+            		$chart.="], color:"."'".$colors[$counts-1]."'";
+	            	if($counts==1)
+						$chart.="}";
+					else
+						$chart.="},";
+					$counts--;
+		        }
+		    $chart.="],
+	    }";
+		return view('report.me.response', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo','sdps','sdp', 'sub_county', 'site'));
+	}
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id
@@ -1955,19 +2142,8 @@ class ReportController extends Controller {
 			    enabled: false
 			},
 	        tooltip: {
-	            headerFormat: '<span style=\"font-size:10px\">{point.key}</span><table>',
-	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
-	                '<td style=\"padding:0\"><b>{point.y:.1f} %</b></td></tr>',
-	            footerFormat: '</table>',
 	            shared: true,
-	            useHTML: true
-	        },
-	        plotOptions: {
-	            column: {
-	                pointPadding: 0.2,
-	                borderWidth: 0,
-	                colorByPoint: true
-	            }
+	            pointFormat: '<span style=\"color:{series.color}\">{series.name}</span>: <b>{point.y} %</b><br/>',
 	        },
 	        colors: ['red', 'orange', 'yellow', '#90ED7D', 'green'],
 	        series: [";

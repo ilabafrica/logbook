@@ -471,4 +471,9 @@ return [
 	'overall-score'	=>	'Overall Score',
 	'khb'	=>	'KHB',
 	'determine'	=>	'DETERMINE',
+	'domain-response-breakdown'	=>	'Domain Response Breakdown',
+	'domain-response-chart'	=>	'Domain Response Chart',
+	'stage-of-implementation'	=>	'Stage of Implementation',
+	'snapshot'	=>	'Snapshot',
+	'level-summary'	=>	'Level Summary',
 ];
