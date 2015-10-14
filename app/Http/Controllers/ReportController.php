@@ -52,6 +52,10 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -75,6 +79,7 @@ class ReportController extends Controller {
 		}
 		//	Get sdps
 		$sdps = array();
+		$n = 0;
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
 			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
@@ -90,8 +95,8 @@ class ReportController extends Controller {
 						}
 					}
 					else
-					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+					{   $n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1).'(N='.$n.')';
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -104,8 +109,8 @@ class ReportController extends Controller {
 					}
 				}
 				else
-				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+				{	$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -119,8 +124,8 @@ class ReportController extends Controller {
 				}
 			}
 			else
-			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+			{	$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -138,7 +143,12 @@ class ReportController extends Controller {
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
+
 			foreach (County::all() as $county)
 			{
 				foreach ($county->subCounties as $subCounty)
@@ -157,9 +167,9 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		$from = Input::get('from');
-		$to = Input::get('to');
-		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		//$from = Input::get('from');
+		//$to = Input::get('to');
+		//$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 	        chart: {
@@ -260,6 +270,10 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		$kit = NULL;
 		$kit = Input::get('kit');
 		if($kit==NULL)
@@ -294,6 +308,7 @@ class ReportController extends Controller {
 			$sub_county = SubCounty::find(Auth::user()->tier->tier);
 		//	Get sdps
 		$sdps = array();
+		$n = 0;
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
 			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
@@ -310,7 +325,8 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1).'(N='.$n.')';
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -324,7 +340,8 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -339,7 +356,8 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';	
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -357,7 +375,12 @@ class ReportController extends Controller {
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
+
 			foreach (County::all() as $county)
 			{
 				foreach ($county->subCounties as $subCounty)
@@ -376,8 +399,8 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		$from = Input::get('from');
-		$to = Input::get('to');
+		//$from = Input::get('from');
+		//$to = Input::get('to');
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 	        chart: {
@@ -571,6 +594,10 @@ class ReportController extends Controller {
 		$site = NULL;
 		$sub_county = NULL;
 		$jimbo = NULL;
+		$from = Input::get('from');
+		$to = Input::get('to');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		$kit = NULL;
 		$kit = Input::get('kit');
 		if($kit==NULL)
@@ -602,6 +629,7 @@ class ReportController extends Controller {
 		$sdps = array();
 		//	Percentages
 		$percentages = array('<95%', '95-98%', '>98%');
+		$n = 0;
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
 			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
@@ -618,7 +646,8 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1).'(N='.$n.')';
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -632,7 +661,8 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -647,7 +677,8 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';	
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -665,7 +696,12 @@ class ReportController extends Controller {
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
+
 			foreach (County::all() as $county)
 			{
 				foreach ($county->subCounties as $subCounty)
@@ -684,8 +720,8 @@ class ReportController extends Controller {
 			}
 		}
 		$sdps = array_unique($sdps);
-		$from = Input::get('from');
-		$to = Input::get('to');
+		//$from = Input::get('from');
+		//$to = Input::get('to');
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 	        chart: {
@@ -894,6 +930,7 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -915,6 +952,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
+		$n = 0;
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
@@ -927,24 +965,32 @@ class ReportController extends Controller {
 						$title = Sdp::find($sdp)->name.' '.'for'.' '.Facility::find($site)->name;
 					}
 					else
-					{
-						$title = Facility::find($site)->name;
+					{   
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.'(N='.$n.')';
 				    }
 				}				
 				else
-				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+				{   
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 				}
 			}
 			else
 			{
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
 				$cc = County::find($jimbo);
-				$title = $cc->name.' '.Lang::choice('messages.county', 1);				
+				$title = $cc->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';			
 			}
 		}
 		else
 		{
-			$title = 'Kenya';
+
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
 		}
 		$categories = array();
 		$options = array();
@@ -1087,6 +1133,7 @@ class ReportController extends Controller {
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1108,6 +1155,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
+		$n = 0;
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
@@ -1121,22 +1169,29 @@ class ReportController extends Controller {
 				}
 				else 
 				{
-					$title = Facility::find($site)->name;
+					$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+					$title = Facility::find($site)->name.'(N='.$n.')';
 				}
 			}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 				}
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';	
 			}
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
 		}
 		$chart = "{
 
@@ -1420,6 +1475,8 @@ class ReportController extends Controller {
 	{	//	Get counties
 		//	Get counties
 		$counties = County::lists('name', 'id');
+		//	Get checklist
+		$checklist = Checklist::find(2);
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1436,6 +1493,7 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1457,7 +1515,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
-		
+		$n = 0;
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
@@ -1471,22 +1529,29 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name;
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.'(N='.$n.')';
 				    }
 				}				
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 				}
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';
 			}
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
 		}
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
@@ -1578,7 +1643,8 @@ class ReportController extends Controller {
 
 	public function breakdown()
 	{	//	Get counties
-		//	Get counties
+		//	Get checklist
+		$checklist = Checklist::find(2);
 		$counties = County::lists('name', 'id');
 		//	Get all sub-counties
 		$subCounties = array();
@@ -1596,6 +1662,7 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1617,7 +1684,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
-		
+		$n = 0;
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
@@ -1631,22 +1698,29 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name;
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.'(N='.$n.')';
 				    }
 				}	
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
-				}
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
+			    }
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';	
 			}
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
 		}
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
@@ -1708,6 +1782,7 @@ class ReportController extends Controller {
 		$from = Input::get('from');
 		$to = Input::get('to');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$today = "'".date("Y-m-d")."'";
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1729,6 +1804,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
+		$n = 0;
 		//	Update chart title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
@@ -1742,23 +1818,30 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name;
+						$n = $checklist->ssdps($from, $toPlusOne, null, null, $site);
+						$title = Facility::find($site)->name.'(N='.$n.')';
 				    }
 				}				
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+					$n = $checklist->ssdps($from, $toPlusOne, null, $sub_county, null);	
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1).'(N='.$n.')';
 				}
 			}
 			else
 			{
+				$n = $checklist->ssdps($from, $toPlusOne, $jimbo, null, null);
 				$cc = County::find($jimbo);
-				$title = $cc->name.' '.Lang::choice('messages.county', 1);				
+				$title = $cc->name.' '.Lang::choice('messages.county', 1).'(N='.$n.')';					
 			}
 		}
 		else
 		{
-			$title = 'Kenya';
+			if(strtotime($from)===strtotime($today))
+				$n = $checklist->ssdps();
+			else
+				$n = $checklist->ssdps($from, $toPlusOne, null, null, null);
+			$title = 'Kenya'.'(N='.$n.')';
 		}
 		$categories = array();
 		$options = array();
