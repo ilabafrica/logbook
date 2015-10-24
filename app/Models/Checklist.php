@@ -266,7 +266,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function positivePercent($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	public function positivePercent($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
 		//	Get scores for each section
 		$counter = 0;

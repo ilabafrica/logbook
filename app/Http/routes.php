@@ -453,5 +453,13 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('overview', array(
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@overview"
+    ));    
+    Route::get('report/{id}/programatic', array(
+        "as"    =>  "report.programatic",
+        "uses"  =>  "ReportController@programatic"
+    ));    
+    Route::get('report/{id}/geographic', array(
+        "as"    =>  "report.geographic",
+        "uses"  =>  "ReportController@geographic"
     ));
 });
