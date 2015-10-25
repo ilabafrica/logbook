@@ -462,4 +462,8 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "report.geographic",
         "uses"  =>  "ReportController@geographic"
     ));
+    Route::any('partner/region', array(
+        "as"    =>  "reports.partner.region",
+        "uses"  =>  "ReportController@geoRegion"
+    ));
 });

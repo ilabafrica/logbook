@@ -39,7 +39,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $list = NULL, $year = 0, $month = 0, $date = 0)
+	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $list = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Check dates
 		$theDate = "";
@@ -52,35 +52,42 @@ class Checklist extends Model implements Revisionable {
 				}
 			}
 		}
-		$ssdps =  $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
-					if($from && $to)
+		$ssdps =  	SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+					->where('checklist_id', $this->id);
+					if($county || $sub_county || $site || $sdp)
+                    {
+                        if($sub_county || $site || $sdp)
+                        {
+                            if($site || $sdp)
+                            {
+                                if($sdp)
+                                {
+                                    $ssdps = $ssdps->where('facility_id', $site)->where('sdp_id', $sdp);
+                                }
+                                else
+                                {
+                                    $ssdps = $ssdps->where('facility_id', $site);
+                                }
+                            }
+                            else
+                            {
+                                $ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                                 ->where('sub_county_id', $sub_county);
+                            }
+                        }
+                        else
+                        {
+                            $ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+                                             ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+                                             ->where('county_id', $county);
+                        }
+                    }
+					if (strlen($theDate)>0 || ($from && $to))
 					{
-						$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
-					}
-					if($county || $sub_county || $site)
-					{
-						if($sub_county || $site)
-						{
-							if(isset($site))
-							{
-								$ssdps = $ssdps->where('facility_id', $site);
-							}
-							else
-							{
-								$ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-										 		 ->where('sub_county_id', $sub_county);
-							}
-						}
+						if($from && $to)
+							$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
 						else
-						{
-							$ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-											 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-											 ->where('county_id', $county);
-						}
-					}
-					if (strlen($theDate)>0)
-					{
-						$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
+							$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
 					}
 					if($list)
 					{
@@ -211,7 +218,7 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$counter++;
 		}
 		return round($counter*100/$total_sites, 2);
@@ -257,7 +264,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}
@@ -275,7 +282,7 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$counter++;
 		}
 		return round($counter*100/$total_sites, 2);
@@ -298,7 +305,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->positivePercent($site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}
@@ -316,7 +323,7 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$counter++;
 		}
 		return round($counter*100/$total_sites, 2);
@@ -339,10 +346,27 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>=$range['lower']) && ($agreement<=$range['upper']))
+			if(($agreement>$range['lower']) && ($agreement<=$level->range_upper) || (($range['lower']==0.00) && ($agreement==$level->range_lower)))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}
 		return $matched;
+	}
+	/**
+	 * Function to return percent of sites in each range - percentage - for spirt levels
+	 */
+	public function spirtLevel($ssdps, $level)
+	{
+		// dd($ssdps);
+		//	Get scores for each section
+		$counter = 0;
+		$total_sites = count($ssdps);
+		foreach ($ssdps as $ssdp)
+		{
+			$lvl = $level->spirtLevel($this->id, $ssdp);
+			if(($lvl>$level->range_lower) && ($lvl<=$level->range_upper) || (($level->range_lower==0.00) && ($lvl==$level->range_lower)))
+				$counter++;
+		}
+		return round($counter*100/$total_sites, 2);
 	}
 }

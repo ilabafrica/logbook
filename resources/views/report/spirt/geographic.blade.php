@@ -28,9 +28,10 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
-            <li class="active"><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
+            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'partner/sdp', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'partner/region', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
             <!-- Tab panes -->
             <div class="tab-content">
@@ -101,36 +102,6 @@
             <div class="row">                
                 <div class="col-sm-12">
                     <div id="chart" style="height: 750px"></div>
-                </div>
-            </div>
-            <hr />
-            <div class="row" style="display:none;">                
-                <div class="col-sm-12">
-                    <div id="data">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="6">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        @foreach($levels as $level)
-                                            <td>{!! $level->name.' ('.$level->range_lower.' - '.$level->range_upper.'%)' !!}</td>
-                                        @endforeach
-                                    </tr>
-                                    @foreach($sdps as $sdp)
-                                    <tr>
-                                        <td>{!! $sdp->name !!}</td>
-                                        @foreach($levels as $level)
-                                            <td></td>
-                                        @endforeach
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
