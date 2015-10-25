@@ -16,76 +16,96 @@
 @endif
 <div class="panel panel-default">
     <div class="panel-heading">
-        {!! $checklist->name !!}
+        <i class="fa fa-tags"></i> {!! $checklist->name !!}
+        <span class="panel-btn">
+            <a class="btn btn-outline btn-primary btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li><a href="{!! url('partner/spirt') !!}">{!! Lang::choice('messages.section', 1) !!}</a></li>
-            <li><a href="{!! url('partner/period') !!}">{!! Lang::choice('messages.period', 1) !!}</a></li>
-            <li class="active"><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.region', 1) !!}</a></li>
-            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.sdp', 1) !!}</a></li>
+            <li><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
+            <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
+            <li><a href="{!! url('partner/overtime') !!}">{!! Lang::choice('messages.precert-overtime', 1) !!}</a></li>
+            <li><a href="{!! url('partner/performance') !!}">{!! Lang::choice('messages.performance-overtime', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
-        <!-- Tab panes -->
-        <div class="tab-content">
-            <br />
-            <div class="row">
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
-                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('from', old('from'), array('class' => 'form-control')) !!}
-                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+        {!! Form::open(array('url' => 'partner/region', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        <div class="container-fluid">
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <br />
+                <div class="row">
+                    @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, old($jimbo)?old($jimbo):$jimbo, 
+                                    array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
-                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                            {!! Form::text('to', old('from'), array('class' => 'form-control')) !!}
-                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                    @endif
+                    @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, old($sub_county)?old($sub_county):$sub_county, 
+                                    array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-4">
-                    {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
-                                array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
-                </div>
-                <hr >
-                <div class="col-sm-12">
-                    <div class="table-responsive">
-                        <table class="table table-striped table-bordered table-hover">
-                            <tbody>
-                                <tr>
-                                    <td colspan="6">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
-                                </tr>
-                                <tr>
-                                    <td></td>
-                                    @foreach($levels as $level)
-                                        <td>{!! $level->name.' ('.$level->range_lower.' - '.$level->range_upper.'%)' !!}</td>
-                                    @endforeach
-                                </tr>
-                                @foreach($regions as $region)
-                                <tr>
-                                    <td>{!! App\Models\County::find($region)->name !!}</td>
-                                    @foreach($levels as $level)
-                                        <td>{!! $checklist->level() !!}</td>
-                                    @endforeach
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    @endif
+                    @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, old($site)?old($site):$site, 
+                                    array('class' => 'form-control', 'id' => 'facility')) !!}
+                            </div>
+                        </div>
                     </div>
+                    @endif
                 </div>
-                <div class="col-sm-12">
-                    <div id="chart" style="height: 400px"></div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                            <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                                {!! Form::text('from', isset($from)?$from:date('Y-m-d'), array('class' => 'form-control')) !!}
+                                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                            <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                                {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
+                                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
+                                    array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
+                    </div>
                 </div>
             </div>
-        </div>
-        {!! Form::close() !!}
+            {!! Form::close() !!}
+            <hr />
+            <div class="row">                
+                <div class="col-sm-12">
+                    <div id="chart" style="height: 750px"></div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- /.panel-body -->
