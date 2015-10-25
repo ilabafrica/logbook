@@ -117,7 +117,7 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
 	*/
-	public function positiveAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
+	public function positiveAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
 		//	Initialize counts
 		$testOne = 0;
@@ -161,8 +161,15 @@ class Sdp extends Model implements Revisionable {
 													 ->where('county_id', $county);
 								}
 							  }
-							  if (strlen($theDate)>0) {
-								$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  if (strlen($theDate)>0 || ($from && $to)) {
+							  		if($from && $to)
+							  		{
+							  			$pages = $pages->whereBetween('date_submitted', [$from, $to]);
+							  		}
+							  		else
+							  		{
+							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  		}								
 							  }
 							  $pages = $pages->where('question_id', $screen)
 											  ->where('answer', $kit)

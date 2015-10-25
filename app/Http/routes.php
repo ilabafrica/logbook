@@ -453,5 +453,25 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('overview', array(
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@overview"
+    ));    
+    Route::get('report/{id}/programatic', array(
+        "as"    =>  "report.programatic",
+        "uses"  =>  "ReportController@programatic"
+    ));    
+    Route::get('report/{id}/geographic', array(
+        "as"    =>  "report.geographic",
+        "uses"  =>  "ReportController@geographic"
+    ));
+    Route::any('partner/region', array(
+        "as"    =>  "reports.partner.region",
+        "uses"  =>  "ReportController@geoRegion"
+    ));
+    Route::any('partner/overtime', array(
+        "as"    =>  "reports.partner.overtime",
+        "uses"  =>  "ReportController@precertOvertime"
+    ));
+    Route::any('partner/performance', array(
+        "as"    =>  "reports.partner.performance",
+        "uses"  =>  "ReportController@performance"
     ));
 });

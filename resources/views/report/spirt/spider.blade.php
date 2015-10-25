@@ -29,6 +29,9 @@
         <ul class="nav nav-tabs">
             <li class="active"><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
             <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
+            <li><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
+            <li><a href="{!! url('partner/overtime') !!}">{!! Lang::choice('messages.precert-overtime', 1) !!}</a></li>
+            <li><a href="{!! url('partner/performance') !!}">{!! Lang::choice('messages.performance-overtime', 1) !!}</a></li>
         </ul>
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/spirt', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
@@ -117,7 +120,7 @@
             <hr />
             <div class="row">                
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 350px"></div>
+                    <div id="chart" style="height: 400px"></div>
                 </div>
             </div>
 

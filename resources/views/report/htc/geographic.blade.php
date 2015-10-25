@@ -27,69 +27,17 @@
     <div class="panel-body">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
-            <li class="active"><a href="{!! url('report/'.$checklist->id) !!}">{!! Lang::choice('messages.percent-positive', 1) !!}</a></li>
+            <li><a href="{!! url('report/'.$checklist->id) !!}">{!! Lang::choice('messages.percent-positive', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/programatic') !!}">{!! Lang::choice('messages.programatic-area', 1) !!}</a></li>
-            <li><a href="{!! url('report/'.$checklist->id.'/geographic') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('report/'.$checklist->id.'/geographic') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
-        {!! Form::open(array('url' => 'report/'.$checklist->id, 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'report/'.$checklist->id.'/geographic', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
-            <div class="row">
-                @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(trans('messages.select-county'), trans('messages.select-county'), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('county', array(''=>trans('messages.select-county'))+$counties, old($jimbo)?old($jimbo):$jimbo, 
-                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
-                        </div>
-                    </div>
-                </div>
-                @endif
-                @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('sub_county', array(''=>trans('messages.select-sub-county'))+$subCounties, old($sub_county)?old($sub_county):$sub_county, 
-                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
-                        </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-            <hr/>
-             <div class="row">
-                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-
-                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
-                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
-                        </div>
-                    </div>
-                </div>
-                @endif
-                 @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.sdp', 1), Lang::choice('messages.sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
-                                array('class' => 'form-control', 'id' => 'sdp')) !!}
-
-                        </div>
-                    </div>
-                </div>
-                @endif
-            </div>
-            <hr />
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
@@ -110,6 +58,13 @@
                     </div>
                 </div>
                 <div class="col-sm-4">
+                    <div class="input-group">
+                        <div id="radioBtn" class="btn-group">
+                            <a class="btn btn-primary btn {{($kit=='KHB')?'active':'notActive'}}" data-toggle="kit" data-title="KHB" name="kit">{!! Lang::choice('messages.khb', 1) !!}</a>
+                            <a class="btn btn-primary btn {{($kit=='DETERMINE')?'active':'notActive'}}" data-toggle="kit" data-title="DETERMINE" name="kit">{!! Lang::choice('messages.determine', 1) !!}</a>
+                        </div>
+                        <input type="hidden" name="kit" id="kit">
+                    </div>
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>

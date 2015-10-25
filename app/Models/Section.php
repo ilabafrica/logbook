@@ -64,18 +64,31 @@ class Section extends Model implements Revisionable {
 	/**
 	 * Function to calculate scores per section
 	 */
-	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL)
+	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
-        //dd($to->format('Y-m-d H:i:s'));
+        //  Check dates
+        $theDate = "";
+        if ($year > 0) {
+            $theDate .= $year;
+            if ($month > 0) {
+                $theDate .= "-".sprintf("%02d", $month);
+                if ($date > 0) {
+                    $theDate .= "-".sprintf("%02d", $date);
+                }
+            }
+        }
         //	Start optimization
 		$checklist = Checklist::idByName('SPI-RT Checklist');
 
 		//  Get data to be used
         $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
                             ->where('checklist_id', $checklist);
-                            if($from && $to)
+                            if (strlen($theDate)>0 || ($from && $to))
                             {
-                                $values = $values->whereBetween('date_submitted', [$from, $to]);
+                                if($from && $to)
+                                    $values = $values->whereBetween('date_submitted', [$from, $to]);
+                                else
+                                    $values = $values->where('date_submitted', 'LIKE', $theDate."%");
                             }
                             if($county || $sub_county || $site || $sdp)
                             {

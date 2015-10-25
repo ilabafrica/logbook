@@ -476,4 +476,8 @@ return [
 	'stage-of-implementation'	=>	'Stage of Implementation',
 	'snapshot'	=>	'Snapshot',
 	'level-summary'	=>	'Level Summary',
+	'programatic-area'	=>	'Programatic Area',
+	'geographic-location'	=>	'Geographic Location',
+	'precert-overtime'	=>	'Pre-certification Overtime',
+	'performance-overtime'	=>	'Performance Overtime',
 ];
