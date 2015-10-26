@@ -49,5 +49,12 @@ class County extends Model implements Revisionable {
 			}
 		}
 		return $count;
-	}	
+	}
+	/**
+	*	Return facilities for a particular county
+	*/	
+	public function facilities()
+	{
+		return $this->subCounties()->join('facilities', 'facilities.sub_county_id', '=', 'sub_counties.id')->get(array('facilities.*'));
+	}
 }

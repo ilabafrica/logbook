@@ -1208,8 +1208,9 @@ class ReportController extends Controller {
 	    	$data[$category->id] = $category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
 
-	    $level = $checklist->level($categories, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
-	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'level'));
+	    $score = $checklist->level($categories, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+	    $level = $checklist->levelCheck($score);
+	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'score', 'level'));
 	}
 	/**
 	 * Show the table for current stage of sites implementing RTQII priority activities in Country X (percentage of sites)..

@@ -80,7 +80,6 @@
                     </table>
                 </div>
             </div>
-          </div>
         </div>
     </div>
     <!-- /.panel-body -->

@@ -142,7 +142,7 @@
                                         @endforeach
                                     </tr>
                                     <tr>
-                                        <th>{!! $level !!}</th>
+                                        <td>{!! $score.'% - <strong>'.$level.'</strong>' !!}</td>
                                         @foreach($categories as $category)
                                             <td>{!! $data[$category->id].'%' !!}</td>
                                         @endforeach

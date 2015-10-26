@@ -46,7 +46,7 @@
                     </thead>
                      <tbody>
                         <?php $counter = 0; ?>
-                        @forelse($checklist->surveys as $survey)
+                        @forelse($surveys as $survey)
                         <?php $counter++; ?>
                         <tr>
                             <td>{{ $counter }}</td>
@@ -74,6 +74,6 @@
             </div>
             {!! session(['SOURCE_URL' => URL::full()]) !!}
         </div>
-      </div>
+    </div>
 </div>
 @stop

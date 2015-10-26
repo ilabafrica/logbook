@@ -133,7 +133,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$percentage+=$section->spider($sdp, $site, $sub_county, $county, $from, $to);
 		}
-		return $this->levelCheck($percentage/$counter);
+		return $percentage/$counter;
 	}
 	/**
 	 * Count unique officers who participated in survey

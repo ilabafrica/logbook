@@ -62,9 +62,9 @@ class Survey extends Model implements Revisionable {
 	/**
 	 * Count number of questionnaires given qa officer filled
 	 */
-	public static function questionnaires($officer)
+	public static function questionnaires($officer, $checklist_id)
 	{
-		return Survey::where('qa_officer', $officer)->count();
+		return Survey::where('qa_officer', $officer)->where('checklist_id', $checklist_id)->count();
 	}
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ]

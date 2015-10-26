@@ -230,8 +230,32 @@ class SurveyController extends Controller {
 		//	Get checklist
 		$checklist_id= $id;
 		$checklist = Checklist::find($id);
-		
-		return view('survey.list', compact('checklist','checklist_id'));
+		$county = null;
+		$subCounty = null;
+		$surveys = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		if($county || $subCounty)
+		{
+			$surveys = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+						->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+			if($subCounty)
+			{
+				$surveys = $surveys->where('facilities.sub_county_id', $subCounty->id)->get();
+			}
+			else
+			{
+				$surveys = $surveys->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+							  	   ->where('sub_counties.county_id', $county->id)->get();
+			}
+		}
+		else
+		{
+			$surveys = $checklist->surveys;
+		}
+		return view('survey.list', compact('checklist','checklist_id', 'surveys'));
 	}
 
 	/**
@@ -386,9 +410,29 @@ class SurveyController extends Controller {
 		$checklist = Checklist::find($id);
 		//	Get unique QA Officers
 		$qa = Survey::select('qa_officer')
-					->where('checklist_id', $checklist->id)
-					->groupBy('qa_officer')
-					->get();
+					->where('checklist_id', $id)
+					->groupBy('qa_officer');
+		$county = null;
+		$subCounty = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		if($county || $subCounty)
+		{
+			if($subCounty)
+			{
+				$qa = $qa->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+						 ->where('facilities.sub_county_id', $subCounty->id);
+			}
+			else
+			{
+				$qa = $qa->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+						 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+						 ->where('sub_counties.county_id', $county->id);
+			}
+		}
+		$qa = $qa->get();
 		return view('survey.collection', compact('checklist', 'qa'));
 	}
 	/**
@@ -402,6 +446,23 @@ class SurveyController extends Controller {
 		//	Get specific checklist
 		$checklist = Checklist::find($id);
 		$facilities = Facility::all();
+		$county = null;
+		$subCounty = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		if($county || $subCounty)
+		{
+			if($subCounty)
+			{
+				$facilities = $subCounty->facilities;
+			}
+			else
+			{
+				$facilities = $county->facilities();
+			}
+		}
 		return view('survey.participant', compact('checklist', 'facilities'));
 	}
 
@@ -416,6 +477,23 @@ class SurveyController extends Controller {
 		//	Get specific checklist
 		$checklist = Checklist::find($id);
 		$facilities = Facility::all();
+		$county = null;
+		$subCounty = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		if($county || $subCounty)
+		{
+			if($subCounty)
+			{
+				$facilities = $subCounty->facilities;
+			}
+			else
+			{
+				$facilities = $county->facilities();
+			}
+		}
 		$surveys = array();
 		$total = array();
 		foreach ($facilities as $facility)
@@ -909,6 +987,16 @@ class SurveyController extends Controller {
 		$checklist = Checklist::find($id);
 		//	Get sub-counties
 		$subCounties = SubCounty::all();
+		$county = null;
+		$subCounty = null;
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$county = County::find(Auth::user()->tier->tier);
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		if($county)
+		{
+			$subCounties = $county->subCounties;
+		}
 		return view('survey.subcounty', compact('checklist', 'subCounties'));
 	}
 	/**
