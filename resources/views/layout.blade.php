@@ -115,6 +115,35 @@
         @endif
             @yield('content')
         <hr>
+        <!-- Delete Modal-->
+        <div class="modal fade confirm-delete-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;</button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            <span class="glyphicon glyphicon-trash"></span> 
+                            {{ trans('messages.confirm-delete-title') }}
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>{{ trans('messages.confirm-delete-message') }}</p>
+                        <p>{{ trans('messages.confirm-delete-irreversible') }}</p>
+                        <input type="hidden" id="delete-url" value="" />
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger btn-delete">
+                            <i class="fa fa-trash-o"></i><span> {{ trans('messages.delete') }}</span>
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">
+                            <i class="fa fa-times-circle-o"></i><span> {{ trans('messages.cancel') }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <p>Copyright &copy; {{ date('Y') }} | <a href="http://www.ilabafrica.ac.ke">@iLabAfrica</a></p>
         </div>
     </div>

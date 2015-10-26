@@ -480,4 +480,12 @@ return [
 	'geographic-location'	=>	'Geographic Location',
 	'precert-overtime'	=>	'Pre-certification Overtime',
 	'performance-overtime'	=>	'Performance Overtime',
+	/** 
+     *   Generic phrases
+     */
+    'confirm-delete-title' => 'Confirm Delete',
+    'confirm-delete-message' => 'Do you wish to delete this item?',
+    'confirm-delete-irreversible' => 'This action is irreversible.',
+    'unexepected-error-occurred'	=>	'An unexpected error occurred, contact the administrator.',
+    'record-successfully-deleted'	=>	'Record was successfully deleted.',
 ];

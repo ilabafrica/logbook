@@ -213,6 +213,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.update",
         "uses"  =>  "SurveyController@update"
     ));
+    Route::any('survey/{id}/delete', array(
+        "as"    =>  "survey.delete",
+        "uses"  =>  "SurveyController@delete"
+    ));
 
     Route::get('survey/{id}', array(
         "as"    =>  "survey.show",
@@ -417,6 +421,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.page.show",
         "uses"  =>  "SurveyController@page"
     ));
+    Route::get('page/{id}/delete', array(
+        "as"    =>  "survey.sdp.page.delete",
+        "uses"  =>  "SurveyController@deletePage"
+    ));
     /**
     *
     *   Download summaries in excel.
@@ -445,6 +453,10 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('surveysdp/{id}/download', array(
         "as"    =>  "survey.sdp.download",
         "uses"  =>  "SurveyController@surveyDownload"
+    ));
+    Route::get('surveysdp/{id}/delete', array(
+        "as"    =>  "survey.sdp.delete",
+        "uses"  =>  "SurveyController@deleteSdp"
     ));
     Route::get('page/{id}/download', array(
         "as"    =>  "survey.sdp.page.download",

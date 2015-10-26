@@ -377,6 +377,52 @@ class SurveyController extends Controller {
 		//
 	}
 	/**
+	 * Remove the specified resource from storage (soft delete).
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function delete($id)
+	{
+		//	soft delete the survey
+		$survey = Survey::find($id);
+		//	m&e and spirt
+		if($survey->checklist->name == 'HTC Lab Register (MOH 362)')
+		{
+			//	Delete questions and data first
+			foreach ($survey->sdp as $ssdp)
+			{
+				foreach ($ssdp->pages as $page)
+				{
+					foreach ($page->questions as $question)
+					{
+						if($question->sd)
+							$question->data->delete();
+					}
+					$page->questions()->delete();
+				}
+				$ssdp->pages()->delete();
+			}
+			$survey->delete();
+		}
+		else
+		{
+			foreach ($survey->sdp as $ssdp)
+			{
+				foreach ($ssdp->sqs as $question)
+				{
+					if($question->sd)
+						$question->sd->delete();
+				}
+				$ssdp->sqs()->delete();
+			}
+			$survey->delete();
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-deleted', 1));
+	}
+	/**
 	 * Show summaries as desired
 	 *
 	 * @param  int  $id of checklist
@@ -1012,6 +1058,57 @@ class SurveyController extends Controller {
 		return view('survey.surveysdp', compact('surveysdp'));
 	}
 	/**
+	 * Remove the specified resource from storage (soft delete).
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function deleteSdp($id)
+	{
+		//	soft delete the survey-sdp
+		$ssdp = SurveySdp::find($id);
+		$ssdpInUse = SurveyQuestion::where('survey_sdp_id', $ssdp->id)->first();
+		$htcSsdpInUse = HtcSurveyPage::where('survey_sdp_id', $ssdp->id)->first();
+		if($ssdpInUse || $htcSsdpInUse)
+		{
+			//	The survey-sdp has data
+			if($ssdpInUse)
+			{
+				//	Delete survey-data
+				foreach ($ssdp->sqs as $question)
+				{
+					$question->sd->delete();
+					$question->delete();
+				}
+			}
+			else
+			{
+				//	Delete page data
+				foreach ($ssdp->pages as $page)
+				{
+					foreach ($page->questions as $question)
+					{
+						$question->data->delete();
+						$question->delete();
+					}
+					$page->delete();
+				}
+			}
+		}
+		if($survey = Survey::find($ssdp->survey->id)->sdp->count()==1)
+		{
+			$ssdp->delete();
+			$survey->delete();
+		}
+		else
+		{
+			$ssdp->delete();
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-deleted', 1));
+	}
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id
@@ -1022,6 +1119,46 @@ class SurveyController extends Controller {
 		//	Get page
 		$page = HtcSurveyPage::find($id);
 		return view('survey.page', compact('page'));
+	}
+	/**
+	 * Remove the specified resource from storage (soft delete).
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function deletePage($id)
+	{
+		//	soft delete the htc-survey-page
+		$page = HtcSurveyPage::find($id);
+		//	Delete page data
+		foreach ($page->questions as $question)
+		{
+			$question->data->delete();
+			$question->delete();
+		}
+		//	Check if it is the only page
+		if($ssdp = SurveySdp::find($page->survey_sdp_id)->pages->count()==1)
+		{
+			//	Check if it is the only survey-sdp
+			if($survey = Survey::find($ssdp->survey->id)->sdp->count()==1)
+			{
+				$page->delete();
+				$ssdp->delete();
+				$survey->delete();
+			}
+			else
+			{
+				$page->delete();
+				$ssdp->delete();
+			}		
+		}
+		else
+		{
+			$page->delete();
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-deleted', 1));
 	}
 	/**
 	 * Function to download collection summary

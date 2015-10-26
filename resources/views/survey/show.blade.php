@@ -27,6 +27,12 @@
     </span>
   </div>
   <div class="panel-body">
+      @if(session()->has('message'))
+      <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">{{ Lang::choice('messages.close', 1) }}</span></button>
+        {!! session('message') !!}
+      </div>
+      @endif
       <table class="table table-striped table-bordered table-hover">
           <thead>
               <tr>
@@ -99,11 +105,13 @@
                   <td>
                       <a href="{!! url('surveysdp/'.$sdp->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
                       <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                      <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('surveysdp/'.$sdp->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
                   </td>
               </tr>
               @endforeach
           </tbody>
       </table>
   </div>
+  {!! session(['SOURCE_URL' => URL::full()]) !!}
 </div>
 @stop

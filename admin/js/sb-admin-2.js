@@ -358,4 +358,15 @@ $('#radioBtn a').on('click', function(){
     
     $('a[data-toggle="'+tog+'"]').not('[data-title="'+sel+'"]').removeClass('active').addClass('notActive');
     $('a[data-toggle="'+tog+'"][data-title="'+sel+'"]').removeClass('notActive').addClass('active');
-})
+});
+/** GLOBAL DELETE   
+ *  Alert on irreversible delete
+ */
+$('.confirm-delete-modal').on('show.bs.modal', function(e) {
+    $('#delete-url').val($(e.relatedTarget).data('id'));
+});
+
+$('.btn-delete').click(function(){
+    $('.confirm-delete-modal').modal('toggle');
+    window.location.href = $('#delete-url').val();
+});

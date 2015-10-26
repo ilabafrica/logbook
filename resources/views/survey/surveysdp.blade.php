@@ -11,9 +11,6 @@
         </ol>
     </div>
 </div>
-@if(Session::has('message'))
-<div class="alert alert-info">{{Session::get('message')}}</div>
-@endif
 <div class="panel panel-default">
     <div class="panel-heading">
     <i class="fa fa-tags"></i> {!! $surveysdp->survey->checklist->name !!}
@@ -25,7 +22,12 @@
     </div>
     <!-- /.panel-heading -->
     <div class="panel-body">
-
+        @if(session()->has('message'))
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">{{ Lang::choice('messages.close', 1) }}</span></button>
+                {!! session('message') !!}
+            </div>
+        @endif
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
@@ -76,6 +78,7 @@
                                 <td>
                                     <a href="{!! url('page/'.$page->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
                                     <a href="{!! url('page/'.$page->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                                    <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('page/'.$page->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
                                 </td>
                             </tr>
                             @endforeach
@@ -103,6 +106,7 @@
             </div>
         </div>
     </div>
+    {!! session(['SOURCE_URL' => URL::full()]) !!}
     <!-- /.panel-body -->
 </div>
 @stop
