@@ -365,8 +365,27 @@ $('#radioBtn a').on('click', function(){
 $('.confirm-delete-modal').on('show.bs.modal', function(e) {
     $('#delete-url').val($(e.relatedTarget).data('id'));
 });
-
 $('.btn-delete').click(function(){
     $('.confirm-delete-modal').modal('toggle');
     window.location.href = $('#delete-url').val();
+});
+/** GLOBAL DUPLICATE   
+ *  Alert on duplicate
+ */
+$('.duplicate-item-link').click(function(){
+    var to_be_duplicated = $(this).data('contents');
+    $('#to-be-duplicated').text(to_be_duplicated);
+});
+$('.confirm-duplicate-modal').on('show.bs.modal', function(e) {
+    $('#ssdpForDuplicate').val($(e.relatedTarget).data('id'));
+});
+/* 
+* Prevent duplicate modal form submit until sdp is selected
+*/
+$('#sdp').change(function(){
+    console.log($(this).val());
+    if($(this).val() !== '')
+        $('.btn-duplicate').prop('disabled', false);
+    else
+        $('.btn-duplicate').prop('disabled', true);
 });

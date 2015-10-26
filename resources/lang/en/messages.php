@@ -166,6 +166,7 @@ return [
 	'view'	=>	'View',
 	'edit'	=>	'Edit',
 	'delete'	=>	'Delete',
+	'duplicate'	=>	'Duplicate',
 	'status'	=>	'Status',
 	'enable'	=>	'Enable|Enabled',
 	'disable'	=>	'Disable|Disabled',
@@ -488,4 +489,8 @@ return [
     'confirm-delete-irreversible' => 'This action is irreversible.',
     'unexepected-error-occurred'	=>	'An unexpected error occurred, contact the administrator.',
     'record-successfully-deleted'	=>	'Record was successfully deleted.',
+    'confirm-duplicate-title' => 'Confirm Duplicate',
+    'confirm-duplicate-message' => 'Do you wish to duplicate this item?',
+    'record-successfully-duplicated'	=>	'Record was successfully duplicated.',
+    'record-already-exists'	=>	'The record already exists.',
 ];

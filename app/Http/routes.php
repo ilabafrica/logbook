@@ -411,6 +411,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.show",
         "uses"  =>  "SurveyController@showSdp"
     ));
+    Route::any('surveysdp/duplicate/{id?}', array(
+        "as"    =>  "survey.sdp.duplicate",
+        "uses"  =>  "SurveyController@duplicate"
+    ));
 
     /**
     *

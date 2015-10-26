@@ -268,7 +268,8 @@ class SurveyController extends Controller {
 	{
 		//	Get survey
 		$survey = Survey::find($id);
-		return view('survey.show', compact('survey', 'checklist_id'));
+		$sdps = Sdp::lists('name', 'id');
+		return view('survey.show', compact('survey', 'checklist_id', 'sdps'));
 	}
 
 	/**
@@ -1056,6 +1057,107 @@ class SurveyController extends Controller {
 		//	Get survey
 		$surveysdp = SurveySdp::find($id);
 		return view('survey.surveysdp', compact('surveysdp'));
+	}
+	/**
+	 * Duplicate survey-sdp
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function duplicate($id = 0)
+	{
+		//	Get survey-sdp-is
+		if($id == 0)
+		{
+			$id = Input::get('ssdpForDuplicate');
+		}
+		//	Get sdp to duplicate data
+		$ssdp = Input::get('sdp');
+		//	Begin duplication
+		$ssdpToDuplicate = SurveySdp::find($id);
+		//	Check if it already exists
+		if($surveySdp = SurveySdp::where('survey_id', $ssdpToDuplicate->survey_id)->where('sdp_id', $ssdp)->where('comment', $ssdpToDuplicate->comment)->where('created_at', $ssdpToDuplicate->created_at)->where('updated_at', $ssdpToDuplicate->updated_at)->first())
+		{
+			//	Redirect
+			$url = session('SOURCE_URL');
+			return redirect()->to($url)->with('warning', Lang::choice('messages.record-already-exists', 1));
+		}
+		else
+		{
+			$ssdpDuplicate = new SurveySdp();
+			$ssdpDuplicate->survey_id = $ssdpToDuplicate->survey_id;
+			$ssdpDuplicate->sdp_id = $ssdp;
+			$ssdpDuplicate->comment = $ssdpToDuplicate->comment;
+			$ssdpDuplicate->created_at = $ssdpToDuplicate->created_at;
+			$ssdpDuplicate->updated_at = $ssdpToDuplicate->updated_at;
+			$ssdpDuplicate->save();
+			//	Proceed to check whether spirt/m&e or htc register
+			if($ssdpToDuplicate->survey->checklist->name == 'HTC Lab Register (MOH 362)')
+			{
+				//	Get pages
+				$pages = $ssdpToDuplicate->pages;
+				foreach ($pages as $page)
+				{
+					$pageDuplicate = new HtcSurveyPage;
+					$pageDuplicate->survey_sdp_id = $ssdpDuplicate->id;
+					$pageDuplicate->page = $page->page;
+					$pageDuplicate->created_at = $page->created_at;
+					$pageDuplicate->updated_at = $page->updated_at;
+					$pageDuplicate->save();
+					//	Get page questions
+					foreach ($page->questions as $question)
+					{
+						//	Save questions first
+						$questionDuplicate = new HtcSurveyPageQuestion;
+						$questionDuplicate->htc_survey_page_id = $pageDuplicate->id;
+						$questionDuplicate->question_id = $question->question_id;
+						$questionDuplicate->created_at = $question->created_at;
+						$questionDuplicate->updated_at = $question->updated_at;
+						$questionDuplicate->save();
+						//	Save data
+						if($question->data)
+						{
+							$dataDuplicate = new HtcSurveyPageData;
+							$dataDuplicate->htc_survey_page_question_id = $questionDuplicate->id;
+							$dataDuplicate->answer = $question->data->answer;
+							$dataDuplicate->comment = $question->data->comment;
+							$dataDuplicate->created_at = $question->data->created_at;
+							$dataDuplicate->updated_at = $question->data->updated_at;
+							$questionDuplicate->save();
+						}
+					}
+				}
+			}
+			else
+			{
+				//	Get survey-sdp-questions
+				$pages = $ssdpToDuplicate->pages;
+				foreach ($ssdpToDuplicate->sqs as $question)
+				{
+					//	Save questions first
+					$questionDuplicate = new SurveyQuestion;
+					$questionDuplicate->survey_sdp_id = $ssdpDuplicate->id;
+					$questionDuplicate->question_id = $question->question_id;
+					$questionDuplicate->created_at = $question->created_at;
+					$questionDuplicate->updated_at = $question->updated_at;
+					$questionDuplicate->save();
+					//	Save data
+					if($question->sd)
+					{
+						$dataDuplicate = new SurveyData;
+						$dataDuplicate->survey_question_id = $questionDuplicate->id;
+						$dataDuplicate->answer = $question->sd->answer;
+						$dataDuplicate->comment = $question->sd->comment;
+						$dataDuplicate->created_at = $question->sd->created_at;
+						$dataDuplicate->updated_at = $question->sd->updated_at;
+						$dataDuplicate->save();
+					}
+				}
+			}
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-duplicated', 1));
 	}
 	/**
 	 * Remove the specified resource from storage (soft delete).
