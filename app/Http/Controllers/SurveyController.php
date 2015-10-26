@@ -1123,7 +1123,7 @@ class SurveyController extends Controller {
 							$dataDuplicate->comment = $question->data->comment;
 							$dataDuplicate->created_at = $question->data->created_at;
 							$dataDuplicate->updated_at = $question->data->updated_at;
-							$questionDuplicate->save();
+							$dataDuplicate->save();
 						}
 					}
 				}
