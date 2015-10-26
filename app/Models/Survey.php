@@ -126,4 +126,29 @@ class Survey extends Model implements Revisionable {
         }
         return $ssdps;
     }
+
+    /**
+     * Get register-start-dates for all pages of the survey
+     */
+    public function dates()
+    {
+    	$question_id = Question::idByName('Register Page Start Date');
+    	$dates = SurveySdp::where('survey_id', $this->id)
+        					->join('htc_survey_pages', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+        					->join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
+        					->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
+        					->where('question_id', $question_id)
+        					->lists('answer');
+        if(!count($dates)>0)
+        {
+        	$dates = [$this->date_submitted];
+        }
+        usort($dates, function($a, $b) {
+		    $dateTimestamp1 = strtotime($a);
+		    $dateTimestamp2 = strtotime($b);
+
+		    return $dateTimestamp1 < $dateTimestamp2 ? -1: 1;
+		});
+        return json_encode(['min' => $dates[0], 'max' => $dates[count($dates)-1]]);
+    }
 }

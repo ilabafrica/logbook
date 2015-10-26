@@ -259,6 +259,35 @@ class SurveyController extends Controller {
 	}
 
 	/**
+	 * Update data month
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function dataMonth($id = 0)
+	{
+		//	Get survey
+		if($id == 0)
+		{
+			$id = Input::get('dataMonth');
+		}
+		$survey = Survey::find($id);
+		$date = Input::get('newest_date');
+		//	Do the operation - check if months are similar (date_submitted vs newest date)
+		$newest_date = Carbon::parse($date);
+		$date_submitted = Carbon::parse($survey->date_submitted);
+		if($date_submitted->month != $newest_date->month)
+		{
+			$data_month = $newest_date->firstOfMonth();
+			$survey->data_month = $data_month;
+			$survey->save();
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1));
+	}
+
+	/**
 	 * Display the specified resource.
 	 *
 	 * @param  int  $id

@@ -493,4 +493,11 @@ return [
     'confirm-duplicate-message' => 'Do you wish to duplicate this item?',
     'record-successfully-duplicated'	=>	'Record was successfully duplicated.',
     'record-already-exists'	=>	'The record already exists.',
+    'data-month'	=>	'Data Month',
+    'page-register-start-date'	=>	'Page Register Start Dates',
+    'oldest'	=>	'Oldest',
+    'newest'	=>	'Newest',
+    'confirm-data-month'	=>	'Confirm Data Month',
+    'date-submitted'	=>	'Date Submitted',
+    'record-successfully-updated'	=>	'Record successfully updated',
 ];

@@ -389,3 +389,24 @@ $('#sdp').change(function(){
     else
         $('.btn-duplicate').prop('disabled', true);
 });
+/** GLOBAL DATA MONTH   
+ *  Alert on duplicate
+ */
+$('.data-month-item-link').click(function(){
+    var facility = $(this).data('facility');
+    var officer = $(this).data('officer');
+    var date_submitted = $(this).data('submitted');
+    var sdps = $(this).data('sdps');
+    var oldest = $(this).data('oldest');
+    var newest = $(this).data('newest');
+    $('#facility').text(facility);
+    $('#date_submitted').text(date_submitted);
+    $('#officer').text(officer);
+    $('#sdp').text(sdps);
+    $('#oldest').text(oldest);
+    $('#newest').text(newest);
+    $('#newest_date').val(newest);
+});
+$('.data-month-modal').on('show.bs.modal', function(e) {
+    $('#dataMonth').val($(e.relatedTarget).data('id'));
+});

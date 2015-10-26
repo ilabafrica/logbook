@@ -454,6 +454,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.download",
         "uses"  =>  "SurveyController@sdpDownload"
     ));
+    Route::any('survey/month/{id?}', array(
+        "as"    =>  "survey.sdp.data",
+        "uses"  =>  "SurveyController@dataMonth"
+    ));
     Route::get('surveysdp/{id}/download', array(
         "as"    =>  "survey.sdp.download",
         "uses"  =>  "SurveyController@surveyDownload"
