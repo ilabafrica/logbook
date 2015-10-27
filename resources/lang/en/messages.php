@@ -411,6 +411,25 @@ return [
 	'edit-affiliation'	=>	'Edit Affiliation',
 	/**
 	*
+	* Pt
+	*
+	*/
+	'pt-program'	=>	'PT Program|PT Programs',
+	'create-pt'	=>	'Create PT Program',
+	'edit-pt'	=>	'Edit PT Program',
+	'select-pt'	=>	'Select PT Program',
+	'pt-config'	=>	'PT Config',
+	/**
+	*
+	* Designation
+	*
+	*/
+	'designation'	=>	'Designation|Designations',
+	'create-designation'	=>	'Create Designation',
+	'edit-designation'	=>	'Edit Designation',
+	'select-designation'	=>	'Select Designation',
+	/**
+	*
 	* Other general terms
 	*
 	*/
@@ -499,5 +518,7 @@ return [
     'newest'	=>	'Newest',
     'confirm-data-month'	=>	'Confirm Data Month',
     'date-submitted'	=>	'Date Submitted',
-    'record-successfully-updated'	=>	'Record successfully updated',
+    'record-successfully-updated'	=>	'Record successfully updated.',
+    'confirm-data-import'	=>	'Confirm Data Import',
+    'record-successfully-saved'	=>	'Record successfully Saved.',
 ];

@@ -1,5 +1,10 @@
 @extends("layout")
 @section("content")
+<style type="text/css">
+    .datepicker{
+        z-index: 1051 !important;
+    }
+</style>
 <br />
 <div class="row">
     <div class="col-lg-12">
@@ -53,7 +58,7 @@
                                 @else
                                     <a href="{!! url('/report/'.$checklist->id) !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
                                 @endif
-                                <a href="{!! url('/api/'.$checklist->id) !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></a>
+                                <button class="btn btn-danger import-data-item-link" data-toggle="modal" data-target=".import-data-modal" data-checklist="{{{ $checklist->name }}}" data-id="{!! $checklist->id !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></button>
                             </p>
                         </div>
                     </div>
@@ -64,4 +69,57 @@
     </div>
     <!-- .panel-body -->
 </div>
+<!-- Duplicate Modal-->
+<div class="modal fade import-data-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        {!! Form::open(array('route' => 'survey.import', 'id' => 'form-import-data', 'class' => 'form-inline', 'method' => 'POST')) !!}
+            <!-- CSRF Token -->
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+            <!-- checklist-id -->
+            <input type="hidden" id="checklist_id" name="checklist_id" value="" />
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <i class="fa fa-download"></i><span> 
+                    {!! trans('messages.confirm-data-import').' for <strong id="checklist"></strong>' !!}
+                    </span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class='form-group'>
+                            {!! Form::label('from', Lang::choice('messages.from', 1)) !!}
+                            <div class="col-sm-9 form-group input-group input-append date datepicker limits">
+                                {!! Form::text('from', '', array('class' => 'form-control', 'id' => 'fromImport')) !!}
+                                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class='form-group'>
+                            {!! Form::label('to', Lang::choice('messages.to', 1)) !!}
+                            <div class="col-sm-9 form-group input-group input-append date datepicker limits">
+                                {!! Form::text('to', '', array('class' => 'form-control', 'id' => 'toImport')) !!}
+                                <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-import" onclick="submit()" disabled>
+                    <i class="fa fa-download"></i><span> {{ trans('messages.import-submitted-data') }}</span>
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span> {{ trans('messages.cancel') }}</span>
+                </button>
+            </div>
+        {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+{!! session(['SOURCE_URL' => URL::full()]) !!}
 @stop

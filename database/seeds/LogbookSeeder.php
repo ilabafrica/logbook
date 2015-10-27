@@ -30,6 +30,8 @@ use App\Models\Answer;
 use App\Models\Section;
 use App\Models\Question;
 use App\Models\Level;
+use App\Models\Designation;
+use App\Models\Pt;
 class LogbookSeeder extends Seeder
 {
     public function run()
@@ -355,7 +357,7 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('SDPs table seeded');
 
-          /* cadres*/
+        /* cadres*/
         $cadres = array(
             array("name" => "Counselor", "description" => "", "user_id" => "1"),
             array("name" => "Nurse", "description" => "", "user_id" => "1"),
@@ -371,11 +373,35 @@ class LogbookSeeder extends Seeder
         }
         $this->command->info('Cadres table seeded');
 
+        /* pt-programs*/
+        $pts = array(
+            array("name" => "PMTCT", "description" => "", "user_id" => "1"),
+            array("name" => "VCT", "description" => "", "user_id" => "1"),
+            array("name" => "PITC", "description" => "", "user_id" => "1"),
+            array("name" => "HBTC", "description" => "", "user_id" => "1")
+        );
+        foreach ($pts as $pt) {
+            Pt::create($pt);
+        }
+        $this->command->info('PT Programs table seeded');
+        /* Designations */
+        $designations = array(
+            array("name" => "Nurse", "description" => "", "user_id" => "1"),
+            array("name" => "Doctor", "description" => "", "user_id" => "1"),
+            array("name" => "Counselor", "description" => "", "user_id" => "1"),
+            array("name" => "Clinical Officer", "description" => "", "user_id" => "1")
+        );
+        foreach ($designations as $designation) {
+            Designation::create($designation);
+        }
+        $this->command->info('Designations table seeded');
+
         /* Checklists table */
         $checklists = array(
             array("name" => "HTC Lab Register (MOH 362)", "description" => "", "user_id" => "1"),
             array("name" => "M & E Checklist", "description" => "", "user_id" => "1"),
             array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1")
+            array("name" => "PT Enrollment Tool", "description" => "", "user_id" => "1")
         
         );
         foreach ($checklists as $checklist) {
@@ -415,6 +441,10 @@ class LogbookSeeder extends Seeder
         $sec_Spisec8= Section::create(array("name" => "Section 8.0", "label" => "EXTERNAL QUALITY ASSESSMENT", "description" => "(PT, RETESTING AND SITE SUPERVISION), (Score = 13)", "checklist_id" => "3", "total_points" => "13","user_id" => "1"));
         $sec_Spisec9= Section::create(array("name" => "Section 9.0", "label" => "Auditor’s Summation Report for SPI-RT Assessment", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
         $sec_Spiother = Section::create(array("name" => "GPRS Location", "label" => "", "description" => "", "checklist_id" => "3", "total_points" => "0", "user_id" => "1"));
+        /**
+        *   PT Enrollment
+        */
+        $sec_ptEnrollment = Section::create(array("name" => "PT Enrollment Details", "description" => "", "checklist_id" => "4", "total_points" => "0", "user_id" => "1"));
         $this->command->info('sections table seeded');
         
        
@@ -760,7 +790,9 @@ class LogbookSeeder extends Seeder
         $question_Spilat = Question::create(array("section_id" => $sec_Spiother->id,"identifier"=>"", "name" => "GPS Latitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         $question_Spilong = Question::create(array("section_id" => $sec_Spiother->id,"identifier"=>"", "name" => "GPS Longitude", "description" => "", "question_type" =>"2", "required" => "0", "info" => "", "score" => "0", "user_id" => "1"));
         
-         $this->command->info('Questions table seeded');
+        /**
+        *   PT Enrollment tool
+        */
 
         /* Responses */
         $response_yes = Answer::create(array("name" => "Yes", "description" => "Yes(Y)", "score" => "1.0", "user_id" => "1"));

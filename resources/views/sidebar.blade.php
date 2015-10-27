@@ -50,6 +50,14 @@
             </ul>
         </li>
         @endif
+        <!-- PT Program -->
+        <li>
+            <a href="#"><i class="fa fa-camera-retro"></i> {{ Lang::choice('messages.pt-config', 1) }}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li><a href="{!! url('pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt-program', 2) !!}</a></li>
+                <li><a href="{!! url('designation') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.designation', 2) }}</a></li>
+            </ul>
+        </li>
         <!-- Test kits -->
         @if(Entrust::can('access-testkits'))
         <li>

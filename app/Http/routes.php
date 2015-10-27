@@ -137,6 +137,10 @@ Route::group(['middleware' => 'auth'], function(){
 
     //  Review controller
     Route::resource('review', 'ReviewController');
+    //  Pt-program controller
+    Route::resource('pt', 'PtController');
+    //  Designation controller
+    Route::resource('designation', 'DesignationController');
     //  HTC
     //Route::resource('htc', 'HtcController');
     Route::get("/htc/{id}/", array(
@@ -398,7 +402,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "reports.response",
         "uses"  =>  "ReportController@response"
     ));
-    Route::any('api/{id}', array(
+    Route::any('api/{id?}', array(
         "as"    =>  "survey.import",
         "uses"  =>  "SurveyController@api"
     ));

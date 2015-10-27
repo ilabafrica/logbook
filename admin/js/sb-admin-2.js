@@ -410,3 +410,23 @@ $('.data-month-item-link').click(function(){
 $('.data-month-modal').on('show.bs.modal', function(e) {
     $('#dataMonth').val($(e.relatedTarget).data('id'));
 });
+/** GLOBAL IMPORT SUBMITTED DATA   
+ *  Alert on import
+ */
+$('.import-data-item-link').click(function(){
+    var checklist = $(this).data('checklist');
+    $('#checklist').text(checklist);
+});
+$('.import-data-modal').on('show.bs.modal', function(e) {
+    $('#checklist_id').val($(e.relatedTarget).data('id'));
+});
+/* 
+* Prevent duplicate modal form submit until both from and to date are given.
+*/
+$('#fromImport, #toImport').change(function(){
+    console.log('mahako');
+    if(($('#fromImport').val() !== '') && ($('#toImport').val() !== '') && ($('#toImport').val() > $('#fromImport').val()))
+        $('.btn-import').prop('disabled', false);
+    else
+        $('.btn-import').prop('disabled', true);
+});
