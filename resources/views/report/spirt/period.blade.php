@@ -33,7 +33,7 @@
             <li class="active"><a href="{!! url('partner/overtime') !!}">{!! Lang::choice('messages.precert-overtime', 1) !!}</a></li>
             <li><a href="{!! url('partner/performance') !!}">{!! Lang::choice('messages.performance-overtime', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'partner/region', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'partner/overtime', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
             <!-- Tab panes -->
             <div class="tab-content">

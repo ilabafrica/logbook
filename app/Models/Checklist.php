@@ -367,6 +367,6 @@ class Checklist extends Model implements Revisionable {
 			if(($lvl>$level->range_lower) && ($lvl<=$level->range_upper) || (($level->range_lower==0.00) && ($lvl==$level->range_lower)))
 				$counter++;
 		}
-		return round($counter*100/$total_sites, 2);
+		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 }
