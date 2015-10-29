@@ -24,6 +24,7 @@ use App\Models\HtcSurveyPageQuestion;
 use App\Models\HtcSurveyPageData;
 use App\Models\County;
 use App\Models\SubCounty;
+use App\Models\Cadre;
 
 use Illuminate\Http\Request;
 use Response;
@@ -1093,6 +1094,148 @@ class SurveyController extends Controller {
 		//	Get survey
 		$surveysdp = SurveySdp::find($id);
 		return view('survey.surveysdp', compact('surveysdp'));
+	}
+	/**
+	 * Display the specified resource to be updated.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function editSdp($id)
+	{
+		//	Get survey
+		$surveysdp = SurveySdp::find($id);
+		//	Get cadres
+		$cadres = Cadre::all();
+		//	Get sdps
+		$sdps = Sdp::lists('name', 'id');
+		//	Get audit_types
+		$audit_types = AuditType::lists('name', 'name');
+		//	Get test_kits
+		$test_kits = TestKit::lists('name', 'name');
+		//	Get algorithms
+		$algorithms = Algorithm::lists('name', 'name');
+		//	Get affiliations
+		$affiliations = Affiliation::lists('name', 'name');
+		return view('survey.editsurveysdp', compact('surveysdp', 'cadres', 'sdps', 'audit_types', 'test_kits', 'algorithms', 'affiliations'));
+	}	
+	/**
+	 * Display the specified resource to be updated.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function updateSdp($id)
+	{
+		//	Get survey
+		$surveySdp = SurveySdp::find($id);
+		$surveySdp->sdp_id = Input::get('sdp');
+		$surveySdp->save();
+		//	Proceed to survey-questions
+		foreach (Input::all() as $key => $value) 
+		{
+			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+				continue;
+			else if((stripos($key, 'text') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'field') !==FALSE) || (stripos($key, 'textarea') !==FALSE) || (stripos($key, 'checkbox') !==FALSE) || (stripos($key, 'select') !==FALSE)){
+				$questionId = $this->strip($key);
+				if(is_array($value))
+					$value = implode(', ', $value);
+				$sq = $surveySdp->sq((int)$questionId);
+				if($sq)
+				{
+					$sd = $sq->sd;
+					$sd->answer = $value;
+					$sd->save();
+				}
+				else
+				{
+					//	Create the survey-question
+					$sq = new SurveyQuestion;
+					$sq->survey_sdp_id = $surveySdp->id;
+					$sq->question_id = $questionId;
+					$sq->save();
+					//	survey-data
+					$sd = new SurveyData;
+					$sd->survey_question_id = $sq->id;
+					$sd->answer = $value;
+					$sd->save();
+				}
+			}
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1));
+	}
+	/**
+	 * Display the specified resource to be updated.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function editPage($id)
+	{
+		//	Get page
+		$page = HtcSurveyPage::find($id);
+		//	Get survey sdp
+		$ssdp = SurveySdp::find($page->survey_sdp_id);
+		//	Get cadres
+		$cadres = Cadre::all();
+		//	Get sdps
+		$sdps = Sdp::lists('name', 'id');
+		//	Get audit_types
+		$audit_types = AuditType::lists('name', 'name');
+		//	Get test_kits
+		$test_kits = TestKit::lists('name', 'name');
+		//	Get algorithms
+		$algorithms = Algorithm::lists('name', 'name');
+		//	Get affiliations
+		$affiliations = Affiliation::lists('name', 'name');
+		return view('survey.editpage', compact('page', 'ssdp', 'cadres', 'sdps', 'audit_types', 'test_kits', 'algorithms', 'affiliations'));
+	}	
+	/**
+	 * Display the specified resource to be updated.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function updatePage($id)
+	{
+		//	Get page
+		$page = HtcSurveyPage::find($id);
+		//	Proceed to survey-questions
+		foreach (Input::all() as $key => $value) 
+		{
+			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'method') !==FALSE))
+				continue;
+			else if((stripos($key, 'text') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'field') !==FALSE) || (stripos($key, 'textarea') !==FALSE) || (stripos($key, 'checkbox') !==FALSE) || (stripos($key, 'select') !==FALSE)){
+				$questionId = $this->strip($key);
+				if(is_array($value))
+					$value = implode(', ', $value);
+				$sq = $page->sq((int)$questionId);
+				if($sq)
+				{
+					$sd = $sq->data;
+					$sd->answer = $value;
+					$sd->save();
+				}
+				else
+				{
+					//	Create the htc-survey-question
+					$sq = new HtcSurveyPageQuestion;
+					$sq->htc_survey_page_id = $page->id;
+					$sq->question_id = $questionId;
+					$sq->save();
+					//	htc-survey-data
+					$sd = new HtcSurveyPageData;
+					$sd->htc_survey_page_question_id = $sq->id;
+					$sd->answer = $value;
+					$sd->save();
+				}
+			}
+		}
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1));
 	}
 	/**
 	 * Duplicate survey-sdp

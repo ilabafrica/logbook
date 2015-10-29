@@ -415,9 +415,17 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.show",
         "uses"  =>  "SurveyController@showSdp"
     ));
+    Route::get('surveysdp/{id}/edit', array(
+        "as"    =>  "survey.sdp.edit",
+        "uses"  =>  "SurveyController@editSdp"
+    ));
     Route::any('surveysdp/duplicate/{id?}', array(
         "as"    =>  "survey.sdp.duplicate",
         "uses"  =>  "SurveyController@duplicate"
+    ));
+    Route::any('surveysdp/{id}/update', array(
+        "as"    =>  "survey.sdp.update",
+        "uses"  =>  "SurveyController@updateSdp"
     ));
 
     /**
@@ -432,6 +440,14 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('page/{id}/delete', array(
         "as"    =>  "survey.sdp.page.delete",
         "uses"  =>  "SurveyController@deletePage"
+    ));
+    Route::get('page/{id}/edit', array(
+        "as"    =>  "survey.sdp.page.edit",
+        "uses"  =>  "SurveyController@editPage"
+    ));
+    Route::any('page/{id}/update', array(
+        "as"    =>  "survey.sdp.page.update",
+        "uses"  =>  "SurveyController@updatePage"
     ));
     /**
     *

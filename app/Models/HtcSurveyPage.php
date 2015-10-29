@@ -86,4 +86,11 @@ class HtcSurveyPage extends Model implements Revisionable {
 
         return ($total - $invalid)>0?round(($reactive_2+$nonreactive_1) * 100 / ($total-$invalid), 2):0;
     }
+    /**
+     * htc-survey-page-question relationship given the question id
+     */
+    public function sq($id)
+    {
+        return $this->questions->where('question_id', $id)->first();
+    }
 }

@@ -48,4 +48,11 @@ class SurveySdp extends Model implements Revisionable {
     {
         return $this->hasMany('App\Models\SurveyQuestion');
     }
+    /**
+     * survey-question relationship given the question id
+     */
+    public function sq($id)
+    {
+        return $this->sqs->where('question_id', $id)->first();
+    }
 }

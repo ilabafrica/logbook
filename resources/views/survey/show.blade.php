@@ -110,7 +110,9 @@
                   @endif
                   <td>
                       <a href="{!! url('surveysdp/'.$sdp->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
-                      <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                      @if($survey->checklist->id != App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
+                          <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                      @endif
                       <button class="btn btn-warning btn-sm duplicate-item-link" data-toggle="modal" data-target=".confirm-duplicate-modal" data-id="{{{ $sdp->id }}}" data-contents="{{{ $sdp->sdp->name.' - '.$sdp->comment }}}"><i class="fa fa-files-o"></i><span> {!! Lang::choice('messages.duplicate', 1) !!}</span></button>
                       <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('surveysdp/'.$sdp->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
                   </td>

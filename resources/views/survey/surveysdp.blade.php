@@ -66,6 +66,8 @@
                         <thead>
                             <tr>
                                 <th>{{ Lang::choice('messages.page-no', 1) }}</th>
+                                <th>{{ Lang::choice('messages.page-register-start-date', 1) }}</th>
+                                <th>{{ Lang::choice('messages.page-register-end-date', 1) }}</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -75,6 +77,8 @@
                             <?php $counter++; ?>
                             <tr>
                                 <td>{!! $counter !!}</td>
+                                <td>{!! $page->sq(App\Models\Question::idById('registerstartdate'))->data->answer !!}</td>
+                                <td>{!! $page->sq(App\Models\Question::idById('enddate'))->data->answer !!}</td>
                                 <td>
                                     <a href="{!! url('page/'.$page->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
                                     <a href="{!! url('page/'.$page->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
@@ -106,7 +110,8 @@
             </div>
         </div>
     </div>
-    {!! session(['SOURCE_URL' => URL::full()]) !!}
-    <!-- /.panel-body -->
 </div>
+@if($surveysdp->survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
+    {!! session(['SOURCE_URL' => URL::full()]) !!}
+@endif
 @stop
