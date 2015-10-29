@@ -31,7 +31,7 @@
             <li class="active"><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/programatic') !!}">{!! Lang::choice('messages.programatic-area', 1) !!}</a></li>
-            <li><a href="{!! url('report/'.$checklist->id.'/geographic') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
+            <li style="display:none;"><a href="{!! url('report/'.$checklist->id.'/geographic') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
         {!! Form::open(array('url' => 'report/'.$checklist->id.'/agreement', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}

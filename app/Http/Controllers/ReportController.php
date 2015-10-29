@@ -3299,17 +3299,7 @@ class ReportController extends Controller {
 		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
 		    $chart.="},
 	        xAxis: {
-	            categories: [";
-	            $count = count($sdps);
-	            	foreach ($sdps as $sdp) {
-	    				$chart.= "'".Sdp::find($sdp)->name;
-	    				if($count==1)
-	    					$chart.="' ";
-	    				else
-	    					$chart.="' ,";
-	    				$count--;
-	    			}
-	            $chart.="]
+	            type: 'category'
 	        },
 	        yAxis: {
 	            title: {
@@ -3329,18 +3319,20 @@ class ReportController extends Controller {
 	        $counts = count($percentages);
 	        foreach ($percentages as $percentage) {
 	        	$chart.="{name:"."'".$percentage."'".", data:[";
-        		$counter = count($sdps);
-        		foreach ($sdps as $sdp) {
-        			$data = $checklist->positiveAgreement($percentage, [$sdp], $kit, $site, $sub_county, $jimbo, 0, 0, $from, $to);
+        		$counter = count($months);
+        		foreach ($months as $month)
+        		{
+        			$chart.="{name:"."'".$month->label.' - '.$month->annum."'".", y:";
+        			$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months, $from, $to);
         			if($data==0){
-        					$chart.= '0.00';
+        					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
         					if($counter==1)
             					$chart.="";
             				else
             					$chart.=",";
     				}
     				else{
-        				$chart.= $data;
+        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
 
         				if($counter==1)
         					$chart.="";
@@ -3357,6 +3349,24 @@ class ReportController extends Controller {
 				$counts--;
 	        }
 	        $chart.="],
+		        drilldown: {
+		            series: [";
+		            foreach ($percentages as $percentage)
+	        		{
+	        			foreach ($months as $month)
+        				{
+        					$sticker = $percentage." - ".$month->label." ".$month->annum;
+        					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
+        					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
+        					foreach ($checklist->sdpPosAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					{
+        						$percent.="["."'".$sdp."'".", ".$per."],";
+        					}
+        					$percent.="]},";
+        				}
+	        		}
+	            $chart.="]
+	        }
 	    }";
 		return view('report.htc.programatic', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'kit'));
 	}

@@ -53,7 +53,7 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
+	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
 	{
 		//	Initialize counts
 		$positive = 0;
@@ -69,48 +69,55 @@ class Sdp extends Model implements Revisionable {
 				}
 			}
 		}
-		//	Declare questions to be used in calculation of both positive and total values
-		$qstns = array('Test-1 Total Positive', 'Test-1 Total Negative', 'Test-2 Total Positive', 'Test-3 Total Positive');
 		//	Get the counts
-		foreach ($qstns as $qstn) {
-			$question = Question::idByName($qstn);
-			$values = HtcSurveyPageQuestion::where('question_id', $question)
-											->join('htc_survey_pages', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
-											->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
-											->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-											->where('sdp_id', $this->id);
-											if($county || $subCounty || $facility)
-											{
-												if($subCounty || $facility)
-												{
-													if($facility)
-													{
-														$values = $values->where('facility_id', $facility);
-													}
-													else
-													{
-														$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																 		 ->where('sub_county_id', $subCounty);
-													}
-												}
-												else
-												{
-													$values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																	 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-																	 ->where('county_id', $county);
-												}
-											}
-											if (strlen($theDate)>0) {
-												$values = $values->where('date_submitted', 'LIKE', $theDate."%");
-											}
-											$values = $values->get(array('htc_survey_page_questions.*'));
-			foreach ($values as $key => $value) 
-			{
-				if(substr_count(Question::nameById($value->question_id), 'Test-1')>0)
-					$total+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-				else
-					$positive+=HtcSurveyPageQuestion::find($value->id)->data->answer;
-			}			
+		$pages = HtcSurveyPage::join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
+							  ->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
+							  ->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
+							  ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
+							  ->where('sdp_id', $this->id);
+							  if($county || $subCounty || $facility)
+							  {
+								if($subCounty || $facility)
+								{
+									if($facility)
+									{
+										$pages = $pages->where('facility_id', $facility);
+									}
+									else
+									{
+										$pages = $pages->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+												 		 ->where('sub_county_id', $subCounty);
+									}
+								}
+								else
+								{
+									$pages = $pages->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
+													 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
+													 ->where('county_id', $county);
+								}
+							  }
+							  if (strlen($theDate)>0 || ($from && $to)) {
+							  		if($from && $to)
+							  		{
+							  			$pages = $pages->whereBetween('date_submitted', [$from, $to]);
+							  		}
+							  		else
+							  		{
+							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  		}								
+							  }
+							  $pages = $pages->get(array('htc_survey_pages.*'));
+		//	Declare questions to be used in calculation of both values
+		$posOne = Question::idByName('Test-1 Total Positive');
+		$negOne = Question::idByName('Test-1 Total Negative');
+		$posTwo = Question::idByName('Test-2 Total Positive');
+		$posThree = Question::idByName('Test-3 Total Positive');
+		$totals = [$posOne, $negOne];
+		$positives = [$posOne, $posTwo, $posThree];
+		foreach ($pages as $page)
+		{
+			$total+=$page->questions()->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')->whereIn('question_id', $totals)->sum('answer');
+			$positive+=$page->questions()->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')->whereIn('question_id', $positives)->sum('answer');
 		}
 		return $total>0?round((int)$positive*100/(int)$total, 2):0;
 	}
