@@ -81,8 +81,10 @@
                                 <td>{!! $page->sq(App\Models\Question::idById('enddate'))->data->answer !!}</td>
                                 <td>
                                     <a href="{!! url('page/'.$page->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
-                                    <a href="{!! url('page/'.$page->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
-                                    <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('page/'.$page->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
+                                    @if(Entrust::can('edit-checklist-data'))
+                                        <a href="{!! url('page/'.$page->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                                        <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('page/'.$page->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
+                                    @endif
                                 </td>
                             </tr>
                             @endforeach

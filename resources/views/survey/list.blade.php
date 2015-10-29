@@ -11,12 +11,15 @@
     </div>
 </div>
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.collected-data', 1) }} <span class="panel-btn">
-      <a class="btn btn-sm btn-info" href="{{ URL::to("survey/".$checklist->id."/create") }}" >
-        <span class="glyphicon glyphicon-plus-sign"></span>
-            {{ trans('messages.fill-questionnaire') }}
-          </a>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.collected-data', 1) }} 
+    @if(Entrust::can('edit-checklist-data'))
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="{{ URL::to("survey/".$checklist->id."/create") }}" >
+                <span class="glyphicon glyphicon-plus-sign"></span>
+                {{ trans('messages.fill-questionnaire') }}
+            </a>
         </span>
+    @endif
         <span class="panel-btn">
             <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
                 <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
@@ -57,11 +60,13 @@
                             <td></td>
                             <td>
                                 <a href="{!! url('survey/'.$survey->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {!! Lang::choice('messages.view', 1) !!}</span></a>
-                                <a href="{!! url('survey/'.$survey->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {!! Lang::choice('messages.edit', 1) !!}</span></a>
-                                @if($survey->checklist->name == 'HTC Lab Register (MOH 362)')
-                                    <button class="btn btn-warning btn-sm data-month-item-link" data-toggle="modal" data-target=".data-month-modal" data-id="{{{ $survey->id }}}" data-facility="{{{ $survey->facility->name }}}" data-submitted="{{{ $survey->date_submitted }}}" data-officer="{{{ $survey->qa_officer }}}" data-sdps="{{{ implode(", ", $survey->ssdps()) }}}"  data-oldest="{{{ json_decode($survey->dates())->min }}}" data-newest="{{{ json_decode($survey->dates())->max }}}"><i class="fa fa-lemon-o"></i><span> {!! Lang::choice('messages.data-month', 1) !!}</span></button>
+                                @if(Entrust::can('edit-checklist-data'))
+                                    <a href="{!! url('survey/'.$survey->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {!! Lang::choice('messages.edit', 1) !!}</span></a>
+                                    @if($survey->checklist->name == 'HTC Lab Register (MOH 362)')
+                                        <button class="btn btn-warning btn-sm data-month-item-link" data-toggle="modal" data-target=".data-month-modal" data-id="{{{ $survey->id }}}" data-facility="{{{ $survey->facility->name }}}" data-submitted="{{{ $survey->date_submitted }}}" data-officer="{{{ $survey->qa_officer }}}" data-sdps="{{{ implode(", ", $survey->ssdps()) }}}"  data-oldest="{{{ json_decode($survey->dates())->min }}}" data-newest="{{{ json_decode($survey->dates())->max }}}"><i class="fa fa-lemon-o"></i><span> {!! Lang::choice('messages.data-month', 1) !!}</span></button>
+                                    @endif
+                                    <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{!! url('survey/'.$survey->id.'/delete') !!}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>                              
                                 @endif
-                                <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{!! url('survey/'.$survey->id.'/delete') !!}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>                              
                             </td>
                         </tr>
                         @empty

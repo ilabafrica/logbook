@@ -40,7 +40,7 @@
             </ul>
         </li>
         @endif
-         @if(Entrust::can('access-site-catalog'))
+        @if(Entrust::can('access-site-catalog'))
         <!-- Site catalog -->
         <li>
             <a href="#"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.site-catalog', 1) !!}<span class="fa arrow"></span></a>
