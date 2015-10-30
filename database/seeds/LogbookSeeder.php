@@ -400,7 +400,7 @@ class LogbookSeeder extends Seeder
         $checklists = array(
             array("name" => "HTC Lab Register (MOH 362)", "description" => "", "user_id" => "1"),
             array("name" => "M & E Checklist", "description" => "", "user_id" => "1"),
-            array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1")
+            array("name" => "SPI-RT Checklist", "description" => "", "user_id" => "1"),
             array("name" => "PT Enrollment Tool", "description" => "", "user_id" => "1")
         
         );

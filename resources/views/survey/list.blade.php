@@ -42,8 +42,7 @@
                             <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility', 1) }}</th>
                             <th>{{ Lang::choice('messages.sdp', 2) }}</th>
-                            <th>{{ Lang::choice('messages.date', 1) }}</th>
-                            <th>{{ Lang::choice('messages.status', 1) }}</th>
+                            <th>{{ Lang::choice('messages.date-submitted', 1) }}</th>
                             <th>{{ Lang::choice('messages.action', 2) }}</th>
                         </tr>
                     </thead>
@@ -56,8 +55,7 @@
                             <td>{{ $survey->qa_officer }}</td>
                             <td>{{ $survey->facility->name }}</td>
                             <td>{{ implode(", ", $survey->ssdps()) }}</td>
-                            <td>{{ $survey->created_at }}</td>
-                            <td></td>
+                            <td>{{ $survey->date_submitted }}</td>
                             <td>
                                 <a href="{!! url('survey/'.$survey->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {!! Lang::choice('messages.view', 1) !!}</span></a>
                                 @if(Entrust::can('edit-checklist-data'))

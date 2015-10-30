@@ -603,16 +603,16 @@ class SurveyController extends Controller {
 	 * @param  int  $id of checklist
 	 * @return Response
 	 */
-	public function api($id = 0)
+	public function api($id)
 	{
 		//	Get specific checklist
-		if($id == 0)
+		/*if($id == 0)
 		{
 			$id = Input::get('checklist_id');
 		}
 		$date_from = Input::get('from');
 		$date_to = Input::get('to');
-		dd($date_from);
+		dd($date_from);*/
 		$checklist = Checklist::find($id);
 		if($checklist->name == 'M & E Checklist')
 			$checklist_id = 69519;
@@ -877,7 +877,7 @@ class SurveyController extends Controller {
     * @param $testId the testID to save with the labRequest or 0 if we do not have the test
     *        in our systems.
     */
-    public function htc($value)
+    public function htc($checklistData)
     {
     	//  Get all the data.
         //	dd($checklistData);
