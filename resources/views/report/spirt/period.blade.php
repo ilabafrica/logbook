@@ -79,7 +79,7 @@
                         <div class='form-group'>
                             {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                             <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
-                                {!! Form::text('from', isset($from)?$from:date('Y-m-d'), array('class' => 'form-control')) !!}
+                                {!! Form::text('from', isset($from)?$from:date('Y-m-01'), array('class' => 'form-control')) !!}
                                 <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                             </div>
                         </div>

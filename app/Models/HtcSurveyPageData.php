@@ -22,7 +22,7 @@ class HtcSurveyPageData extends Model implements Revisionable {
 	/**
      * Htc-Survey-Page-Question relationship
      */
-    public function question()
+    public function htc_survey_page_question()
     {
        return $this->belongsTo('App\Models\HtcSurveyPageQuestion');
     }

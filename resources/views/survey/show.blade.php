@@ -175,6 +175,12 @@
                                     array('class' => 'form-control', 'id' => 'sdp')) !!}
                             </div>
                         </div>
+                        <div class="form-group">
+                            {!! Form::label('desription', Lang::choice('messages.description', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::text('description', old(''), array('class' => 'form-control')) !!}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

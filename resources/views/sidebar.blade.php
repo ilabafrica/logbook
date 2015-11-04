@@ -26,6 +26,14 @@
                 <li><a href="{!! url('level') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.level', 2) !!}</a></li>
             </ul>
         </li>
+        <!-- PT Program -->
+        <li>
+            <a href="#"><i class="fa fa-camera-retro"></i> {{ Lang::choice('messages.pt-config', 1) }}<span class="fa arrow"></span></a>
+            <ul class="nav nav-second-level">
+                <li><a href="{!! url('pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt-program', 2) !!}</a></li>
+                <li><a href="{!! url('designation') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.designation', 2) }}</a></li>
+            </ul>
+        </li>
         @endif
         @if(Entrust::can('access-facility-config'))
         <!-- Facility configuration -->
@@ -50,14 +58,6 @@
             </ul>
         </li>
         @endif
-        <!-- PT Program -->
-        <li>
-            <a href="#"><i class="fa fa-camera-retro"></i> {{ Lang::choice('messages.pt-config', 1) }}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level">
-                <li><a href="{!! url('pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt-program', 2) !!}</a></li>
-                <li><a href="{!! url('designation') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.designation', 2) }}</a></li>
-            </ul>
-        </li>
         <!-- Test kits -->
         @if(Entrust::can('access-testkits'))
         <li>

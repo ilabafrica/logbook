@@ -1,5 +1,5 @@
 <?php namespace App\Http\Controllers;
-
+set_time_limit(0);
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Checklist;

@@ -69,44 +69,6 @@ class Sdp extends Model implements Revisionable {
 				}
 			}
 		}
-		//	Get the counts
-		$pages = HtcSurveyPage::join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
-							  ->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
-							  ->join('survey_sdps', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
-							  ->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-							  ->where('sdp_id', $this->id);
-							  if($county || $subCounty || $facility)
-							  {
-								if($subCounty || $facility)
-								{
-									if($facility)
-									{
-										$pages = $pages->where('facility_id', $facility);
-									}
-									else
-									{
-										$pages = $pages->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-												 		 ->where('sub_county_id', $subCounty);
-									}
-								}
-								else
-								{
-									$pages = $pages->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-													 ->where('county_id', $county);
-								}
-							  }
-							  if (strlen($theDate)>0 || ($from && $to)) {
-							  		if($from && $to)
-							  		{
-							  			$pages = $pages->whereBetween('date_submitted', [$from, $to]);
-							  		}
-							  		else
-							  		{
-							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
-							  		}								
-							  }
-							  $pages = $pages->get(array('htc_survey_pages.*'));
 		//	Declare questions to be used in calculation of both values
 		$posOne = Question::idByName('Test-1 Total Positive');
 		$negOne = Question::idByName('Test-1 Total Negative');
@@ -114,11 +76,10 @@ class Sdp extends Model implements Revisionable {
 		$posThree = Question::idByName('Test-3 Total Positive');
 		$totals = [$posOne, $negOne];
 		$positives = [$posOne, $posTwo, $posThree];
-		foreach ($pages as $page)
-		{
-			$total+=$page->questions()->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')->whereIn('question_id', $totals)->sum('answer');
-			$positive+=$page->questions()->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')->whereIn('question_id', $positives)->sum('answer');
-		}
+		//	Get the counts
+		
+		$total = $this->eagerLoad($facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $totals, $this->id);
+		$positive = $this->eagerLoad($facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $positives, $this->id);
 		return $total>0?round((int)$positive*100/(int)$total, 2):0;
 	}
 	/**
@@ -310,5 +271,56 @@ class Sdp extends Model implements Revisionable {
 					  ->where('checklist_id', $check)
 					  ->count();
 		return $ssdps;
+	}
+	/**
+	*	Function to eager-load questions for use in calculating other derivatives
+	*/
+	public function eagerLoad($facility = null, $subCounty = null, $county = null, $theDate, $from = NULL, $to = NULL, $array, $sdp_id)
+	{
+		$data = HtcSurveyPageData::whereHas('htc_survey_page_question', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $array, $sdp_id){
+			
+			$q->whereIn('question_id', $array)->whereHas('htc_survey_page', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
+				$q->whereHas('survey_sdp', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
+					$q->whereHas('survey', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to){
+						if($county || $subCounty || $facility)
+						{
+							if($subCounty || $facility)
+							{
+								if($facility)
+								{
+									$q->where('facility_id', $facility);
+								}
+								else
+								{
+									$q->whereHas('facility', function($q) use($subCounty){
+										$q->where('sub_county_id', $subCounty);
+									});
+								}
+							}
+							else
+							{
+								$q->whereHas('facility', function($q) use($county){
+									$q->whereHas('subCounty', function($q) use ($county){
+										$q->where('county_id', $county);
+									});
+								});
+							}
+						}
+						if(strlen($theDate)>0 || ($from && $to))
+						{
+							if($from && $to)
+							{
+								$q->whereBetween('date_submitted', [$from, $to]);
+							}
+							else
+							{
+								$q->where('date_submitted', 'LIKE', $theDate."%");
+							}	
+						}
+					})->where('sdp_id', $this->id);
+				});
+			});
+		});
+		return $data->sum('answer');
 	}
 }

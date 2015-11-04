@@ -30,6 +30,12 @@
                 </div>
                 <div id="collapse{{$checklist->id}}" class="panel-collapse collapse">
                     <div class="panel-body">
+                        @if(session()->has('message'))
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">{{ Lang::choice('messages.close', 1) }}</span></button>
+                          {!! session('message') !!}
+                        </div>
+                        @endif
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
                                 <tbody>
@@ -61,7 +67,8 @@
                                     <a href="{!! url('/report/'.$checklist->id) !!}" class="btn btn-warning"><i class="fa fa-bar-chart-o"></i><span> {!! Lang::choice('messages.view-report', 1) !!}</span></a>
                                 @endif
                                 @if(Entrust::can('edit-checklist-data'))
-                                    <button class="btn btn-danger import-data-item-link" data-toggle="modal" data-target=".import-data-modal" data-checklist="{{{ $checklist->name }}}" data-id="{!! $checklist->id !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></button>
+                                    <a href="{!! url('/api/'.$checklist->id) !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></a>
+                                    <!-- <button class="btn btn-danger import-data-item-link" data-toggle="modal" data-target=".import-data-modal" data-checklist="{{{ $checklist->name }}}" data-id="{!! $checklist->id !!}" class="btn btn-danger"><i class="fa fa-download"></i><span> {!! Lang::choice('messages.import-submitted-data', 1) !!}</span></button> -->
                                 @endif
                             </p>
                         </div>

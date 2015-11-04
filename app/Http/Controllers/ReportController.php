@@ -158,7 +158,11 @@ class ReportController extends Controller {
 		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
@@ -377,7 +381,11 @@ class ReportController extends Controller {
 		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 	        chart: {
@@ -685,7 +693,11 @@ class ReportController extends Controller {
 		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$months = json_decode(self::getMonths($from, $to));
 		$chart = "{
 	        chart: {
@@ -892,7 +904,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -1084,7 +1100,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		//	Get facility
@@ -1272,7 +1292,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$today = "'".date("Y-m-d")."'";
 		//	Get facility
@@ -1434,7 +1458,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -1594,7 +1622,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -1706,7 +1738,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -2314,7 +2350,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -2622,7 +2662,11 @@ class ReportController extends Controller {
 		$checklists = Checklist::all();
 		//	Get dates and months
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$months = json_decode(self::getMonths($from, $to));
 
 	    //	Calculation of "complete"
@@ -3280,7 +3324,11 @@ class ReportController extends Controller {
 		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
@@ -3510,7 +3558,11 @@ class ReportController extends Controller {
 		}
 		$sdps = array_unique($sdps);
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
@@ -3682,7 +3734,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		//	Get facility
 		//$facility = Facility::find(2);
@@ -3964,7 +4020,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		//	Get facility
@@ -4144,7 +4204,11 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
 		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 		//	Get facility

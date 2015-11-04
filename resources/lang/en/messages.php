@@ -522,4 +522,5 @@ return [
     'record-successfully-updated'	=>	'Record successfully updated.',
     'confirm-data-import'	=>	'Confirm Data Import',
     'record-successfully-saved'	=>	'Record successfully Saved.',
+    'data-successfully-imported'	=>	'The data was successfully imported.',
 ];

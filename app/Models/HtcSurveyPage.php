@@ -22,7 +22,7 @@ class HtcSurveyPage extends Model implements Revisionable {
 	/**
      * Survey-Sdp relationship
      */
-    public function sdp()
+    public function survey_sdp()
     {
        return $this->belongsTo('App\Models\SurveySdp');
     }
