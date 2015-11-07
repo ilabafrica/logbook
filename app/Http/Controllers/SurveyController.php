@@ -662,11 +662,11 @@ class SurveyController extends Controller {
         //  Process the data appropriately
         if($id == 69514)
         {
-        	$this->htc($checklist_data);
+        	return $this->htc($checklist_data);
         }
         else
         {
-        	$this->process($checklist_data, $checklist);
+        	return $this->process($checklist_data, $checklist);
         }
     }
      /**

@@ -20,6 +20,12 @@
     <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.survey', 2) }}</div>
     <!-- .panel-heading -->
     <div class="panel-body">
+        @if(session()->has('message'))
+        <div class="alert alert-success alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">{{ Lang::choice('messages.close', 1) }}</span></button>
+          {!! session('message') !!}
+        </div>
+        @endif
         <div class="panel-group" id="accordion">
             @foreach($checklists as $checklist)
             <div class="panel panel-default">
@@ -30,12 +36,6 @@
                 </div>
                 <div id="collapse{{$checklist->id}}" class="panel-collapse collapse">
                     <div class="panel-body">
-                        @if(session()->has('message'))
-                        <div class="alert alert-success alert-dismissible" role="alert">
-                          <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">×</span><span class="sr-only">{{ Lang::choice('messages.close', 1) }}</span></button>
-                          {!! session('message') !!}
-                        </div>
-                        @endif
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover">
                                 <tbody>
