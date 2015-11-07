@@ -861,7 +861,8 @@ class ReportController extends Controller {
 	    }";
 		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
-	}/**
+	}
+	/**
 	 * Invalid results report
 	 *
 	 * @param  int  $id
@@ -4112,7 +4113,9 @@ class ReportController extends Controller {
 	            min: 0,
 	            title: {
 	                text: 'Percentage'
-	            }
+	            },
+	            min: 0,
+	            max: 100
 	        },
 	        credits: {
 			    enabled: false
@@ -4338,5 +4341,244 @@ class ReportController extends Controller {
 	   		$chart.="]
 	    }";
 	    return view('report.spirt.section', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp'));
+	}
+	/**
+	 * Overall agreement report aggregated overtime
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function overallOvertime($id)
+	{
+		//	Get checklist
+		$checklist = Checklist::find($id);
+		//	Chart title
+		$title = '';
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$facilities = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$facilities = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
+		//	Declare variables
+		$sdp =NULL;
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		$kit = NULL;
+		$kit = Input::get('kit');
+		if($kit==NULL)
+		{
+			$kit = 'KHB';
+		}
+		//	Get facility
+		//$facility = Facility::find(2);
+		if(Input::get('sdp'))
+		{
+			$sdp = Input::get('sdp');
+		}
+		if(Input::get('facility'))
+		{
+			$site = Input::get('facility');
+		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		}
+		if(Input::get('sub_county'))
+		{
+			$sub_county = Input::get('sub_county');
+			$facilities = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+		}
+		if(Input::get('county'))
+		{
+			$jimbo = Input::get('county');
+			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
+		}	
+		//	Get sdps
+		$sdps = array();
+		//	Percentages
+		$percentages = array('<95%', '95-98%', '>98%');
+		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
+		{
+			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
+			{
+				if($site!=NULL|| $sdp!=NULL)
+				{
+					if($sdp!=NULL)
+					{
+						$title = Sdp::find($sdp)->name;
+						foreach (Sdp::find($sdp)->surveys as $survey) 
+						{
+							array_push($sdps, $survey->sdp_id);
+						}
+					}
+					else
+					{
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						foreach (Facility::find($site)->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+							array_push($sdps, $sdp->sdp_id);
+							}
+						}
+
+
+					}
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					foreach (SubCounty::find($sub_county)->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				foreach (County::find($jimbo)->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+			foreach (County::all() as $county)
+			{
+				foreach ($county->subCounties as $subCounty)
+				{
+					foreach ($subCounty->facilities as $facility)
+					{
+						foreach ($facility->surveys as $survey) 
+						{
+							foreach ($survey->sdps as $sdp) 
+							{
+								array_push($sdps, $sdp->sdp_id);
+							}
+						}
+					}
+				}
+			}
+		}
+		$sdps = array_unique($sdps);
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$months = json_decode(self::getMonths($from, $to));
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+	    //	Percent of sites
+	    $percent = "{
+	        chart: {
+	            type: 'column'
+	        },
+	        title: {
+	            text: '".Lang::choice('messages.percent-of-sites', 1).'-'.$title."'
+	        },
+		    subtitle: {
+		        text:"; 
+		        if($from==$to)
+		        	$percent.="'".trans('messages.for-the-year').' '.date('Y')."'";
+		        else
+		        	$percent.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
+		    $percent.="},
+	        xAxis: {
+	            categories: [";
+	            	foreach ($sdps as $sdp) {
+	            		$percent.="'".Sdp::find($sdp)->name."',";
+	            	}
+	            $percent.="]
+	        },
+	        yAxis: {
+	            title: {
+	                text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	            }
+	        },
+	        credits: {
+			    enabled: false
+			},
+			colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+			plotOptions: {
+	            series: {
+	            	stacking: 'normal',
+	                dataLabels: {
+	                    enabled: true,
+	                    formatter: function() {
+                            if (this.y != 0) {
+                              return this.y;
+                            } else {
+                              return null;
+                            }
+                        }
+	                }
+	            }
+	        },
+	        tooltip: {
+	            valueSuffix: '%',
+	            shared: true
+	        },
+	        series: [";
+	        $counts = count($percentages);
+	        foreach ($percentages as $percentage)
+	        {
+	        	$percent.="{name:"."'".$percentage."'".", data:[";
+        		$counter = count($sdps);
+        		foreach ($sdps as $sdp)
+        		{
+        			$data = $checklist->overallAgreement($percentage, [$sdp], $kit, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+        			if($data==0)
+        			{
+        					$percent.= '0.00';
+        					if($counter==1)
+            					$percent.="";
+            				else
+            					$percent.=",";
+    				}
+    				else
+    				{
+        				$percent.= $data;
+
+        				if($counter==1)
+        					$percent.="";
+        				else
+        					$percent.=",";
+    				}
+        			$counter--;
+        		}
+        		$percent.="]";
+            	if($counts==1)
+					$percent.="}";
+				else
+					$percent.="},";
+				$counts--;
+	        }
+	        $percent.="]
+	    }";
+		return view('report.htc.overtime', compact('checklist', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
+
 	}
 }

@@ -132,7 +132,7 @@ class Sdp extends Model implements Revisionable {
 							  if (strlen($theDate)>0 || ($from && $to)) {
 							  		if($from && $to)
 							  		{
-							  			$pages = $pages->whereBetween('date_submitted', [$from, $to]);
+							  			$pages = $pages->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
 							  		}
 							  		else
 							  		{
@@ -156,7 +156,7 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]
 	*/
-	public function overallAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0)
+	public function overallAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
 		//	Initialize variables
 		$total = 0;
@@ -204,8 +204,15 @@ class Sdp extends Model implements Revisionable {
 													 ->where('county_id', $county);
 								}
 							  }
-							  if (strlen($theDate)>0) {
-								$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  if (strlen($theDate)>0 || ($from && $to)) {
+							  		if($from && $to)
+							  		{
+							  			$pages = $pages->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
+							  		}
+							  		else
+							  		{
+							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  		}								
 							  }
 							  $pages = $pages->where('question_id', $screen)
 											  ->where('answer', $kit)
@@ -310,7 +317,7 @@ class Sdp extends Model implements Revisionable {
 						{
 							if($from && $to)
 							{
-								$q->whereBetween('date_submitted', [$from, $to]);
+								$q->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
 							}
 							else
 							{

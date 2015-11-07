@@ -28,13 +28,13 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs">
             <li><a href="{!! url('report/'.$checklist->id) !!}">{!! Lang::choice('messages.percent-positive', 1) !!}</a></li>
-            <li class="active"><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
+            <li><a href="{!! url('report/'.$checklist->id.'/agreement') !!}">{!! Lang::choice('messages.percent-positiveAgr', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/overall') !!}">{!! Lang::choice('messages.percent-overallAgr', 1) !!}</a></li>
-            <li><a href="{!! url('report/'.$checklist->id.'/programatic') !!}">{!! Lang::choice('messages.programatic-area', 1) !!}</a></li>
+            <li  class="active"><a href="{!! url('report/'.$checklist->id.'/programatic') !!}">{!! Lang::choice('messages.programatic-area', 1) !!}</a></li>
             <li><a href="{!! url('report/'.$checklist->id.'/geographic') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
-        {!! Form::open(array('url' => 'report/'.$checklist->id.'/agreement', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'report/'.$checklist->id.'/programatic', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
@@ -62,8 +62,8 @@
                 </div>
                 @endif
                 </div>
-                   <hr/>
-           <div class="row">
+                <hr />
+                <div class="row">
                 @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
                 <div class="col-sm-4">
                     <div class='form-group'>
@@ -83,13 +83,13 @@
                         <div class="col-sm-8">
                             {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
                                 array('class' => 'form-control', 'id' => 'sdp')) !!}
+
                         </div>
                     </div>
                 </div>
                 @endif
             </div>
-            
-            <hr />
+            <hr/>
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
@@ -126,13 +126,7 @@
             <hr />
             <div class="row">
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 400px"></div>
-                </div>
-            </div>
-            <hr />
-            <div class="row">
-                <div class="col-sm-12">
-                    <div id="percent" style="height: 400px"></div>
+                    <div id="percent" style="height: 500px"></div>
                 </div>
             </div>
         </div>
@@ -145,7 +139,6 @@
 <script src="{{ URL::asset('admin/js/drilldown.js') }}"></script>
 <script type="text/javascript">
     $(function () {
-        $('#chart').highcharts(<?php echo $chart ?>);
         $('#percent').highcharts(<?php echo $percent ?>);
     });
 </script>

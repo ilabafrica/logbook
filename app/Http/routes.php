@@ -494,9 +494,9 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@overview"
     ));    
-    Route::get('report/{id}/programatic', array(
+    Route::any('report/{id}/programatic', array(
         "as"    =>  "report.programatic",
-        "uses"  =>  "ReportController@programatic"
+        "uses"  =>  "ReportController@overallOvertime"
     ));    
     Route::get('report/{id}/geographic', array(
         "as"    =>  "report.geographic",

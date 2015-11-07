@@ -212,7 +212,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function overallAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
+	public function overallAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
 		//	Get scores for each section
 		$counter = 0;
@@ -220,7 +220,7 @@ class Checklist extends Model implements Revisionable {
 		$total_sites = count($sdps);	
 		foreach ($sdps as $sdp)
 		{
-			$agreement = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
+			$agreement = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month, $date, $from, $to);
 			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
