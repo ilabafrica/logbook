@@ -58,9 +58,18 @@
                 </div>
             </div>
             <div class="form-group">
-                {!! Form::label('facility', Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                {!! Form::label('facility_id', Lang::choice('messages.reporting-to-facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                 <div class="col-sm-8">
-                    {!! Form::text('facility', $survey->facility->name, array('class' => 'form-control', 'readonly')) !!}
+                   {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,
+                        old('facility') ? old('facility') : $facility, 
+                        array('class' => 'form-control', 'id' => 'facility')) !!}
+                </div>
+            </div>
+            <div class='form-group'>
+                {!! Form::label('data-month', Lang::choice('messages.data-month', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;padding-right:15px;">
+                    {!! Form::text('data_month', $survey->data_month, array('class' => 'form-control')) !!}
+                    <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
                 </div>
             </div>
             <div class="form-group">
@@ -72,7 +81,7 @@
             <div class="form-group">
                 {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
                 <div class="col-sm-8">
-                    {!! Form::text('facility', $survey->facility->subCounty->county->name, array('class' => 'form-control', 'readonly')) !!}
+                    {!! Form::text('county', $survey->facility->subCounty->county->name, array('class' => 'form-control', 'readonly')) !!}
                 </div>
             </div>
             <div class="form-group">

@@ -50,7 +50,10 @@
                         <?php $counter = 0; ?>
                         @forelse($surveys as $survey)
                         <?php $counter++; ?>
-                        <tr>
+                        <tr @if(session()->has('active_survey'))
+                                {!! (session('active_survey') == $survey->id)?"class='warning'":"" !!}
+                            @endif
+                            >
                             <td>{{ $counter }}</td>
                             <td>{{ $survey->qa_officer }}</td>
                             <td>{{ $survey->facility->name }}</td>

@@ -312,7 +312,11 @@ class SurveyController extends Controller {
 	{
 		//	Get survey
 		$survey = Survey::find($id);
-		return view('survey.edit', compact('survey'));
+		//	Get all facilities in sub-county
+		$facilities = $survey->facility->subCounty->facilities->lists('name', 'id');
+		//	Already selected facility
+		$facility = $survey->facility_id;
+		return view('survey.edit', compact('survey', 'facilities', 'facility'));
 	}
 
 	/**
@@ -324,7 +328,11 @@ class SurveyController extends Controller {
 	public function update($id)
 	{
 		$survey = Survey::findOrFail($id);
+		$survey->facility_id = Input::get('facility');
+		$survey->qa_officer = Input::get('qa_officer');
 		$survey->comment = Input::get('comments');
+		if(Input::get('data_month'))
+			$survey->data_month = Input::get('data_month');
         $survey->save();
         //$url = session('SOURCE_URL');
 		/*$checklist_id = Input::get('checklist_id');
@@ -394,7 +402,9 @@ class SurveyController extends Controller {
 				}
 			}
 		}*/
-		return redirect('survey');
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1))->with('active_survey', $survey ->id);
 	}
 
 	/**

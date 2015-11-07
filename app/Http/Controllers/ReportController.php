@@ -3148,7 +3148,7 @@ class ReportController extends Controller {
         		foreach ($months as $month) {
         			$data = $checklist->ssdps(null, null, null, null, null, null, null, $month->annum, $month->months);
         			if($data==0){
-        					$chart.= '0.00';
+        					$combination.= '0.00';
         					if($counter==1)
             					$combination.="";
             				else

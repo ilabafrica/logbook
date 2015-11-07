@@ -143,16 +143,19 @@ class Checklist extends Model implements Revisionable {
 		$data = null;
 		if($county || $subCounty)
 		{
-			$data = $this->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id');
-			if($subCounty)
-			{
-				$data = $data->where('facilities.sub_county_id', $subCounty->id);
-			}
-			else
-			{
-				$data = $data->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-							 ->where('sub_counties.county_id', $county->id);
-			}
+			$data = $this->surveys()->whereHas('facility', function($q) use($county, $subCounty){
+				if($subCounty)
+				{
+					$q->where('facilities.sub_county_id', $subCounty->id);
+				}
+				else
+				{
+					$q->whereHas('subCounty', function($q) use($county){
+						$q->where('county_id', $county->id);
+					});
+				}
+				
+			});
 		}
 		else
 		{
