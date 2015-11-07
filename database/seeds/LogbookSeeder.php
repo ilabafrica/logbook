@@ -40,7 +40,7 @@ class LogbookSeeder extends Seeder
         $usersData = array(
             array(
                 "username" => "admin", "password" => Hash::make("password"), "email" => "admin@hivlogbook.org",
-                "name" => "Lucy Mbugua", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
+                "name" => "RTQII Administrator", "gender" => "1", "phone"=>"0722000000", "address" => "P.O. Box 59857-00200, Nairobi"
             )
         );
 
