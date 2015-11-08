@@ -132,11 +132,11 @@ class Sdp extends Model implements Revisionable {
 							  if (strlen($theDate)>0 || ($from && $to)) {
 							  		if($from && $to)
 							  		{
-							  			$pages = $pages->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
+							  			$pages = $pages->whereBetween('data_month', [$from, $to]);
 							  		}
 							  		else
 							  		{
-							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  			$pages = $pages->where('data_month', 'LIKE', $theDate."%");
 							  		}								
 							  }
 							  $pages = $pages->where('question_id', $screen)
@@ -207,11 +207,11 @@ class Sdp extends Model implements Revisionable {
 							  if (strlen($theDate)>0 || ($from && $to)) {
 							  		if($from && $to)
 							  		{
-							  			$pages = $pages->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
+							  			$pages = $pages->whereBetween('data_month', [$from, $to]);
 							  		}
 							  		else
 							  		{
-							  			$pages = $pages->where('date_submitted', 'LIKE', $theDate."%");
+							  			$pages = $pages->where('data_month', 'LIKE', $theDate."%");
 							  		}								
 							  }
 							  $pages = $pages->where('question_id', $screen)
@@ -317,11 +317,11 @@ class Sdp extends Model implements Revisionable {
 						{
 							if($from && $to)
 							{
-								$q->whereBetween('date_submitted', [$from, $to])->orWhereBetween('data_month', [$from, $to]);
+								$q->whereBetween('data_month', [$from, $to]);
 							}
 							else
 							{
-								$q->where('date_submitted', 'LIKE', $theDate."%");
+								$q->where('data_month', 'LIKE', $theDate."%");
 							}	
 						}
 					})->where('sdp_id', $this->id);

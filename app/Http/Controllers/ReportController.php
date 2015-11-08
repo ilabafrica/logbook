@@ -164,7 +164,7 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-		$months = json_decode(self::getMonths($from, $to));
+		$months = json_decode(self::getMonths($from, $to, $checklist->id));
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -208,11 +208,18 @@ class ReportController extends Controller {
         		foreach ($months as $month) {
         			$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0){
-        					$chart.= '0.00';
-        					if($counter==1)
-            					$chart.="";
-            				else
-            					$chart.=",";
+    					$chart.= '0.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
+    				}
+    				else if($data>100){
+    					$chart.= '100.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
     				}
     				else{
         				$chart.= $data;
@@ -386,7 +393,7 @@ class ReportController extends Controller {
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
-		$months = json_decode(self::getMonths($from, $to));
+		$months = json_decode(self::getMonths($from, $to, $checklist->id));
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -435,6 +442,13 @@ class ReportController extends Controller {
             					$chart.="";
             				else
             					$chart.=",";
+    				}
+    				else if($data>100){
+    					$chart.= '100.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
     				}
     				else{
         				$chart.= $data;
@@ -698,7 +712,7 @@ class ReportController extends Controller {
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
-		$months = json_decode(self::getMonths($from, $to));
+		$months = json_decode(self::getMonths($from, $to, $checklist->id));
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -742,12 +756,19 @@ class ReportController extends Controller {
         		foreach ($months as $month) {
         			$data = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0){
-        					$chart.= '0.00';
-        					if($counter==1)
-            					$chart.="";
-            				else
-            					$chart.=",";
+    					$chart.= '0.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
 
+    				}
+    				else if($data>100){
+    					$chart.= '100.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
     				}
     				else{
         				$chart.= $data;
@@ -2588,26 +2609,37 @@ class ReportController extends Controller {
 	/**
 	* Get months: return months for time_created column when filter dates are set
 	*/	
-	public static function getMonths($from, $to)
+	public static function getMonths($from, $to, $htc  = null)
 	{
-		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
 		$today = "'".date("Y-m-d")."'";
 		$year = date('Y');
-		$surveys = $checklist->surveys()->select('date_submitted')->distinct();
+		if($htc)
+			$surveys = Survey::select('data_month')->distinct();
+		else
+			$surveys = Survey::select('date_submitted')->distinct();
 
 		if(strtotime($from)===strtotime($today)){
-			$surveys = $surveys->where('date_submitted', 'LIKE', $year.'%');
+			if($htc)
+				$surveys = $surveys->where('data_month', 'LIKE', $year.'%');
+			else
+				$surveys = $surveys->where('date_submitted', 'LIKE', $year.'%');
 		}
 		else
 		{
 			$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-			$surveys = $surveys->whereBetween('date_submitted', array($from, $toPlusOne));
+			if($htc)
+				$surveys = $surveys->whereBetween('data_month', array($from, $to));
+			else
+				$surveys = $surveys->whereBetween('date_submitted', array($from, $toPlusOne));
 		}
 		$allDates = array();
-		$allSurveyDates = $surveys->lists('date_submitted');
+		if($htc)
+			$allSurveyDates = $surveys->lists('data_month');
+		else
+			$allSurveyDates = $surveys->lists('date_submitted');
 		foreach ($allSurveyDates as $surveyDate)
 		{
-			array_push($allDates, Carbon::createFromFormat('Y-m-d H:i:s', $surveyDate)->toDateString());
+			array_push($allDates, Carbon::parse($surveyDate)->toDateString());
 		}
 		$allDates = array_unique($allDates);
 		asort($allDates);
