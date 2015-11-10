@@ -116,6 +116,8 @@
                       @if(Entrust::can('edit-checklist-data'))
                           @if($survey->checklist->id != App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
                               <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                          @else
+                              <button class="btn btn-info btn-sm  edit-item-link" data-toggle="modal" data-target=".confirm-edit-modal" data-id="{{{ $sdp->id }}}" data-contents="{{{ $sdp->sdp->name.' - '.$sdp->comment }}}"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></button>
                           @endif
                           <button class="btn btn-warning btn-sm duplicate-item-link" data-toggle="modal" data-target=".confirm-duplicate-modal" data-id="{{{ $sdp->id }}}" data-contents="{{{ $sdp->sdp->name.' - '.$sdp->comment }}}"><i class="fa fa-files-o"></i><span> {!! Lang::choice('messages.duplicate', 1) !!}</span></button>
                           <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('surveysdp/'.$sdp->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
@@ -187,6 +189,75 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-warning btn-duplicate" onclick="submit()" disabled>
                     <i class="fa fa-files-o"></i><span> {{ trans('messages.duplicate') }}</span>
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    <i class="fa fa-times-circle-o"></i><span> {{ trans('messages.cancel') }}</span>
+                </button>
+            </div>
+        {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+<!-- Edit Modal-->
+<div class="modal fade confirm-edit-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        {!! Form::open(array('route' => 'survey.sdp.modal.edit', 'id' => 'form-duplicate-survey-sdp-data', 'class' => 'form-horizontal', 'method' => 'POST')) !!}
+            <!-- CSRF Token -->
+            <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
+            <!-- survey-sdp-id -->
+            <input type="hidden" id="ssdpForUpdate" name="ssdpForUpdate" value="" />
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;</button>
+                <h4 class="modal-title" id="myModalLabel">
+                    <i class="fa fa-edit"></i><span> 
+                    {{ trans('messages.confirm-update-title') }}
+                    </span>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <table class="table table-striped table-bordered table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>{!! Lang::choice('messages.facility', 1) !!}</th>
+                                    <td>{!! $survey->facility->name !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>{!! Lang::choice('messages.qa-officer', 1) !!}</th>
+                                    <td>{!! $survey->qa_officer !!}</td>
+                                </tr>
+                                <tr>
+                                    <th>{!! Lang::choice('messages.sdp', 1) !!}</th>
+                                    <td><div id="to-be-updated"></div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class='form-group'>
+                            {!! Form::label(Lang::choice('messages.select-sdp', 1), Lang::choice('messages.select-sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, '', 
+                                    array('class' => 'form-control', 'id' => 'ssdp')) !!}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            {!! Form::label('comm', Lang::choice('messages.description', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::text('comm', old(''), array('class' => 'form-control')) !!}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info btn-update" onclick="submit()" disabled>
+                    <i class="fa fa-edit"></i><span> {{ Lang::choice('messages.save', 1) }}</span>
                 </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">
                     <i class="fa fa-times-circle-o"></i><span> {{ trans('messages.cancel') }}</span>

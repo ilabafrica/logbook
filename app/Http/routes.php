@@ -427,7 +427,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.update",
         "uses"  =>  "SurveyController@updateSdp"
     ));
-
+    Route::any('surveysdp/update/{id?}', array(
+        "as"    =>  "survey.sdp.modal.edit",
+        "uses"  =>  "SurveyController@modalUpdateSdp"
+    ));
     /**
     *
     *   htc survey sdp pages routes

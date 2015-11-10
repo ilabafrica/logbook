@@ -1199,6 +1199,33 @@ class SurveyController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
+	public function modalUpdateSdp($id = 0)
+	{
+		//	Get survey-sdp-id
+		if($id == 0)
+		{
+			$id = Input::get('ssdpForUpdate');
+		}
+		//	Get sdp to update data
+		$ssdp = Input::get('sdp');
+		$comment = Input::get('comm');
+		//	Begin duplication
+		$ssdpToUpdate = SurveySdp::find($id);
+		//	Get survey
+		$surveySdp = SurveySdp::find($id);
+		$surveySdp->sdp_id = $ssdp;
+		$surveySdp->comment = $comment;
+		$surveySdp->save();
+		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1));
+	}
+	/**
+	 * Display the specified resource to be updated.
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
 	public function editPage($id)
 	{
 		//	Get page

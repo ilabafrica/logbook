@@ -430,3 +430,23 @@ $('#fromImport, #toImport').change(function(){
     else
         $('.btn-import').prop('disabled', true);
 });
+/** GLOBAL UPDATE   
+ *  Alert on update
+ */
+$('.edit-item-link').click(function(){
+    var to_be_updated = $(this).data('contents');
+    $('#to-be-updated').text(to_be_updated);
+});
+$('.confirm-edit-modal').on('show.bs.modal', function(e) {
+    $('#ssdpForUpdate').val($(e.relatedTarget).data('id'));
+});
+/* 
+* Prevent duplicate modal form submit until sdp is selected
+*/
+$('#ssdp').change(function(){
+    console.log($(this).val());
+    if($(this).val() !== '')
+        $('.btn-update').prop('disabled', false);
+    else
+        $('.btn-update').prop('disabled', true);
+});
