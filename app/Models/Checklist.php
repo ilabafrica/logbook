@@ -221,10 +221,12 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month, $date, $from, $to);
+			if($agreement == 0)
+				$total_sites--;
 			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
-		return round($counter*100/$total_sites, 2);
+		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 	/**
 	 * Function to return corresponding range given the percentage
@@ -234,7 +236,7 @@ class Checklist extends Model implements Revisionable {
 		$range = array();
 		if($percentage === '<95%')
 		{
-			$range['lower'] = 0;
+			$range['lower'] = 1;
 			$range['upper'] = 95;
 		}
 		else if($percentage === '95-98%')
@@ -285,10 +287,12 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $year, $month);
+			if($agreement == 0)
+				$total_sites--;
 			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
-		return round($counter*100/$total_sites, 2);
+		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 	/**
 	 * Function to return sdp with corresponding percentage
@@ -326,10 +330,12 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
+			if($agreement == 0)
+				$total_sites--;
 			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
-		return round($counter*100/$total_sites, 2);
+		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 	/**
 	 * Function to return sdp with corresponding percentage
