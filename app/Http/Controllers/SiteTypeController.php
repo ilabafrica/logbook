@@ -9,6 +9,8 @@ use App\Http\Requests\SiteTypeRequest;
 use App\Models\SiteType;
 use Response;
 use Auth;
+use Session;
+use Lang;
 
 class SiteTypeController extends Controller {
 
@@ -46,8 +48,9 @@ class SiteTypeController extends Controller {
         $siteType->description = $request->description;
         $siteType->user_id = Auth::user()->id;;
         $siteType->save();
+        $url = session('SOURCE_URL');
 
-        return redirect('siteType')->with('message', 'Site type created successfully.');
+        return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-saved', 1))->with('active_sdp', $siteType ->id);
 	}
 
 	/**
@@ -90,8 +93,9 @@ class SiteTypeController extends Controller {
         $siteType->description = $request->description;
         $siteType->user_id = Auth::user()->id;;
         $siteType->save();
+		$url = session('SOURCE_URL');
 
-        return redirect('siteType')->with('message', 'Site type updated successfully.');
+        return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1))->with('active_sdp', $siteType ->id);
 	}
 
 	/**
@@ -104,11 +108,10 @@ class SiteTypeController extends Controller {
 	{
 		$siteType= siteType::find($id);
 		$siteType->delete();
-		return redirect('siteType')->with('message', 'Site Type deleted successfully.');
+		return redirect('siteType')->with('message', Lang::choice('messages.record-successfully-deleted', 1));
 	}
 	public function destroy($id)
 	{
 		//
 	}
-
 }

@@ -8,7 +8,7 @@ use Sofa\Revisionable\Revisionable; // interface
 class SiteType extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'site_types';
+	protected $table = 'sdps';
 	use RevisionableTrait;
 
     /*

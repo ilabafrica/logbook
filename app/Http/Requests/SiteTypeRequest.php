@@ -23,7 +23,7 @@ class SiteTypeRequest extends Request {
 	{
 		$id = $this->ingnoreId();
 		return [
-            'name'   => 'required|unique:site_types,name,'.$id,
+            'name'   => 'required|unique:sdps,name,'.$id,
         ];
 	}
 	/**

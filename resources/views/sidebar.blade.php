@@ -51,11 +51,7 @@
         @if(Entrust::can('access-site-catalog'))
         <!-- Site catalog -->
         <li>
-            <a href="#"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.site-catalog', 1) !!}<span class="fa arrow"></span></a>
-            <ul class="nav nav-second-level collapse">
-                <li><a href="{!! url('site') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site', 2) !!}</a></li>
-                <li><a href="{!! url('siteType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.site-type', 2) !!}</a></li>
-            </ul>
+            <a href="{!! url('siteType') !!}"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.sdp', 2) !!}</a>
         </li>
         @endif
         <!-- Test kits -->
