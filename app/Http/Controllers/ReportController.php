@@ -3637,7 +3637,7 @@ class ReportController extends Controller {
         		$counter = count($counties);
         		foreach ($counties as $county) {
         			$chart.="{name:"."'".County::find($county)->name."'".", y:";
-        			$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county, $county, 0, 0, $from, $to);
+        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county, $county, 0, 0, $from, $to);
         			if($data==0){
     					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
     					if($counter==1)
@@ -3677,7 +3677,7 @@ class ReportController extends Controller {
     					foreach ($cnty->subCounties as $sub_county)
     					{
     						$chart.="{name:"."'".$sub_county->name."'".", y:";
-    						$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county->id, $county, 0, 0, $from, $to);
+    						$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county->id, $county, 0, 0, $from, $to);
 		        			if($data==0){
 		    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$sub_county->id."'"."}";
 		    					if($counter==1)
@@ -3712,7 +3712,7 @@ class ReportController extends Controller {
 	    					foreach ($sub_county->facilities as $facility)
 	    					{
 	    						$chart.="{name:"."'".$facility->name."'".", y:";
-	    						$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $facility->id, $sub_county->id, $county, 0, 0, $from, $to);
+	    						$data = $checklist->overallAgreement($percentage, $sdps, $kit, $facility->id, $sub_county->id, $county, 0, 0, $from, $to);
 			        			if($data==0){
 			    					$chart.= '0.00'."}";
 			    					if($counter==1)

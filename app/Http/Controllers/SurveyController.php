@@ -698,7 +698,9 @@ class SurveyController extends Controller {
         	if(isset($value['addtionalcomments']))
         		$comment = $value['addtionalcomments'];
         	$date_started = $value['start'];
-        	$date_ended = $value['end'];
+        	$date_ended = null;
+        	if(isset($value['end']))
+        		$date_ended = $value['end'];
         	$date_submitted = $value['_submission_time'];
         	$latitude = null;
         	$longitude = null;
@@ -714,7 +716,9 @@ class SurveyController extends Controller {
         		$sdp_data = $value["sdpoint"];
         	}
         	$start_date = Carbon::parse($value['start'])->toDateString();
-        	$end_date = Carbon::parse($value['end'])->toDateString();
+        	$end_date = null;
+        	if(isset($value['end']))
+        		$end_date = Carbon::parse($value['end'])->toDateString();
         	$submit_date = Carbon::parse($value['_submission_time'])->toDateString();
         	//	Save survey at this point after checking for existence
         	//	Compare dates
@@ -916,7 +920,9 @@ class SurveyController extends Controller {
         	if(isset($value['addtionalcomments']))
         		$comment = $value['addtionalcomments'];
         	$date_started = $value['start'];
-        	$date_ended = $value['end'];
+        	$date_ended = null;
+        	if(isset($value['end']))
+        		$date_ended = $value['end'];
         	$date_submitted = $value['_submission_time'];
         	$latitude = null;
         	$longitude = null;
@@ -932,30 +938,24 @@ class SurveyController extends Controller {
         		$sdp_data = $value["sdprepeat"];
         	}
         	$start_date = Carbon::parse($value['start'])->toDateString();
-        	$end_date = Carbon::parse($value['end'])->toDateString();
+        	if(isset($value['end']))
+        		$end_date = Carbon::parse($value['end'])->toDateString();
         	$submit_date = Carbon::parse($value['_submission_time'])->toDateString();
         	//	Save survey at this point after checking for existence
         	//	Compare dates to check whether record already exists
         	if($max->lt(Carbon::parse($value['_submission_time'])))
         	{
-	        	if($srvy = Survey::where('checklist_id', $checklist_id)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', 'like', $start_date.'%')->where('date_ended', 'like', $end_date.'%')->where('date_submitted', 'like', $submit_date.'%')->first())
-	        	{
-	        		$survey = Survey::find($srvy->id);
-	        	}
-	        	else
-	        	{
-	        		$survey = new Survey;        	
-	        		$survey->checklist_id = $checklist_id;
-	        		$survey->facility_id = $facility_id;
-	        		$survey->qa_officer = $qa_officer;
-	        		$survey->comment = $comment;
-	        		$survey->date_started = $date_started;
-	        		$survey->date_ended = $date_ended;
-	        		$survey->date_submitted = $date_submitted;
-	        		$survey->longitude = $longitude;
-	        		$survey->latitude = $latitude;
-					$survey->save();
-	        	}
+        		$survey = new Survey;        	
+        		$survey->checklist_id = $checklist_id;
+        		$survey->facility_id = $facility_id;
+        		$survey->qa_officer = $qa_officer;
+        		$survey->comment = $comment;
+        		$survey->date_started = $date_started;
+        		$survey->date_ended = $date_ended;
+        		$survey->date_submitted = $date_submitted;
+        		$survey->longitude = $longitude;
+        		$survey->latitude = $latitude;
+				$survey->save();
 	        	if($sdp_data)
 	        	{
 		        	foreach ($sdp_data as $harvey => $specter) 
