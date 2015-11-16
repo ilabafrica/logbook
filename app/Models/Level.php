@@ -73,16 +73,18 @@ class Level extends Model implements Revisionable{
             $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
                                   ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
                                   ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points = $sqtns->sum('answer');    
-            $reductions = $sqtns->where('question_id', $notapplicable)
-                                ->where('answer', '0')
-                                ->count();
+            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
+            if($sq = SurveyQuestion::where('survey_sdp_id', $value->id)->where('question_id', $notapplicable)->first())
+            {
+                if($sq->sd->answer == '0')
+                    $reductions++;
+            }
             if($reductions>0)
                 $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
             else
                 $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
             //  Check and increment counter
-            if(($percentage>$this->range_lower) && ($percentage<=$this->range_upper) || (($this->range_lower==0.00) && ($percentage==$this->range_lower)))
+            if(($percentage>=$this->range_lower) && ($percentage<$this->range_upper+1) || (($this->range_lower==0.00) && ($percentage==$this->range_lower)))
                 $counter++;
         }
         return $total_counts > 0?round($counter*100/$total_counts, 2):0.00;
