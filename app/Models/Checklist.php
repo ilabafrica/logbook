@@ -41,6 +41,7 @@ class Checklist extends Model implements Revisionable {
 	*/
 	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $list = NULL, $year = 0, $month = 0, $date = 0)
 	{
+		$values = null;
 		//	Check dates
 		$theDate = "";
 		if ($year > 0) {
@@ -52,52 +53,53 @@ class Checklist extends Model implements Revisionable {
 				}
 			}
 		}
-		$ssdps =  	SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-					->where('checklist_id', $this->id);
-					if($county || $sub_county || $site || $sdp)
-                    {
-                        if($sub_county || $site || $sdp)
-                        {
-                            if($site || $sdp)
-                            {
-                                if($sdp)
-                                {
-                                    $ssdps = $ssdps->where('facility_id', $site)->where('sdp_id', $sdp);
-                                }
-                                else
-                                {
-                                    $ssdps = $ssdps->where('facility_id', $site);
-                                }
-                            }
-                            else
-                            {
-                                $ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                 ->where('sub_county_id', $sub_county);
-                            }
-                        }
-                        else
-                        {
-                            $ssdps = $ssdps->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                             ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                             ->where('county_id', $county);
-                        }
-                    }
-					if (strlen($theDate)>0 || ($from && $to))
-					{
-						if($from && $to)
-							$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
-						else
-							$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
-					}
-					if($list)
-					{
-						$ssdps = $ssdps->get(array('survey_sdps.*'));
-					}
+		$ssdps = $this->surveys()->select('surveys.id');
+		if (strlen($theDate)>0 || ($from && $to))
+		{
+			if($from && $to)
+				$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+			else
+				$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
+		}
+		if($county || $sub_county || $site)
+		{
+			$ssdps = $ssdps->whereHas('facility', function($q) use($county, $sub_county, $site)
+			{
+				if($sub_county || $site)
+				{
+					if($site)
+						$q->where('facility_id', $site);
 					else
-					{
-						$ssdps = $ssdps->count();
-					}
-		return $ssdps;
+						$q->where('facilities.sub_county_id', $sub_county);
+				}
+				else
+				{
+					$q->whereHas('subCounty', function($q) use($county){
+						$q->where('county_id', $county);
+					});
+				}
+				
+			});
+		}
+		$ssdps = $ssdps->lists('surveys.id');
+		if($ssdps)
+		{
+			$values = SurveySdp::whereIn('survey_id', $ssdps);
+			if($list)
+			{
+				if($sdp)
+					$values = $values->where('sdp_id', $sdp);
+				$values = $values->get();
+			}
+			else
+			{
+				if($sdp)
+					$values = $values->where('sdp_id', $sdp);
+				$values = $values->count();
+
+			}
+		}
+		return $values;
 	}
 	/**
 	* Return Checklist ID given the name
@@ -370,11 +372,14 @@ class Checklist extends Model implements Revisionable {
 		//	Get scores for each section
 		$counter = 0;
 		$total_sites = count($ssdps);
-		foreach ($ssdps as $ssdp)
+		if($total_sites>0)
 		{
-			$lvl = $level->spirtLevel($this->id, $ssdp);
-			if(($lvl>$level->range_lower) && ($lvl<=$level->range_upper) || (($level->range_lower==0.00) && ($lvl==$level->range_lower)))
-				$counter++;
+			foreach ($ssdps as $ssdp)
+			{
+				$lvl = $level->spirtLevel($this->id, $ssdp);
+				if(($lvl>=$level->range_lower) && ($lvl<$level->range_upper+1) || (($level->range_lower==0.00) && ($lvl==$level->range_lower)))
+					$counter++;
+			}
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}

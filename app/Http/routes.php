@@ -509,6 +509,10 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "reports.partner.region",
         "uses"  =>  "ReportController@geoRegion"
     ));
+    Route::any('partner/precert', array(
+        "as"    =>  "reports.partner.precert",
+        "uses"  =>  "ReportController@precert"
+    ));
     Route::any('partner/overtime', array(
         "as"    =>  "reports.partner.overtime",
         "uses"  =>  "ReportController@precertOvertime"

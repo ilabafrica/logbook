@@ -30,11 +30,11 @@
             <li><a href="{!! url('report/'.$checklist->id.'/spirt') !!}">{!! Lang::choice('messages.summary-chart', 1) !!}</a></li>
             <li><a href="{!! url('partner/sdp') !!}">{!! Lang::choice('messages.level-comparison', 1) !!}</a></li>
             <li><a href="{!! url('partner/region') !!}">{!! Lang::choice('messages.geographic-location', 1) !!}</a></li>
-            <li><a href="{!! url('partner/precert') !!}">{!! Lang::choice('messages.precert-summary', 1) !!}</a></li>
+            <li class="active"><a href="{!! url('partner/precert') !!}">{!! Lang::choice('messages.precert-summary', 1) !!}</a></li>
             <li><a href="{!! url('partner/overtime') !!}">{!! Lang::choice('messages.precert-overtime', 1) !!}</a></li>
-            <li class="active"><a href="{!! url('partner/performance') !!}">{!! Lang::choice('messages.performance-overtime', 1) !!}</a></li>
+            <li><a href="{!! url('partner/performance') !!}">{!! Lang::choice('messages.performance-overtime', 1) !!}</a></li>
         </ul>
-        {!! Form::open(array('url' => 'partner/performance', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'partner/precert', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <div class="container-fluid">
             <!-- Tab panes -->
             <div class="tab-content">
@@ -61,34 +61,17 @@
                             </div>
                         </div>
                     </div>
-
-                @endif
-                
-            </div>
-            <hr/>
-            <div class="row">
-                @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
-                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
+                    @endif
+                    @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                    <div class="col-sm-4">
+                        <div class='form-group'>
+                            {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
+                            <div class="col-sm-8">
+                                {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, old($site)?old($site):$site, 
+                                    array('class' => 'form-control', 'id' => 'facility')) !!}
+                            </div>
                         </div>
                     </div>
-                </div>
-                @endif
-                 @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                <div class="col-sm-4">
-                    <div class='form-group'>
-                        {!! Form::label(Lang::choice('messages.sdp', 1), Lang::choice('messages.sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
-                        <div class="col-sm-8">
-                            {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
-                                array('class' => 'form-control', 'id' => 'sdp')) !!}
-
-                        </div>
-                    </div>
-                 </div>
                     @endif
                 </div>
                 <hr />
@@ -121,7 +104,7 @@
             <hr />
             <div class="row">                
                 <div class="col-sm-12">
-                    <div id="chart" style="height: 400px"></div>
+                    <div id="chart" style="height: 750px"></div>
                 </div>
             </div>
         </div>

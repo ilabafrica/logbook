@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
+use DB;
 
 class Level extends Model implements Revisionable{
 	use SoftDeletes;
@@ -103,10 +104,13 @@ class Level extends Model implements Revisionable{
         $sqtns = $ssdp->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
                               ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
                               ->whereIn('survey_data.answer', Answer::lists('score'));
-        $calculated_points = $sqtns->sum('answer');    
-        $reductions = $sqtns->where('question_id', $notapplicable)
-                            ->where('answer', '0')
-                            ->count();
+        $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');    
+        if($sq = SurveyQuestion::where('survey_sdp_id', $ssdp->id)->where('question_id', $notapplicable)->first())
+        {
+            if($sq->sd->answer == '0')
+                $reductions++;
+        }
+            
         if($reductions>0)
             $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
         else

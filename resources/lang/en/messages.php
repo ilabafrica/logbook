@@ -498,8 +498,9 @@ return [
 	'snapshot'	=>	'Snapshot',
 	'level-summary'	=>	'Level Summary',
 	'programatic-area'	=>	'Programatic Area',
-	'geographic-location'	=>	'Geographic Location',
+	'geographic-location'	=>	'Region',
 	'precert-overtime'	=>	'Pre-certification Overtime',
+	'precert-summary'	=>	'Pre-certification',
 	'performance-overtime'	=>	'Performance Overtime',
 	/** 
      *   Generic phrases
