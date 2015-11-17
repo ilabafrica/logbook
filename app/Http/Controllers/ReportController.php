@@ -214,13 +214,6 @@ class ReportController extends Controller {
         				else
         					$chart.=",";
     				}
-    				else if($data>100){
-    					$chart.= '100.00';
-    					if($counter==1)
-        					$chart.="";
-        				else
-        					$chart.=",";
-    				}
     				else{
         				$chart.= $data;
 
@@ -518,11 +511,11 @@ class ReportController extends Controller {
         			$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
-        					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
-        					if($counter==1)
-            					$percent.="";
-            				else
-            					$percent.=",";
+    					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
+    					if($counter==1)
+        					$percent.="";
+        				else
+        					$percent.=",";
     				}
     				else
     				{

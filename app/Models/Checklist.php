@@ -332,6 +332,8 @@ class Checklist extends Model implements Revisionable {
 		foreach ($sdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
+			if($agreement>100)
+				$agreement=100.00;
 			if($agreement == 0)
 				$total_sites--;
 			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
