@@ -501,7 +501,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "report.programatic",
         "uses"  =>  "ReportController@overallOvertime"
     ));    
-    Route::get('report/{id}/geographic', array(
+    Route::any('report/{id}/geographic', array(
         "as"    =>  "report.geographic",
         "uses"  =>  "ReportController@geographic"
     ));

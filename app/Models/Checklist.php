@@ -39,7 +39,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	* Get sdps in period given
 	*/
-	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $list = NULL, $year = 0, $month = 0, $date = 0)
+	public function ssdps($from = NULL, $to = NULL, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $list = NULL, $year = 0, $month = 0, $date = 0, $point = null)
 	{
 		$values = null;
 		//	Check dates
@@ -59,7 +59,7 @@ class Checklist extends Model implements Revisionable {
 			if($from && $to)
 				$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
 			else
-				$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
+				$ssdps = $ssdps->where('data_month', 'LIKE', $theDate."%");
 		}
 		if($county || $sub_county || $site)
 		{
@@ -90,6 +90,10 @@ class Checklist extends Model implements Revisionable {
 				if($sdp)
 					$values = $values->where('sdp_id', $sdp);
 				$values = $values->get();
+			}
+			else if($point)
+			{
+				$values = array_unique($values->lists('sdp_id'));
 			}
 			else
 			{
@@ -214,19 +218,39 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function overallAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
+	public function overallAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null, $point = null)
 	{
+		/*Get ssdps by geograhical region*/
+		if($point)
+			$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, null, null, $year, $month, $date, 1);
+		else
+			$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, null, 1, $year, $month, $date);
+		// dd($ssdps);
 		//	Get scores for each section
 		$counter = 0;
 		$range = $this->corrRange($percentage);
-		$total_sites = count($sdps);	
-		foreach ($sdps as $sdp)
+		$total_sites = 0;
+		if(count($ssdps)>0)
 		{
-			$agreement = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month, $date, $from, $to);
-			if($agreement == 0)
-				$total_sites--;
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
-				$counter++;
+			foreach ($ssdps as $ssdp)
+			{
+				if($point)
+					$agreement = Sdp::find($ssdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month, $date, $from, $to);
+				else
+					$agreement = SurveySdp::find($ssdp->id)->overallAgreement();
+				if($agreement == 0)
+				{
+					continue;
+				}
+				else
+				{
+					$total_sites++;
+					if($agreement>100)
+						$agreement = 100;
+					if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) && ($agreement!=0))
+						$counter++;
+				}
+			}
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
@@ -238,13 +262,13 @@ class Checklist extends Model implements Revisionable {
 		$range = array();
 		if($percentage === '<95%')
 		{
-			$range['lower'] = 1;
-			$range['upper'] = 95;
+			$range['lower'] = 0;
+			$range['upper'] = 94;
 		}
 		else if($percentage === '95-98%')
 		{
 			$range['lower'] = 95;
-			$range['upper'] = 98;
+			$range['upper'] = 97;
 		}
 		else if($percentage === '>98%')
 		{
@@ -271,7 +295,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}
@@ -291,7 +315,7 @@ class Checklist extends Model implements Revisionable {
 			$agreement = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $year, $month);
 			if($agreement == 0)
 				$total_sites--;
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
@@ -314,7 +338,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->positivePercent($site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}
@@ -336,7 +360,7 @@ class Checklist extends Model implements Revisionable {
 				$agreement=100.00;
 			if($agreement == 0)
 				$total_sites--;
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$counter++;
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
@@ -359,7 +383,7 @@ class Checklist extends Model implements Revisionable {
 		{
 			$point = Sdp::find($sdp);
 			$agreement = $point->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if(($agreement>$range['lower']) && ($agreement<=$range['upper']) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
 				$matched[$point->name] = $agreement;
 				//$matched = array_merge($matched, ["sdp"=>$point->name, "per"=>$agreement]);
 		}

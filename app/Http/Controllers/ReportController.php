@@ -638,11 +638,9 @@ class ReportController extends Controller {
 						{
 							foreach ($survey->sdps as $sdp) 
 							{
-							array_push($sdps, $sdp->sdp_id);
+								array_push($sdps, $sdp->sdp_id);
 							}
 						}
-
-
 					}
 				}
 				else
@@ -748,22 +746,24 @@ class ReportController extends Controller {
         		$counter = count($months);
         		foreach ($months as $month) {
         			$data = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
-        			if($data==0){
+        			if($data==0)
+        			{
     					$chart.= '0.00';
     					if($counter==1)
         					$chart.="";
         				else
         					$chart.=",";
-
     				}
-    				else if($data>100){
+    				else if($data>100)
+    				{
     					$chart.= '100.00';
     					if($counter==1)
         					$chart.="";
         				else
         					$chart.=",";
     				}
-    				else{
+    				else
+    				{
         				$chart.= $data;
 
         				if($counter==1)
@@ -818,7 +818,7 @@ class ReportController extends Controller {
 	            valueSuffix: '%'
 	        },
 	        series: [";
-	        $counts = count($sdps);
+	        $counts = count($percentages);
 	        foreach ($percentages as $percentage)
 	        {
 	        	$percent.="{name:"."'".$percentage."'".", data:[";
@@ -826,7 +826,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, null, null, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
         					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -863,7 +863,7 @@ class ReportController extends Controller {
         					$sticker = $percentage." - ".$month->label." ".$month->annum;
         					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
         					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
+        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $kit, null, $sub_county, null, $month->annum, $month->months) as $sdp=>$per)
         					{
         						$percent.="["."'".$sdp."'".", ".$per."],";
         					}
@@ -3499,8 +3499,7 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
-		//	Get sdps
-		$sdps = array();
+		//	Set title
 		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
 		{
 			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
@@ -3509,80 +3508,27 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
-						foreach (Sdp::find($sdp)->surveys as $survey) 
-						{
-							array_push($sdps, $survey->sdp_id);
-						}
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
-						foreach (Facility::find($site)->surveys as $survey) 
-						{
-							foreach ($survey->sdps as $sdp) 
-							{
-							array_push($sdps, $sdp->sdp_id);
-							}
-						}
-
-
+						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);
 					}
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
-					foreach (SubCounty::find($sub_county)->facilities as $facility)
-					{
-						foreach ($facility->surveys as $survey) 
-						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
-						}
-					}
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 				}
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
-				foreach (County::find($jimbo)->subCounties as $subCounty)
-				{
-					foreach ($subCounty->facilities as $facility)
-					{
-						foreach ($facility->surveys as $survey) 
-						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
-						}
-					}
-				}
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 			}
 		}
 		else
 		{
 			$title = 'Kenya';
-			foreach (County::all() as $county)
-			{
-				foreach ($county->subCounties as $subCounty)
-				{
-					foreach ($subCounty->facilities as $facility)
-					{
-						foreach ($facility->surveys as $survey) 
-						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
-						}
-					}
-				}
-			}
 		}
-		$sdps = array_unique($sdps);
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -3619,6 +3565,19 @@ class ReportController extends Controller {
 	        tooltip: {
 	            valueSuffix: '%'
 	        },
+	        plotOptions: {
+	        	series: {
+		        	dataLabels: {
+	                    enabled: true,
+	                    formatter: function() {
+	                        if (this.y != 0)
+	                        	return this.y;
+	                        else
+	                        	return null;
+	                    }
+	                }
+	            }
+	        },
 	        colors: ['#BCBD22', '#ED561B', '#1F77B4'],
 	        credits: {
 			    enabled: false
@@ -3628,17 +3587,20 @@ class ReportController extends Controller {
 	        foreach ($percentages as $percentage) {
 	        	$chart.="{name:"."'".$percentage."'".", data:[";
         		$counter = count($counties);
-        		foreach ($counties as $county) {
+        		foreach ($counties as $county)
+        		{
         			$chart.="{name:"."'".County::find($county)->name."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county, $county, 0, 0, $from, $to);
-        			if($data==0){
+        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, null, null, $county, 0, 0, 0, $from, $to);
+        			if($data==0)
+        			{
     					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
     					if($counter==1)
         					$chart.="";
         				else
         					$chart.=",";
     				}
-    				else{
+    				else
+    				{
         				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
 
         				if($counter==1)
@@ -3655,79 +3617,7 @@ class ReportController extends Controller {
 					$chart.="},";
 				$counts--;
 	        }
-	        $chart.="],
-	        drilldown: {
-	            series: [";
-	            foreach ($percentages as $percentage)
-        		{
-        			foreach ($counties as $county)
-    				{
-    					$cnty = County::find($county);
-    					$sticker = $percentage." - ".$cnty->name;
-    					$combined = $percentage.'_'.$county;
-    					$chart.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-    					$counter = count($cnty->subCounties);
-    					foreach ($cnty->subCounties as $sub_county)
-    					{
-    						$chart.="{name:"."'".$sub_county->name."'".", y:";
-    						$data = $checklist->overallAgreement($percentage, $sdps, $kit, $site, $sub_county->id, $county, 0, 0, $from, $to);
-		        			if($data==0){
-		    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$sub_county->id."'"."}";
-		    					if($counter==1)
-		        					$chart.="";
-		        				else
-		        					$chart.=",";
-		    				}
-		    				else{
-		        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$sub_county->id."'"."}";
-
-		        				if($counter==1)
-		        					$chart.="";
-		        				else
-		        					$chart.=",";
-		    				}
-		        			$counter--;
-    					}
-    					$chart.="]},";
-    				}
-        		}
-        		foreach ($percentages as $percentage)
-        		{
-        			foreach ($counties as $county)
-    				{
-    					$cnty = County::find($county);
-    					foreach ($cnty->subCounties as $sub_county)
-    					{
-	    					$sticker = $percentage." - ".$sub_county->name;
-	    					$combined = $percentage.'_'.$sub_county->id;
-	    					$chart.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-	    					$counter = count($sub_county->facilities);
-	    					foreach ($sub_county->facilities as $facility)
-	    					{
-	    						$chart.="{name:"."'".$facility->name."'".", y:";
-	    						$data = $checklist->overallAgreement($percentage, $sdps, $kit, $facility->id, $sub_county->id, $county, 0, 0, $from, $to);
-			        			if($data==0){
-			    					$chart.= '0.00'."}";
-			    					if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			    				else{
-			        				$chart.= $data."}";
-
-			        				if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			        			$counter--;
-	    					}
-	    					$chart.="]},";
-	    				}
-    				}
-        		}
-            $chart.="]}
+	        $chart.="]
 	    }";
 		return view('report.htc.geographic', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to','sdps', 'sdp', 'kit'));
 	}
@@ -4766,5 +4656,18 @@ class ReportController extends Controller {
 	    }";
 		return view('report.htc.overtime', compact('checklist', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
+	}
+	/*function to return array of sdps including IPD, VMMC, Pediatric department, Youth centre, PITC, TB Clinic, ART Clinic*/
+	public function others()
+	{
+		$ipd = Sdp::idByName('IPD (Ward)');
+		$vmmc = Sdp::idByName('VMMC');
+		$pd = Sdp::idByName('Pediatric department');
+		$yc = Sdp::idByName('Youth Centre');
+		$pitc = Sdp::idByName('PITC');
+		$tb = Sdp::idByName('TB Clinic');
+		$art = Sdp::idByName('ART Clinic');
+		$sti = Sdp::idByName('STI Clinic');
+		return [$ipd, $vmmc, $pd, $yc, $pitc, $tb, $art, $sti];
 	}
 }

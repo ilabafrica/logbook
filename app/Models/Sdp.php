@@ -116,7 +116,7 @@ class Sdp extends Model implements Revisionable {
 		$reactiveTwo = 0;
 		$nonReactiveTwo = 0;		
 		/*pages*/
-		$pages = $this->eagerPages($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null);
+		$pages = $this->eagerPages($kit, $facility, $subCounty, $county, $year, $month, $date, $from, $to);
 		/*htc survey page questions*/
 		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $pages);
 		/*htc survey data*/
@@ -262,27 +262,23 @@ class Sdp extends Model implements Revisionable {
 	  	}
 	  	if($county || $subCounty || $facility)
 		{
-			if($subCounty || $facility)
+			$surveys = $surveys->whereHas('facility', function($q) use($county, $subCounty, $facility)
 			{
-				if($facility)
+				if($subCounty || $facility)
 				{
-					$q->where('facility_id', $facility);
+					if($facility)
+						$q->where('facility_id', $facility);
+					else
+						$q->where('facilities.sub_county_id', $subCounty);
 				}
 				else
 				{
-					$surveys = $surveys->whereHas('facility', function($q) use($subCounty){
-						$q->where('sub_county_id', $subCounty);
-					});
-				}
-			}
-			else
-			{
-				$surveys = $surveys->whereHas('facility', function($q) use($county){
-					$q->whereHas('subCounty', function($q) use ($county){
+					$q->whereHas('subCounty', function($q) use($county){
 						$q->where('county_id', $county);
 					});
-				});
-			}
+				}
+				
+			});
 		}
 		$surveys = $surveys->lists('surveys.id');
 		/*survey sdps*/
