@@ -826,7 +826,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, null, null, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
         					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -3590,7 +3590,7 @@ class ReportController extends Controller {
         		foreach ($counties as $county)
         		{
         			$chart.="{name:"."'".County::find($county)->name."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $sdps, $kit, null, null, $county, 0, 0, 0, $from, $to);
+        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $county, 0, 0, 0, $from, $to);
         			if($data==0)
         			{
     					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
@@ -4625,7 +4625,7 @@ class ReportController extends Controller {
         		$counter = count($sdps);
         		foreach ($sdps as $sdp)
         		{
-        			$data = $checklist->overallAgreement($percentage, [$sdp], $kit, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+        			$data = $checklist->overallAgreement($percentage, $kit, $sdp, null, null, null, 0, 0, 0, $from, $toPlusOne);
         			if($data==0)
         			{
         					$percent.= '0.00';

@@ -218,13 +218,13 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function overallAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null, $point = null)
+	public function overallAgreement($percentage, $kit, $sdp = null, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null, $point = null)
 	{
 		/*Get ssdps by geograhical region*/
 		if($point)
-			$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, null, null, $year, $month, $date, 1);
+			$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, $sdp, null, $year, $month, $date, 1);
 		else
-			$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, null, 1, $year, $month, $date);
+			$ssdps = $this->ssdps($from, $to, $jimbo, $sub_county, $site, $sdp, 1, $year, $month, $date);
 		// dd($ssdps);
 		//	Get scores for each section
 		$counter = 0;

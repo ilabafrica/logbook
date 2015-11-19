@@ -86,7 +86,7 @@
 	          <input type="hidden" name="_token" value="{{ csrf_token() }}">
 	          <!-- ./ csrf token -->
 	              <div class="form-group input-group">
-	                <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+	                <span class="input-group-addon"><i class="fa fa-user"></i></span>
 	                <input type="text" name="username" id="username" class="form-control"  placeholder="Username">
 	              </div>
 	              <div class="form-group input-group">
