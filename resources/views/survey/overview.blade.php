@@ -39,49 +39,78 @@
                 </li>
             </ul>
             <div class="tab-content">
-            <br />
-            <p>
-                <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
-                <a href="{!! url('survey/overview/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
-            </p>
-            <div class="row">                
-                <div class="col-sm-12">
-                    <table class="table table-striped table-bordered table-hover">
-                        <tbody>
-                            <tr>
-                                <td>{!! 'M&E, SPIRT and HTC Lab Register' !!}</td>
-                                <td>{!! $all !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! Lang::choice('messages.me-spirt', 1) !!}</td>
-                                <td>{!! $spirt_me !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! Lang::choice('messages.me-htc', 1) !!}</td>
-                                <td>{!! $htc_me !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! Lang::choice('messages.htc-spirt', 1) !!}</td>
-                                <td>{!! $htc_spirt !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! 'PMTCT - SPIRT and M&E' !!}</td>
-                                <td>{!! $pmtcts !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! 'PMTCT - HTC, SPIRT and M&E' !!}</td>
-                                <td>{!! $pmtctMeSpi !!}</td>
-                            </tr>
-                            <tr>
-                                <td>{!! Lang::choice('messages.complete', 1) !!}</td>
-                                <td>{!! $all+($pmtcts-$pmtctMeSpi) !!}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <br />
+                <p>
+                    <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
+                    <a href="{!! url('survey/overview/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
+                </p>
+                <hr />
+                {!! Form::open(array('url' => '/overview', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class='form-group'>
+                                {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                                <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                                    {!! Form::text('from', isset($from)?$from:date('Y-m-01'), array('class' => 'form-control')) !!}
+                                    <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class='form-group'>
+                                {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                                <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                                    {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
+                                    <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
+                                        array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
+                        </div>
+                    </div>
+                {!! Form::close() !!}
+                <hr />
+                <div class="row">                
+                    <div class="col-sm-12">
+                        <table class="table table-striped table-bordered table-hover">
+                            <tbody>
+                                <tr>
+                                    <td>{!! 'M&E, SPIRT and HTC Lab Register' !!}</td>
+                                    <td>{!! $all !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! Lang::choice('messages.me-spirt', 1) !!}</td>
+                                    <td>{!! $spirt_me !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! Lang::choice('messages.me-htc', 1) !!}</td>
+                                    <td>{!! $htc_me !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! Lang::choice('messages.htc-spirt', 1) !!}</td>
+                                    <td>{!! $htc_spirt !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! 'PMTCT - SPIRT and M&E' !!}</td>
+                                    <td>{!! $pmtcts !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! 'PMTCT - HTC, SPIRT and M&E' !!}</td>
+                                    <td>{!! $pmtctMeSpi !!}</td>
+                                </tr>
+                                <tr>
+                                    <td>{!! Lang::choice('messages.complete', 1) !!}</td>
+                                    <td>{!! $all+($pmtcts-$pmtctMeSpi) !!}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     <!-- /.panel-body -->
+    </div>
 </div>
 @stop

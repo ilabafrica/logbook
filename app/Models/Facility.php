@@ -117,7 +117,7 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to get counts per checklist for sdps
 	*/
-	public function sdps($id, $sdpId = null)
+	public function sdps($id, $sdpId = null, $from = null, $to = null)
 	{
 		//	Initialize counter
 		$counter  =  SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
@@ -126,6 +126,14 @@ class Facility extends Model implements Revisionable {
 						if($sdpId)
 						{
 							$counter = $counter->where('sdp_id', $sdpId);
+						}
+						if($from && $to)
+						{
+							if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+								$counter = $counter->whereRaw('IFNULL(data_month, date_submitted) BETWEEN '.$from.' AND '.$to->format('Y-m-d H:i:s'));
+							else
+								$counter = $counter->whereBetween('date_submitted', [$from, $to]);
+								
 						}
 						$counter = $counter->count();
 		return $counter;
@@ -237,13 +245,21 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to return unique sdps submitted for given facility
 	*/
-	public function ssdps($id = null, $unique = null)
+	public function ssdps($id = null, $unique = null, $from = null, $to = null)
 	{
 		//	Initialize counter
 		$ssdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
 						if($id)
 						{
 							$ssdps = $ssdps->where('checklist_id', $id);
+						}
+						if($from && $to)
+						{
+							if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+								$ssdps = $ssdps->whereRaw('IFNULL(data_month, date_submitted) BETWEEN '.$from.' AND '.$to->format('Y-m-d H:i:s'));
+							else
+								$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+								
 						}
 						$ssdps = $ssdps->lists('sdp_id');
 		if($unique)

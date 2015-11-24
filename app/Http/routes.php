@@ -493,7 +493,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.sdp.page.download",
         "uses"  =>  "SurveyController@pageDownload"
     ));    
-    Route::get('overview', array(
+    Route::any('overview', array(
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@overview"
     ));    

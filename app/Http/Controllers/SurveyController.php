@@ -35,6 +35,7 @@ use App;
 use Excel;
 use Jenssegers\Date\Date as Carbon;
 use DB;
+use DateTime;
 class SurveyController extends Controller {
 
 	/**
@@ -1723,6 +1724,13 @@ class SurveyController extends Controller {
        	$htc = Checklist::idByName('HTC Lab Register (MOH 362)');
        	$me = Checklist::idByName('M & E Checklist');
        	$spi = Checklist::idByName('SPI-RT Checklist');
+       	$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
        	//        Facilities
        	$facilities = Facility::all();
        	//        Complete counts
@@ -1735,15 +1743,15 @@ class SurveyController extends Controller {
        	foreach ($facilities as $facility)
        	{
            	$bothMeSpirt = array();
-           	$spirt_sdps = $facility->ssdps($spi);
-           	$me_sdps = $facility->ssdps($me);
-           	$htc_sdps = $facility->ssdps($htc);
+           	$spirt_sdps = $facility->ssdps($spi, null, $from, $toPlusOne);
+           	$me_sdps = $facility->ssdps($me, null, $from, $toPlusOne);
+           	$htc_sdps = $facility->ssdps($htc, null, $from, $toPlusOne);
            	//	get survey-sdp ids for use in getting PMTCT records
-           	if($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct))
+           	if($facility->sdps($spi, $pmtct, $from, $toPlusOne) == $facility->sdps($me, $pmtct, $from, $toPlusOne))
            	{
            		$pmtcts++;
            	}
-           	if(($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct)) && ($facility->sdps($me, $pmtct) == $facility->sdps($htc, $pmtct)))
+           	if(($facility->sdps($spi, $pmtct, $from, $toPlusOne) == $facility->sdps($me, $pmtct, $from, $toPlusOne)) && ($facility->sdps($me, $pmtct, $from, $toPlusOne) == $facility->sdps($htc, $pmtct, $from, $toPlusOne)))
            	{
            		$pmtctMeSpi++;
            	}
@@ -1769,7 +1777,7 @@ class SurveyController extends Controller {
                     $htc_spirt++;
             }
        	}
-       	return view('survey.overview', compact('checklists', 'htc_me', 'htc_spirt', 'spirt_me', 'complete', 'all', 'pmtcts', 'pmtctMeSpi'));
+       	return view('survey.overview', compact('checklists', 'htc_me', 'htc_spirt', 'spirt_me', 'complete', 'all', 'pmtcts', 'pmtctMeSpi', 'from', 'to'));
 	}
 }
 $excel = App::make('excel');
