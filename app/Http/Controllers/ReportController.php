@@ -14,6 +14,7 @@ use App\Models\Answer;
 use App\Models\Level;
 use App\Models\SubCounty;
 use App\Models\County;
+use App\Models\SurveySdp;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -2348,7 +2349,12 @@ class ReportController extends Controller {
 		//	Get levels
 		$levels = Level::all();
 		//	Get sdps
-		$sdps = Sdp::all();
+		$sdps = [];
+		$ssdps = SurveySdp::whereIn('survey_id', $checklist->surveys->lists('id'))->distinct()->lists('sdp_id');
+		foreach ($ssdps as $key)
+		{
+			array_push($sdps, Sdp::find($key));
+		}
 		//	Chart title
 		$title = '';
 		//	Get counties
