@@ -81,54 +81,39 @@ class Section extends Model implements Revisionable {
 		$checklist = Checklist::idByName('SPI-RT Checklist');
 
 		//  Get data to be used
-        $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-                            ->where('checklist_id', $checklist);
-                            if (strlen($theDate)>0 || ($from && $to))
-                            {
-                                if($from && $to)
-                                    $values = $values->whereBetween('date_submitted', [$from, $to]);
-                                else
-                                    $values = $values->where('date_submitted', 'LIKE', $theDate."%");
-                            }
-                            if($county || $sub_county || $site || $sdp)
-                            {
-                                if($sub_county || $site || $sdp)
-                                {
-                                	if($site || $sdp)
-                                	{
-                                    	if($sdp)
-                                    	{
-                                             $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
-                                    	}
-                                    	else
-                                    	{
-                                    		$values = $values->where('facility_id', $site);
-                                    	}
-                                    }
-                                    else
-                                    {
-                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('sub_county_id', $sub_county);
-                                    }
-                                }
-                                else
-                                {
-                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                     ->where('county_id', $county);
-                                }
-                            }
-                            else
-                            {
-                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
-                            }
-                            $values = $values->get(array('survey_sdps.*'));
-
+        $values = Survey::where('checklist_id', $checklist);
+        if($from && $to)
+        {
+            $values = $values->whereBetween('date_submitted', [$from, $to]);
+        }
+        if($county || $sub_county || $site)
+        {
+            $values = $values->whereHas('facility', function($q) use($county, $sub_county, $site)
+            {
+                if($sub_county || $site)
+                {
+                    if($site)
+                        $q->where('facility_id', $site);
+                    else
+                        $q->where('facilities.sub_county_id', $sub_county);
+                }
+                else
+                {
+                    $q->whereHas('subCounty', function($q) use($county){
+                        $q->where('county_id', $county);
+                    });
+                }
+                
+            });
+        }
+        $values = $values->lists('surveys.id');
+        $ssdps = SurveySdp::whereIn('survey_id', $values);
+        if($sdp)
+            $ssdps = $ssdps->where('sdp_id', $sdp);
+        $ssdps = $ssdps->get();
         //  Define variables for use
         $counter = 0;
-        $total_counts = count($values);
+        $total_counts = count($ssdps);
         $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
@@ -136,17 +121,18 @@ class Section extends Model implements Revisionable {
         $calculated_points = 0.00;
         $percentage = 0.00;
         //  Begin processing
-        foreach ($values as $key => $value)
+        foreach ($ssdps as $key => $value)
         {
-            
             $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
                                   ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-                                  ->whereIn('survey_data.answer', Answer::lists('score'))
-                                  ->whereIn('question_id', $this->questions->lists('id'));
-            $calculated_points+= $sqtns->sum('answer');    
-            $reductions+= $sqtns->where('question_id', $notapplicable)
-                                ->where('answer', '0')
-                                ->count();
+                                  ->whereIn('question_id', $this->questions->lists('id'))
+                                  ->whereIn('survey_data.answer', Answer::lists('score'));
+            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
+            if($sq = SurveyQuestion::where('survey_sdp_id', $value->id)->where('question_id', $notapplicable)->first())
+            {
+                if($sq->sd->answer == '0')
+                    $reductions++;
+            }
         }
         return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
 		//	End optimization

@@ -59,7 +59,6 @@ class Level extends Model implements Revisionable{
                     if($sdp)
                         $ssdps = $ssdps->where('sdp_id', $sdp);
                     $ssdps = $ssdps->get();
-
         //  Define variables for use
         $counter = 0;
         $total_counts = count($ssdps);
@@ -67,6 +66,7 @@ class Level extends Model implements Revisionable{
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
         //  Begin processing
+        $dump = array();
         foreach ($ssdps as $key => $value)
         {
             $reductions = 0;
@@ -86,6 +86,8 @@ class Level extends Model implements Revisionable{
             else
                 $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
             //  Check and increment counter
+            if($percentage<40 && $this->id==1)
+                array_push($dump, $value->id);
             if(($percentage>=$this->range_lower) && ($percentage<$this->range_upper+1) || (($this->range_lower==0.00) && ($percentage==$this->range_lower)))
                 $counter++;
         }
