@@ -827,7 +827,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $jimbo, $month->annum, $month->months, 0, null, null, 1);
         			if($data==0)
         			{
         					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";

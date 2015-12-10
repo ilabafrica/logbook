@@ -91,7 +91,7 @@ class Sdp extends Model implements Revisionable {
 		$testOne = 0;
 		$testTwo = 0;		
 		/*pages*/
-		$pages = $this->eagerPages($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null);
+		$pages = $this->eagerPages($kit, $facility, $subCounty, $county, $year, $month, $date, $from, $to);
 		/*htc survey page questions*/
 		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $pages);
 		//	Declare questions to be used in calculation of both values
@@ -281,6 +281,7 @@ class Sdp extends Model implements Revisionable {
 			});
 		}
 		$surveys = $surveys->lists('surveys.id');
+
 		/*survey sdps*/
 		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->where('sdp_id', $this->id)->lists('id');
 		/*htc survey pages*/

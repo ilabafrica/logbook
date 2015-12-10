@@ -399,19 +399,29 @@ class Checklist extends Model implements Revisionable {
 	 */
 	public function positiveAgreement($percentage, $sdps, $kit, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0)
 	{
+		/*Get sdps*/
+		$ssdps = $this->ssdps(null, null, $jimbo, $sub_county, $site, null, null, $year, $month, $date, 1);
 		//	Get scores for each section
 		$counter = 0;
 		$range = $this->corrRange($percentage);
-		$total_sites = count($sdps);	
-		foreach ($sdps as $sdp)
+		$total_sites = 0;	
+		foreach ($ssdps as $sdp)
 		{
 			$agreement = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
 			if($agreement>100)
 				$agreement=100.00;
 			if($agreement == 0)
-				$total_sites--;
-			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
-				$counter++;
+			{
+				continue;
+			}
+			else
+			{
+				$total_sites++;
+				if($agreement>100)
+					$agreement = 100;
+				if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) && ($agreement!=0))
+					$counter++;
+			}
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
