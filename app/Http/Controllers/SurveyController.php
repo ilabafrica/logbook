@@ -335,74 +335,6 @@ class SurveyController extends Controller {
 		if(Input::get('data_month'))
 			$survey->data_month = Input::get('data_month');
         $survey->save();
-        //$url = session('SOURCE_URL');
-		/*$checklist_id = Input::get('checklist_id');
-		$facility_id = Input::get('facility');
-		$qa_officer = Input::get('qa_officer');
-		$longitude = Input::get('longitude');
-		$latitude = Input::get('latitude');
-		$comments = Input::get('comments');
-		$sdp_id = Input::get('sdp');
-		//	Check if survey exists
-		$survey = Survey::find($id);
-		if($survey->isEmpty()){
-			$survey = new Survey;
-			$survey->checklist_id = $checklist_id;
-			$survey->facility_id = $facility_id;
-			$survey->qa_officer = $qa_officer;
-			$survey->latitude = $latitude;
-			$survey->longitude = $longitude;
-			$survey->comment = $comments;
-			$survey->sdp_id = $sdp_id;
-			$survey->save();
-		}
-		foreach (Input::all() as $key => $value) {
-			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE))
-				continue;
-			else if((stripos($key, 'date') !==FALSE) || (stripos($key, 'radio') !==FALSE) || (stripos($key, 'textfield') !==FALSE) || (stripos($key, 'textarea') !==FALSE)){
-				$fieldId = $this->strip($key);
-				//	Check if survey-question exists before saving
-				$surveyQuestion = SurveyQuestion::where('survey_id', $survey->id)->where('question_id', $fieldId)->first();
-				//	Create survey-question
-				if(!$surveyQuestion){
-					$surveyQuestion = new SurveyQuestion;
-					$surveyQuestion->survey_id = $survey->id;
-					$surveyQuestion->question_id = $fieldId;
-					$surveyQuestion->save();
-				}
-				//	Check if data already exists
-				$surveyData = SurveyData::where('survey_question_id', $surveyQuestion->id)->first();
-				//	Save survey data
-				if(!$surveyData){
-					$surveyData = new SurveyData;
-					$surveyData->survey_question_id = $surveyQuestion->id;
-					$surveyData->answer = $value;
-					$surveyData->save();
-				}
-				//	Check if scorable
-				if($responses = Question::find($surveyQuestion->question_id)->answers)
-				{
-					$answers = array();
-					foreach ($responses as $response) 
-					{
-						if((float)$response->score>0)
-							array_push($answers, $response->id);
-					}
-					if(count($answers)>0)
-					{
-						//	Check if score already exists
-						$surveyScore = SurveyScore::where('survey_question_id', $surveyQuestion->id)->first();
-						if(!$surveyScore)
-						{
-							$surveyScore = new SurveyScore;
-							$surveyScore->survey_question_id = $surveyQuestion->id;
-							$surveyScore->score = Answer::find(Answer::idByName($value))->score;
-							$surveyScore->save();
-						}
-					}
-				}
-			}
-		}*/
 		//	Redirect
 		$url = session('SOURCE_URL');
 		return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1))->with('active_survey', $survey ->id);
@@ -626,11 +558,11 @@ class SurveyController extends Controller {
 		dd($date_from);*/
 		$checklist = Checklist::find($id);
 		if($checklist->name == 'M & E Checklist')
-			$checklist_id = 69519;
+			$checklist_id = 94539;//69519;
 		else if($checklist->name == 'HTC Lab Register (MOH 362)')
-			$checklist_id = 69514;
+			$checklist_id = 94547;//69514;
 		else if($checklist->name == 'SPI-RT Checklist')
-			$checklist_id = 69683;
+			$checklist_id = 94529;//69683;
 		return $this->onadata($checklist_id, $checklist->id);
 	}
 	/**
@@ -661,14 +593,7 @@ class SurveyController extends Controller {
         //  Get the data returned
         $checklist_data = json_decode($result, true);
         //  Process the data appropriately
-        if($id == 69514)
-        {
-        	return $this->htc($checklist_data);
-        }
-        else
-        {
-        	return $this->process($checklist_data, $checklist);
-        }
+        return $this->process($checklist_data, $checklist);
     }
      /**
      * Function for processing the requests we receive from the external system
@@ -681,15 +606,16 @@ class SurveyController extends Controller {
         //  Cleanup the data first to do away with unwanted variables
         //  Save the data to the database tables
         //	$this->htc($data);
-        //	dd($data);
+        	// dd($data);
         //	Get maximum date for the checklist data
+        arsort($data);
         $max = Carbon::parse(Checklist::find($checklist)->surveys->max('date_submitted'));
         foreach ($data as $key => $value)
         {
         	//dd($value);
         	$checklist_id = $checklist;
         	$facility_id = NULL;
-        	$facility = $value["mysites"];
+        	$facility = $value["mysites_facility"];
         	if(str_replace('_', ' ', $facility) === 'makandara health center')
 				$facility_id = Facility::idByName('Makadara Health Center');
 			else
@@ -711,11 +637,6 @@ class SurveyController extends Controller {
 	        	$longitude = $gps[1];
 	        	$latitude = $gps[0];
 	        }
-        	$sdp_data = null;
-        	if(array_key_exists("sdpoint", $value))
-        	{
-        		$sdp_data = $value["sdpoint"];
-        	}
         	$start_date = Carbon::parse($value['start'])->toDateString();
         	$end_date = null;
         	if(isset($value['end']))
@@ -743,333 +664,201 @@ class SurveyController extends Controller {
 	        		$survey->latitude = $latitude;
 					$survey->save();
 	        	}
-				//	Proceed to save the rest of the data.
-				//	dd($sdp_data);
-				if($sdp_data)
-				{
-					foreach ($sdp_data as $harvey => $specter) 
-		        	{
-		        		//	Save survey-sdp
-		    			$sdp_id = NULL;
-		    			$sdp = '';
-		    			if(array_key_exists("sdpoint/hh_testing_site", $specter))
-							$sdp = $specter["sdpoint/hh_testing_site"];
-						if(strlen($sdp)>0)
+	        	//	Proceed to save survey-sdp
+	        	if($survey)
+	        	{
+	        		$sdp_id = null;
+	        		$comment = null;
+	        		$sdp = $value['mysites'];
+	        		if(stripos($sdp, 'opd') !==FALSE)
+	        		{
+	        			$sdp_id = Sdp::idByName('OPD');
+	        			if(stripos($sdp, '_') !==FALSE)
+	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+	        			else
+	        				$comment = $sdp;
+					}
+					else if(stripos($sdp, 'ipd') !==FALSE)
+	        		{
+	        			$sdp_id = Sdp::idByName('IPD');
+	        			if(stripos($sdp, '_') !==FALSE)
+	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+	        			else
+	        				$comment = $sdp;
+					}
+					else if(stripos($sdp, 'pmtct') !==FALSE)
+	        		{
+	        			$sdp_id = Sdp::idByName('PMTCT');
+	        			if(stripos($sdp, '_') !==FALSE)
+	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+					}
+					else if(stripos($sdp, 'vct') !==FALSE)
+	        		{
+	        			$sdp_id = Sdp::idByName('VCT');
+	        			if(stripos($sdp, '_') !==FALSE)
+	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+					}
+					else
+	        		{
+	        			$sdp_id = Sdp::idById($sdp);
+	        			$comment = $sdp;
+					}
+					if($sdp_id)
+					{
+						if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->where('comment', $comment)->first())
 						{
-							if($sdp === 'other1')
-								$sdp_id = Sdp::idByName('Others');
-							else if($sdp === 'artclinic')
-								$sdp_id = Sdp::idByName('ART Clinic');
-							else
-								$sdp_id = Sdp::idById($sdp);
+							$surveySdp = SurveySdp::find($ss->id);
 						}
-						$comment = NULL;
-						if(array_key_exists("sdpoint/opd", $specter))
-							$comment = $specter["sdpoint/opd"];
-						if(array_key_exists("sdpoint/pmtct", $specter))
-							$comment = $specter["sdpoint/pmtct"];
-						if(array_key_exists("sdpoint/othersdp", $specter))
-							$comment = $specter["sdpoint/othersdp"];
-						if(array_key_exists("sdpoint/other_specify", $specter))
-							$comment = $specter["sdpoint/other_specify"];
-						if(array_key_exists("sdpoint/ipd", $specter))
-							$comment = $specter["sdpoint/ipd"];
-						if(array_key_exists("sdpoint/otheripd", $specter))
-							$comment = $specter["sdpoint/otheripd"];
-						if(array_key_exists("sdpoint/otheropd", $specter))
-							$comment = $specter["sdpoint/otheropd"];
-						if(array_key_exists("sdpoint/pmctc1", $specter))
-							$comment = $specter["sdpoint/pmctc1"];
-						if(array_key_exists("sdpoint/otherpmtct1", $specter))
-							$comment = $specter["sdpoint/otherpmtct1"];
-						//	Get comments array
-						if($sdp_id)
+						else
 						{
-							if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->where('comment', $comment)->first())
+							$surveySdp = new SurveySdp;
+							$surveySdp->survey_id = $survey->id;
+							$surveySdp->sdp_id = $sdp_id;
+							$surveySdp->comment = $comment;
+							$surveySdp->save();
+						}
+						if($surveySdp)
+						{
+							if($checklist == Checklist::idByName('HTC Lab Register (MOH 362)'))
 							{
-								$surveySdp = SurveySdp::find($ss->id);
-							}
-							else
-							{
-								$surveySdp = new SurveySdp;
-								$surveySdp->survey_id = $survey->id;
-								$surveySdp->sdp_id = $sdp_id;
-								$surveySdp->comment = $comment;
-								$surveySdp->save();
-							}
-							//	Save comments if any - SPI-RT
-							$spirtComments = null;
-							if(array_key_exists("sdpoint/Section/Section9/repeat", $specter))
-								$spirtComments = $specter["sdpoint/Section/Section9/repeat"];
-							if($spirtComments)
-							{
-								foreach ($spirtComments as $key => $value)
+								$pages = null;
+								if(array_key_exists("pagerepeat", $value))
 								{
-									if(array_key_exists("sdpoint/Section/Section9/repeat/sectionno", $value) && array_key_exists("sdpoint/Section/Section9/repeat/comments1", $value))
+									$pages = $value["pagerepeat"];
+								}
+								if($pages)
+								{
+									$page = 0;
+									foreach ($pages as $louis => $litt) 
 									{
-										$section = $value["sdpoint/Section/Section9/repeat/sectionno"];
-										$comments = $value["sdpoint/Section/Section9/repeat/comments1"];
-										if(count(DB::table('survey_spirt_comments')->where('survey_sdp_id', $surveySdp->id)->where('section_id', $section)->get()) == 0)
+										$page++;
+										if($ssdPage = HtcSurveyPage::where('survey_sdp_id', $surveySdp->id)->where('page', $page)->first())
 										{
-											DB::table('survey_spirt_comments')->insert(['survey_sdp_id' => $surveySdp->id, 'section_id' => $section, 'comments' => $comments]);
+											$surveyPage = HtcSurveyPage::find($ssdPage->id);
+										}
+										else
+										{
+
+											$surveyPage = new HtcSurveyPage;
+											$surveyPage->survey_sdp_id = $surveySdp->id;
+											$surveyPage->page = $page;
+											$surveyPage->save();
+										}
+										foreach ($litt as $ned => $stark) 
+										{
+											$id = substr($ned, strrpos($ned, '/')+1);
+											if(($id === 'youdone') || ($id === 'newpage'))
+											{
+												continue;
+											}
+											else
+											{
+												
+												$question_id = Question::idById($id);
+												if($qstn = HtcSurveyPageQuestion::where('htc_survey_page_id', $surveyPage->id)->where('question_id', $question_id)->first())
+												{
+													$surveyPageQstn = HtcSurveyPageQuestion::find($qstn->id);
+												}
+												else
+												{
+													$surveyPageQstn = new HtcSurveyPageQuestion;
+													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
+													$surveyPageQstn->question_id = $question_id;
+													$surveyPageQstn->save();
+												}
+
+												//	htc-survey-page-data
+												if(count($surveyPageQstn->data) == 0)
+												{
+													$pageData = new HtcSurveyPageData;
+													$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
+													$pageData->answer = $stark;
+													$pageData->save();
+												}
+											}
 										}
 									}
 								}
 							}
-
-							//	Save the rest of the data
-							foreach ($specter as $mike => $ross)
-							{
-								$id = substr($mike, strrpos($mike, '/')+1);
-								if(($id === 'yesthen') || 
-									($id === 'youdone') || 
-									($id === 'newpage') || 
-									($id === 'hh_testing_site') || 
-									($id === 'sec1percentage') || 
-									($id === 'sec2percentage') || 
-									($id === 'sec3percentage') || 
-									($id === 'sec4percentage') || 
-									($id === 'sec5percentage') || 
-									($id === 'sec6percentage') || 
-									($id === 'sec7percentage') || 
-									($id === 'sec8percentage') || 
-									($id === 'sec81percentage') ||
-									($id === 'sec9percentage') ||   
-									($id === 'sec91percentage') ||  
-									($id === 'sec1calc') || 
-									($id === 'sec2calc') || 
-									($id === 'sec3calc') || 
-									($id === 'sec4calc') || 
-									($id === 'sec5calc') || 
-									($id === 'sec6calc') || 
-									($id === 'sec7calc') || 
-									($id === 'sec8calc') || 
-									($id === 'sec81calc') || 
-									($id === 'sec9calc') ||
-									($id === 'sec91calc') || 
-									($id === 'opd') || 
-									($id === 'pmtct') || 
-									($id === 'othersdp') || 
-									($id === 'other_specify') || 
-									($id === 'ipd') || 
-									($id === 'otheripd') || 
-									($id === 'otheropd') || 
-									($id === 'pmctc1') || 
-									($id === 'otherpmtct1') || 
-									($id === 'repeat'))
-								{
-									continue;
-								}
-								else
-								{
-									$question_id = Question::idById($id);
-									if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
-									{
-										$surveyQstn = SurveyQuestion::find($sq->id);
-									}
-									else
-									{
-										$surveyQstn = new SurveyQuestion;
-										$surveyQstn->survey_sdp_id = $surveySdp->id;
-										$surveyQstn->question_id = $question_id;
-										$surveyQstn->save();
-									}
-									if(count($surveyQstn->sd) == 0)
-									{
-										$surveyData = new SurveyData;
-										$surveyData->survey_question_id = $surveyQstn->id;
-										$surveyData->answer = $ross;
-										$surveyData->save();
-									}
-								}
-							}
-						}
-		        	}
-		        }
-		    }
-			//	End here
-		}
-		//	Redirect
-		$url = session('SOURCE_URL');
-		return redirect()->to($url)->with('message', Lang::choice('messages.data-successfully-imported', 1));
-    }
-
-    /**
-    * Function for saving the data to externalDump table
-    * 
-    * @param $labrequest the labrequest in array format
-    * @param $testId the testID to save with the labRequest or 0 if we do not have the test
-    *        in our systems.
-    */
-    public function htc($checklistData)
-    {
-    	//  Get all the data.
-        //	dd($checklistData);
-    	$checklist_id = Checklist::idByName('HTC Lab Register (MOH 362)');
-        $max = Carbon::parse(Checklist::find($checklist_id)->surveys->max('date_submitted'));
-        foreach ($checklistData as $key => $value) 
-        {
-        	//	dd($value);
-        	$facility_id = NULL;
-        	$facility = $value["mysites"];
-        	if(str_replace('_', ' ', $facility) === 'makandara health center')
-				$facility_id = Facility::idByName('Makadara Health Center');
-			else
-				$facility_id = Facility::idByName(str_replace('_', ' ', $facility));
-        	$qa_officer = $value['nameoftheauditor'];
-        	$comment = null;
-        	if(isset($value['addtionalcomments']))
-        		$comment = $value['addtionalcomments'];
-        	$date_started = $value['start'];
-        	$date_ended = null;
-        	if(isset($value['end']))
-        		$date_ended = $value['end'];
-        	$date_submitted = $value['_submission_time'];
-        	$latitude = null;
-        	$longitude = null;
-        	$gps = $value["_geolocation"];
-        	if(count($gps)>0)
-        	{
-	        	$longitude = $gps[1];
-	        	$latitude = $gps[0];
-	        }
-        	$sdp_data = null;
-        	if(array_key_exists("sdprepeat", $value))
-        	{
-        		$sdp_data = $value["sdprepeat"];
-        	}
-        	$start_date = Carbon::parse($value['start'])->toDateString();
-        	if(isset($value['end']))
-        		$end_date = Carbon::parse($value['end'])->toDateString();
-        	$submit_date = Carbon::parse($value['_submission_time'])->toDateString();
-        	//	Save survey at this point after checking for existence
-        	//	Compare dates to check whether record already exists
-        	if($max->lt(Carbon::parse($value['_submission_time'])))
-        	{
-        		$survey = new Survey;        	
-        		$survey->checklist_id = $checklist_id;
-        		$survey->facility_id = $facility_id;
-        		$survey->qa_officer = $qa_officer;
-        		$survey->comment = $comment;
-        		$survey->date_started = $date_started;
-        		$survey->date_ended = $date_ended;
-        		$survey->date_submitted = $date_submitted;
-        		$survey->longitude = $longitude;
-        		$survey->latitude = $latitude;
-				$survey->save();
-	        	if($sdp_data)
-	        	{
-		        	foreach ($sdp_data as $harvey => $specter) 
-		        	{
-		        		$sdp_id = NULL;
-						$sdp = '';
-		    			if(array_key_exists("sdprepeat/hh_testing_site", $specter))
-							$sdp = $specter["sdprepeat/hh_testing_site"];
-						if(strlen($sdp)>0)
-						{
-							if($sdp === 'other1')
-								$sdp_id = Sdp::idByName('Others');
-							else if($sdp === 'artclinic')
-								$sdp_id = Sdp::idByName('ART Clinic');
-							else
-								$sdp_id = Sdp::idById($sdp);
-						}
-
-						$comment = NULL;
-						if(array_key_exists("sdprepeat/opd", $specter))
-							$comment = $specter["sdprepeat/opd"];
-						if(array_key_exists("sdprepeat/pmtct", $specter))
-							$comment = $specter["sdprepeat/pmtct"];
-						if(array_key_exists("sdprepeat/othersdp", $specter))
-							$comment = $specter["sdprepeat/othersdp"];
-						if(array_key_exists("sdprepeat/other_specify", $specter))
-							$comment = $specter["sdprepeat/other_specify"];
-						if(array_key_exists("sdprepeat/ipd", $specter))
-							$comment = $specter["sdprepeat/ipd"];
-						if(array_key_exists("sdprepeat/otheripd", $specter))
-							$comment = $specter["sdprepeat/otheripd"];
-						if(array_key_exists("sdprepeat/otheropd", $specter))
-							$comment = $specter["sdprepeat/otheropd"];
-						if(array_key_exists("sdprepeat/pmctc1", $specter))
-							$comment = $specter["sdprepeat/pmctc1"];
-						if(array_key_exists("sdprepeat/otherpmtct1", $specter))
-							$comment = $specter["sdprepeat/otherpmtct1"];
-						$pages = null;
-						if(array_key_exists("sdprepeat/pagerepeat", $specter))
-						{
-							$pages = $specter["sdprepeat/pagerepeat"];
-						}
-						if($sdp_id)
-						{
-							if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->where('comment', $comment)->first())
-							{
-								$surveySdp = SurveySdp::find($ss->id);
-							}
 							else
 							{
-								$surveySdp = new SurveySdp;
-								$surveySdp->survey_id = $survey->id;
-								$surveySdp->sdp_id = $sdp_id;
-								$surveySdp->comment = $comment;
-								$surveySdp->save();
-							}
-							if($pages)
-							{
-								$page = 0;
-								foreach ($pages as $louis => $litt) 
+								foreach ($value as $mike => $ross)
 								{
-									$page++;
-									if($ssdPage = HtcSurveyPage::where('survey_sdp_id', $surveySdp->id)->where('page', $page)->first())
+									if(strpos($mike,'/') !== false)
 									{
-										$surveyPage = HtcSurveyPage::find($ssdPage->id);
-									}
-									else
-									{
-
-										$surveyPage = new HtcSurveyPage;
-										$surveyPage->survey_sdp_id = $surveySdp->id;
-										$surveyPage->page = $page;
-										$surveyPage->save();
-									}
-									foreach ($litt as $ned => $stark) 
-									{
-										$id = substr($ned, strrpos($ned, '/')+1);
-										if(($id === 'youdone') || ($id === 'newpage'))
+										$id = substr($mike, strrpos($mike, '/')+1);
+										if(($id === 'yesthen') || 
+											($id === 'youdone') || 
+											($id === 'newpage') || 
+											($id === 'hh_testing_site') || 
+											($id === 'sec1percentage') || 
+											($id === 'sec2percentage') || 
+											($id === 'sec3percentage') || 
+											($id === 'sec4percentage') || 
+											($id === 'sec5percentage') || 
+											($id === 'sec6percentage') || 
+											($id === 'sec7percentage') || 
+											($id === 'sec8percentage') || 
+											($id === 'sec81percentage') ||
+											($id === 'sec9percentage') ||   
+											($id === 'sec91percentage') ||  
+											($id === 'sec1calc') || 
+											($id === 'sec2calc') || 
+											($id === 'sec3calc') || 
+											($id === 'sec4calc') || 
+											($id === 'sec5calc') || 
+											($id === 'sec6calc') || 
+											($id === 'sec7calc') || 
+											($id === 'sec8calc') || 
+											($id === 'sec81calc') || 
+											($id === 'sec9calc') ||
+											($id === 'sec91calc') || 
+											($id === 'opd') || 
+											($id === 'pmtct') || 
+											($id === 'othersdp') || 
+											($id === 'other_specify') || 
+											($id === 'ipd') || 
+											($id === 'otheripd') || 
+											($id === 'otheropd') || 
+											($id === 'pmctc1') || 
+											($id === 'otherpmtct1') || 
+											($id === 'repeat') || 
+											($id === 'uuid') || 
+											($id === 'instanceID'))
 										{
 											continue;
 										}
 										else
 										{
-											
 											$question_id = Question::idById($id);
-											if($qstn = HtcSurveyPageQuestion::where('htc_survey_page_id', $surveyPage->id)->where('question_id', $question_id)->first())
+											if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
 											{
-												$surveyPageQstn = HtcSurveyPageQuestion::find($qstn->id);
+												$surveyQstn = SurveyQuestion::find($sq->id);
 											}
 											else
 											{
-												$surveyPageQstn = new HtcSurveyPageQuestion;
-												$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
-												$surveyPageQstn->question_id = $question_id;
-												$surveyPageQstn->save();
+												$surveyQstn = new SurveyQuestion;
+												$surveyQstn->survey_sdp_id = $surveySdp->id;
+												$surveyQstn->question_id = $question_id;
+												$surveyQstn->save();
 											}
-
-											//	htc-survey-page-data
-											if(count($surveyPageQstn->data) == 0)
+											if(count($surveyQstn->sd) == 0)
 											{
-												$pageData = new HtcSurveyPageData;
-												$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
-												$pageData->answer = $stark;
-												$pageData->save();
+												$surveyData = new SurveyData;
+												$surveyData->survey_question_id = $surveyQstn->id;
+												$surveyData->answer = $ross;
+												$surveyData->save();
 											}
 										}
 									}
 								}
 							}
 						}
-		        	}
-		        }
+						dd();
+					}
+	        	}
 		    }
+			//	End here
 		}
 		//	Redirect
 		$url = session('SOURCE_URL');
