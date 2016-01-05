@@ -127,7 +127,7 @@ class Section extends Model implements Revisionable {
                                   ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
                                   ->whereIn('question_id', $this->questions->lists('id'))
                                   ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
+            $calculated_points+=$sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
             if($sq = SurveyQuestion::where('survey_sdp_id', $value->id)->where('question_id', $notapplicable)->first())
             {
                 if($sq->sd->answer == '0')

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 set_time_limit(0); //60 seconds = 1 minute
+ini_set('memory_limit', '-1');
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Checklist;
@@ -572,9 +573,9 @@ class SurveyController extends Controller {
     */
     public function onadata($id, $checklist)
     {
-        /* Run curl request */
+    	/* Run curl request */
         //  Initiate curl
-        $ch = curl_init('https://ona.io/api/v1/data/'.$id);
+        $ch = curl_init('https://classic.ona.io/api/v1/data/'.$id);
         //  Set all applicable options
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
         curl_setopt($ch, CURLOPT_POSTFIELDS, '');
@@ -606,13 +607,13 @@ class SurveyController extends Controller {
         //  Cleanup the data first to do away with unwanted variables
         //  Save the data to the database tables
         //	$this->htc($data);
-        	// dd($data);
         //	Get maximum date for the checklist data
         arsort($data);
         $max = Carbon::parse(Checklist::find($checklist)->surveys->max('date_submitted'));
+        // dd(Checklist::find($checklist)->surveys->max('date_submitted'));
         foreach ($data as $key => $value)
         {
-        	//dd($value);
+        	// dd($value);
         	$checklist_id = $checklist;
         	$facility_id = NULL;
         	$facility = $value["mysites_facility"];
@@ -622,6 +623,14 @@ class SurveyController extends Controller {
 				$facility_id = Facility::idByName(str_replace('_', ' ', $facility));
         	$qa_officer = $value['nameoftheauditor'];
         	$comment = null;
+        	/*
+        	*	Get pages for htc
+        	*/
+        	$pages = null;
+			if(array_key_exists("pagerepeat", $value))
+			{
+				$pages = $value["pagerepeat"];
+			}
         	if(isset($value['addtionalcomments']))
         		$comment = $value['addtionalcomments'];
         	$date_started = $value['start'];
@@ -637,20 +646,17 @@ class SurveyController extends Controller {
 	        	$longitude = $gps[1];
 	        	$latitude = $gps[0];
 	        }
-        	$start_date = Carbon::parse($value['start'])->toDateString();
+        	$start_date = Carbon::parse($value['start'])->toDateTimeString();
         	$end_date = null;
         	if(isset($value['end']))
-        		$end_date = Carbon::parse($value['end'])->toDateString();
-        	$submit_date = Carbon::parse($value['_submission_time'])->toDateString();
+        		$end_date = Carbon::parse($value['end'])->toDateTimeString();
+        	$submit_date = Carbon::parse($value['_submission_time'])->toDateTimeString();
+        	// dd(Carbon::parse($value['start'])->toDateTimeString());
         	//	Save survey at this point after checking for existence
         	//	Compare dates
         	if($max->lt(Carbon::parse($value['_submission_time'])))
         	{
-	        	if($srvy = Survey::where('checklist_id', $checklist_id)->where('facility_id', $facility_id)->where('qa_officer', $qa_officer)->where('date_started', 'like', $start_date.'%')->where('date_ended', 'like', $end_date.'%')->where('date_submitted', 'like', $submit_date.'%')->first())
-	        	{
-	        		$survey = Survey::find($srvy->id);
-	        	}
-	        	else
+	        	if(!Survey::where('checklist_id', $checklist_id)->where('facility_id', $facility_id)->where('longitude', $longitude)->where('latitude', $latitude)->where('qa_officer', $qa_officer)->where('comment', $comment)->where('date_started', $start_date)->where('date_ended', $end_date)->where('date_submitted', $submit_date)->first())
 	        	{
 	        		$survey = new Survey;        	
 	        		$survey->checklist_id = $checklist_id;
@@ -663,201 +669,178 @@ class SurveyController extends Controller {
 	        		$survey->longitude = $longitude;
 	        		$survey->latitude = $latitude;
 					$survey->save();
-	        	}
-	        	//	Proceed to save survey-sdp
-	        	if($survey)
-	        	{
-	        		$sdp_id = null;
-	        		$comment = null;
-	        		$sdp = $value['mysites'];
-	        		if(stripos($sdp, 'opd') !==FALSE)
-	        		{
-	        			$sdp_id = Sdp::idByName('OPD');
-	        			if(stripos($sdp, '_') !==FALSE)
-	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
-	        			else
-	        				$comment = $sdp;
-					}
-					else if(stripos($sdp, 'ipd') !==FALSE)
-	        		{
-	        			$sdp_id = Sdp::idByName('IPD');
-	        			if(stripos($sdp, '_') !==FALSE)
-	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
-	        			else
-	        				$comment = $sdp;
-					}
-					else if(stripos($sdp, 'pmtct') !==FALSE)
-	        		{
-	        			$sdp_id = Sdp::idByName('PMTCT');
-	        			if(stripos($sdp, '_') !==FALSE)
-	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
-					}
-					else if(stripos($sdp, 'vct') !==FALSE)
-	        		{
-	        			$sdp_id = Sdp::idByName('VCT');
-	        			if(stripos($sdp, '_') !==FALSE)
-	        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
-					}
-					else
-	        		{
-	        			$sdp_id = Sdp::idById($sdp);
-	        			$comment = $sdp;
-					}
-					if($sdp_id)
-					{
-						if($ss = SurveySdp::where('survey_id', $survey->id)->where('sdp_id', $sdp_id)->where('comment', $comment)->first())
-						{
-							$surveySdp = SurveySdp::find($ss->id);
+		        	//	Proceed to save survey-sdp
+		        	if($survey)
+		        	{
+		        		$sdp_id = null;
+		        		$comment = null;
+		        		$sdp = $value['mysites'];
+		        		if(stripos($sdp, 'opd') !==FALSE)
+		        		{
+		        			$sdp_id = Sdp::idByName('OPD');
+		        			if(stripos($sdp, '_') !==FALSE)
+		        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+		        			else
+		        				$comment = $sdp;
+						}
+						else if(stripos($sdp, 'ipd') !==FALSE)
+		        		{
+		        			$sdp_id = Sdp::idById('IPD');
+		        			if(stripos($sdp, '_') !==FALSE)
+		        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+		        			else
+		        				$comment = $sdp;
+						}
+						else if(stripos($sdp, 'pmtct') !==FALSE)
+		        		{
+		        			$sdp_id = Sdp::idByName('PMTCT');
+		        			if(stripos($sdp, '_') !==FALSE)
+		        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+						}
+						else if(stripos($sdp, 'vct') !==FALSE)
+		        		{
+		        			$sdp_id = Sdp::idByName('VCT');
+		        			if(stripos($sdp, '_') !==FALSE)
+		        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
+						}
+						else if(stripos($sdp, 'support') !==FALSE)
+		        		{
+		        			$sdp_id = Sdp::idById('PatientSupportCenter');
+		        			if(stripos($sdp, '_') !==FALSE)
+		        				$comment = str_replace('_', ' ', substr($sdp, strpos($sdp, '_')+1));
 						}
 						else
+		        		{
+		        			$sdp_id = Sdp::idById($sdp);
+		        			$comment = $sdp;
+						}
+						if($sdp_id)
 						{
 							$surveySdp = new SurveySdp;
 							$surveySdp->survey_id = $survey->id;
 							$surveySdp->sdp_id = $sdp_id;
 							$surveySdp->comment = $comment;
 							$surveySdp->save();
-						}
-						if($surveySdp)
-						{
-							if($checklist == Checklist::idByName('HTC Lab Register (MOH 362)'))
+							//	Proceed
+							if($surveySdp)
 							{
-								$pages = null;
-								if(array_key_exists("pagerepeat", $value))
+								if($checklist_id == Checklist::idByName('HTC Lab Register (MOH 362)'))
 								{
-									$pages = $value["pagerepeat"];
-								}
-								if($pages)
-								{
-									$page = 0;
-									foreach ($pages as $louis => $litt) 
+									if($pages)
 									{
-										$page++;
-										if($ssdPage = HtcSurveyPage::where('survey_sdp_id', $surveySdp->id)->where('page', $page)->first())
+										$counter = 0;
+										foreach ($pages as $mike => $ross) 
 										{
-											$surveyPage = HtcSurveyPage::find($ssdPage->id);
-										}
-										else
-										{
-
+											$counter++;
 											$surveyPage = new HtcSurveyPage;
 											$surveyPage->survey_sdp_id = $surveySdp->id;
-											$surveyPage->page = $page;
+											$surveyPage->page = $counter;
 											$surveyPage->save();
+											foreach ($ross as $harvey => $specter) 
+											{
+												$id = substr($harvey, strrpos($harvey, '/')+1);
+												if(($id === 'youdone') || ($id === 'newpage'))
+												{
+													continue;
+												}
+												else
+												{
+													$question_id = Question::idById($id);
+													$surveyPageQstn = new HtcSurveyPageQuestion;
+													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
+													$surveyPageQstn->question_id = $question_id;
+													$surveyPageQstn->save();
+													//	htc-survey-page-data
+													if(count($surveyPageQstn->data) == 0)
+													{
+														$pageData = new HtcSurveyPageData;
+														$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
+														$pageData->answer = $specter;
+														$pageData->save();
+													}
+												}
+											}
 										}
-										foreach ($litt as $ned => $stark) 
+									}
+								}
+								else
+								{
+									foreach ($value as $mike => $ross)
+									{
+										if(strpos($mike,'/') !== false)
 										{
-											$id = substr($ned, strrpos($ned, '/')+1);
-											if(($id === 'youdone') || ($id === 'newpage'))
+											$id = substr($mike, strrpos($mike, '/')+1);
+											if(($id === 'yesthen') || 
+												($id === 'youdone') || 
+												($id === 'newpage') || 
+												($id === 'hh_testing_site') || 
+												($id === 'sec1percentage') || 
+												($id === 'sec2percentage') || 
+												($id === 'sec3percentage') || 
+												($id === 'sec4percentage') || 
+												($id === 'sec5percentage') || 
+												($id === 'sec6percentage') || 
+												($id === 'sec7percentage') || 
+												($id === 'sec8percentage') || 
+												($id === 'sec81percentage') ||
+												($id === 'sec9percentage') ||   
+												($id === 'sec91percentage') ||  
+												($id === 'sec1calc') || 
+												($id === 'sec2calc') || 
+												($id === 'sec3calc') || 
+												($id === 'sec4calc') || 
+												($id === 'sec5calc') || 
+												($id === 'sec6calc') || 
+												($id === 'sec7calc') || 
+												($id === 'sec8calc') || 
+												($id === 'sec81calc') || 
+												($id === 'sec9calc') ||
+												($id === 'sec91calc') || 
+												($id === 'opd') || 
+												($id === 'pmtct') || 
+												($id === 'othersdp') || 
+												($id === 'other_specify') || 
+												($id === 'ipd') || 
+												($id === 'otheripd') || 
+												($id === 'otheropd') || 
+												($id === 'pmctc1') || 
+												($id === 'otherpmtct1') || 
+												($id === 'repeat') || 
+												($id === 'uuid') || 
+												($id === 'instanceID'))
 											{
 												continue;
 											}
 											else
 											{
-												
 												$question_id = Question::idById($id);
-												if($qstn = HtcSurveyPageQuestion::where('htc_survey_page_id', $surveyPage->id)->where('question_id', $question_id)->first())
+												if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
 												{
-													$surveyPageQstn = HtcSurveyPageQuestion::find($qstn->id);
+													$surveyQstn = SurveyQuestion::find($sq->id);
 												}
 												else
 												{
-													$surveyPageQstn = new HtcSurveyPageQuestion;
-													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
-													$surveyPageQstn->question_id = $question_id;
-													$surveyPageQstn->save();
+													$surveyQstn = new SurveyQuestion;
+													$surveyQstn->survey_sdp_id = $surveySdp->id;
+													$surveyQstn->question_id = $question_id;
+													$surveyQstn->save();
 												}
-
-												//	htc-survey-page-data
-												if(count($surveyPageQstn->data) == 0)
+												if(count($surveyQstn->sd) == 0)
 												{
-													$pageData = new HtcSurveyPageData;
-													$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
-													$pageData->answer = $stark;
-													$pageData->save();
+													$surveyData = new SurveyData;
+													$surveyData->survey_question_id = $surveyQstn->id;
+													$surveyData->answer = $ross;
+													$surveyData->save();
 												}
-											}
-										}
-									}
-								}
-							}
-							else
-							{
-								foreach ($value as $mike => $ross)
-								{
-									if(strpos($mike,'/') !== false)
-									{
-										$id = substr($mike, strrpos($mike, '/')+1);
-										if(($id === 'yesthen') || 
-											($id === 'youdone') || 
-											($id === 'newpage') || 
-											($id === 'hh_testing_site') || 
-											($id === 'sec1percentage') || 
-											($id === 'sec2percentage') || 
-											($id === 'sec3percentage') || 
-											($id === 'sec4percentage') || 
-											($id === 'sec5percentage') || 
-											($id === 'sec6percentage') || 
-											($id === 'sec7percentage') || 
-											($id === 'sec8percentage') || 
-											($id === 'sec81percentage') ||
-											($id === 'sec9percentage') ||   
-											($id === 'sec91percentage') ||  
-											($id === 'sec1calc') || 
-											($id === 'sec2calc') || 
-											($id === 'sec3calc') || 
-											($id === 'sec4calc') || 
-											($id === 'sec5calc') || 
-											($id === 'sec6calc') || 
-											($id === 'sec7calc') || 
-											($id === 'sec8calc') || 
-											($id === 'sec81calc') || 
-											($id === 'sec9calc') ||
-											($id === 'sec91calc') || 
-											($id === 'opd') || 
-											($id === 'pmtct') || 
-											($id === 'othersdp') || 
-											($id === 'other_specify') || 
-											($id === 'ipd') || 
-											($id === 'otheripd') || 
-											($id === 'otheropd') || 
-											($id === 'pmctc1') || 
-											($id === 'otherpmtct1') || 
-											($id === 'repeat') || 
-											($id === 'uuid') || 
-											($id === 'instanceID'))
-										{
-											continue;
-										}
-										else
-										{
-											$question_id = Question::idById($id);
-											if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
-											{
-												$surveyQstn = SurveyQuestion::find($sq->id);
-											}
-											else
-											{
-												$surveyQstn = new SurveyQuestion;
-												$surveyQstn->survey_sdp_id = $surveySdp->id;
-												$surveyQstn->question_id = $question_id;
-												$surveyQstn->save();
-											}
-											if(count($surveyQstn->sd) == 0)
-											{
-												$surveyData = new SurveyData;
-												$surveyData->survey_question_id = $surveyQstn->id;
-												$surveyData->answer = $ross;
-												$surveyData->save();
 											}
 										}
 									}
 								}
 							}
 						}
-						dd();
 					}
-	        	}
-		    }
+			    }
+			}
 			//	End here
 		}
 		//	Redirect
