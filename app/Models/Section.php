@@ -268,7 +268,7 @@ class Section extends Model implements Revisionable {
                                   	->whereIn('question_id', $this->questions->lists('id'))
                                   	->where('answer', $response)
                                   	->count();
-        return $total_counts>0?round(($calculated_counts*100)/($total_counts*$counter), 2):$percentage;
+        return $total_counts>0?round(($calculated_counts*100)/($total_counts*$counter), 2):0.00;
 	}
 	/**
 	 * Function to calculate percentage based on quarters
