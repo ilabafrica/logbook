@@ -193,7 +193,7 @@ class Section extends Model implements Revisionable {
         							->whereIn('question_id', $this->questions->lists('id'))
         							->whereIn('survey_data.answer', Answer::lists('score'))
         							->sum('answer');
-        return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
+        return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):0.00;
         //  End optimization
     }
 	/**
