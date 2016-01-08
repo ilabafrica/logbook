@@ -564,6 +564,8 @@ class SurveyController extends Controller {
 			$checklist_id = 94547;//69514;
 		else if($checklist->name == 'SPI-RT Checklist')
 			$checklist_id = 94529;//69683;
+		else if($checklist->name == 'PT Enrollment Tool')
+			$checklist_id = 83294;
 		return $this->onadata($checklist_id, $checklist->id);
 	}
 	/**
@@ -844,6 +846,17 @@ class SurveyController extends Controller {
 			//	End here
 		}
 		//	Redirect
+		$url = session('SOURCE_URL');
+		return redirect()->to($url)->with('message', Lang::choice('messages.data-successfully-imported', 1));
+    }
+    /**
+	 * Function to import pt-enrollment-tool data
+	 * @param  int  $id
+	 * @return Response
+	 */
+    public function pt()
+    {
+    	//	Redirect
 		$url = session('SOURCE_URL');
 		return redirect()->to($url)->with('message', Lang::choice('messages.data-successfully-imported', 1));
     }
