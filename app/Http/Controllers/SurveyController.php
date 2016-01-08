@@ -1282,15 +1282,15 @@ class SurveyController extends Controller {
 					->where('checklist_id', $checklist->id)
 					->groupBy('qa_officer')
 					->get();
-		Excel::create('QA Officer Collection Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($qa)
+		Excel::create('QA Officer Collection Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($qa, $checklist)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($qa)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($qa, $checklist)
 		    {
 		    	$sheet->appendRow(array(Lang::choice('messages.qa-officer', 1), Lang::choice('messages.no-of-questionnaire', 1)));
 		    	foreach ($qa as $officer)
 		    	{
-		    		$sheet->appendRow(array($officer->qa_officer, Survey::questionnaires($officer->qa_officer)));
+		    		$sheet->appendRow(array($officer->qa_officer, Survey::questionnaires($officer->qa_officer, $checklist->id)));
 		    	}
 		    });
 
