@@ -763,6 +763,18 @@ class SurveyController extends Controller {
 												}
 											}
 										}
+										//	Compare newest and oldest register-page start dates to get data month and update survey
+										$dates = json_decode($survey->dates());
+										$old = $dates->min;
+										$new = $dates->max;
+										$newest_date = Carbon::parse($new);
+										$date_submitted = Carbon::parse($survey->date_submitted);
+										if($date_submitted->month != $newest_date->month)
+										{
+											$data_month = $newest_date->firstOfMonth();
+											$survey->data_month = $data_month;
+											$survey->save();
+										}
 									}
 								}
 								else
