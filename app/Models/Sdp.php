@@ -167,13 +167,39 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Function to return counts of data submiited
 	*/
-	public function submissions($id, $check)
+	public function submissions($id, $check, $from = null, $to = null, $year = 0, $month = 0, $date = 0)
 	{
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		$ssdps = $this->surveys()->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-					  ->where('facility_id', $id)
-					  ->where('checklist_id', $check)
-					  ->count();
-		return $ssdps;
+				  ->where('facility_id', $id)
+				  ->where('checklist_id', $check);
+				  if (strlen($theDate)>0 || ($from && $to))
+					{
+						if($from && $to)
+						{
+							if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+								$ssdps = $ssdps->whereBetween('data_month', [$from, $to]);
+							else
+								$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+						}
+						else
+						{
+							if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+								$ssdps = $ssdps->where('data_month', 'LIKE', $theDate."%");
+							else
+								$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
+						}
+					}
+		return $ssdps->groupBy('sdp_id')->count();
 	}
 	/**
 	*	Function to eager-load questions for use in calculating other derivatives

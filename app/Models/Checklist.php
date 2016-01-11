@@ -57,9 +57,19 @@ class Checklist extends Model implements Revisionable {
 		if (strlen($theDate)>0 || ($from && $to))
 		{
 			if($from && $to)
-				$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+			{
+				if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+					$ssdps = $ssdps->whereBetween('data_month', [$from, $to]);
+				else
+					$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
+			}
 			else
-				$ssdps = $ssdps->where('data_month', 'LIKE', $theDate."%");
+			{
+				if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+					$ssdps = $ssdps->where('data_month', 'LIKE', $theDate."%");
+				else
+					$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
+			}
 		}
 		if($county || $sub_county || $site)
 		{

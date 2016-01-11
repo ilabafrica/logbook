@@ -101,10 +101,40 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to get counts per checklist
 	*/
-	public function submissions($id)
+	public function submissions($id, $from = null, $to = null, $year = 0, $month = 0, $date = 0)
 	{
 		//	Initialize counter		
-		return $this->surveys->where('checklist_id', $id)->count();
+		$count = 0;
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}	
+		$surveys = Checklist::find($id)->surveys()->where('facility_id', $this->id);
+		if (strlen($theDate)>0 || ($from && $to))
+		{
+			if($from && $to)
+			{
+				if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+					$surveys = $surveys->whereBetween('data_month', [$from, $to]);
+				else
+					$surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
+			}
+			else
+			{
+				if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+					$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
+				else
+					$surveys = $surveys->where('date_submitted', 'LIKE', $theDate."%");
+			}
+		}
+		$surveys = $surveys->lists('surveys.id');
+		return SurveySdp::whereIn('survey_id', $surveys)->count();
 	}
 	/**
 	* Function to get counts per checklist

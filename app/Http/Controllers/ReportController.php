@@ -2692,126 +2692,32 @@ class ReportController extends Controller {
 		}
 		//	Get checklists
 		$checklists = Checklist::all();
-		//	Get dates and months
+		//	Get counties
+		$counties = County::lists('name', 'id');
+		//	Get all sub-counties
+		$subCounties = array();
+		if(Auth::user()->hasRole('County Lab Coordinator'))
+			$subCounties = County::find(Auth::user()->tier->tier)->subCounties->lists('name', 'id');
+		//	Get all facilities
+		$sites = array();
+		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
+			$sites = SubCounty::find(Auth::user()->tier->tier)->facilities->lists('name', 'id');
+		$sdps = array();
+		//	Declare variables
+        $sdp =NULL;
+		$site = NULL;
+		$sub_county = NULL;
+		$jimbo = NULL;
+		//	Get facility
+		//$facility = Facility::find(2);
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
-
-	    //	Calculation of "complete"
-	    $htc_me = 0;
-       	$htc_spirt = 0;
-       	$spirt_me = 0;
-       	//        Facilities
-       	$facilities = Facility::all();
-       	//        Complete counts
-       	$complete = 0;
-       	$all = 0;
-       	$pmtcts = 0;
-       	$pmtctMeSpi = 0;
-       	//	PMTCT
-       	$pmtct = Sdp::idByName('PMTCT');
-       	foreach ($facilities as $facility)
-       	{
-           	$bothMeSpirt = array();
-           	$spirt_sdps = $facility->ssdps($spi);
-           	$me_sdps = $facility->ssdps($me);
-           	$htc_sdps = $facility->ssdps($htc);
-           	//	get survey-sdp ids for use in getting PMTCT records
-           	if($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct))
-           	{
-           		$pmtcts++;
-           	}
-           	if(($facility->sdps($spi, $pmtct) == $facility->sdps($me, $pmtct)) && ($facility->sdps($me, $pmtct) == $facility->sdps($htc, $pmtct)))
-           	{
-           		$pmtctMeSpi++;
-           	}
-           	foreach ($me_sdps as $me_sdp)
-           	{
-               	if(in_array($me_sdp, $spirt_sdps))
-                {
-                    $complete++;
-                    $spirt_me++;
-                    $bothMeSpirt = array_merge($bothMeSpirt, [$me_sdp]);
-                }
-           	}
-           	foreach ($htc_sdps as $htc_sdp)
-            {
-                if(in_array($htc_sdp, $me_sdps))
-                    $htc_me++;
-                if(in_array($htc_sdp, $bothMeSpirt))
-                    $all++;
-            }
-           	foreach ($htc_sdps as $htc_sdp)
-            {
-                if(in_array($htc_sdp, $spirt_sdps))
-                    $htc_spirt++;
-            }
-       	}
-       	//	End calculation of 'complete'
-		$drill = "{
-	        chart: {
-	            type: 'column'
-	        },
-	        title: {
-	            text: '".Lang::choice('messages.complete-check', 1)."'
-	        },
-	        yAxis: {
-	            title: {
-	                text: '".Lang::choice('messages.complete-sdp', 1)."'
-	            }
-	        },
-	        xAxis: {
-	            type: 'category'
-	        },
-
-	        legend: {
-	            enabled: false
-	        },
-
-	        credits: {
-	            enabled: false
-	        },
-
-	        plotOptions: {
-	            series: {
-	                borderWidth: 0,
-	                dataLabels: {
-	                    enabled: true
-	                }
-	            }
-	        },
-
-	        series: [{
-	            name: '".Lang::choice('messages.complete', 1)."',
-	            colorByPoint: true,
-	            data: [{
-	                name: '".Lang::choice('messages.sdp', 2)."',
-	                y: 206,
-	                drilldown: 'complete'
-	            }]
-	        }],
-	        drilldown: {
-	            series: [{
-	                id: 'complete',
-	                data: [";
-	                $count = count($checklists);
-	                foreach ($checklists as $checklist)
-	                {
-	                	$drill.="["."'".$checklist->name."'".", ".$checklist->ssdps()."]";
-	                	if($count==1)
-	    					$drill.="";
-	    				else
-	    					$drill.=",";
-	    				$count--;
-	                }
-	                $drill.="]
-	            }]
-	        }
-	    }";
 	    //	Pie chart for county submissions
 	    $htc_pie = "{
 	        chart: {
@@ -2848,7 +2754,7 @@ class ReportController extends Controller {
 	            		$county = County::find($key);
 	            		$htc_pie.="{
 			                name: '".$county->name."',
-			                y: ".$county->submissions($htc).",
+			                y: ".$county->submissions($htc, $from, $to).",
 			                drilldown: '".$county->id."'
 			            },";
 	            	}
@@ -2868,7 +2774,7 @@ class ReportController extends Controller {
 		                {
 		                	$htc_pie.="{
 			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($htc).",
+			                    y: ".$subCounty->submissions($htc, $from, $to).",
 			                    drilldown: '".$subCounty->name."'
 			                },";
 		                }
@@ -2888,7 +2794,7 @@ class ReportController extends Controller {
 		                	{
 		                		$htc_pie.="{
 				                    name: '".$facility->name."',
-				                    y: ".$facility->sdps($htc).",
+				                    y: ".$facility->submissions($htc, $from, $to).",
 				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
 				                },";
 				            }
@@ -2911,7 +2817,7 @@ class ReportController extends Controller {
 			                		$sdp = Sdp::find($ssdp);
 			                		$htc_pie.="{
 					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $htc).",
+					                    y: ".$sdp->submissions($facility->id, $htc, $from, $to).",
 					                    drilldown: '".$sdp->name."'
 					                },";
 					            }
@@ -2959,7 +2865,7 @@ class ReportController extends Controller {
 	            		$county = County::find($key);
 	            		$me_pie.="{
 			                name: '".$county->name."',
-			                y: ".$county->submissions($me).",
+			                y: ".$county->submissions($me, $from, $to).",
 			                drilldown: '".$county->id."'
 			            },";
 	            	}
@@ -2979,7 +2885,7 @@ class ReportController extends Controller {
 		                {
 		                	$me_pie.="{
 			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($me).",
+			                    y: ".$subCounty->submissions($me, $from, $to).",
 			                    drilldown: '".$subCounty->name."'
 			                },";
 		                }
@@ -2999,7 +2905,7 @@ class ReportController extends Controller {
 		                	{
 		                		$me_pie.="{
 				                    name: '".$facility->name."',
-				                    y: ".$facility->sdps($me).",
+				                    y: ".$facility->submissions($me, $from, $to).",
 				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
 				                },";
 				            }
@@ -3022,7 +2928,7 @@ class ReportController extends Controller {
 			                		$sdp = Sdp::find($ssdp);
 			                		$me_pie.="{
 					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $me).",
+					                    y: ".$sdp->submissions($facility->id, $me, $from, $to).",
 					                    drilldown: '".$sdp->name."'
 					                },";
 					            }
@@ -3070,7 +2976,7 @@ class ReportController extends Controller {
 	            		$county = County::find($key);
 	            		$spi_pie.="{
 			                name: '".$county->name."',
-			                y: ".$county->submissions($spi).",
+			                y: ".$county->submissions($spi, $from, $to).",
 			                drilldown: '".$county->id."'
 			            },";
 	            	}
@@ -3090,7 +2996,7 @@ class ReportController extends Controller {
 		                {
 		                	$spi_pie.="{
 			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($spi).",
+			                    y: ".$subCounty->submissions($spi, $from, $to).",
 			                    drilldown: '".$subCounty->name."'
 			                },";
 		                }
@@ -3110,7 +3016,7 @@ class ReportController extends Controller {
 		                	{
 		                		$spi_pie.="{
 				                    name: '".$facility->name."',
-				                    y: ".$facility->sdps($spi).",
+				                    y: ".$facility->submissions($spi, $from, $to).",
 				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
 				                },";
 				            }
@@ -3128,12 +3034,12 @@ class ReportController extends Controller {
 		                	$spi_pie.="{
 				                id: '".$facility->id.'_'.$subCounty->id."',
 				                data: [";
-			                	foreach ($facility->ssdps($spi) as $ssdp)
+			                	foreach ($facility->ssdps($spi, 1, $from, $to) as $ssdp)
 			                	{
 			                		$sdp = Sdp::find($ssdp);
 			                		$spi_pie.="{
 					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $spi).",
+					                    y: ".$sdp->submissions($facility->id, $spi, $from, $to).",
 					                    drilldown: '".$sdp->name."'
 					                },";
 					            }
@@ -3145,76 +3051,95 @@ class ReportController extends Controller {
             	$spi_pie.="]
 	        }
 	    }";
-	    //	Combination chart
-	    $combination = "{
+	    // msline for submissions for the 3 checklists
+	    $msline = "{
 	        title: {
-	            text: '".Lang::choice('messages.sdp-comparison-overtime', 1)."'
+	            text: 'Monthly Data Submissions Per Checklist',
+	            x: -20 //center
 	        },
-	        yAxis: {
-	            title: {
-	                text: '".Lang::choice('messages.complete-sdp', 1)."'
-	            }
+	        subtitle: {
+	            text: 'Source: HIV-QA Kenya',
+	            x: -20
 	        },
 	        xAxis: {
-	            categories: [";
-		            $count = count($months);
-	            	foreach ($months as $month) {
-	    				$combination.= "'".$month->label.' '.$month->annum;
-	    				if($count==1)
-	    					$combination.="' ";
-	    				else
-	    					$combination.="' ,";
-	    				$count--;
-	    			}
-	            $combination.="]
+	        	categories: [";
+	        	$count = count($months);
+            	foreach ($months as $month)
+            	{
+    				$msline.= "'".$month->label.' '.$month->annum;
+    				if($count==1)
+    					$msline.="' ";
+    				else
+    					$msline.="' ,";
+    				$count--;
+    			}
+	        $msline.="]
+	    	},
+	        yAxis: {
+	            title: {
+	                text: 'Submissions (N)'
+	            },
+	            plotLines: [{
+	                value: 0,
+	                width: 1,
+	                color: '#808080'
+	            }]
 	        },
-
+	        tooltip: {
+	            valueSuffix: '°C'
+	        },
+	        legend: {
+	            enabled: true,
+	            align: 'center',
+	            verticalAlign: 'bottom',
+	            y: 0,
+	            padding: 0,
+	            margin:5,
+	            itemMarginTop: 0,
+	            itemMarginBottom: 0,
+	            itemStyle:{
+	                fontSize: '10px'
+	                }
+	        },
 	        credits: {
-	            enabled: false
-	        },
+			    enabled: false
+			},
 	        series: [";
-	        $counts = count($checklists);
-	        foreach ($checklists as $checklist) {
-	        	$combination.="{type:'column',name:"."'".$checklist->name."'".", data:[";
-        		$counter = count($months);
-        		foreach ($months as $month) {
-        			$data = $checklist->ssdps(null, null, null, null, null, null, null, $month->annum, $month->months);
-        			if($data==0){
-        					$combination.= '0.00';
+	        	$counts = count($checklists);
+	        	foreach ($checklists as $checklist)
+	        	{
+	        		$counter = count($months);
+	        		$msline.="{name:"."'".$checklist->name."'".", data:[";
+		        	foreach ($months as $month)
+		        	{
+		        		$data = $checklist->ssdps(NULL, NULL, NULL, NULL, NULL, NULL, NULL, $month->annum, $month->months, 0, null);
+			        	if($data==0){
+        					$msline.= '0.00';
         					if($counter==1)
-            					$combination.="";
+            					$msline.="";
             				else
-            					$combination.=",";
-    				}
-    				else{
-        				$combination.= $data;
-
-        				if($counter==1)
-        					$combination.="";
-        				else
-        					$combination.=",";
-    				}
-        			$counter--;
-        		}
-        		$combination.="]";
-            	if($counts==1)
-					$combination.="}";
-				else
-					$combination.="},";
-				$counts--;
-	        }
-	        $combination.=",{
-	            type: 'spline',
-	            name: 'Average',
-	            data: [177, 26, 3],
-	            marker: {
-	                lineWidth: 2,
-	                lineColor: Highcharts.getOptions().colors[3],
-	                fillColor: 'white'
-	            }
-	        }]
+            					$msline.=",";
+	    				}
+	    				else{
+	        				$msline.= $data;
+	        				if($counter==1)
+	        					$msline.="";
+	        				else
+	        					$msline.=",";
+	    				}
+	        			$counter--;
+	        		}
+	        		$msline.="]";
+	            	if($counts==1)
+						$msline.="}";
+					else
+						$msline.="},";
+					$counts--;
+		        }
+		    $msline.="
+	        ]
 	    }";
-		return view('dashboard', compact('drill', 'pie', 'combination', 'htc_pie', 'me_pie', 'spi_pie'));
+		return view('dashboard', compact('pie', 'htc_pie', 'me_pie', 'spi_pie', 'from', 'to', 'msline'));
 	}
 	/**
 	 * Display distribution of agreement rates among testing sites by programatic area
