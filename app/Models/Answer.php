@@ -152,4 +152,24 @@ class Answer extends Model implements Revisionable {
 			return null;
 		}
 	}
+	/**
+	* Return response answer given value
+	* @param $score the score of the response
+	*/
+	public static function decode($type, $i)
+	{
+		$answer = null;
+		if($type == Question::CHOICE)
+		{
+			if($i == '0')
+				$answer = 'No';
+			else if($i == '1')
+				$answer = 'Yes';
+			else
+				$answer = $i;
+		}
+		else
+			$answer = $i;
+		return $answer;
+	}
 }

@@ -38,7 +38,7 @@
                             <tr>
                                 <td>{!! $counter !!}</td>
                                 <td>{!! $qstn->name !!}</td>                                
-                                <td>{!! ($qstn->question_type == App\Models\Question::CHOICE)?($question->data->answer == 0?'No':'Yes'):$question->data->answer !!}</td>
+                                <td>{!! App\Models\Answer::decode($qstn->question_type, $question->data->answer) !!}</td>
                             </tr>
                         @endforeach
                         </tbody>
