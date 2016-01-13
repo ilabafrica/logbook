@@ -3053,6 +3053,9 @@ class ReportController extends Controller {
 	    }";
 	    // msline for submissions for the 3 checklists
 	    $msline = "{
+	    	chart: {
+	            type: 'column'
+	        },
 	        title: {
 	            text: 'Monthly Data Submissions Per Checklist',
 	            x: -20 //center
@@ -3710,7 +3713,10 @@ class ReportController extends Controller {
 	            column: {
 	                pointPadding: 0.2,
 	                borderWidth: 0,
-	                colorByPoint: true
+	                colorByPoint: true,
+		            series: {
+		                stacking: 'normal'
+		            }
 	            }
 	        },
 	        colors: ['red', '#FF7F0E', 'yellow', '#90ED7D', 'green'],

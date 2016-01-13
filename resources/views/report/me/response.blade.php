@@ -34,7 +34,7 @@
             <li class="active"><a href="{!! url('analysis/response') !!}">{!! Lang::choice('messages.domain-response-chart', 1) !!}</a></li>
         </ul>
         <div class="container-fluid">
-        {!! Form::open(array('url' => 'report/'.$checklist->id.'/me', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        {!! Form::open(array('url' => 'analysis/response', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
         <!-- Tab panes -->
         <div class="tab-content">
             <br />

@@ -120,17 +120,11 @@ class Facility extends Model implements Revisionable {
 		{
 			if($from && $to)
 			{
-				if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
-					$surveys = $surveys->whereBetween('data_month', [$from, $to]);
-				else
-					$surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
+				$surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
 			}
 			else
 			{
-				if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
-					$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
-				else
-					$surveys = $surveys->where('date_submitted', 'LIKE', $theDate."%");
+				$surveys = $surveys->where('date_submitted', 'LIKE', $theDate."%");
 			}
 		}
 		$surveys = $surveys->lists('surveys.id');
