@@ -3085,9 +3085,6 @@ class ReportController extends Controller {
 	                color: '#808080'
 	            }]
 	        },
-	        tooltip: {
-	            valueSuffix: '°C'
-	        },
 	        legend: {
 	            enabled: true,
 	            align: 'center',
