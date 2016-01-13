@@ -84,7 +84,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -92,7 +92,7 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$title = Facility::find($site)->name;
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -100,13 +100,11 @@ class ReportController extends Controller {
 							array_push($sdps, $sdp->sdp_id);
 							}
 						}
-
-
 					}
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -121,7 +119,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -307,7 +305,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -315,7 +313,7 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$title = Facility::find($site)->name;
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -323,13 +321,11 @@ class ReportController extends Controller {
 							array_push($sdps, $sdp->sdp_id);
 							}
 						}
-
-
 					}
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -344,7 +340,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -491,7 +487,7 @@ class ReportController extends Controller {
 	        credits: {
 			    enabled: false
 			},
-			colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+			colors: ['red', 'yellow', 'green'],
 			plotOptions: {
 	            dataLabels:{
 	            	enabled:true
@@ -626,7 +622,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -634,7 +630,7 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$title = Facility::find($site)->name;
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -646,7 +642,7 @@ class ReportController extends Controller {
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -661,7 +657,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -809,7 +805,7 @@ class ReportController extends Controller {
 	        credits: {
 			    enabled: false
 			},
-			colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+			colors: ['red', 'yellow', 'green'],
 			plotOptions: {
 	            dataLabels:{
 	            	enabled:true
@@ -3206,7 +3202,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -3214,7 +3210,7 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$title = Facility::find($site)->name;
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -3222,13 +3218,11 @@ class ReportController extends Controller {
 							array_push($sdps, $sdp->sdp_id);
 							}
 						}
-
-
 					}
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -3243,7 +3237,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -3316,7 +3310,7 @@ class ReportController extends Controller {
 	        tooltip: {
 	            valueSuffix: '%'
 	        },
-	        colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+	        colors: ['red', 'yellow', 'green'],
 	        credits: {
 			    enabled: false
 			},
@@ -3439,11 +3433,11 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);
+						$title = Facility::find($site)->name;
 					}
 				}
 				else
@@ -3509,7 +3503,7 @@ class ReportController extends Controller {
 	                }
 	            }
 	        },
-	        colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+	        colors: ['red', 'yellow', 'green'],
 	        credits: {
 			    enabled: false
 			},
@@ -4419,7 +4413,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name;
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -4427,7 +4421,7 @@ class ReportController extends Controller {
 					}
 					else
 					{
-						$title = Facility::find($site)->name.' '.Lang::choice('messages.facility', 1);;
+						$title = Facility::find($site)->name;
 						foreach (Facility::find($site)->surveys as $survey) 
 						{
 							foreach ($survey->sdps as $sdp) 
@@ -4435,13 +4429,11 @@ class ReportController extends Controller {
 							array_push($sdps, $sdp->sdp_id);
 							}
 						}
-
-
 					}
 				}
 				else
 				{
-					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);;
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
 						foreach ($facility->surveys as $survey) 
@@ -4456,7 +4448,7 @@ class ReportController extends Controller {
 			}
 			else
 			{
-				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);;
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				foreach (County::find($jimbo)->subCounties as $subCounty)
 				{
 					foreach ($subCounty->facilities as $facility)
@@ -4531,7 +4523,7 @@ class ReportController extends Controller {
 	        credits: {
 			    enabled: false
 			},
-			colors: ['#BCBD22', '#ED561B', '#1F77B4'],
+			colors: ['red', 'yellow', 'green'],
 			plotOptions: {
 	            series: {
 	            	stacking: 'normal',
@@ -4559,7 +4551,7 @@ class ReportController extends Controller {
         		$counter = count($sdps);
         		foreach ($sdps as $sdp)
         		{
-        			$data = $checklist->overallAgreement($percentage, $kit, $sdp, null, null, null, 0, 0, 0, $from, $toPlusOne);
+        			$data = $checklist->overallAgreement($percentage, $kit, $sdp, null, null, null, 0, 0, 0, $from, $toPlusOne, 1);
         			if($data==0)
         			{
         					$percent.= '0.00';

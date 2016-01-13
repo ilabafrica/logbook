@@ -271,7 +271,7 @@ class Checklist extends Model implements Revisionable {
 		$levels = Level::all();
 		foreach ($levels as $level)
 		{
-			if(($score<=$level->range_upper) && ($score>=$level->range_lower))
+			if(($score<$level->range_upper+1) && ($score>=$level->range_lower))
 				return $level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)';
 		}
 	}
