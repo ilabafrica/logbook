@@ -165,6 +165,8 @@ class Answer extends Model implements Revisionable {
 				$answer = 'No';
 			else if($i == '1')
 				$answer = 'Yes';
+			else if(in_array($i, Answer::lists('description')))
+				$answer = Answer::where('description', $i)->first()->name;
 			else
 				$answer = $i;
 		}
