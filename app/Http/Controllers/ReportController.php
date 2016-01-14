@@ -568,7 +568,18 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = County::lists('name', 'id');
+		$counties = [];
+		$cIds = [];
+		foreach (array_unique(Survey::lists('facility_id')) as $key)
+		{
+			$scIds = [];
+			array_push($scIds, Facility::find($key)->subCounty->id);
+			foreach (array_unique($scIds) as $sc)
+			{
+				array_push($cIds, SubCounty::find($sc)->county->id);
+			}
+		}
+		$counties = County::whereIn('id', array_unique($cIds))->lists('name', 'id');
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -622,7 +633,7 @@ class ReportController extends Controller {
 				{
 					if($sdp!=NULL)
 					{
-						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name
+						$title = Sdp::find($sdp)->name.' for '.Facility::find($site)->name;
 						foreach (Sdp::find($sdp)->surveys as $survey) 
 						{
 							array_push($sdps, $survey->sdp_id);
@@ -736,6 +747,9 @@ class ReportController extends Controller {
 	        credits: {
 			    enabled: false
 			},
+	        tooltip: {
+	            valueSuffix: '%'
+	        },
 	        series: [";
 	        $counts = count($sdps);
 	        foreach ($sdps as $sdp) {

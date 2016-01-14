@@ -291,17 +291,31 @@ class Facility extends Model implements Revisionable {
 		else
 			return $ssdps;
 	}
-
-	/*public function ssdps($id = null)
-	{
-		//	Get surveys_sdps
-		$survey_sdps = $this->surveys()->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
-							if($id)
-							{
-								$survey_sdps = $survey_sdps->where('checklist_id', $id);
-							}
-							$survey_sdps = $survey_sdps->lists('sdp_id');
-		return array_unique($survey_sdps);
-	}
+	/**
+	* Function to return unique sdps submitted for given facility for use in dropdown
 	*/
+	public function points($id = null)
+	{
+		$result = [];
+		$returnable = [];
+		//	Get surveys_sdps
+		$surveys = $this->surveys->lists('id');
+		//	Get survey-sdps with the above IDs
+		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->select('sdp_id', 'comment')->get();
+		foreach ($ssdps as $data)
+		{
+			$sdp = Sdp::find($data->sdp_id);
+			if((stripos($sdp->name, 'PMTCT') !==FALSE) || (stripos($sdp->name, 'OPD') !==FALSE) || (stripos($sdp->name, 'IPD') !==FALSE))
+				$result[] = $sdp->name.' - '.$data->comment;
+			else
+				$result[] = $sdp->name;
+		}
+		$result = array_unique($result);
+		foreach ($result as $sdp)
+		{
+			$returnable[] = ['name' => $sdp];
+		}
+		return $returnable;
+	}
+	
 }

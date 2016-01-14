@@ -203,8 +203,7 @@ class FacilityController extends Controller {
 	{
 		$input = Input::get('facility_id');
         $facility = Facility::find($input);
-        $sdps = $facility->ssdps();
-        return json_encode(Sdp::whereIn('id', $sdps)->get());
+        return json_encode($facility->points());
         //return json_encode($sdps);
     }
 }
