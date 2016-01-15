@@ -38,7 +38,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = County::lists('name', 'id');
+		$counties = $this->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -4609,5 +4609,26 @@ class ReportController extends Controller {
 		$art = Sdp::idByName('ART Clinic');
 		$sti = Sdp::idByName('STI Clinic');
 		return [$ipd, $vmmc, $pd, $yc, $pitc, $tb, $art, $sti];
+	}
+	/**
+	*
+	*	Function to load counties with data for select lists in views
+	*
+	*/
+	public function countiesWithData()
+	{
+		$counties = [];
+		$cIds = [];
+		foreach (array_unique(Survey::lists('facility_id')) as $key)
+		{
+			$scIds = [];
+			array_push($scIds, Facility::find($key)->subCounty->id);
+			foreach (array_unique($scIds) as $sc)
+			{
+				array_push($cIds, SubCounty::find($sc)->county->id);
+			}
+		}
+		$counties = County::whereIn('id', array_unique($cIds))->lists('name', 'id');
+		return $counties;
 	}
 }
