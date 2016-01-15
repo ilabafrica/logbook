@@ -299,7 +299,10 @@ class Facility extends Model implements Revisionable {
 		$result = [];
 		$returnable = [];
 		//	Get surveys_sdps
-		$surveys = $this->surveys->lists('id');
+		$surveys = $this->surveys;
+		if($id)
+			$surveys = $surveys->where('checklist_id', $id);
+		$surveys = $surveys->lists('id');
 		//	Get survey-sdps with the above IDs
 		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->select('sdp_id', 'comment')->get();
 		foreach ($ssdps as $data)
@@ -317,5 +320,26 @@ class Facility extends Model implements Revisionable {
 		}
 		return $returnable;
 	}
-	
+	/**
+	* Function to count the number of submissions for the given sdp
+	*/
+	public function perSdp($id)
+	{
+		$sdpName = '';
+		$comment = null;
+		if(stripos($id, '-') !==FALSE)
+		{
+			$id = explode('-', $id);
+			$sdpName = $id[0];
+			if(trim($id[1])!='')
+				$comment = $id[1];
+		}
+		else
+			$sdpName = $id;
+		$surveys = $this->surveys->lists('id');
+		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->where('sdp_id', Sdp::idByName($sdpName));
+		if($comment)
+			$ssdps = $ssdps->where('comment', 'like', '%' .trim($comment) . '%');
+		return $ssdps->count();
+	}
 }

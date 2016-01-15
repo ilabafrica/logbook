@@ -57,27 +57,23 @@
                                 <th>{{ Lang::choice('messages.count', 1) }}</th>
                                 <th>{{ Lang::choice('messages.facility', 1) }}</th>
                                 <th>{{ Lang::choice('messages.sdp', 1) }}</th>
-                                <th>{{ Lang::choice('messages.comment', 1) }}</th>
                                 <th>{{ Lang::choice('messages.count', 1) }}</th>
                             </tr>
                         </thead>
                         <tbody>
                         <?php $counter = 0; ?>
                         @foreach($facilities as $facility)
-                            <?php $counter++; $total = 0; if($facility->sdps($checklist->id)!=0){ $total = $facility->sdps($checklist->id)+1; } ?>
+                            <?php $counter++; $total = 0; if($facility->sdps($checklist->id)!=0){ $total = count($facility->points($checklist->id))+1; } ?>
                             <tr>
                                 <td rowspan="{!! $total !!}">{!! $counter !!}</td>
                                 <td rowspan="{!! $total !!}">{!! $facility->name !!}</td>
                             </tr>
-                            @if(count($facility->perchecklist($checklist->id))!=0)
-                                @foreach($facility->perchecklist($checklist->id) as $survey)
-                                    @foreach($survey->sdps as $sdp)
-                                    <tr>
-                                        <td>{!! App\Models\Sdp::find($sdp->sdp_id)->name !!}</td>
-                                        <td>{!! $sdp->comment !!}</td>
-                                        <td>{!! 0 !!}</td>
-                                    </tr>
-                                    @endforeach
+                            @if(count($facility->points($checklist->id))!=0)
+                                @foreach($facility->points($checklist->id) as $sdp)
+                                <tr>
+                                    <td>{!! $sdp['name'] !!}</td>
+                                    <td>{!! $facility->perSdp($sdp['name']) !!}</td>
+                                </tr>
                                 @endforeach
                             @endif
                         @endforeach

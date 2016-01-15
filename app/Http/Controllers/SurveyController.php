@@ -520,13 +520,14 @@ class SurveyController extends Controller {
 		foreach ($facilities as $facility)
 		{
 			$sdps = array();
+			$sdps[$facility->id] = $facility->points();/*
 			$total[$facility->id] = 0;
 			$surveys[$facility->id] = $facility->surveys->where('checklist_id', $checklist->id)->lists('id');
 			foreach ($surveys[$facility->id] as $key)
 			{
 				$sdps[$key] = Survey::find($key)->sdps->lists('sdp_id');
 				$total[$facility->id] = count($sdps[$key]);
-			}
+			}*/
 		}
 		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'sdps', 'total'));
 	}
@@ -1409,17 +1410,14 @@ class SurveyController extends Controller {
 		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist)
 		    {
 		    	$counter = 0;
-		    	$sheet->appendRow(array(Lang::choice('messages.count', 1), Lang::choice('messages.facility', 1), Lang::choice('messages.sdp', 1), Lang::choice('messages.comment', 1)));
+		    	$sheet->appendRow(array(Lang::choice('messages.count', 1), Lang::choice('messages.facility', 1), Lang::choice('messages.sdp', 1), Lang::choice('messages.no', 1)));
 		    	foreach ($facilities as $facility)
 		    	{
-		    		foreach ($facility->surveys()->where('checklist_id', $checklist->id)->get() as $survey)
-		    		{
-		    			foreach ($survey->sdps as $ssdp)
-		    			{	
-		    				$counter++;	    				
-		    				$sheet->appendRow(array($counter, $facility->name, $ssdp->sdp->name, $ssdp->comment));
-		    			}
-		    		}
+		    		foreach ($facility->points() as $ssdp)
+	    			{	
+	    				$counter++;	    				
+	    				$sheet->appendRow(array($counter, $facility->name, $ssdp['name'], $facility->perSdp($ssdp['name'])));
+	    			}
 		    	}
 		    });
 
