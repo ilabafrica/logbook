@@ -345,7 +345,7 @@ function ssdp()
             sdp.empty();
             sdp.append("<option value=''>Select SDP</option>");
             $.each(data, function(index, element) {
-                sdp.append("<option value='"+ element.id +"'>" + element.name + "</option>");
+                sdp.append("<option value='"+ element.name +"'>" + element.name + "</option>");
             });
         }
     });

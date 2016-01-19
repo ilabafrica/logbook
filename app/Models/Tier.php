@@ -5,10 +5,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
 
-class SpirtInfo extends Model implements Revisionable {
+class Tier extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'survey_spirt_info';
+	protected $table = 'tiers';
 	use RevisionableTrait;
 
     /*
@@ -16,15 +16,12 @@ class SpirtInfo extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'survey_id',
-        'affiliation_id',
-        'user_id',
     ];
-	/**
-	* Relationship with survey
-	*/
-	public function survey()
-	{
-		return $this->belongsTo('App\Models\Survey');
-	}
+    /**
+    * Relationship with sdps
+    */
+    public function sdp()
+    {
+        return $this->belongsTo('App\Models\Sdp');
+    }
 }

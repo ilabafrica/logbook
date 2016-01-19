@@ -73,5 +73,4 @@ class PtEnrollmentTables extends Migration {
 		Schema::drop('pts');
 		Schema::drop('designations');
 	}
-
 }

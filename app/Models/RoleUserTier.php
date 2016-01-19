@@ -16,8 +16,5 @@ class RoleUserTier extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'user_id',
-        'role_id',
-        'tier',
     ];
 }

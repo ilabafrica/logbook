@@ -17,11 +17,6 @@ class Level extends Model implements Revisionable{
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'range_lower',
-        'range_upper',
-        'user_id',
     ];
     /**
      * Function to calculate percentage of submissions in each level and sdp

@@ -22,11 +22,11 @@ class Sdp extends Model implements Revisionable {
     ];
 
 	/**
-	 * Survey relationship
+	 * sdp-tiers relationship
 	 */
-	public function surveys()
+	public function tiers()
 	{
-		return $this->hasMany('App\Models\SurveySdp');
+		return $this->hasMany('App\Models\Tier');
 	}
 	/**
 	* Return Sdp ID given the name
@@ -53,7 +53,7 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
+	public function positivePercent($comment = NULL, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
 	{
 		//	Initialize counts
 		$positive = 0;
@@ -78,8 +78,8 @@ class Sdp extends Model implements Revisionable {
 		$positives = [$posOne, $posTwo, $posThree];
 		//	Get the counts
 		
-		$total = $this->eagerLoad($facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $totals, $this->id);
-		$positive = $this->eagerLoad($facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $positives, $this->id);
+		$total = $this->eagerLoad($comment, $facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $totals, $this->id);
+		$positive = $this->eagerLoad($comment, $facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $positives, $this->id);
 		return $total>0?round((int)$positive*100/(int)$total, 2):0;
 	}
 	/**
@@ -198,12 +198,12 @@ class Sdp extends Model implements Revisionable {
 	/**
 	*	Function to eager-load questions for use in calculating other derivatives
 	*/
-	public function eagerLoad($facility = null, $subCounty = null, $county = null, $theDate, $from = NULL, $to = NULL, $array, $sdp_id)
+	public function eagerLoad($comment = NULL, $facility = null, $subCounty = null, $county = null, $theDate, $from = NULL, $to = NULL, $array, $sdp_id)
 	{
-		$data = HtcSurveyPageData::whereHas('htc_survey_page_question', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $array, $sdp_id){
+		$data = HtcSurveyPageData::whereHas('htc_survey_page_question', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $array, $sdp_id){
 			
-			$q->whereIn('question_id', $array)->whereHas('htc_survey_page', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
-				$q->whereHas('survey_sdp', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
+			$q->whereIn('question_id', $array)->whereHas('htc_survey_page', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
+				$q->whereHas('survey_sdp', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
 					$q->whereHas('survey', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to){
 						if($county || $subCounty || $facility)
 						{
@@ -240,7 +240,7 @@ class Sdp extends Model implements Revisionable {
 								$q->where('data_month', 'LIKE', $theDate."%");
 							}	
 						}
-					})->where('sdp_id', $this->id);
+					})->where('sdp_id', $this->id)->where('comment', 'like', '%' . $comment . '%');
 				});
 			});
 		});
@@ -313,5 +313,25 @@ class Sdp extends Model implements Revisionable {
 								->where('answer', $kit)
 								->lists('htc_survey_pages.id');
 		return $pages;
+	}
+	/**
+	* Function to split given string to get sdp and comment
+	*/
+	public static function splitSdp($id)
+	{
+		$sdpName = '';
+		$comment = null;
+		if(stripos($id, '-') !==FALSE)
+		{
+			$id = explode('-', $id);
+			$sdpName = $id[0];
+			if(trim($id[1])!='')
+				$comment = $id[1];
+		}
+		else
+			$sdpName = $id;
+		$sdp_id = Sdp::idByName($sdpName);
+		$comment = trim($comment);
+		return ['sdp_id' => $sdp_id, 'comment' => $comment];
 	}
 }

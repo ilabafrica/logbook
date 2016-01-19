@@ -619,6 +619,5 @@ class CreateMflTables extends Migration {
 		Schema::dropIfExists('algorithms');
 		Schema::dropIfExists('affiliations');
 		Schema::dropIfExists('audit_types');
-
 	}
 }

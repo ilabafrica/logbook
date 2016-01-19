@@ -30,5 +30,4 @@ class UpdateSurveysTable extends Migration {
 			$table->dropColumn('data_month');
 		});
 	}
-
 }

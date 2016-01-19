@@ -17,21 +17,6 @@ class Facility extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'code',
-        'name',
-        'sub_county_id',
-        'facility_type_id',
-        'facility_owner_id',
-        'reporting_site',
-        'nearest_town',
-        'landline',
-        'mobile',
-        'address',
-        'in_charge',
-        'operational_status',
-        'longitude',
-        'latitude',
-        'user_id',
     ];
 	/**
 	* Operational Status
@@ -325,21 +310,14 @@ class Facility extends Model implements Revisionable {
 	*/
 	public function perSdp($id)
 	{
-		$sdpName = '';
-		$comment = null;
-		if(stripos($id, '-') !==FALSE)
-		{
-			$id = explode('-', $id);
-			$sdpName = $id[0];
-			if(trim($id[1])!='')
-				$comment = $id[1];
-		}
-		else
-			$sdpName = $id;
+		$split = Sdp::splitSdp($id);
+		$sdp_id = $split['sdp_id'];
+		$comment = $split['comment'];
+
 		$surveys = $this->surveys->lists('id');
-		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->where('sdp_id', Sdp::idByName($sdpName));
+		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->where('sdp_id', $sdp_id);
 		if($comment)
-			$ssdps = $ssdps->where('comment', 'like', '%' .trim($comment) . '%');
+			$ssdps = $ssdps->where('comment', 'like', '%' . $comment . '%');
 		return $ssdps->count();
 	}
 }

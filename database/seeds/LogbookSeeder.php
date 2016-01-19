@@ -122,7 +122,8 @@ class LogbookSeeder extends Seeder
             array("name" => "Data Manager", "display_name" => "Data Manager"),
             array("name" => "County Lab Coordinator", "display_name" => "County Lab Coordinator"),
             array("name" => "Sub-County Lab Coordinator", "display_name" => "Sub-County Lab Coordinator"),
-            array("name" => "QA Supervisor", "display_name" => "QA Supervisor")
+            array("name" => "QA Supervisor", "display_name" => "QA Supervisor"),
+            array("name" => "QA Officer", "display_name" => "QA Officer")
         );
         foreach ($roles as $role) {
             Role::create($role);

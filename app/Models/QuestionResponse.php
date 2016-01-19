@@ -17,8 +17,5 @@ class QuestionResponse extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'question_id',
-        'response_id',
-        'comment',
     ];
 }
