@@ -39,18 +39,11 @@ class Survey extends Model implements Revisionable {
 		return $this->belongsTo('App\Models\User');
 	}
 	/**
-	 * Facility relationship
+	 * Facility-sdp relationship
 	 */
-	public function facility()
+	public function facilitySdp()
 	{
-		return $this->belongsTo('App\Models\Facility');
-	}
-	/**
-	 * Sdp relationship
-	 */
-	public function sdp()
-	{
-		return $this->hasMany('App\Models\SurveySdp');
+		return $this->belongsTo('App\Models\FacilitySdp');
 	}
 	/**
 	 * SurveyQuestions relationship
@@ -58,6 +51,13 @@ class Survey extends Model implements Revisionable {
 	public function questions()
 	{
 		return $this->hasMany('App\Models\SurveyQuestion');
+	}
+	/**
+	 * htc-survey-pages relationship
+	 */
+	public function pages()
+	{
+		return $this->hasMany('App\Models\HtcSurveyPage');
 	}
 	/**
 	 * Count number of questionnaires given qa officer filled
@@ -133,12 +133,11 @@ class Survey extends Model implements Revisionable {
     public function dates()
     {
     	$question_id = Question::idByName('Register Page Start Date');
-    	$dates = SurveySdp::where('survey_id', $this->id)
-        					->join('htc_survey_pages', 'survey_sdps.id', '=', 'htc_survey_pages.survey_sdp_id')
-        					->join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
-        					->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
-        					->where('question_id', $question_id)
-        					->lists('answer');
+    	$dates = $this->pages()
+    					->join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
+        				->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
+        				->where('question_id', $question_id)
+        				->lists('answer');
         if(!count($dates)>0)
         {
         	$dates = [$this->date_submitted];

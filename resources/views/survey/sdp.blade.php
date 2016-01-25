@@ -63,16 +63,16 @@
                         <tbody>
                         <?php $counter = 0; ?>
                         @foreach($facilities as $facility)
-                            <?php $counter++; $total = 0; if($facility->sdps($checklist->id)!=0){ $total = count($facility->points($checklist->id))+1; } ?>
+                            <?php $counter++; $total = 0; if($facility->facilitySdp->count()!=0){ $total = $facility->facilitySdp->count()+1; } ?>
                             <tr>
                                 <td rowspan="{!! $total !!}">{!! $counter !!}</td>
                                 <td rowspan="{!! $total !!}">{!! $facility->name !!}</td>
                             </tr>
-                            @if(count($facility->points($checklist->id))!=0)
-                                @foreach($facility->points($checklist->id) as $sdp)
+                            @if($facility->facilitySdp)
+                                @foreach($facility->facilitySdp as $fsdp)
                                 <tr>
-                                    <td>{!! $sdp['name'] !!}</td>
-                                    <td>{!! $facility->perSdp($sdp['name']) !!}</td>
+                                    <td>{!! $fsdp->sdp_tier_id?App\Models\Sdp::find($fsdp->sdp_id)->name.' - '.App\Models\Tier::find($fsdp->sdp_tier_id)->name:App\Models\Sdp::find($fsdp->sdp_id)->name !!}</td>
+                                    <td>{!! $fsdp->surveys->count() !!}</td>
                                 </tr>
                                 @endforeach
                             @endif

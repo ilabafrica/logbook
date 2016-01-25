@@ -52,7 +52,7 @@ class ReportController extends Controller {
 		$sub_county = NULL;
 		$jimbo = NULL;
 		//	Get facility
-		//$facility = Facility::find(2);
+		// $facility = Facility::find(2);
 		if(Input::get('sdp'))
 		{
 			$sdp = Input::get('sdp');
@@ -60,7 +60,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Sdp::whereIn('id', Facility::find($site)->facilitySdp->lists('sdp_id'))->lists('name', 'id');
 		}
 		if(Input::get('sub_county'))
 		{
@@ -101,7 +101,8 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            $count = count($months);
-	            	foreach ($months as $month) {
+	            	foreach ($months as $month)
+	            	{
 	    				$chart.= "'".$month->label.' '.$month->annum;
 	    				if($count==1)
 	    					$chart.="' ";
@@ -122,34 +123,25 @@ class ReportController extends Controller {
 	        series: [";
 	        $counts = count($ssdps);
 	        $i = $counts;
-	        foreach ($ssdps as $sdp) {
-	        	$name = '';
-	        	if($i==1)
-	        		$name = Sdp::find(Sdp::splitSdp($sdp)['sdp_id'])->name;
-	        	else
-	        		$name = Sdp::find($sdp)->name;
-	        	$chart.="{name:"."'".$name."'".", data:[";
+	        foreach ($ssdps as $sdp)
+	        {
+
+	        	$chart.="{name:"."'".$sdp."'".", data:[";
         		$counter = count($months);
-        		foreach ($months as $month) {
-        			if($i==1)
+        		foreach ($months as $month)
+        		{
+        			$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($data==0)
         			{
-	        			$split = Sdp::splitSdp($sdp);
-        				$data = Sdp::find($split['sdp_id'])->positivePercent($split['comment'], $site, $sub_county, $jimbo, $month->annum, $month->months);
-        			}
-        			else
-        			{
-        				$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $month->annum, $month->months);
-        			}
-        			if($data==0){
     					$chart.= '0.00';
     					if($counter==1)
         					$chart.="";
         				else
         					$chart.=",";
     				}
-    				else{
+    				else
+    				{
         				$chart.= $data;
-
         				if($counter==1)
         					$chart.="";
         				else
@@ -3941,21 +3933,19 @@ class ReportController extends Controller {
 		$sdps = array();
 		$title = '';
 		$n = 0;
-		if($jimbo!=NULL || $sub_county!=NULL || $site!=NULL || $sdp!=NULL)
+		if($jimbo || $sub_county || $site || $sdp)
 		{
-			if($sub_county!=NULL || $site!=NULL|| $sdp!=NULL)
+			if($sub_county || $site || $sdp)
 			{
-				if($site!=NULL|| $sdp!=NULL)
+				if($site || $sdp)
 				{
-					foreach (Facility::find($site)->surveys as $survey) 
+					foreach (Facility::find($site)->facilitySdp as $fsdp) 
 					{
-						foreach ($survey->sdps as $sdp) 
-						{
-						array_push($sdps, $sdp->sdp_id);
-						}
+						array_push($sdps, $fsdp->sdp_id);
 					}
-					if($sdp!=NULL)
+					if($sdp)
 					{
+						$sdps = array_intersect([$sdp], $sdps);
 						$title = $sdp.' for '.Facility::find($site)->name;
 					}
 					else
@@ -3969,12 +3959,9 @@ class ReportController extends Controller {
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					foreach (SubCounty::find($sub_county)->facilities as $facility)
 					{
-						foreach ($facility->surveys as $survey) 
+						foreach ($facility->facilitySdp as $fsdp) 
 						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
+							array_push($sdps, $fsdp->sdp_id);
 						}
 					}
 				}
@@ -3986,12 +3973,9 @@ class ReportController extends Controller {
 				{
 					foreach ($subCounty->facilities as $facility)
 					{
-						foreach ($facility->surveys as $survey) 
+						foreach ($facility->facilitySdp as $fsdp) 
 						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
+							array_push($sdps, $fsdp->sdp_id);
 						}
 					}
 				}
@@ -4006,12 +3990,9 @@ class ReportController extends Controller {
 				{
 					foreach ($subCounty->facilities as $facility)
 					{
-						foreach ($facility->surveys as $survey) 
+						foreach ($facility->facilitySdp as $fsdp) 
 						{
-							foreach ($survey->sdps as $sdp) 
-							{
-								array_push($sdps, $sdp->sdp_id);
-							}
+							array_push($sdps, $fsdp->sdp_id);
 						}
 					}
 				}

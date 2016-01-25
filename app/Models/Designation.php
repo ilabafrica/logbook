@@ -16,9 +16,6 @@ class Designation extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'user_id',
     ];
  	/**
 	* Return designation id given the name

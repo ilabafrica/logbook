@@ -5,10 +5,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
 
-class Cadre extends Model implements Revisionable {
+class SdpTier extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
-	protected $table = 'cadres';
+	protected $table = 'sdp_tiers';
 	use RevisionableTrait;
 
     /*

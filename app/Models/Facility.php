@@ -38,11 +38,11 @@ class Facility extends Model implements Revisionable {
 		return $this->belongsTo('App\Models\FacilityOwner');
 	}
 	/**
-	* Relationship with sites
+	* Relationship with facility-sdp
 	*/
-	public function sites()
+	public function facilitySdp()
 	{
-		return $this->hasMany('App\Models\Site');
+		return $this->hasMany('App\Models\FacilitySdp');
 	}
 	/**
 	* Relationship with subcounty
@@ -99,8 +99,10 @@ class Facility extends Model implements Revisionable {
 					$theDate .= "-".sprintf("%02d", $date);
 				}
 			}
-		}	
-		$surveys = Checklist::find($id)->surveys()->where('facility_id', $this->id);
+		}
+		//	Get facility-sdps for the facility
+		$fsdps = $this->facilitySdp->lists('id');
+		$surveys = Checklist::find($id)->surveys()->whereIn('facility_sdp_id', $fsdps);
 		if (strlen($theDate)>0 || ($from && $to))
 		{
 			if($from && $to)
@@ -284,17 +286,15 @@ class Facility extends Model implements Revisionable {
 		$result = [];
 		$returnable = [];
 		//	Get surveys_sdps
-		$surveys = $this->surveys;
+		$surveys = Survey::whereIn('facility_sdp_id', $this->facilitySdp->lists('id'));
 		if($id)
 			$surveys = $surveys->where('checklist_id', $id);
-		$surveys = $surveys->lists('id');
 		//	Get survey-sdps with the above IDs
-		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->select('sdp_id', 'comment')->get();
-		foreach ($ssdps as $data)
+		foreach ($this->facilitySdp as $fsdp)
 		{
-			$sdp = Sdp::find($data->sdp_id);
-			if((stripos($sdp->name, 'PMTCT') !==FALSE) || (stripos($sdp->name, 'OPD') !==FALSE) || (stripos($sdp->name, 'IPD') !==FALSE))
-				$result[] = $sdp->name.' - '.$data->comment;
+			$sdp = Sdp::find($fsdp->sdp_id);
+			if($fsdp->sdp_tier_id)
+				$result[] = $sdp->name.' - '.Tier::find($fsdp->sdp_tier_id)->name;
 			else
 				$result[] = $sdp->name;
 		}

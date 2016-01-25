@@ -11,11 +11,14 @@
         </ol>
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-heading">
-    <i class="fa fa-tags"></i> {!! '' !!}
+<div class="panel panel-primary">
+    <div class="panel-heading"><i class="fa fa-tags"></i> 
+        {!! $page->survey->facilitySdp->facility->name.':<strong>'.App\Models\FacilitySdp::cojoinSdp($page->survey->facilitySdp->id).' for page '.$page->page.'</strong>' !!}
         <span class="panel-btn">
-            <a class="btn btn-outline btn-primary btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+            <a href="{!! url('page/'.$page->id.'/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
+        </span>
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
                 <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
             </a>
         </span>
@@ -38,7 +41,7 @@
             <!-- CSRF Token -->
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
             <!-- ./ csrf token -->
-            @foreach($ssdp->survey->checklist->sections as $section)
+            @foreach($page->survey->checklist->sections as $section)
                 @if(($section->name != 'Total Score') && ($section->name != 'GPRS Location'))
                     <strong>{!! $section->name.' '.$section->label !!}</strong>
                     <hr />
@@ -53,7 +56,7 @@
                                     <div class="col-sm-12">
                                     @if($question->question_type == App\Models\Question::CHOICE)
                                         @foreach($question->answers as $answer)
-                                            @if(($question->identifier == 'surpervisor') || ($question->identifier == 'algorithm' && $ssdp->survey->checklist->id == 1))
+                                            @if(($question->identifier == 'surpervisor') || ($question->identifier == 'algorithm' && $page->survey->checklist->id == 1))
                                                 <label class="radio-inline">{!! Form::radio('radio_'.$question->id, $answer->score, (($page->sq($question->id) && in_array($answer->score, [$page->sq($question->id)->data->answer]))?true:false), ['class' => 'radio']) !!}{!! $answer->name !!}</label>
                                             @elseif($question->identifier == 'no')
                                                 <label class="checkbox-inline">{!! Form::checkbox('checkbox_'.$question->id.'[]', $answer->description, (($page->sq($question->id) && in_array($answer->description, preg_split("/[\s,]+/", $page->sq($question->id)->data->answer)))?true:false), ['class' => 'checkbox']) !!}{!! $answer->name !!}</label>
@@ -63,15 +66,15 @@
                                         @endforeach
                                     @elseif($question->question_type == App\Models\Question::FIELD)
                                         @if($question->name == 'Name of the QA Officer')
-                                            {!! Form::label('', $ssdp->survey->qa_officer, array('class' => 'control-label text-primary')) !!}
+                                            {!! Form::label('', $page->survey->qa_officer, array('class' => 'control-label text-primary')) !!}
                                         @else
                                             {!! Form::text('field_'.$question->id, $page->sq($question->id)?$page->sq($question->id)->data->answer:'', ['class' => 'form-control']) !!}
                                         @endif
                                     @elseif($question->question_type == App\Models\Question::SELECT)
                                         @if($question->name == 'Service Delivery Points (SDP)')
-                                            {!! Form::label('', $ssdp->sdp->comment?$ssdp->sdp->name.' - '.$ssdp->sdp->comment:$ssdp->sdp->name, array('class' => 'control-label text-primary')) !!}
+                                            {!! Form::label('', App\Models\FacilitySdp::cojoinSdp($page->survey->facilitySdp->id), array('class' => 'control-label text-primary')) !!}
                                         @elseif($question->name == 'Facility')
-                                            {!! Form::label('', $ssdp->survey->facility->name, array('class' => 'control-label text-primary')) !!}
+                                            {!! Form::label('', $page->survey->facilitySdp->facility->name, array('class' => 'control-label text-primary')) !!}
                                         @else
                                             {!! Form::select('select_'.$question->id, ['' => Lang::choice('messages.select', 1)], '', ['class' => 'form-control']) !!}
                                         @endif

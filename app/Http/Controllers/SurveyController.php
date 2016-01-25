@@ -15,9 +15,6 @@ use App\Models\Affiliation;
 use App\Models\Algorithm;
 use App\Models\AuditType;
 use App\Models\TestKit;
-use App\Models\MeInfo;
-use App\Models\SpirtInfo;
-use App\Models\SurveyScore;
 use App\Models\Answer;
 use App\Models\SurveySdp;
 use App\Models\HtcSurveyPage;
@@ -26,6 +23,7 @@ use App\Models\HtcSurveyPageData;
 use App\Models\County;
 use App\Models\SubCounty;
 use App\Models\Cadre;
+use App\Models\FacilitySdp;
 
 use Illuminate\Http\Request;
 use Response;
@@ -62,8 +60,8 @@ class SurveyController extends Controller {
 		if($county || $subCounty){
 			foreach ($checklists as $checklist)
 			{
-				$surveys[$checklist->id] = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-																->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+				$surveys[$checklist->id] = $checklist->surveys()->join('facility_sdps', 'facility_sdps.id', '=', 'surveys.facility_sdp_id')
+																->join('facilities', 'facilities.id', '=', 'facility_sdps.facility_id');
 				if($subCounty)
 				{
 					$surveys[$checklist->id] = $surveys[$checklist->id]->where('facilities.sub_county_id', $subCounty->id)->get();
@@ -89,17 +87,15 @@ class SurveyController extends Controller {
 		$checklist = Checklist::find($id);
 		//	Get list of facilities
 		$facilities = Facility::lists('name', 'id');
-		//	Get list of service delivery points
-		$sdps = Sdp::lists('name', 'id');
 		//	Get list of algorithms
-		$algorithms = Algorithm::lists('name', 'id');
+		$algorithms = Algorithm::lists('name', 'name');
 		//	Get list of affiliations
-		$affiliations = Affiliation::lists('name', 'id');
+		$affiliations = Affiliation::lists('name', 'name');
 		//	Get list of audit-types
-		$auditTypes = AuditType::lists('name', 'id');
+		$auditTypes = AuditType::lists('name', 'name');
 		//	Get list of test kits
-		$kits = TestKit::lists('name', 'id');
-		return view('survey.create', compact('checklist', 'facilities', 'sdps', 'algorithms', 'affiliations', 'auditTypes', 'kits'));
+		$kits = TestKit::lists('name', 'name');
+		return view('survey.create', compact('checklist', 'facilities', 'algorithms', 'affiliations', 'auditTypes', 'kits'));
 	}
 
 	/**
@@ -116,63 +112,17 @@ class SurveyController extends Controller {
 		$longitude = Input::get('longitude');
 		$latitude = Input::get('latitude');
 		$comments = Input::get('comments');
-		$sdp_id = Input::get('sdp');
-		$affiliation = NULL;
-		$audit_type = NULL;
-		$algorithm = NULL;
-		$screening = NULL;
-		$confirmatory = NULL;
-		$tie_breaker = NULL;
-		if($checklist_id == Checklist::idByName('SPI-RT Checklist'))
-			$affiliation = Input::get('affiliation');
-		if($checklist_id == Checklist::idByName('M & E Checklist')){
-			$audit_type = Input::get('audit_type');
-			$algorithm = Input::get('algorithm');
-			$screening = Input::get('screening');
-			$confirmatory = Input::get('confirmatory');
-			$tie_breaker = Input::get('tie_breaker');
-		}
+		$sdp = Input::get('sdp');
 		//	Check if survey exists
-		$survey = Survey::where('checklist_id', $checklist_id)
-						->where('facility_id', $facility_id)
-						->where('qa_officer', $qa_officer)
-						->where('sdp_id', $sdp_id)
-						->first();
-		if(count($survey) == 0){
-			$survey = new Survey;
-			$survey->checklist_id = $checklist_id;
-			$survey->facility_id = $facility_id;
-			$survey->qa_officer = $qa_officer;
-			$survey->latitude = $latitude;
-			$survey->longitude = $longitude;
-			$survey->comment = $comments;
-			$survey->sdp_id = $sdp_id;
-			$survey->save();
-		}
-		//	ME info
-		if($checklist_id == Checklist::idByName('M & E Checklist')){
-			$me_info = $survey->me;
-			if(count($me_info) == 0){
-				$me_info = new MeInfo;
-				$me_info->survey_id = $survey->id;
-				$me_info->audit_type_id = $audit_type;
-				$me_info->algorithm_id = $algorithm;
-				$me_info->screening = $screening;
-				$me_info->confirmatory = $confirmatory;
-				$me_info->tie_breaker = $tie_breaker;
-				$me_info->save();
-			}
-		}
-		//	SPI-RT info
-		if($checklist_id == Checklist::idByName('SPI-RT Checklist')){
-			$spirt_info = $survey->spirt;
-			if(count($spirt_info) == 0){
-				$spirt_info = new SpirtInfo;
-				$spirt_info->survey_id = $survey->id;
-				$spirt_info->affiliation_id = $affiliation;
-				$spirt_info->save();
-			}
-		}
+		$survey = new Survey;
+		$survey->checklist_id = $checklist_id;
+		$survey->facility_id = $facility_id;
+		$survey->qa_officer = $qa_officer;
+		$survey->latitude = $latitude;
+		$survey->longitude = $longitude;
+		$survey->comment = $comments;
+		$survey->facility_sdp_id = FacilitySdp::splitSdp($facility, $sdp);
+		$survey->save();
 		foreach (Input::all() as $key => $value) {
 			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE) || (stripos($key, 'audit') !==FALSE))
 				continue;
@@ -242,8 +192,8 @@ class SurveyController extends Controller {
 			$subCounty = SubCounty::find(Auth::user()->tier->tier);
 		if($county || $subCounty)
 		{
-			$surveys = $checklist->surveys()->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-						->join('survey_sdps', 'surveys.id', '=', 'survey_sdps.survey_id');
+			$surveys = $checklist->surveys()->join('facility_sdps', 'facility_sdps.id', '=', 'surveys.facility_sdp_id')
+											->join('facilities', 'facilities.id', '=', 'facility_sdps.facility_id');
 			if($subCounty)
 			{
 				$surveys = $surveys->where('facilities.sub_county_id', $subCounty->id)->get(['surveys.*']);
@@ -314,11 +264,9 @@ class SurveyController extends Controller {
 	{
 		//	Get survey
 		$survey = Survey::find($id);
-		//	Get all facilities in sub-county
-		$facilities = $survey->facility->subCounty->facilities->lists('name', 'id');
-		//	Already selected facility
-		$facility = $survey->facility_id;
-		return view('survey.edit', compact('survey', 'facilities', 'facility'));
+		//	Already selected facility and sdp
+		$fsdp = FacilitySdp::cojoinSdp($survey->facilitySdp->id);
+		return view('survey.edit', compact('survey', 'facilities', 'fsdp'));
 	}
 
 	/**
@@ -1029,12 +977,8 @@ class SurveyController extends Controller {
 	{
 		//	Get page
 		$page = HtcSurveyPage::find($id);
-		//	Get survey sdp
-		$ssdp = SurveySdp::find($page->survey_sdp_id);
 		//	Get cadres
 		$cadres = Cadre::all();
-		//	Get sdps
-		$sdps = Sdp::lists('name', 'id');
 		//	Get audit_types
 		$audit_types = AuditType::lists('name', 'name');
 		//	Get test_kits
@@ -1043,7 +987,7 @@ class SurveyController extends Controller {
 		$algorithms = Algorithm::lists('name', 'name');
 		//	Get affiliations
 		$affiliations = Affiliation::lists('name', 'name');
-		return view('survey.editpage', compact('page', 'ssdp', 'cadres', 'sdps', 'audit_types', 'test_kits', 'algorithms', 'affiliations'));
+		return view('survey.editpage', compact('page', 'cadres', 'audit_types', 'test_kits', 'algorithms', 'affiliations'));
 	}	
 	/**
 	 * Display the specified resource to be updated.

@@ -64,15 +64,19 @@
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.county', 1) }}</td>
-                      <td>{!! $survey->facility->subCounty->county->name !!}</td>
+                      <td>{!! $survey->facilitySdp->facility->subCounty->county->name !!}</td>
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.sub-county', 1) }}</td>
-                      <td>{!! $survey->facility->subCounty->name !!}</td>
+                      <td>{!! $survey->facilitySdp->facility->subCounty->name !!}</td>
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.facility', 1) }}</td>
-                      <td>{!! $survey->facility->name !!}</td>
+                      <td>{!! $survey->facilitySdp->facility->name !!}</td>
+                  </tr>
+                  <tr>
+                      <td>{{ Lang::choice('messages.sdp', 1) }}</td>
+                      <td>{!! App\Models\FacilitySdp::cojoinSdp($survey->facilitySdp->id) !!}</td>
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.gps', 1) }}</td>
@@ -93,39 +97,50 @@
           </tbody>
       </table>
       <table class="table table-striped table-bordered table-hover">
+          @if($survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
+            <thead>
+                <tr>
+                    <th>{{ Lang::choice('messages.page-no', 1) }}</th>
+                    <th>{{ Lang::choice('messages.page-register-start-date', 1) }}</th>
+                    <th>{{ Lang::choice('messages.page-register-end-date', 1) }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <?php $counter = 0; ?>
+            <tbody>
+                @foreach($survey->pages as $page)
+                <?php $counter++; ?>
+                <tr>
+                    <td>{!! $counter !!}</td>
+                    <td>{!! $page->sq(App\Models\Question::idById('registerstartdate'))->data->answer !!}</td>
+                    <td>{!! $page->sq(App\Models\Question::idById('enddate'))->data->answer !!}</td>
+                    <td>
+                        <a href="{!! url('page/'.$page->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
+                        @if(Entrust::can('edit-checklist-data'))
+                            <a href="{!! url('page/'.$page->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
+                            <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('page/'.$page->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
+                        @endif
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        @else
           <thead>
               <tr>
-                  <th>{{ Lang::choice('messages.sdp', 1) }}</th>
-                  <th>{{ Lang::choice('messages.description', 1) }}</th>
-                  @if($survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
-                      <th>{{ Lang::choice('messages.page-no', 1) }}</th>
-                  @endif
-                  <th></th>
+                  <th>{{ Lang::choice('messages.question', 1) }}</th>
+                  <th>{{ Lang::choice('messages.response', 1) }}</th>
               </tr>
           </thead>
           <tbody>
-              @foreach($survey->sdps as $sdp)
+              @foreach($survey->questions as $question)
+              <?php $qstn = App\Models\Question::find($question->question_id); ?>
               <tr>
-                  <td>{!! $sdp->sdp->name !!}</td>
-                  <td>{!! $sdp->comment !!}</td>
-                  @if($survey->checklist->id == App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
-                      <td>{!! $sdp->pages->count() !!}</td>
-                  @endif
-                  <td>
-                      <a href="{!! url('surveysdp/'.$sdp->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {{ Lang::choice('messages.view', 1) }}</span></a>
-                      @if(Entrust::can('edit-checklist-data'))
-                          @if($survey->checklist->id != App\Models\Checklist::idByName('HTC Lab Register (MOH 362)'))
-                              <a href="{!! url('surveysdp/'.$sdp->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></a>
-                          @else
-                              <button class="btn btn-info btn-sm  edit-item-link" data-toggle="modal" data-target=".confirm-edit-modal" data-id="{{{ $sdp->id }}}" data-contents="{{{ $sdp->sdp->name.' - '.$sdp->comment }}}"><i class="fa fa-edit"></i><span> {{ Lang::choice('messages.edit', 1) }}</span></button>
-                          @endif
-                          <button class="btn btn-warning btn-sm duplicate-item-link" data-toggle="modal" data-target=".confirm-duplicate-modal" data-id="{{{ $sdp->id }}}" data-contents="{{{ $sdp->sdp->name.' - '.$sdp->comment }}}"><i class="fa fa-files-o"></i><span> {!! Lang::choice('messages.duplicate', 1) !!}</span></button>
-                          <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{{{ url('surveysdp/'.$sdp->id.'/delete') }}}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>
-                      @endif
-                  </td>
+                  <td>{!! $qstn->name !!}</td>
+                  <td>{!! $question->sd->answer !!}</td>
               </tr>
               @endforeach
           </tbody>
+        @endif
       </table>
   </div>
 </div>
@@ -154,7 +169,7 @@
                             <tbody>
                                 <tr>
                                     <th>{!! Lang::choice('messages.facility', 1) !!}</th>
-                                    <td>{!! $survey->facility->name !!}</td>
+                                    <td>{!! $survey->facilitySdp->facility->name !!}</td>
                                 </tr>
                                 <tr>
                                     <th>{!! Lang::choice('messages.qa-officer', 1) !!}</th>
@@ -223,7 +238,7 @@
                             <tbody>
                                 <tr>
                                     <th>{!! Lang::choice('messages.facility', 1) !!}</th>
-                                    <td>{!! $survey->facility->name !!}</td>
+                                    <td>{!! $survey->facilitySdp->facility->name !!}</td>
                                 </tr>
                                 <tr>
                                     <th>{!! Lang::choice('messages.qa-officer', 1) !!}</th>

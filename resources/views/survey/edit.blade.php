@@ -12,7 +12,14 @@
     </div>
 </div>
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-questionnaire', 1) }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> 
+        {{ Lang::choice('messages.edit-questionnaire', 1) }}
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
+    </div>
     <!-- .panel-heading -->
     <div class="panel-body">
         <!-- Begin form --> 
@@ -60,9 +67,13 @@
             <div class="form-group">
                 {!! Form::label('facility_id', Lang::choice('messages.reporting-to-facility', 1), array('class' => 'col-sm-4 control-label')) !!}
                 <div class="col-sm-8">
-                   {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities,
-                        old('facility') ? old('facility') : $facility, 
-                        array('class' => 'form-control', 'id' => 'facility')) !!}
+                   {!! Form::text('facility', $survey->facilitySdp->facility->name, array('class' => 'form-control', 'readonly')) !!}
+                </div>
+            </div>
+            <div class="form-group">
+                {!! Form::label('sdp_id', Lang::choice('messages.sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
+                <div class="col-sm-8">
+                   {!! Form::text('sdp', $fsdp, array('class' => 'form-control', 'readonly')) !!}
                 </div>
             </div>
             <div class='form-group'>
@@ -75,13 +86,13 @@
             <div class="form-group">
                 {!! Form::label('sub-county', Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
                 <div class="col-sm-8">
-                    {!! Form::text('sub_county', $survey->facility->subCounty->name, array('class' => 'form-control', 'readonly')) !!}
+                    {!! Form::text('sub_county', $survey->facilitySdp->facility->subCounty->name, array('class' => 'form-control', 'readonly')) !!}
                 </div>
             </div>
             <div class="form-group">
                 {!! Form::label('county', Lang::choice('messages.county', 1), array('class' => 'col-sm-4 control-label')) !!}
                 <div class="col-sm-8">
-                    {!! Form::text('county', $survey->facility->subCounty->county->name, array('class' => 'form-control', 'readonly')) !!}
+                    {!! Form::text('county', $survey->facilitySdp->facility->subCounty->county->name, array('class' => 'form-control', 'readonly')) !!}
                 </div>
             </div>
             <div class="form-group">

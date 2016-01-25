@@ -282,14 +282,16 @@ class Sdp extends Model implements Revisionable {
 	  	}
 	  	if($county || $subCounty || $facility)
 		{
-			$surveys = $surveys->whereHas('facility', function($q) use($county, $subCounty, $facility)
+			$surveys = $surveys->whereHas('facilitySdp', function($q) use($county, $subCounty, $facility)
 			{
 				if($subCounty || $facility)
 				{
-					if($facility)
-						$q->where('facility_id', $facility);
-					else
-						$q->where('facilities.sub_county_id', $subCounty);
+					$q->whereHas('facility', function($q) use($facility, $subCounty){
+						if($facility)
+							$q->where('id', $facility);
+						else
+							$q->where('facilities.sub_county_id', $subCounty);
+					});					
 				}
 				else
 				{
@@ -313,25 +315,5 @@ class Sdp extends Model implements Revisionable {
 								->where('answer', $kit)
 								->lists('htc_survey_pages.id');
 		return $pages;
-	}
-	/**
-	* Function to split given string to get sdp and comment
-	*/
-	public static function splitSdp($id)
-	{
-		$sdpName = '';
-		$comment = null;
-		if(stripos($id, '-') !==FALSE)
-		{
-			$id = explode('-', $id);
-			$sdpName = $id[0];
-			if(trim($id[1])!='')
-				$comment = $id[1];
-		}
-		else
-			$sdpName = $id;
-		$sdp_id = Sdp::idByName($sdpName);
-		$comment = trim($comment);
-		return ['sdp_id' => $sdp_id, 'comment' => $comment];
 	}
 }

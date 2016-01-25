@@ -12,7 +12,14 @@
     </div>
 </div>
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.fill-questionnaire', 1) }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> 
+        {{ Lang::choice('messages.fill-questionnaire', 1) }}
+        <span class="panel-btn">
+            <a class="btn btn-sm btn-info" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+                <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
+            </a>
+        </span>
+    </div>
     <!-- .panel-heading -->
     <div class="panel-body">
         <!-- Begin form --> 
@@ -87,11 +94,11 @@
                             {!! Form::label('select_'.$question->id, $question->name, array('class' => 'col-sm-6 control-label', 'style' => 'text-align:left')) !!}
                             <div class="col-sm-6">
                                 @if($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
-                                   {!! Form::select('facility', array(''=>trans('messages.select'))+$facilities,'', 
-                                    array('class' => 'form-control')) !!}
+                                   {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, '', 
+                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
                                 @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)', $question->section->checklist->id))
-                                    {!! Form::select('sdp', array(''=>trans('messages.select'))+$sdps,'', 
-                                    array('class' => 'form-control')) !!}
+                                    {!! Form::select('sdp', array(''=>trans('messages.select-sdp')), '', 
+                                array('class' => 'form-control', 'id' => 'sdp')) !!}
                                 @endif
                                 @if($question->section->checklist->id == App\Models\Checklist::idByName('SPI-RT Checklist'))
                                     @if($question->id == App\Models\Question::idByName('Affilliation (Circle One)', $question->section->checklist->id))

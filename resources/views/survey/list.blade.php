@@ -41,7 +41,7 @@
                             <th>{{ Lang::choice('messages.response-no', 1) }}</th>
                             <th>{{ Lang::choice('messages.qa-officer', 1) }}</th>
                             <th>{{ Lang::choice('messages.facility', 1) }}</th>
-                            <th>{{ Lang::choice('messages.sdp', 2) }}</th>
+                            <th>{{ Lang::choice('messages.sdp', 1) }}</th>
                             <th>{{ Lang::choice('messages.date-submitted', 1) }}</th>
                             <th>{{ Lang::choice('messages.action', 2) }}</th>
                         </tr>
@@ -56,15 +56,15 @@
                             >
                             <td>{{ $counter }}</td>
                             <td>{{ $survey->qa_officer }}</td>
-                            <td>{{ $survey->facility->name }}</td>
-                            <td>{{ implode(", ", $survey->ssdps()) }}</td>
+                            <td>{{ $survey->facilitySdp->facility->name }}</td>
+                            <td>{{ $survey->facilitySdp->sdp_tier_id?App\Models\Sdp::find($survey->facilitySdp->sdp_id)->name.' - '.App\Models\Tier::find($survey->facilitySdp->sdp_tier_id)->name:App\Models\Sdp::find($survey->facilitySdp->sdp_id)->name }}</td>
                             <td>{{ $survey->date_submitted }}</td>
                             <td>
                                 <a href="{!! url('survey/'.$survey->id) !!}" class="btn btn-success btn-sm"><i class="fa fa-eye"></i><span> {!! Lang::choice('messages.view', 1) !!}</span></a>
                                 @if(Entrust::can('edit-checklist-data'))
                                     <a href="{!! url('survey/'.$survey->id.'/edit') !!}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i><span> {!! Lang::choice('messages.edit', 1) !!}</span></a>
                                     @if($survey->checklist->name == 'HTC Lab Register (MOH 362)')
-                                        <button class="btn btn-warning btn-sm data-month-item-link" data-toggle="modal" data-target=".data-month-modal" data-id="{{{ $survey->id }}}" data-facility="{{{ $survey->facility->name }}}" data-submitted="{{{ $survey->date_submitted }}}" data-officer="{{{ $survey->qa_officer }}}" data-sdps="{{{ implode(", ", $survey->ssdps()) }}}"  data-oldest="{{{ json_decode($survey->dates())->min }}}" data-newest="{{{ json_decode($survey->dates())->max }}}"><i class="fa fa-lemon-o"></i><span> {!! Lang::choice('messages.data-month', 1) !!}</span></button>
+                                        <button class="btn btn-warning btn-sm data-month-item-link" data-toggle="modal" data-target=".data-month-modal" data-id="{{{ $survey->id }}}" data-facility="{{{ $survey->facilitySdp->facility->name }}}" data-submitted="{{{ $survey->date_submitted }}}" data-officer="{{{ $survey->qa_officer }}}" data-sdps="{{{ 'qwerty' }}}"  data-oldest="{{{ json_decode($survey->dates())->min }}}" data-newest="{{{ json_decode($survey->dates())->max }}}"><i class="fa fa-lemon-o"></i><span> {!! Lang::choice('messages.data-month', 1) !!}</span></button>
                                     @endif
                                     <button class="btn btn-danger btn-sm delete-item-link" data-toggle="modal" data-target=".confirm-delete-modal" data-id="{!! url('survey/'.$survey->id.'/delete') !!}"><i class="fa fa-trash-o"></i><span> {!! Lang::choice('messages.delete', 1) !!}</span></button>                              
                                 @endif
