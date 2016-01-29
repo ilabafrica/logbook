@@ -39,15 +39,11 @@
             <div class="panel-body">
                 <div id="drill" style="height: 300px"></div>
             <br />
+            @foreach($checklists as $checklist)
                 <div class="col-sm-4">
-                    <div id="htc" style="height: 300px"></div>
+                    <div id="pie{{$checklist->id}}" style="height: 300px"></div>
                 </div>
-                <div class="col-sm-4">
-                    <div id="me" style="height: 300px"></div>
-                </div>
-                <div class="col-sm-4">
-                    <div id="spirt" style="height: 300px"></div>
-                </div>
+            @endforeach
             </div>
         </div>
     </div>
@@ -60,9 +56,13 @@
 <script type="text/javascript">
     $(function () {
         $('#drill').highcharts(<?php echo $msline ?>);
-        $('#htc').highcharts(<?php echo $htc_pie ?>);
-        $('#me').highcharts(<?php echo $me_pie ?>);
-        $('#spirt').highcharts(<?php echo $spi_pie ?>);
+        <?php
+            foreach($checklists as $checklist)
+            { ?>
+                $('#pie<?php echo $checklist->id ?>').highcharts(<?php echo $pie[$checklist->id] ?>);
+              <?php
+            }
+        ?>
     });
 </script>
 @endsection

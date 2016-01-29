@@ -2262,18 +2262,10 @@ class ReportController extends Controller {
 		//	Get complete sites
 		$counter = 0;
 		$facilities = Survey::lists('facility_id');
-		$htc = Checklist::idByName('HTC Lab Register (MOH 362)');
-		$me = Checklist::idByName('M & E Checklist');
-		$spi = Checklist::idByName('SPI-RT Checklist');
-		foreach ($facilities as $key => $value)
-		{
-			//	Variables
-			$facility = Facility::find($value);
-			if(($facility->sdps($htc) == $facility->sdps($me)) && ($facility->sdps($me) == $facility->sdps($spi)))
-				$counter++;
-		}
-		//	Get checklists
-		$checklists = Checklist::all();
+		$htc = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
+		$me = Checklist::find(Checklist::idByName('M & E Checklist'));
+		$spi = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
+		$checklists = [$htc, $me, $spi];
 		//	Get counties
 		$counties = $this->countiesWithData();
 		//	Get all sub-counties
@@ -2301,338 +2293,119 @@ class ReportController extends Controller {
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to));
 	    //	Pie chart for county submissions
-	    $htc_pie = "{
-	        chart: {
-	            type: 'pie'
-	        },
-	        title: {
-	            text: 'HTC Lab Register (MoH 362)'
-	        },
-	        xAxis: {
-	            type: 'category'
-	        },
+	    $pie = [];
+	    foreach($checklists as $checklist)
+	    {
+		    $pie[$checklist->id] = "{
+		        chart: {
+		            type: 'pie'
+		        },
+		        title: {
+		            text: '".$checklist->name."'
+		        },
+		        xAxis: {
+		            type: 'category'
+		        },
 
-	        legend: {
-	            enabled: false
-	        },
-	        credits: {
-	            enabled: false
-	        },
-	        plotOptions: {
-	            series: {
-	                borderWidth: 0,
-	                dataLabels: {
-	                    enabled: true,
-	                }
-	            }
-	        },
+		        legend: {
+		            enabled: false
+		        },
+		        credits: {
+		            enabled: false
+		        },
+		        plotOptions: {
+		            series: {
+		                borderWidth: 0,
+		                dataLabels: {
+		                    enabled: true,
+		                }
+		            }
+		        },
 
-	        series: [{
-	            name: 'Total',
-	            colorByPoint: true,
-	            data: [";
-	            	foreach (Checklist::find($htc)->distCount($htc) as $key)
+		        series: [{
+		            name: 'Total',
+		            colorByPoint: true,
+		            data: [";
+		            	foreach ($checklist->distCount($htc) as $key)
+		            	{
+		            		$county = County::find($key);
+		            		$pie[$checklist->id].="{
+				                name: '".$county->name."',
+				                y: ".$checklist->fsdps($checklist->id, $county->id, NULL, NULL, NULL, $from, $toPlusOne)->count().",
+				                drilldown: '".$county->id."'
+				            },";
+		            	}
+		            	$pie[$checklist->id].="
+		            ]
+		        }],
+		        drilldown: {
+		            series: [";
+		            foreach ($checklist->distCount() as $key)
 	            	{
 	            		$county = County::find($key);
-	            		$htc_pie.="{
-			                name: '".$county->name."',
-			                y: ".$county->submissions($htc, $from, $to).",
-			                drilldown: '".$county->id."'
-			            },";
-	            	}
-	            	$htc_pie.="
-	            ]
-	        }],
-	        drilldown: {
-	            series: [";
-	            foreach (Checklist::find($htc)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-            		$htc_pie.="{
-		                id: '".$county->id."',
-		                name: 'Total',
-		                data: [";
-		                foreach ($county->subCounties as $subCounty)
-		                {
-		                	$htc_pie.="{
-			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($htc, $from, $to).",
-			                    drilldown: '".$subCounty->name."'
-			                },";
-		                }
-		                $htc_pie.="]
-		            },";
-            	}
-            	foreach (Checklist::find($htc)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	$htc_pie.="{
-			                id: '".$subCounty->name."',
+	            		$pie[$checklist->id].="{
+			                id: '".$county->id."',
 			                name: 'Total',
 			                data: [";
-		                	foreach ($subCounty->facilities as $facility)
-		                	{
-		                		$htc_pie.="{
-				                    name: '".$facility->name."',
-				                    y: ".$facility->submissions($htc, $from, $to).",
-				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
+			                foreach ($county->subCounties as $subCounty)
+			                {
+			                	$pie[$checklist->id].="{
+				                    name: '".$subCounty->name."',
+				                    y: ".$checklist->fsdps($checklist->id, NULL, $subCounty->id, NULL, NULL, $from, $toPlusOne)->count().",
+				                    drilldown: '".$subCounty->name."'
 				                },";
-				            }
-				            $htc_pie.="]
+			                }
+			                $pie[$checklist->id].="]
 			            },";
-	                }
-            	}
-            	foreach (Checklist::find($htc)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	foreach ($subCounty->facilities as $facility)
-		                {
-		                	$htc_pie.="{
-				                id: '".$facility->id.'_'.$subCounty->id."',
-				                data: [";
-			                	foreach ($facility->ssdps($htc) as $ssdp)
-			                	{
-			                		$sdp = Sdp::find($ssdp);
-			                		$htc_pie.="{
-					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $htc, $from, $to).",
-					                    drilldown: '".$sdp->name."'
-					                },";
-					            }
-					            $htc_pie.="]
-				            },";
-			        	}
-	                }
-            	}
-            	$htc_pie.="]
-	        }
-	    }";
-	    //	M&E pie
-	    $me_pie = "{
-	        chart: {
-	            type: 'pie'
-	        },
-	        title: {
-	            text: 'M&E Checklist'
-	        },
-	        xAxis: {
-	            type: 'category'
-	        },
-
-	        legend: {
-	            enabled: false
-	        },
-	        credits: {
-	            enabled: false
-	        },
-	        plotOptions: {
-	            series: {
-	                borderWidth: 0,
-	                dataLabels: {
-	                    enabled: true,
-	                }
-	            }
-	        },
-
-	        series: [{
-	            name: 'Total',
-	            colorByPoint: true,
-	            data: [";
-	            	foreach (Checklist::find($me)->distCount($me) as $key)
+	            	}
+	            	foreach ($checklist->distCount() as $key)
 	            	{
 	            		$county = County::find($key);
-	            		$me_pie.="{
-			                name: '".$county->name."',
-			                y: ".$county->submissions($me, $from, $to).",
-			                drilldown: '".$county->id."'
-			            },";
-	            	}
-	            	$me_pie.="
-	            ]
-	        }],
-	        drilldown: {
-	            series: [";
-	            foreach (Checklist::find($me)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-            		$me_pie.="{
-		                id: '".$county->id."',
-		                name: 'Total',
-		                data: [";
 		                foreach ($county->subCounties as $subCounty)
 		                {
-		                	$me_pie.="{
-			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($me, $from, $to).",
-			                    drilldown: '".$subCounty->name."'
-			                },";
-		                }
-		                $me_pie.="]
-		            },";
-            	}
-            	foreach (Checklist::find($me)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	$me_pie.="{
-			                id: '".$subCounty->name."',
-			                name: 'Total',
-			                data: [";
-		                	foreach ($subCounty->facilities as $facility)
-		                	{
-		                		$me_pie.="{
-				                    name: '".$facility->name."',
-				                    y: ".$facility->submissions($me, $from, $to).",
-				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
-				                },";
-				            }
-				            $me_pie.="]
-			            },";
-	                }
-            	}
-            	foreach (Checklist::find($me)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	foreach ($subCounty->facilities as $facility)
-		                {
-		                	$me_pie.="{
-				                id: '".$facility->id.'_'.$subCounty->id."',
+		                	$pie[$checklist->id].="{
+				                id: '".$subCounty->name."',
+				                name: 'Total',
 				                data: [";
-			                	foreach ($facility->ssdps($me) as $ssdp)
+			                	foreach ($subCounty->facilities as $facility)
 			                	{
-			                		$sdp = Sdp::find($ssdp);
-			                		$me_pie.="{
-					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $me, $from, $to).",
-					                    drilldown: '".$sdp->name."'
+			                		$pie[$checklist->id].="{
+					                    name: '".$facility->name."',
+					                    y: ".$checklist->fsdps($checklist->id, NULL, NULL, $facility->id, NULL, $from, $toPlusOne)->count().",
+					                    drilldown: '".$facility->id.'_'.$subCounty->id."'
 					                },";
 					            }
-					            $me_pie.="]
+					            $pie[$checklist->id].="]
 				            },";
-			        	}
-	                }
-            	}
-            	$me_pie.="]
-	        }
-	    }";
-	    //	SPI-RT pie
-	    $spi_pie = "{
-	        chart: {
-	            type: 'pie'
-	        },
-	        title: {
-	            text: 'SPI-RT Checklist'
-	        },
-	        xAxis: {
-	            type: 'category'
-	        },
-
-	        legend: {
-	            enabled: false
-	        },
-
-	        plotOptions: {
-	            series: {
-	                borderWidth: 0,
-	                dataLabels: {
-	                    enabled: true,
-	                }
-	            }
-	        },
-	        credits: {
-	            enabled: false
-	        },
-	        series: [{
-	            name: 'Total',
-	            colorByPoint: true,
-	            data: [";
-	            	foreach (Checklist::find($spi)->distCount($spi) as $key)
+		                }
+	            	}
+	            	foreach ($checklist->distCount() as $key)
 	            	{
 	            		$county = County::find($key);
-	            		$spi_pie.="{
-			                name: '".$county->name."',
-			                y: ".$county->submissions($spi, $from, $to).",
-			                drilldown: '".$county->id."'
-			            },";
-	            	}
-	            	$spi_pie.="
-	            ]
-	        }],
-	        drilldown: {
-	            series: [";
-	            foreach (Checklist::find($spi)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-            		$spi_pie.="{
-		                id: '".$county->id."',
-		                name: 'Total',
-		                data: [";
 		                foreach ($county->subCounties as $subCounty)
 		                {
-		                	$spi_pie.="{
-			                    name: '".$subCounty->name."',
-			                    y: ".$subCounty->submissions($spi, $from, $to).",
-			                    drilldown: '".$subCounty->name."'
-			                },";
-		                }
-		                $spi_pie.="]
-		            },";
-            	}
-            	foreach (Checklist::find($spi)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	$spi_pie.="{
-			                id: '".$subCounty->name."',
-			                name: 'Total',
-			                data: [";
 		                	foreach ($subCounty->facilities as $facility)
-		                	{
-		                		$spi_pie.="{
-				                    name: '".$facility->name."',
-				                    y: ".$facility->submissions($spi, $from, $to).",
-				                    drilldown: '".$facility->id.'_'.$subCounty->id."'
-				                },";
-				            }
-				            $spi_pie.="]
-			            },";
-	                }
-            	}
-            	foreach (Checklist::find($spi)->distCount() as $key)
-            	{
-            		$county = County::find($key);
-	                foreach ($county->subCounties as $subCounty)
-	                {
-	                	foreach ($subCounty->facilities as $facility)
-		                {
-		                	$spi_pie.="{
-				                id: '".$facility->id.'_'.$subCounty->id."',
-				                data: [";
-			                	foreach ($facility->ssdps($spi, 1, $from, $to) as $ssdp)
-			                	{
-			                		$sdp = Sdp::find($ssdp);
-			                		$spi_pie.="{
-					                    name: '".$sdp->name."',
-					                    y: ".$sdp->submissions($facility->id, $spi, $from, $to).",
-					                    drilldown: '".$sdp->name."'
-					                },";
-					            }
-					            $spi_pie.="]
-				            },";
-			        	}
-	                }
-            	}
-            	$spi_pie.="]
-	        }
-	    }";
+			                {
+			                	$pie[$checklist->id].="{
+					                id: '".$facility->id.'_'.$subCounty->id."',
+					                data: [";
+				                	foreach ($facility->facilitySdp as $fsdp)
+				                	{
+				                		$pie[$checklist->id].="{
+						                    name: '".FacilitySdp::cojoin($fsdp->id)."',
+						                    y: ".$checklist->fsdps($checklist->id, NULL, NULL, NULL, $fsdp->id, $from, $toPlusOne)->count().",
+						                    drilldown: '".FacilitySdp::cojoin($fsdp->id)."'
+						                },";
+						            }
+						            $pie[$checklist->id].="]
+					            },";
+				        	}
+		                }
+	            	}
+	            	$pie[$checklist->id].="]
+		        }
+		    }";
+		}
 	    // msline for submissions for the 3 checklists
 	    $msline = "{
 	    	chart: {
@@ -2694,7 +2467,7 @@ class ReportController extends Controller {
 	        		$msline.="{name:"."'".$checklist->name."'".", data:[";
 		        	foreach ($months as $month)
 		        	{
-		        		$data = $checklist->ssdps(NULL, NULL, NULL, NULL, NULL, NULL, NULL, $month->annum, $month->months, 0, null);
+		        		$data = $checklist->fsdps($checklist->id, NULL, NULL, NULL, NULL, NULL, NULL, $month->annum, $month->months)->count();
 			        	if($data==0){
         					$msline.= '0.00';
         					if($counter==1)
@@ -2721,7 +2494,7 @@ class ReportController extends Controller {
 		    $msline.="
 	        ]
 	    }";
-		return view('dashboard', compact('pie', 'htc_pie', 'me_pie', 'spi_pie', 'from', 'to', 'msline'));
+		return view('dashboard', compact('pie', 'from', 'to', 'msline', 'checklists'));
 	}
 	/**
 	 * Display distribution of agreement rates among testing sites by programatic area
