@@ -16,9 +16,6 @@ class Affiliation extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'user_id',
     ];
 	/**
 	* Return affiliation_id given the name

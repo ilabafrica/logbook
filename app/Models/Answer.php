@@ -17,12 +17,6 @@ class Answer extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'score',
-        'range_lower',
-        'range_upper',
-        'user_id',
     ];
 	/**
 	* Responses for questions

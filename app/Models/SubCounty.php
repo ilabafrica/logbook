@@ -17,8 +17,6 @@ class SubCounty extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'county_id',
     ];
 
 	/**

@@ -19,10 +19,6 @@ class Question extends Model implements Revisionable  {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'question_type',
-        'user_id',
     ];
 	//	Constants for type of field
 	const CHOICE = 0;

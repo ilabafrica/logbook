@@ -36,12 +36,6 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'email',
-        'phone',
-        'address',
-        'username',
-        'password',
     ];
 
 	/**

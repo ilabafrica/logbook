@@ -17,9 +17,6 @@ class AuditType extends Model implements Revisionable {
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
-        'user_id',
          ];
 	/**
 	* Return audit_type_id given the name
