@@ -5,20 +5,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
+use DB;
 
 class Sdp extends Model implements Revisionable {
     use SoftDeletes;
     protected $dates = ['deleted_at'];
 	protected $table = 'sdps';
 	use RevisionableTrait;
-
     /*
      * Set revisionable whitelist - only changes to any
      * of these fields will be tracked during updates.
      */
     protected $revisionable = [
-        'name',
-        'description',
     ];
 
 	/**
@@ -27,6 +25,13 @@ class Sdp extends Model implements Revisionable {
 	public function tiers()
 	{
 		return $this->hasMany('App\Models\Tier');
+	}
+	/**
+	 * facility-sdp relationship
+	 */
+	public function facilitySdp()
+	{
+		return $this->hasMany('App\Models\FacilitySdp');
 	}
 	/**
 	* Return Sdp ID given the name
@@ -53,34 +58,25 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
 	*/
-	public function positivePercent($comment = NULL, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
+	public function positivePercent($facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
 	{
-		//	Initialize counts
-		$positive = 0;
-		$total = 0;		
-		//	Check dates
-		$theDate = "";
-		if ($year > 0) {
-			$theDate .= $year;
-			if ($month > 0) {
-				$theDate .= "-".sprintf("%02d", $month);
-				if ($date > 0) {
-					$theDate .= "-".sprintf("%02d", $date);
-				}
-			}
-		}
-		//	Declare questions to be used in calculation of both values
-		$posOne = Question::idByName('Test-1 Total Positive');
-		$negOne = Question::idByName('Test-1 Total Negative');
-		$posTwo = Question::idByName('Test-2 Total Positive');
-		$posThree = Question::idByName('Test-3 Total Positive');
-		$totals = [$posOne, $negOne];
-		$positives = [$posOne, $posTwo, $posThree];
-		//	Get the counts
-		
-		$total = $this->eagerLoad($comment, $facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $totals, $this->id);
-		$positive = $this->eagerLoad($comment, $facility, $subCounty, $county, $theDate, $from = NULL, $to = NULL, $positives, $this->id);
-		return $total>0?round((int)$positive*100/(int)$total, 2):0;
+		$fsdps = $this->facilitySdp->lists('id');
+		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
+        $surveys = Checklist::find($checklist)->fsdps($checklist, $county, $subCounty, NULL, NULL, $from, $to, $year, $month, $date)->whereIn('facility_sdp_id', $fsdps)->lists('id');
+        //  Initialize counts
+        $positive = 0;
+        $total = 0;     
+        //  Declare questions to be used in calculation of both values
+        $posOne = Question::idByName('Test-1 Total Positive');
+        $negOne = Question::idByName('Test-1 Total Negative');
+        $posTwo = Question::idByName('Test-2 Total Positive');
+        $posThree = Question::idByName('Test-3 Total Positive');
+        $totals = [$posOne, $negOne];
+        $positives = [$posOne, $posTwo, $posThree];
+        //  Get the counts        
+        $total = $this->eagerLoad($surveys, $totals);
+        $positive = $this->eagerLoad($surveys, $positives);
+        return $total>0?round((int)$positive*100/(int)$total, 2):0;
 	}
 	/**
 	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
@@ -91,9 +87,19 @@ class Sdp extends Model implements Revisionable {
 		$testOne = 0;
 		$testTwo = 0;		
 		/*pages*/
-		$pages = $this->eagerPages($kit, $facility, $subCounty, $county, $year, $month, $date, $from, $to);
+		$fsdps = $this->facilitySdp->lists('id');
+		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
+        $surveys = Checklist::find($checklist)->fsdps($checklist, $county, $subCounty, NULL, NULL, $from, $to, $year, $month, $date)->whereIn('facility_sdp_id', $fsdps)->lists('id');
+		$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
+		//	Get pages with the screening question being answered by kit
+		$refinedPages = [];
+        $screen = Question::idById('screen');   //  Question whose response is either determine or khb
+        // work in reverse to get pages
+        $data = HtcSurveyPageData::where('answer', $kit)->lists('htc_survey_page_question_id');
+        $refinedIds = HtcSurveyPageQuestion::whereIn('id', $data)->where('question_id', $screen)->lists('htc_survey_page_id');
+        $refinedPages = array_intersect($pages, $refinedIds);
 		/*htc survey page questions*/
-		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $pages);
+		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $refinedPages);
 		//	Declare questions to be used in calculation of both values
 		$posOne = Question::idByName('Test-1 Total Positive');
 		$posTwo = Question::idByName('Test-2 Total Positive');
@@ -101,7 +107,7 @@ class Sdp extends Model implements Revisionable {
 		$one = clone $quest; $two = clone $quest;
 		$testOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $one->where('question_id', $posOne)->lists('id'))->sum('answer');
 		$testTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $two->where('question_id', $posTwo)->lists('id'))->sum('answer');
-		return $testOne>0?round((int)$testTwo*100/(int)$testOne, 2):0.00;
+		return $testOne>0?(round((int)$testTwo*100/(int)$testOne, 2)>100?100:round((int)$testTwo*100/(int)$testOne, 2)):0.00;
 	}
 	/**
 	* Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]
@@ -116,9 +122,19 @@ class Sdp extends Model implements Revisionable {
 		$reactiveTwo = 0;
 		$nonReactiveTwo = 0;		
 		/*pages*/
-		$pages = $this->eagerPages($kit, $facility, $subCounty, $county, $year, $month, $date, $from, $to);
+		$fsdps = $this->facilitySdp->lists('id');
+		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
+        $surveys = Checklist::find($checklist)->fsdps($checklist, $county, $subCounty, NULL, NULL, $from, $to, $year, $month, $date)->whereIn('facility_sdp_id', $fsdps)->lists('id');
+		$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
+		//	Get pages with the screening question being answered by kit
+		$refinedPages = [];
+        $screen = Question::idById('screen');   //  Question whose response is either determine or khb
+        // work in reverse to get pages
+        $data = HtcSurveyPageData::where('answer', $kit)->lists('htc_survey_page_question_id');
+        $refinedIds = HtcSurveyPageQuestion::whereIn('id', $data)->where('question_id', $screen)->lists('htc_survey_page_id');
+        $refinedPages = array_intersect($pages, $refinedIds);
 		/*htc survey page questions*/
-		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $pages);
+		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $refinedPages);
 		/*htc survey data*/
 	  	//	Get questions to be used in the math
 		$testOnePos = Question::idByName('Test-1 Total Positive');
@@ -140,7 +156,12 @@ class Sdp extends Model implements Revisionable {
 		
 		$absReactive = abs($reactiveTwo-$reactiveOne);
 		$absNonReactive = abs($nonReactiveTwo-$nonReactiveOne);
-		return ($total - $invalid)>0?round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2):0;
+		$percentage = 0.00;
+		if(($total - $invalid)>0)
+			$percentage = round(($reactiveTwo+$nonReactiveOne) * 100 / ($total-$invalid), 2);
+		if($percentage>100)
+			$percentage = 100;
+		return $percentage;
 	}
 	/**
 	* Return Sdp ID given the identifier
@@ -165,155 +186,53 @@ class Sdp extends Model implements Revisionable {
 		}
 	}
 	/**
-	* Function to return counts of data submiited
-	*/
-	public function submissions($id, $check, $from = null, $to = null, $year = 0, $month = 0, $date = 0)
-	{
-		$theDate = "";
-		if ($year > 0) {
-			$theDate .= $year;
-			if ($month > 0) {
-				$theDate .= "-".sprintf("%02d", $month);
-				if ($date > 0) {
-					$theDate .= "-".sprintf("%02d", $date);
-				}
-			}
-		}
-		$ssdps = $this->surveys()->join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-				  ->where('facility_id', $id)
-				  ->where('checklist_id', $check);
-				  if (strlen($theDate)>0 || ($from && $to))
-					{
-						if($from && $to)
-						{
-							$ssdps = $ssdps->whereBetween('date_submitted', [$from, $to]);
-						}
-						else
-						{
-							$ssdps = $ssdps->where('date_submitted', 'LIKE', $theDate."%");
-						}
-					}
-		return $ssdps->groupBy('sdp_id')->count();
-	}
-	/**
 	*	Function to eager-load questions for use in calculating other derivatives
 	*/
-	public function eagerLoad($comment = NULL, $facility = null, $subCounty = null, $county = null, $theDate, $from = NULL, $to = NULL, $array, $sdp_id)
-	{
-		$data = HtcSurveyPageData::whereHas('htc_survey_page_question', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $array, $sdp_id){
-			
-			$q->whereIn('question_id', $array)->whereHas('htc_survey_page', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
-				$q->whereHas('survey_sdp', function($q) use ($comment, $facility, $subCounty, $county, $theDate, $from, $to, $sdp_id){
-					$q->whereHas('survey', function($q) use ($facility, $subCounty, $county, $theDate, $from, $to){
-						if($county || $subCounty || $facility)
-						{
-							if($subCounty || $facility)
-							{
-								if($facility)
-								{
-									$q->where('facility_id', $facility);
-								}
-								else
-								{
-									$q->whereHas('facility', function($q) use($subCounty){
-										$q->where('sub_county_id', $subCounty);
-									});
-								}
-							}
-							else
-							{
-								$q->whereHas('facility', function($q) use($county){
-									$q->whereHas('subCounty', function($q) use ($county){
-										$q->where('county_id', $county);
-									});
-								});
-							}
-						}
-						if(strlen($theDate)>0 || ($from && $to))
-						{
-							if($from && $to)
-							{
-								$q->whereBetween('data_month', [$from, $to]);
-							}
-							else
-							{
-								$q->where('data_month', 'LIKE', $theDate."%");
-							}	
-						}
-					})->where('sdp_id', $this->id)->where('comment', 'like', '%' . $comment . '%');
-				});
-			});
-		});
-		return $data->sum('answer');
-	}
-	/**
-	*
-	*	Function to eager load data for use in positive/overall agreement
-	*
-	*/
-	public function eagerPages($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
-	{
-		//	Check dates
-		$theDate = "";
-		if ($year > 0) {
-			$theDate .= $year;
-			if ($month > 0) {
-				$theDate .= "-".sprintf("%02d", $month);
-				if ($date > 0) {
-					$theDate .= "-".sprintf("%02d", $date);
-				}
-			}
-		}
-		$screen = Question::idById('screen');	//	Question whose response is either determine or khb
-		//	Get pages whose screening test is as given(khb/determine)
-		/*Checklist*/
-		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
-		/*Surveys*/
-		$surveys = Survey::where('checklist_id', $checklist);
-		if (strlen($theDate)>0 || ($from && $to)) {
-	  		if($from && $to)
-	  		{
-	  			$surveys = $surveys->whereBetween('data_month', [$from, $to]);
-	  		}
-	  		else
-	  		{
-	  			$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
-	  		}								
-	  	}
-	  	if($county || $subCounty || $facility)
-		{
-			$surveys = $surveys->whereHas('facilitySdp', function($q) use($county, $subCounty, $facility)
-			{
-				if($subCounty || $facility)
-				{
-					$q->whereHas('facility', function($q) use($facility, $subCounty){
-						if($facility)
-							$q->where('id', $facility);
-						else
-							$q->where('facilities.sub_county_id', $subCounty);
-					});					
-				}
-				else
-				{
-					$q->whereHas('subCounty', function($q) use($county){
-						$q->where('county_id', $county);
-					});
-				}
-				
-			});
-		}
-		$surveys = $surveys->lists('surveys.id');
-
-		/*survey sdps*/
-		$ssdps = SurveySdp::whereIn('survey_id', $surveys)->where('sdp_id', $this->id)->lists('id');
-		/*htc survey pages*/
-		$pages = HtcSurveyPage::select('htc_survey_pages.id')
-								->whereIn('survey_sdp_id', $ssdps)
-								->join('htc_survey_page_questions', 'htc_survey_pages.id', '=', 'htc_survey_page_questions.htc_survey_page_id')
-								->join('htc_survey_page_data', 'htc_survey_page_questions.id', '=', 'htc_survey_page_data.htc_survey_page_question_id')
-								->where('question_id', $screen)
-								->where('answer', $kit)
-								->lists('htc_survey_pages.id');
-		return $pages;
-	}
+    public function eagerLoad($surveys, $qstns)
+    {
+        $pages = HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
+        $questions = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $pages)->whereIn('question_id', $qstns)->lists('id');
+        $data = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $questions)->sum('answer');
+        return $data;
+    }
+    /**
+     * Function to calculate percentage of submissions in each level and sdp for spirt
+     */
+    public function level($lvl, $county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL)
+    {
+    	$fsdps = $this->facilitySdp->lists('id');
+    	$level = Level::find($lvl);
+    	$checklist = Checklist::idByName('SPI-RT Checklist');
+    	$surveys = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to)->whereIn('facility_sdp_id', $fsdps)->get();
+    	//  Define variables for use
+        $counter = 0;
+        $total_counts = count($surveys);
+        $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
+        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
+        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
+        //  Begin processing
+        foreach ($surveys as $key => $value)
+        {
+            $reductions = 0;
+            $calculated_points = 0.00;
+            $percentage = 0.00;
+            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
+                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+                                  ->whereIn('survey_data.answer', Answer::lists('score'));
+            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
+            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
+            {
+                if($sq->sd->answer == '0')
+                    $reductions++;
+            }
+            if($reductions>0)
+                $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
+            else
+                $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
+            //  Check and increment counter
+            if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) || (($level->range_lower==0.00) && ($percentage==$level->range_lower)))
+                $counter++;
+        }
+        return $total_counts > 0?round($counter*100/$total_counts, 2):0.00;
+    }
 }

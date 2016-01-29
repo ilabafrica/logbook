@@ -45,6 +45,34 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            {!! Form::open(array('url' => 'survey/'.$checklist->id.'/sdp', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+            <!-- Tab panes -->
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class='form-group'>
+                        {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                            {!! Form::text('from', isset($from)?$from:date('Y-m-01'), array('class' => 'form-control')) !!}
+                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5">
+                    <div class='form-group'>
+                        {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                        <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                            {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
+                            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
+                                array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
+                </div>
+            </div>
+            {!! Form::close() !!}
+            <hr>
             <p>
                 <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
                 <a href="{!! url('survey/'.$checklist->id.'/sdp/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
@@ -72,7 +100,7 @@
                                 @foreach($facility->facilitySdp as $fsdp)
                                 <tr>
                                     <td>{!! $fsdp->sdp_tier_id?App\Models\Sdp::find($fsdp->sdp_id)->name.' - '.App\Models\Tier::find($fsdp->sdp_tier_id)->name:App\Models\Sdp::find($fsdp->sdp_id)->name !!}</td>
-                                    <td>{!! $fsdp->surveys->count() !!}</td>
+                                    <td>{!! $checklist->fsdps($checklist->id, NULL, NULL, NULL, $fsdp->id, $from, $toPlusOne)->count() !!}</td>
                                 </tr>
                                 @endforeach
                             @endif

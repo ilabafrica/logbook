@@ -201,9 +201,9 @@ class FacilityController extends Controller {
 	*/
 	public function dropdown()
 	{
-		$input = Input::get('facility_id');
-        $facility = Facility::find($input);
-        return json_encode($facility->points());
-        //return json_encode($sdps);
+		$fId = Input::get('facility_id');
+		$checkId = Input::get('check_id');
+        $facility = Facility::find($fId);
+        return $facility->points($checkId);
     }
 }

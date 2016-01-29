@@ -33,9 +33,37 @@
           {!! session('message') !!}
         </div>
         @endif
+        {!! Form::open(array('url' => 'survey/'.$checklist->id.'/list', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
+        <!-- Tab panes -->
+        <div class="row">
+            <div class="col-sm-5">
+                <div class='form-group'>
+                    {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                    <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                        {!! Form::text('from', isset($from)?$from:date('Y-m-01'), array('class' => 'form-control')) !!}
+                        <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5">
+                <div class='form-group'>
+                    {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
+                    <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
+                        {!! Form::text('to', isset($to)?$to:date('Y-m-d'), array('class' => 'form-control')) !!}
+                        <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-2">
+                {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
+                            array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
+            </div>
+        </div>
+        {!! Form::close() !!}
+        <hr>
         <div class="row">
             <div class="col-sm-12">
-                <table class="table table-striped table-bordered table-hover search-table">
+                <table class="table table-striped table-bordered table-hover {!! !$surveys->isEmpty()?'search-table':'' !!}">
                     <thead>
                         <tr>
                             <th>{{ Lang::choice('messages.response-no', 1) }}</th>

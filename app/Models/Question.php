@@ -216,45 +216,10 @@ class Question extends Model implements Revisionable  {
 	public function breakdown($option, $sdp=null, $site=null, $sub_county=null, $county=null, $from=null, $to=null)
 	{
 		$response = Answer::find(Answer::idByName($option))->score;
-    	$counter = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-    			 			->join('survey_questions', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-    			 			->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-    			 			->where('question_id', $this->id)
-    			 			->where('answer', $response);
-    			 			if($from && $to)
-							{
-								$counter = $counter->whereBetween('date_submitted', [$from, $to]);
-							}
-							if($county || $sub_county || $site || $sdp)
-							{
-								if($sub_county || $site|| $sdp)
-								{
-									if($site || $sdp)
-                                	{
-										if(isset($sdp))
-										{
-											$counter = $counter->where('facility_id', $site)->where('sdp_id', $sdp);
-										}
-										else
-										{
-											$counter = $counter->where('facility_id', $site);
-										}
-									}
-
-									else
-									{
-										$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-												 		 ->where('sub_county_id', $sub_county);
-									}
-								}
-								else
-								{
-									$counter = $counter->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-													 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-													 ->where('county_id', $county);
-								}
-							}
-    			 			$counter = $counter->count();
+    	$fsdps = $this->fsdps($county, $sub_county, $site, $sdp, $from, $to);
+    	$surveys = $fsdps->lists('id');
+    	$sq = SurveyQuestion::whereIn('survey_id', $surveys)->where('question_id', $this->id)->lists('id');
+    	$counter = SurveyData::whereIn('survey_question_id', $sq)->where('answer', $response)->count();
     	return $counter;
 	}
 	/**
@@ -273,4 +238,60 @@ class Question extends Model implements Revisionable  {
 		}
 		return $overallCount>0?round($perAnswer*100/$overallCount, 2):0.00;
 	}
+    /**
+     * Function to load fsdps given the different variables
+     */
+    public function fsdps($county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL)
+    {
+        $checklist = Checklist::idByName('M & E Checklist');
+        $fsdps = [];
+        $values = Survey::where('checklist_id', $checklist);
+        if($from && $to)
+        {
+            $values = $values->whereBetween('date_submitted', [$from, $to]);
+        }
+        if($county || $sub_county || $site || $sdp)
+        {
+            if($sub_county || $site || $sdp)
+            {
+                if($site || $sdp)
+                {                                
+                    if($sdp)
+                    {
+                        $fsdps = [$sdp];
+                    }
+                    else
+                    {
+                        $fsdps = Facility::find($site)->facilitySdp->lists('id');
+                    }
+                }
+                else
+                {
+                    foreach (SubCounty::find($sub_county)->facilities as $facility)
+                    {
+                        foreach ($facility->facilitySdp as $fsdp)
+                        {
+                            array_push($fsdps, $fsdp->id);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach(County::find($county)->subCounties as $subCounty)
+                {
+                    foreach ($subCounty->facilities as $facility)
+                    {
+                        foreach ($facility->facilitySdp as $fsdp)
+                        {
+                            array_push($fsdps, $fsdp->id);
+                        }
+                    }
+                }
+            }
+        }
+        if(count($fsdps)>0)
+            $values = $values->whereIn('facility_sdp_id', $fsdps);
+        return $values->get();
+    }
 }

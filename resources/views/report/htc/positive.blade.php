@@ -81,7 +81,7 @@
                     <div class='form-group'>
                         {!! Form::label(Lang::choice('messages.sdp', 1), Lang::choice('messages.sdp', 1), array('class' => 'col-sm-4 control-label')) !!}
                         <div class="col-sm-8">
-                            {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$ssdps, isset($sdp)?$sdp:'', 
+                            {!! Form::select('sdp', array(''=>trans('messages.select-sdp'))+$sdps, isset($sdp)?$sdp:'', 
                                 array('class' => 'form-control', 'id' => 'sdp')) !!}
 
                         </div>

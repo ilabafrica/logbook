@@ -107,36 +107,6 @@
                     <div id="chart" style="height: 750px"></div>
                 </div>
             </div>
-            <hr />
-            <div class="row" style="display:none;">                
-                <div class="col-sm-12">
-                    <div id="data">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-bordered table-hover">
-                                <tbody>
-                                    <tr>
-                                        <td colspan="6">{!! Lang::choice('messages.percent-of-sites', 1) !!}</td>
-                                    </tr>
-                                    <tr>
-                                        <td></td>
-                                        @foreach($levels as $level)
-                                            <td>{!! $level->name.' ('.$level->range_lower.' - '.$level->range_upper.'%)' !!}</td>
-                                        @endforeach
-                                    </tr>
-                                    @foreach($sdps as $sdp)
-                                    <tr>
-                                        <td>{!! $sdp->name !!}</td>
-                                        @foreach($levels as $level)
-                                            <td></td>
-                                        @endforeach
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!-- /.panel-body -->

@@ -281,27 +281,32 @@ class Facility extends Model implements Revisionable {
 	/**
 	* Function to return unique sdps submitted for given facility for use in dropdown
 	*/
-	public function points($id = null)
+	public function points($id, $i=null)
 	{
-		$result = [];
+		$in_surveys = [];
 		$returnable = [];
+		$cojoined = null;
 		//	Get surveys_sdps
 		$surveys = Survey::whereIn('facility_sdp_id', $this->facilitySdp->lists('id'));
-		if($id)
-			$surveys = $surveys->where('checklist_id', $id);
-		//	Get survey-sdps with the above IDs
+		$checklist = Checklist::find($id);
 		foreach ($this->facilitySdp as $fsdp)
 		{
+			if(in_array($fsdp->id, $checklist->surveys()->lists('facility_sdp_id')))
+				$in_surveys[] = $fsdp->id;
+		}
+		//	Get survey-sdps with the above IDs
+		foreach (array_unique($in_surveys) as $id)
+		{
+			$fsdp = FacilitySdp::find($id);
 			$sdp = Sdp::find($fsdp->sdp_id);
 			if($fsdp->sdp_tier_id)
-				$result[] = $sdp->name.' - '.Tier::find($fsdp->sdp_tier_id)->name;
+				$cojoined = $sdp->name.' - '.Tier::find($fsdp->sdp_tier_id)->name;
 			else
-				$result[] = $sdp->name;
-		}
-		$result = array_unique($result);
-		foreach ($result as $sdp)
-		{
-			$returnable[] = ['name' => $sdp];
+				$cojoined = $sdp->name;
+			if($i)
+				$returnable[$id] = $cojoined;
+			else
+				$returnable[] = ['name' => $cojoined, 'id' => $id];
 		}
 		return $returnable;
 	}

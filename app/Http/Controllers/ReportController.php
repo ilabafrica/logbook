@@ -15,6 +15,7 @@ use App\Models\Level;
 use App\Models\SubCounty;
 use App\Models\County;
 use App\Models\SurveySdp;
+use App\Models\FacilitySdp;
 
 use Illuminate\Http\Request;
 use Lang;
@@ -60,7 +61,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps = Sdp::whereIn('id', Facility::find($site)->facilitySdp->lists('sdp_id'))->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -75,7 +76,7 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];		
+		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -101,15 +102,15 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            $count = count($months);
-	            	foreach ($months as $month)
-	            	{
-	    				$chart.= "'".$month->label.' '.$month->annum;
-	    				if($count==1)
-	    					$chart.="' ";
-	    				else
-	    					$chart.="' ,";
-	    				$count--;
-	    			}
+            	foreach ($months as $month)
+            	{
+    				$chart.= "'".$month->label.' '.$month->annum;
+    				if($count==1)
+    					$chart.="' ";
+    				else
+    					$chart.="' ,";
+    				$count--;
+    			}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -117,20 +118,29 @@ class ReportController extends Controller {
 	                text: '".Lang::choice('messages.percent-positive', 1)."'
 	            }
 	        },
+	        tooltip: {
+	            valueSuffix: '%'
+	        },
 	        credits: {
 			    enabled: false
 			},
 	        series: [";
-	        $counts = count($ssdps);
-	        $i = $counts;
-	        foreach ($ssdps as $sdp)
+	        $counts = count($fsdps);
+	        foreach ($fsdps as $fsdp)
 	        {
-
-	        	$chart.="{name:"."'".$sdp."'".", data:[";
+	        	$name = '';
+        		if($site || $sdp)
+        			$name = FacilitySdp::cojoin($fsdp);
+        		else
+        			$name = Sdp::find($fsdp)->name;
+	        	$chart.="{name:"."'".$name."'".", data:[";
         		$counter = count($months);
         		foreach ($months as $month)
         		{
-        			$data = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($site || $sdp)
+        				$data =  FacilitySdp::find($fsdp)->positivePercent($sdp, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			else
+        				$data = Sdp::find($fsdp)->positivePercent(NULL, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
     					$chart.= '0.00';
@@ -158,7 +168,7 @@ class ReportController extends Controller {
 	        }
 	        $chart.="],
 	    }";
-		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site','ssdps', 'sdp'));
+		return view('report.htc.positive', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp'));
 	}
 
 	/**
@@ -204,7 +214,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -224,7 +234,7 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -249,14 +259,15 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            $count = count($months);
-	            	foreach ($months as $month) {
-	    				$chart.= "'".$month->label.' '.$month->annum;
-	    				if($count==1)
-	    					$chart.="' ";
-	    				else
-	    					$chart.="' ,";
-	    				$count--;
-	    			}
+            	foreach ($months as $month)
+            	{
+    				$chart.= "'".$month->label.' '.$month->annum;
+    				if($count==1)
+    					$chart.="' ";
+    				else
+    					$chart.="' ,";
+    				$count--;
+    			}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -264,31 +275,39 @@ class ReportController extends Controller {
 	                text: '".Lang::choice('messages.percent-positiveAgr', 1)."'
 	            }
 	        },
+	        tooltip: {
+	            valueSuffix: '%'
+	        },
 	        credits: {
 			    enabled: false
 			},
 	        series: [";
-	        $counts = count($sdps);
-	        foreach ($sdps as $sdp) {
-	        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
+	        $counts = count($fsdps);
+	        foreach ($fsdps as $fsdp)
+	        {
+	        	$name = '';
+        		if($site || $sdp)
+        			$name = FacilitySdp::cojoin($fsdp);
+        		else
+        			$name = Sdp::find($fsdp)->name;
+	        	$chart.="{name:"."'".$name."'".", data:[";
         		$counter = count($months);
-        		foreach ($months as $month) {
-        			$data = Sdp::find($sdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
-        			if($data==0){
-        					$chart.= '0.00';
-        					if($counter==1)
-            					$chart.="";
-            				else
-            					$chart.=",";
-    				}
-    				else if($data>100){
-    					$chart.= '100.00';
+        		foreach ($months as $month)
+        		{
+        			if($site || $sdp)
+        				$data = $fsdp->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			else
+        				$data = Sdp::find($fsdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($data==0)
+        			{
+    					$chart.= '0.00';
     					if($counter==1)
         					$chart.="";
         				else
         					$chart.=",";
     				}
-    				else{
+    				else
+    				{
         				$chart.= $data;
 
         				if($counter==1)
@@ -307,7 +326,6 @@ class ReportController extends Controller {
 	        }
 	        $chart.="],
 	    }";
-
 	    //	Percent of sites
 	    $percentages = array('<95%', '95-98%', '>98%');
 	    $percent = "{
@@ -345,7 +363,7 @@ class ReportController extends Controller {
 	            valueSuffix: '%'
 	        },
 	        series: [";
-	        $counts = count($sdps);
+	        $counts = count($percentages);
 	        foreach ($percentages as $percentage)
 	        {
 	        	$percent.="{name:"."'".$percentage."'".", data:[";
@@ -353,7 +371,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->positiveAgreement($percentage, $sdps, $kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->positiveAgreement($percentage, $kit, $fsdps, $sdp, $site, $sub_county, $jimbo, NULL, NULL, $month->annum, $month->months);
         			if($data==0)
         			{
     					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -380,25 +398,7 @@ class ReportController extends Controller {
 					$percent.="},";
 				$counts--;
 	        }
-	        $percent.="],
-		        drilldown: {
-		            series: [";
-		            foreach ($percentages as $percentage)
-	        		{
-	        			foreach ($months as $month)
-        				{
-        					$sticker = $percentage." - ".$month->label." ".$month->annum;
-        					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
-        					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-        					foreach ($checklist->sdpPosAgreement($combined, $sdps, $kit, $site, $sub_county, $jimbo) as $sdp=>$per)
-        					{
-        						$percent.="["."'".$sdp."'".", ".$per."],";
-        					}
-        					$percent.="]},";
-        				}
-	        		}
-	            $percent.="]
-	        }
+	        $percent.="]
 	    }";
 		return view('report.htc.agreement', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'sdps','sdp', 'percent', 'kit'));
 	}
@@ -446,7 +446,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -465,7 +465,7 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -490,14 +490,15 @@ class ReportController extends Controller {
 	        xAxis: {
 	            categories: [";
 	            $count = count($months);
-	            	foreach ($months as $month) {
-	    				$chart.= "'".$month->label.' '.$month->annum;
-	    				if($count==1)
-	    					$chart.="' ";
-	    				else
-	    					$chart.="' ,";
-	    				$count--;
-	    			}
+            	foreach ($months as $month)
+            	{
+    				$chart.= "'".$month->label.' '.$month->annum;
+    				if($count==1)
+    					$chart.="' ";
+    				else
+    					$chart.="' ,";
+    				$count--;
+    			}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -512,23 +513,25 @@ class ReportController extends Controller {
 	            valueSuffix: '%'
 	        },
 	        series: [";
-	        $counts = count($sdps);
-	        foreach ($sdps as $sdp) {
-	        	$chart.="{name:"."'".Sdp::find($sdp)->name."'".", data:[";
+	        $counts = count($fsdps);
+	        foreach ($fsdps as $fsdp)
+	        {
+	        	$name = '';
+        		if($site || $sdp)
+        			$name = FacilitySdp::cojoin($fsdp);
+        		else
+        			$name = Sdp::find($fsdp)->name;
+	        	$chart.="{name:"."'".$name."'".", data:[";
         		$counter = count($months);
-        		foreach ($months as $month) {
-        			$data = Sdp::find($sdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        		foreach ($months as $month)
+        		{
+        			if($site || $sdp)
+        				$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			else
+        				$data = Sdp::find($fsdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
     					$chart.= '0.00';
-    					if($counter==1)
-        					$chart.="";
-        				else
-        					$chart.=",";
-    				}
-    				else if($data>100)
-    				{
-    					$chart.= '100.00';
     					if($counter==1)
         					$chart.="";
         				else
@@ -598,14 +601,14 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $jimbo, $month->annum, $month->months, 0, null, null, 1);
+        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, $sdp, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			if($data==0)
         			{
-        					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
-        					if($counter==1)
-            					$percent.="";
-            				else
-            					$percent.=",";
+    					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
+    					if($counter==1)
+        					$percent.="";
+        				else
+        					$percent.=",";
     				}
     				else
     				{
@@ -625,25 +628,7 @@ class ReportController extends Controller {
 					$percent.="},";
 				$counts--;
 	        }
-	        $percent.="],
-		        drilldown: {
-		            series: [";
-		            foreach ($percentages as $percentage)
-	        		{
-	        			foreach ($months as $month)
-        				{
-        					$sticker = $percentage." - ".$month->label." ".$month->annum;
-        					$combined = $percentage.'_'.$month->months.'_'.$month->annum;
-        					$percent.="{name:"."'".$sticker."', "."id:"."'".$combined."'".", data:[";
-        					foreach ($checklist->sdpOverAgreement($combined, $sdps, $kit, null, $sub_county, null, $month->annum, $month->months) as $sdp=>$per)
-        					{
-        						$percent.="["."'".$sdp."'".", ".$per."],";
-        					}
-        					$percent.="]},";
-        				}
-	        		}
-	            $percent.="]
-	        }
+	        $percent.="]
 	    }";
 		return view('report.htc.overall', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
@@ -706,7 +691,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -721,7 +706,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		$categories = array();
 		$options = array();
 		foreach ($checklist->sections as $section) 
@@ -729,7 +713,8 @@ class ReportController extends Controller {
 			if($section->isScorable())
 				array_push($categories, $section);
 		}
-		foreach ($categories as $category) {
+		foreach ($categories as $category)
+		{
 			foreach ($category->questions as $question) 
 			{
 				if($question->answers->count()>0)
@@ -787,20 +772,21 @@ class ReportController extends Controller {
 	        },
 	        series: [";
 	        	$counts = count($options);
-		        foreach ($options as $option) {
+		        foreach ($options as $option)
+		        {
 		        	$response = Answer::find(Answer::idByName($option));
 		        	$chart.="{colorByPoint: false,name:"."'".$response->name." (".$response->range_lower."-".$response->range_upper."%)'".", data:[";
 	        		$counter = count($categories);
-	        		foreach ($categories as $category) {
-
+	        		foreach ($categories as $category)
+	        		{
 	        			$data = $category->level($id, $option, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
-
-	        			if($data==0){
-            					$chart.= '0.00';
-            					if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
+	        			if($data==0)
+	        			{
+        					$chart.= '0.00';
+        					if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
         				}
         				else{
             				$chart.= $data;
@@ -876,7 +862,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -891,7 +877,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		$chart = "{
 
 	        chart: {
@@ -947,7 +932,8 @@ class ReportController extends Controller {
 	        series: [{
 	            name: 'Score',
 	            data: [";
-	            	foreach ($categories as $category) {
+	            	foreach ($categories as $category)
+	            	{
 	   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne).',';
 	   				}
 	   				$chart.="],
@@ -1042,7 +1028,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1058,7 +1044,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -1163,6 +1148,7 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$id = Checklist::idByName('M & E Checklist');
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1172,7 +1158,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1188,7 +1174,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
@@ -1240,7 +1225,13 @@ class ReportController extends Controller {
 	                text: '% Score'
 	            }
 	        },
+	        tooltip: {
+	            valueSuffix: '%'
+	        },
 	        credits: {
+			    enabled: false
+			},
+	        legend: {
 			    enabled: false
 			},
 			plotOptions: {
@@ -1300,6 +1291,7 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$id = Checklist::idByName('M & E Checklist');
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1309,7 +1301,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1325,7 +1317,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$domain = array();
@@ -1399,7 +1390,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1414,7 +1405,6 @@ class ReportController extends Controller {
 		//	Update chart title
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		$categories = array();
 		$options = array();
 		foreach ($checklist->sections as $section) 
@@ -1951,13 +1941,6 @@ class ReportController extends Controller {
 		$checklist = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
 		//	Get levels
 		$levels = Level::all();
-		//	Get sdps
-		$sdps = [];
-		$ssdps = SurveySdp::whereIn('survey_id', $checklist->surveys->lists('id'))->distinct()->lists('sdp_id');
-		foreach ($ssdps as $key)
-		{
-			array_push($sdps, Sdp::find($key));
-		}
 		//	Chart title
 		$title = '';
 		//	Get counties
@@ -1980,11 +1963,13 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$id = Checklist::idByName('SPI-RT Checklist');
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
+			$sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1997,9 +1982,9 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, NULL);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -2014,9 +1999,15 @@ class ReportController extends Controller {
 	        },
 	        xAxis: {
 	            categories: [";
-	            	foreach ($sdps as $sdp) {
-	            		$chart.="'".$sdp->name."',";
-	            	}
+            	foreach ($fsdps as $fsdp)
+            	{
+            		$name = '';
+            		if($site)
+            			$name = FacilitySdp::cojoin($fsdp);
+            		else
+            			$name = Sdp::find($fsdp)->name;
+            		$chart.="'".$name."',";
+            	}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -2046,19 +2037,26 @@ class ReportController extends Controller {
 	        colors: ['red', 'orange', 'yellow', '#90ED7D', 'green'],
 	        series: [";
 	        	$counts = count($levels);
-		        foreach ($levels as $level) {
+		        foreach ($levels as $level)
+		        {
 		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-	        		$counter = count($sdps);
-	        		foreach ($sdps as $sdp) {
-	        			$data = $level->level($checklist->id, $jimbo, $sub_county, $site, $sdp->id, $from, $toPlusOne);
-	        			if($data==0){
-            					$chart.= '0.00';
-            					if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
+	        		$counter = count($fsdps);
+	        		foreach ($fsdps as $fsdp)
+	        		{
+	        			if($site)
+	        				$data = FacilitySdp::find($fsdp)->level($level->id, $from, $toPlusOne);
+	        			else
+	        				$data = Sdp::find($fsdp)->level($level->id, $jimbo, $sub_county, NULL, NULL, $from, $toPlusOne);
+	        			if($data==0)
+	        			{
+        					$chart.= '0.00';
+        					if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
         				}
-        				else{
+        				else
+        				{
             				$chart.= $data;
 
             				if($counter==1)
@@ -2077,7 +2075,7 @@ class ReportController extends Controller {
 		        }
 		        $chart.="],
 	    }";
-		return view('report.spirt.level', compact('checklist', 'levels', 'sdps', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'title', 'from', 'to'));
+		return view('report.spirt.level', compact('checklist', 'levels', 'sdps', 'chart', 'counties', 'subCounties', 'facilities', 'jimbo', 'sub_county', 'site', 'title', 'from', 'to', 'fsdps'));
 	}
 	/**
 	 * Return eval report
@@ -2768,7 +2766,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -2924,7 +2922,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -2940,7 +2938,7 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -2996,32 +2994,126 @@ class ReportController extends Controller {
 			},
 	        series: [";
 	        $counts = count($percentages);
-	        foreach ($percentages as $percentage) {
+	        foreach ($percentages as $percentage)
+	        {
 	        	$chart.="{name:"."'".$percentage."'".", data:[";
-        		$counter = count($counties);
-        		foreach ($counties as $county)
-        		{
-        			$chart.="{name:"."'".County::find($county)->name."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $kit, null, null, null, $county, 0, 0, 0, $from, $to);
-        			if($data==0)
-        			{
-    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-    					if($counter==1)
-        					$chart.="";
-        				else
-        					$chart.=",";
-    				}
-    				else
-    				{
-        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+	        	if($jimbo || $sub_county || $site)
+	        	{
+	        		if($sub_county || $site)
+	        		{
+	        			if($site)
+	        			{
+	        				$facility = Facility::find($site);
+	        				$counter = $facility->facilitySdp->count();
+			        		foreach ($facility->facilitySdp as $fsdp)
+			        		{
+			        			$chart.="{name:"."'".FacilitySdp::cojoin($fsdp->id)."'".", y:";
+			        			$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+			        			if($data==0)
+			        			{
+			    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+			    					if($counter==1)
+			        					$chart.="";
+			        				else
+			        					$chart.=",";
+			    				}
+			    				else
+			    				{
+			        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
 
-        				if($counter==1)
-        					$chart.="";
-        				else
-        					$chart.=",";
-    				}
-        			$counter--;
-        		}
+			        				if($counter==1)
+			        					$chart.="";
+			        				else
+			        					$chart.=",";
+			    				}
+			        			$counter--;
+			        		}
+	        			}
+	        			else
+	        			{
+	        				$subCounty = SubCounty::find($sub_county);
+	        				$counter = $subCounty->facilities->count();
+			        		foreach ($subCounty->facilities as $facility)
+			        		{
+			        			$chart.="{name:"."'".$facility->name."'".", y:";
+			        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+			        			if($data==0)
+			        			{
+			    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+			    					if($counter==1)
+			        					$chart.="";
+			        				else
+			        					$chart.=",";
+			    				}
+			    				else
+			    				{
+			        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+
+			        				if($counter==1)
+			        					$chart.="";
+			        				else
+			        					$chart.=",";
+			    				}
+			        			$counter--;
+			        		}
+	        			}
+	        		}
+	        		else
+	        		{
+	        			$county = County::find($jimbo);
+	        			$counter = $county->subCounties->count();
+		        		foreach ($county->subCounties as $subCounty)
+		        		{
+		        			$chart.="{name:"."'".$subCounty->name."'".", y:";
+		        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, null, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+		        			if($data==0)
+		        			{
+		    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+		    					if($counter==1)
+		        					$chart.="";
+		        				else
+		        					$chart.=",";
+		    				}
+		    				else
+		    				{
+		        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+
+		        				if($counter==1)
+		        					$chart.="";
+		        				else
+		        					$chart.=",";
+		    				}
+		        			$counter--;
+		        		}
+	        		}
+	        	}
+	        	else
+	        	{
+	        		$counter = count($counties);
+	        		foreach ($counties as $key => $value)
+	        		{
+	        			$chart.="{name:"."'".$value."'".", y:";
+	        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, null, null, $key, 0, 0, 0, $from, $toPlusOne);
+	        			if($data==0)
+	        			{
+	    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$value."'"."}";
+	    					if($counter==1)
+	        					$chart.="";
+	        				else
+	        					$chart.=",";
+	    				}
+	    				else
+	    				{
+	        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$value."'"."}";
+
+	        				if($counter==1)
+	        					$chart.="";
+	        				else
+	        					$chart.=",";
+	    				}
+	        			$counter--;
+	        		}
+	        	}
         		$chart.="]";
             	if($counts==1)
 					$chart.="}";
@@ -3077,7 +3169,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($checklist->id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -3092,7 +3184,7 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -3111,40 +3203,40 @@ class ReportController extends Controller {
 		    $chart.="},
 	        xAxis: {
 	            categories: [";
-	            	if($jimbo || $sub_county || $site)
+	            if($jimbo || $sub_county || $site)
+	            {
+	            	if($sub_county || $site)
 	            	{
-	            		if($sub_county || $site)
+	            		if($site)
 	            		{
-	            			if($site)
+	            			foreach (Facility::find($site)->facilitySdp as $facSdp)
 	            			{
-            					foreach (Facility::find($site)->ssdps($checklist->id, 1) as $ssdp)
-				            	{
-				            		$chart.="'".Sdp::find($ssdp)->name."',";
-				            	}
-	            			}
-	            			else
-	            			{
-	            				foreach (SubCounty::find($sub_county)->facilities as $facility)
-				            	{
-				            		$chart.="'".$facility->name."',";
-				            	}
+	            				$chart.="'".FacilitySdp::cojoin($facSdp->id)."',";
 	            			}
 	            		}
 	            		else
 	            		{
-	            			foreach (County::find($jimbo)->subCounties as $sub)
-			            	{
-			            		$chart.="'".$sub->name."',";
-			            	}
+	            			foreach (SubCounty::find($sub_county)->facilities as $facility)
+	            			{
+	            				$chart.="'".$facility->name."',";
+	            			}
 	            		}
 	            	}
 	            	else
 	            	{
-		            	foreach ($checklist->distCount() as $county)
-		            	{
-		            		$chart.="'".County::find($county)->name."',";
-		            	}
-		            }
+	            		foreach (County::find($jimbo)->subCounties as $subCounty)
+	            		{
+	            			$chart.="'".$subCounty->name."',";
+	            		}
+	            	}
+	            }
+	            else
+	            {
+	            	foreach ($checklist->distCount() as $county)
+	            	{
+	            		$chart.="'".County::find($county)->name."',";
+	            	}
+	            }
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -3177,7 +3269,8 @@ class ReportController extends Controller {
 	        colors: ['red', '#FF7F0E', 'yellow', '#90ED7D', 'green'],
 	        series: [";
 	        	$counts = count($levels);
-		        foreach ($levels as $level) {
+		        foreach ($levels as $level)
+		        {
 		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
 		        	if($jimbo || $sub_county || $site)
 		        	{
@@ -3185,19 +3278,20 @@ class ReportController extends Controller {
 		        		{
 		        			if($site)
 		        			{
-		        				$counter = count(Facility::find($site)->ssdps($checklist->id, 1));
-				        		foreach (Facility::find($site)->ssdps($checklist->id, 1) as $ssdp)
+		        				$counter = count($fsdps);
+				        		foreach ($fsdps as $fsdp)
 				        		{
-				        			$ssdps = $checklist->ssdps($from, $toPlusOne, NULL, NULL, NULL, $ssdp, 1, 0, 0, 0);
-				        			$data = $checklist->spirtLevel($ssdps, $level);
-				        			if($data==0){
-			            					$chart.= '0.00';
-			            					if($counter==1)
-				            					$chart.="";
-				            				else
-				            					$chart.=",";
+				        			$data = FacilitySdp::find($fsdp)->level($level->id, $from, $toPlusOne);
+				        			if($data==0)
+				        			{
+		            					$chart.= '0.00';
+		            					if($counter==1)
+			            					$chart.="";
+			            				else
+			            					$chart.=",";
 			        				}
-			        				else{
+			        				else
+			        				{
 			            				$chart.= $data;
 
 			            				if($counter==1)
@@ -3213,16 +3307,17 @@ class ReportController extends Controller {
 		        				$counter = count(SubCounty::find($sub_county)->facilities);
 				        		foreach (SubCounty::find($sub_county)->facilities as $facility)
 				        		{
-				        			$ssdps = $checklist->ssdps($from, $toPlusOne, NULL, NULL, $facility, NULL, 1, 0, 0, 0);
-				        			$data = $checklist->spirtLevel($ssdps, $level);
-				        			if($data==0){
-			            					$chart.= '0.00';
-			            					if($counter==1)
-				            					$chart.="";
-				            				else
-				            					$chart.=",";
+				        			$data = $checklist->spirtLevel($level->id, NULL, $facility->id, NULL, NULL, 0, 0, 0, $from, $toPlusOne);
+				        			if($data==0)
+				        			{
+		            					$chart.= '0.00';
+		            					if($counter==1)
+			            					$chart.="";
+			            				else
+			            					$chart.=",";
 			        				}
-			        				else{
+			        				else
+			        				{
 			            				$chart.= $data;
 
 			            				if($counter==1)
@@ -3239,8 +3334,7 @@ class ReportController extends Controller {
 			        		$counter = count(County::find($jimbo)->subCounties);
 			        		foreach (County::find($jimbo)->subCounties as $sub)
 			        		{
-			        			$ssdps = $checklist->ssdps($from, $toPlusOne, NULL, $sub->id, NULL, NULL, 1, 0, 0, 0);
-			        			$data = $checklist->spirtLevel($ssdps, $level);
+			        			$data = $checklist->spirtLevel($level->id, NULL, NULL, $sub->id, NULL, 0, 0, 0, $from, $toPlusOne);
 			        			if($data==0){
 		            					$chart.= '0.00';
 		            					if($counter==1)
@@ -3265,16 +3359,17 @@ class ReportController extends Controller {
 	            		$counter = count($checklist->distCount());
 		        		foreach ($checklist->distCount() as $county)
 		        		{
-		        			$ssdps = $checklist->ssdps($from, $toPlusOne, $county, NULL, NULL, NULL, 1, 0, 0, 0);
-		        			$data = $checklist->spirtLevel($ssdps, $level);
-		        			if($data==0){
-	            					$chart.= '0.00';
-	            					if($counter==1)
-		            					$chart.="";
-		            				else
-		            					$chart.=",";
+		        			$data = $checklist->spirtLevel($level->id, NULL, NULL, NULL, $county, 0, 0, 0, $from, $toPlusOne);
+		        			if($data==0)
+		        			{
+            					$chart.= '0.00';
+            					if($counter==1)
+	            					$chart.="";
+	            				else
+	            					$chart.=",";
 	        				}
-	        				else{
+	        				else
+	        				{
 	            				$chart.= $data;
 
 	            				if($counter==1)
@@ -3341,7 +3436,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($checklist->id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -3356,7 +3451,6 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -3415,22 +3509,24 @@ class ReportController extends Controller {
 	        },
 	        colors: ['red', '#FF7F0E', 'yellow', '#90ED7D', 'green'],
 	        series: [";
-	        	$counts = count($levels);
-		        foreach ($levels as $level) {
+        	$counts = count($levels);
+	        foreach ($levels as $level)
+	        {
 	        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
         		$counter = count($months);
         		foreach ($months as $month)
         		{
-        			$ssdps = $checklist->ssdps(Null, NULL, $jimbo, $sub_county, $site, $sdp, 1, $month->annum, $month->months, 0);
-        			$data = $checklist->spirtLevel($ssdps, $level);
-        			if($data==0){
-        					$chart.= '0.00';
-        					if($counter==1)
-            					$chart.="";
-            				else
-            					$chart.=",";
+        			$data = $checklist->spirtLevel($level->id, $sdp, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			if($data==0)
+        			{
+    					$chart.= '0.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
     				}
-    				else{
+    				else
+    				{
         				$chart.= $data;
 
         				if($counter==1)
@@ -3496,7 +3592,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($checklist->id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -3511,7 +3607,6 @@ class ReportController extends Controller {
 		//	Get sdps
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -3564,17 +3659,15 @@ class ReportController extends Controller {
 	        },
 	        colors: ['red', '#FF7F0E', 'yellow', '#90ED7D', 'green'],
 	        series: [";
-	        	$counts = count($levels);
-		        foreach ($levels as $level) {
+        	$counts = count($levels);
+	        foreach ($levels as $level)
+	        {
 	        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-    			$ssdps = $checklist->ssdps($from, $toPlusOne, $jimbo, $sub_county, $site, $sdp, 1);
-    			$data = $checklist->spirtLevel($ssdps, $level);
-    			if($data==0){
-    					$chart.= '0.00';
-				}
-				else{
+	        	$data = $checklist->spirtLevel($level->id, $sdp, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+    			if($data==0)
+    				$chart.= '0.00';
+				else
     				$chart.= $data;
-				}
         		$chart.="]";
             	if($counts==1)
 					$chart.="}";
@@ -3636,7 +3729,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -3676,9 +3769,10 @@ class ReportController extends Controller {
 
 	        xAxis: {
 	            categories: [";
-	            	foreach ($categories as $category) {
-	            		$chart.="'".$category->label."',";
-	            	}
+            	foreach ($categories as $category) 
+            	{
+            		$chart.="'".$category->label."',";
+            	}
 	            $chart.="],
 	            tickmarkPlacement: 'on',
 	            lineWidth: 0
@@ -3710,8 +3804,9 @@ class ReportController extends Controller {
     		{
     			$chart.="{name: "."'".$month->label.' '.$month->annum."', data: [";
     			$cats = count($categories);
-    			foreach ($categories as $category) {
-   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, NULL, NULL, $month->annum, $month->months);
+    			foreach ($categories as $category)
+    			{
+   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne, $month->annum, $month->months);
    					if($cats==1)
 						$chart.="";
 					else
@@ -3772,7 +3867,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps =Sdp::whereIn('id', Facility::find($site)->ssdps())->lists('name', 'id');
+		    $sdps = Facility::find($site)->points($id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -3790,7 +3885,7 @@ class ReportController extends Controller {
 		$percentages = array('<95%', '95-98%', '>98%');
 		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
 		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
+		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -3816,9 +3911,15 @@ class ReportController extends Controller {
 		    $percent.="},
 	        xAxis: {
 	            categories: [";
-	            	foreach ($sdps as $sdp) {
-	            		$percent.="'".Sdp::find($sdp)->name."',";
-	            	}
+            	foreach ($fsdps as $fsdp)
+            	{
+            		$name = '';
+            		if($site)
+            			$name = FacilitySdp::cojoin($fsdp);
+            		else
+            			$name = Sdp::find($fsdp)->name;
+            		$percent.="'".$name."',";
+            	}
 	            $percent.="]
 	        },
 	        yAxis: {
@@ -3854,17 +3955,17 @@ class ReportController extends Controller {
 	        foreach ($percentages as $percentage)
 	        {
 	        	$percent.="{name:"."'".$percentage."'".", data:[";
-        		$counter = count($sdps);
-        		foreach ($sdps as $sdp)
+        		$counter = count($fsdps);
+        		foreach ($fsdps as $fsdp)
         		{
-        			$data = $checklist->overallAgreement($percentage, $kit, $sdp, null, null, null, 0, 0, 0, $from, $toPlusOne, 1);
+        			$data = $checklist->programatic($percentage, $kit, $fsdp, $sdp, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
         			if($data==0)
         			{
-        					$percent.= '0.00';
-        					if($counter==1)
-            					$percent.="";
-            				else
-            					$percent.=",";
+    					$percent.= '0.00';
+    					if($counter==1)
+        					$percent.="";
+        				else
+        					$percent.=",";
     				}
     				else
     				{
@@ -3939,64 +4040,34 @@ class ReportController extends Controller {
 			{
 				if($site || $sdp)
 				{
-					foreach (Facility::find($site)->facilitySdp as $fsdp) 
-					{
-						array_push($sdps, $fsdp->sdp_id);
-					}
+					$facility = Facility::find($site);
 					if($sdp)
 					{
-						$sdps = array_intersect([$sdp], $sdps);
-						$title = $sdp.' for '.Facility::find($site)->name;
+						array_push($sdps, $sdp);
+						$title = $facility->name.':<strong>'.FacilitySdp::cojoin($sdp).'</strong>';
 					}
 					else
 					{
-						$title = Facility::find($site)->name;
-						
+						$sdps = $facility->facilitySdp->lists('id');
+						$title = $facility->name;
 					}
 				}
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
-					foreach (SubCounty::find($sub_county)->facilities as $facility)
-					{
-						foreach ($facility->facilitySdp as $fsdp) 
-						{
-							array_push($sdps, $fsdp->sdp_id);
-						}
-					}
+					$sdps = FacilitySdp::whereIn('facility_id', SubCounty::find($sub_county)->facilities->lists('id'))->lists('sdp_id');
 				}
 			}
 			else
 			{
 				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
-				foreach (County::find($jimbo)->subCounties as $subCounty)
-				{
-					foreach ($subCounty->facilities as $facility)
-					{
-						foreach ($facility->facilitySdp as $fsdp) 
-						{
-							array_push($sdps, $fsdp->sdp_id);
-						}
-					}
-				}
+				$sdps = FacilitySdp::whereIn('facility_id', Facility::whereIn('sub_county_id', County::find($jimbo)->subCounties->lists('id'))->lists('id'))->lists('sdp_id');
 			}
 		}
 		else
 		{
 			$title = 'Kenya';
-			foreach (County::all() as $county)
-			{
-				foreach ($county->subCounties as $subCounty)
-				{
-					foreach ($subCounty->facilities as $facility)
-					{
-						foreach ($facility->facilitySdp as $fsdp) 
-						{
-							array_push($sdps, $fsdp->sdp_id);
-						}
-					}
-				}
-			}
+			$sdps = FacilitySdp::lists('sdp_id');
 		}
 		$sdps = array_unique($sdps);
 		return ['sdps' => $sdps, 'title' => $title];

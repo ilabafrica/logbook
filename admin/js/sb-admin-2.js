@@ -330,7 +330,7 @@ function drop()
 }
 
 /* Dynamic loading of sdps given the facility */
-function ssdp()
+function ssdp(id)
 {
     cId = $('#facility').val();
     var URL_ROOT = 'http://127.0.0.1/rtqii/';
@@ -339,13 +339,13 @@ function ssdp()
         dataType: 'json',
         type: 'POST',
         url:  URL_ROOT+'sdp/dropdown',
-        data: {facility_id: cId, '_token': $('input[name=_token]').val()},
+        data: {facility_id: cId, check_id: id, '_token': $('input[name=_token]').val()},
         success: function(data){
             var sdp = $('#sdp');
             sdp.empty();
             sdp.append("<option value=''>Select SDP</option>");
             $.each(data, function(index, element) {
-                sdp.append("<option value='"+ element.name +"'>" + element.name + "</option>");
+                sdp.append("<option value='"+ element.id +"'>" + element.name + "</option>");
             });
         }
     });

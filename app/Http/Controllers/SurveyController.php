@@ -186,29 +186,41 @@ class SurveyController extends Controller {
 		$county = null;
 		$subCounty = null;
 		$surveys = null;
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$county = County::find(Auth::user()->tier->tier);
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$subCounty = SubCounty::find(Auth::user()->tier->tier);
+		$fsdps = [];
 		if($county || $subCounty)
 		{
-			$surveys = $checklist->surveys()->join('facility_sdps', 'facility_sdps.id', '=', 'surveys.facility_sdp_id')
-											->join('facilities', 'facilities.id', '=', 'facility_sdps.facility_id');
 			if($subCounty)
 			{
-				$surveys = $surveys->where('facilities.sub_county_id', $subCounty->id)->get(['surveys.*']);
+				$facilities = SubCounty::find($subCounty)->facilities->lists('id');
+				$fsdps = FacilitySdp::whereIn('facility_id', $facilities)->lists('id');
 			}
 			else
 			{
-				$surveys = $surveys->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-							  	   ->where('sub_counties.county_id', $county->id)->get(['surveys.*']);
+				$subCounties = County::find($county)->subCounties->lists('id');
+				$facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
+				$fsdps = FacilitySdp::whereIn('facility_id', $facilities)->lists('id');
 			}
 		}
 		else
 		{
-			$surveys = $checklist->surveys;
+			$counties = $checklist->distCount();
+			$subCounties = SubCounty::whereIn('county_id', $counties)->lists('id');
+			$facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
+			$fsdps = FacilitySdp::whereIn('facility_id', $facilities)->lists('id');
 		}
-		return view('survey.list', compact('checklist','checklist_id', 'surveys'));
+		$surveys = $checklist->surveys()->whereIn('facility_sdp_id', $fsdps)->whereBetween('date_submitted', [$from, $toPlusOne])->get();
+		return view('survey.list', compact('checklist','checklist_id', 'surveys', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
@@ -383,6 +395,13 @@ class SurveyController extends Controller {
 					->groupBy('qa_officer');
 		$county = null;
 		$subCounty = null;
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$county = County::find(Auth::user()->tier->tier);
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
@@ -402,7 +421,7 @@ class SurveyController extends Controller {
 			}
 		}
 		$qa = $qa->get();
-		return view('survey.collection', compact('checklist', 'qa'));
+		return view('survey.collection', compact('checklist', 'qa', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Show participating facilities summaries as desired
@@ -417,6 +436,13 @@ class SurveyController extends Controller {
 		$facilities = Facility::all();
 		$county = null;
 		$subCounty = null;
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$county = County::find(Auth::user()->tier->tier);
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
@@ -432,7 +458,7 @@ class SurveyController extends Controller {
 				$facilities = $county->facilities();
 			}
 		}
-		return view('survey.participant', compact('checklist', 'facilities'));
+		return view('survey.participant', compact('checklist', 'facilities', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
@@ -448,6 +474,13 @@ class SurveyController extends Controller {
 		$facilities = Facility::all();
 		$county = null;
 		$subCounty = null;
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$county = County::find(Auth::user()->tier->tier);
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
@@ -465,19 +498,7 @@ class SurveyController extends Controller {
 		}
 		$surveys = array();
 		$total = array();
-		foreach ($facilities as $facility)
-		{
-			$sdps = array();
-			$sdps[$facility->id] = $facility->points();/*
-			$total[$facility->id] = 0;
-			$surveys[$facility->id] = $facility->surveys->where('checklist_id', $checklist->id)->lists('id');
-			foreach ($surveys[$facility->id] as $key)
-			{
-				$sdps[$key] = Survey::find($key)->sdps->lists('sdp_id');
-				$total[$facility->id] = count($sdps[$key]);
-			}*/
-		}
-		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'sdps', 'total'));
+		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'total', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Remove the specified begining of text to get Id alone.
@@ -831,8 +852,15 @@ class SurveyController extends Controller {
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get counties
-		$counties = County::all();
-		return view('survey.county', compact('checklist', 'counties'));
+		$counties = $checklist->distCount();
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		return view('survey.county', compact('checklist', 'counties', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Return summary by sub-county
@@ -844,9 +872,16 @@ class SurveyController extends Controller {
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get sub-counties
-		$subCounties = SubCounty::all();
+		$subCounties = SubCounty::whereIn('county_id', $checklist->distCount())->get();
 		$county = null;
 		$subCounty = null;
+		$from = Input::get('from');
+		if(!$from)
+			$from = date('Y-m-01');
+		$to = Input::get('to');
+		if(!$to)
+			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		if(Auth::user()->hasRole('County Lab Coordinator'))
 			$county = County::find(Auth::user()->tier->tier);
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
@@ -855,7 +890,7 @@ class SurveyController extends Controller {
 		{
 			$subCounties = $county->subCounties;
 		}
-		return view('survey.subcounty', compact('checklist', 'subCounties'));
+		return view('survey.subcounty', compact('checklist', 'subCounties', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Display the specified resource.

@@ -66,54 +66,12 @@ class Section extends Model implements Revisionable {
 	 */
 	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
+        $checklist = Checklist::idByName('SPI-RT Checklist');
         //  Check dates
-        $theDate = "";
-        if ($year > 0) {
-            $theDate .= $year;
-            if ($month > 0) {
-                $theDate .= "-".sprintf("%02d", $month);
-                if ($date > 0) {
-                    $theDate .= "-".sprintf("%02d", $date);
-                }
-            }
-        }
-        //	Start optimization
-		$checklist = Checklist::idByName('SPI-RT Checklist');
-
-		//  Get data to be used
-        $values = Survey::where('checklist_id', $checklist);
-        if($from && $to)
-        {
-            $values = $values->whereBetween('date_submitted', [$from, $to]);
-        }
-        if($county || $sub_county || $site)
-        {
-            $values = $values->whereHas('facility', function($q) use($county, $sub_county, $site)
-            {
-                if($sub_county || $site)
-                {
-                    if($site)
-                        $q->where('facility_id', $site);
-                    else
-                        $q->where('facilities.sub_county_id', $sub_county);
-                }
-                else
-                {
-                    $q->whereHas('subCounty', function($q) use($county){
-                        $q->where('county_id', $county);
-                    });
-                }
-                
-            });
-        }
-        $values = $values->lists('surveys.id');
-        $ssdps = SurveySdp::whereIn('survey_id', $values);
-        if($sdp)
-            $ssdps = $ssdps->where('sdp_id', $sdp);
-        $ssdps = $ssdps->get();
+        $fsdps = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to, $year, $month, $date)->get();
         //  Define variables for use
         $counter = 0;
-        $total_counts = count($ssdps);
+        $total_counts = count($fsdps);
         $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
@@ -121,14 +79,14 @@ class Section extends Model implements Revisionable {
         $calculated_points = 0.00;
         $percentage = 0.00;
         //  Begin processing
-        foreach ($ssdps as $key => $value)
+        foreach ($fsdps as $key => $value)
         {
             $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
                                   ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
                                   ->whereIn('question_id', $this->questions->lists('id'))
                                   ->whereIn('survey_data.answer', Answer::lists('score'));
             $calculated_points+=$sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
-            if($sq = SurveyQuestion::where('survey_sdp_id', $value->id)->where('question_id', $notapplicable)->first())
+            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
             {
                 if($sq->sd->answer == '0')
                     $reductions++;
@@ -145,52 +103,11 @@ class Section extends Model implements Revisionable {
        		//	Initialize variables
 		$counter = 0;
 		$checklist = Checklist::idByName('M & E Checklist');
-		$values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-                            ->where('checklist_id', $checklist);
-                            if($from && $to)
-                            {
-                                $values = $values->whereBetween('date_submitted', [$from, $to]);
-                            }
-                            if($county || $sub_county || $site || $sdp)
-                            {
-                                if($sub_county || $site || $sdp)
-                                {
-                                	if($site || $sdp)
-                                	{
-                                    	if($sdp)
-                                        {
-                                             $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
-                                        }
-                                        else
-                                        {
-                                            $values = $values->where('facility_id', $site);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('sub_county_id', $sub_county);
-                                    }
-                                }
-                                else
-                                {
-                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                     ->where('county_id', $county);
-                                }
-                            }
-                            else
-                            {
-                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
-                            }
-                           
-        $total_counts = count($values->get(array('survey_sdps.*')));
-        
-        $calculated_points = $values->join('survey_questions', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-        							->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-        							->whereIn('question_id', $this->questions->lists('id'))
+		$fsdps = $this->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to);
+        $total_counts = count($fsdps);
+        $surveys = $fsdps->lists('id');
+        $sq = SurveyQuestion::whereIn('survey_id', $surveys)->whereIn('question_id', $this->questions->lists('id'))->lists('id');
+        $calculated_points = SurveyData::whereIn('survey_question_id', $sq)
         							->whereIn('survey_data.answer', Answer::lists('score'))
         							->sum('answer');
         return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):0.00;
@@ -217,55 +134,16 @@ class Section extends Model implements Revisionable {
 	 */
 	public function column($option, $county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL)
 	{
-		//	Initialize variables
-		$checklist = Checklist::idByName('M & E Checklist');
-		$values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-                            ->where('checklist_id', $checklist);
-                            if($from && $to)
-                            {
-                                $values = $values->whereBetween('date_submitted', [$from, $to]);
-                            }
-                            if($county || $sub_county || $site || $sdp)
-                            {
-                                if($sub_county || $site || $sdp)
-                                {
-                                	if($site || $sdp)
-                                	{
-                                    	if($sdp)
-                                        {
-                                            $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
-                                        }
-                                        else
-                                        {
-                                            $values = $values->where('facility_id', $site);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('sub_county_id', $sub_county);
-                                    }
-                                }
-                                else
-                                {
-                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                     ->where('county_id', $county);
-                                }
-                            }
-                            else
-                            {
-                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
-                            }
+        //	Initialize variables
+        $checklist = Checklist::idByName('M & E Checklist');
+		$fsdps = $this->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to);
         $response = Answer::find(Answer::idByName($option))->score;
         $counter = $this->questions->where('score', '!=', 0)->count();
-        $total_counts = count($values->get(array('survey_sdps.*')));
-        $calculated_counts = $values->join('survey_questions', 'survey_sdps.id', '=', 'survey_questions.survey_sdp_id')
-                                  	->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
+        $total_counts = count($fsdps);
+        $surveys = $fsdps->lists('id');
+        $sq = SurveyQuestion::whereIn('survey_id', $surveys)->whereIn('question_id', $this->questions->lists('id'))->lists('id');
+        $calculated_counts = SurveyData::whereIn('survey_question_id', $sq)
                                   	->whereIn('survey_data.answer', Answer::lists('score'))
-                                  	->whereIn('question_id', $this->questions->lists('id'))
                                   	->where('answer', $response)
                                   	->count();
         return $total_counts>0?round(($calculated_counts*100)/($total_counts*$counter), 2):0.00;
@@ -357,55 +235,16 @@ class Section extends Model implements Revisionable {
      */
     public function level($checklist, $response, $county = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
     {
+        $checklist = Checklist::idByName('M & E Checklist');
         //  Get answer object from $response
         $level = Answer::find(Answer::idByName($response));
         //  Get data to be used
-        $values = SurveySdp::join('surveys', 'surveys.id', '=', 'survey_sdps.survey_id')
-                            ->where('checklist_id', $checklist);
-                            if($from && $to)
-                            {
-                                $values = $values->whereBetween('date_submitted', [$from, $to]);
-                            }
-                            if($county || $sub_county || $site || $sdp)
-                            {
-                                if($sub_county || $site || $sdp)
-                                {
-                                    if($site || $sdp)
-                                    {
-                                        if($sdp)
-                                        {
-                                            $values = $values->where('facility_id', $site)->where('sdp_id', $sdp);
-                                        }
-                                        else
-                                        {
-                                            $values = $values->where('facility_id', $site);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                         ->where('sub_county_id', $sub_county);
-                                    }
-                                }
-                                else
-                                {
-                                    $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                     ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                     ->where('county_id', $county);
-                                }
-                            }
-                            else
-                            {
-                                $values = $values->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-                                                 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-                                                 ->join('counties', 'counties.id', '=', 'sub_counties.county_id');
-                            }
-                            $values = $values->get(array('survey_sdps.*'));
+        $fsdps = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to);
         //  Define variables for use
         $counter = 0;
-        $total_counts = count($values);
+        $total_counts = $fsdps->count();
         //  Begin processing
-        foreach ($values as $key => $value)
+        foreach ($fsdps->get() as $key => $value)
         {
             $calculated_points = 0.00;
             $percentage = 0.00;
@@ -421,5 +260,60 @@ class Section extends Model implements Revisionable {
             }
         }
         return $counter;
+    }
+    /**
+     * Function to load fsdps given the different variables
+     */
+    public function fsdps($checklist, $county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
+    {
+        $fsdps = [];
+        $values = Survey::where('checklist_id', $checklist);
+        if($from && $to)
+        {
+            $values = $values->whereBetween('date_submitted', [$from, $to]);
+        }
+        if($county || $sub_county || $site || $sdp)
+        {
+            if($sub_county || $site || $sdp)
+            {
+                if($site || $sdp)
+                {                                
+                    if($sdp)
+                    {
+                        $fsdps = $sdp;
+                    }
+                    else
+                    {
+                        $fsdps = Facility::find($site)->facilitySdp->lists('id');
+                    }
+                }
+                else
+                {
+                    foreach (SubCounty::find($sub_county)->facilities as $facility)
+                    {
+                        foreach ($facility->facilitySdp as $fsdp)
+                        {
+                            array_push($fsdps, $fsdp->id);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach(County::find($county)->subCounties as $subCounty)
+                {
+                    foreach ($subCounty->facilities as $facility)
+                    {
+                        foreach ($facility->facilitySdp as $fsdp)
+                        {
+                            array_push($fsdps, $fsdp->id);
+                        }
+                    }
+                }
+            }
+        }
+        if(count($fsdps)>0)
+            $values = $values->whereIn('facility_sdp_id', $fsdps);
+        return $values->get();
     }
 }

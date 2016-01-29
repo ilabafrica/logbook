@@ -205,7 +205,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.store",
         "uses"  =>  "SurveyController@store"
     ));
-    Route::get('survey/{id}/list', array(
+    Route::any('survey/{id}/list', array(
         "as"    =>  "survey.list",
         "uses"  =>  "SurveyController@listing"
     ));
@@ -234,19 +234,19 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.collection",
         "uses"  =>  "SurveyController@collection"
     ));
-    Route::get('survey/{id}/participant', array(
+    Route::any('survey/{id}/participant', array(
         "as"    =>  "survey.participant",
         "uses"  =>  "SurveyController@participant"
     ));
-    Route::get('survey/{id}/county', array(
+    Route::any('survey/{id}/county', array(
         "as"    =>  "survey.county.summary",
         "uses"  =>  "SurveyController@county"
     ));
-    Route::get('survey/{id}/subcounty', array(
+    Route::any('survey/{id}/subcounty', array(
         "as"    =>  "survey.subcounty.summary",
         "uses"  =>  "SurveyController@subcounty"
     ));
-    Route::get('survey/{id}/sdp', array(
+    Route::any('survey/{id}/sdp', array(
         "as"    =>  "survey.sdp.summary",
         "uses"  =>  "SurveyController@sdp"
     ));
