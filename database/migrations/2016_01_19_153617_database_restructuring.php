@@ -73,6 +73,8 @@ class DatabaseRestructuring extends Migration {
 		Schema::dropIfExists('sites');
 		//	Drop table agencies
 		Schema::dropIfExists('agencies');
+		//	Drop table survey-spirt-info
+		Schema::dropIfExists('survey_spirt_info');
 		// 	Alter survey-sdps table
 		Schema::table('survey_questions', function($table)
 		{
