@@ -32,13 +32,13 @@
     {!! Form::close() !!}
     <hr />
     <div class="row">
-        <div class="panel panel-default">
+        <div class="panel panel-primary">
             <div class="panel-heading">
                 {!! Lang::choice('messages.data-collection-summary', 1) !!}
             </div>
             <div class="panel-body">
                 <div id="drill" style="height: 300px"></div>
-            <br />
+            <hr />
             @foreach($checklists as $checklist)
                 <div class="col-sm-4">
                     <div id="pie{{$checklist->id}}" style="height: 300px"></div>
