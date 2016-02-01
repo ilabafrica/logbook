@@ -72,7 +72,7 @@
                         <div class="col-sm-8">
 
                             {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, isset($site)?$site:'', 
-                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
+                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp($checklist->id)")) !!}
                         </div>
                     </div>
                 </div>
