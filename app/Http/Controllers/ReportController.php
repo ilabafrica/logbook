@@ -1445,9 +1445,10 @@ class ReportController extends Controller {
 		    $chart.="},
 	        xAxis: {
 	            categories: [";
-	            	foreach ($categories as $category) {
-	            		$chart.="'".$category->label."',";
-	            	}
+            	foreach ($categories as $category)
+            	{
+            		$chart.="'".$category->label."',";
+            	}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -1470,23 +1471,23 @@ class ReportController extends Controller {
 	        },
 	        series: [";
 	        	$counts = count($options);
-		        foreach ($options as $option) {
+		        foreach ($options as $option)
+		        {
 		        	$chart.="{colorByPoint: false, name:"."'".Answer::find(Answer::idByName($option))->name."'".", data:[";
 	        		$counter = count($categories);
-	        		foreach ($categories as $category) {
-
+	        		foreach ($categories as $category)
+	        		{
 	        			$data = Answer::find(Answer::idByName($option))->column($category->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
-
-	        			if($data==0){
-            					$chart.= '0.00';
-            					if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
+	        			if($data==0)
+	        			{
+        					$chart.= '0.00';
+        					if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
         				}
         				else{
             				$chart.= $data;
-
             				if($counter==1)
             					$chart.="";
             				else

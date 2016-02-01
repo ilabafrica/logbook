@@ -92,7 +92,7 @@ class FacilitySdp extends Model implements Revisionable {
             $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
                                   ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
                                   ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
+            $calculated_points+= $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
             if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
             {
                 if($sq->sd->answer == '0')
@@ -105,8 +105,15 @@ class FacilitySdp extends Model implements Revisionable {
             //  Check and increment counter
             if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) || (($level->range_lower==0.00) && ($percentage==$level->range_lower)))
                 $counter++;
-        }
-        return $total_counts > 0?round($counter*100/$total_counts, 2):0.00;
+        }        
+        if($reductions>0)
+            $percentage = round(($calculated_points*100)/($total_checklist_points-5)*$total_counts, 2);
+        else
+            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 2);
+        if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) && ($percentage!=0))
+            return $percentage;
+        else
+            return 0.00;
     }
     /**
     * Calculation of positive percent[ (Total Number of Positive Results/Total Number of Specimens Tested)*100 ] - Aggregated
