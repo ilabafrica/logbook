@@ -242,6 +242,7 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$months = json_decode(self::getMonths($from, $to, $checklist->id));
+		$posAgr = [];
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -298,6 +299,7 @@ class ReportController extends Controller {
         				$data = $fsdp->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			else
         				$data = Sdp::find($fsdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$posAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
         			if($data==0)
         			{
     					$chart.= '0.00';
@@ -371,7 +373,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->positiveAgreement($percentage, $kit, $fsdps, $sdp, $site, $sub_county, $jimbo, NULL, NULL, $month->annum, $month->months);
+        			$data = $checklist->positiveAgreement($percentage, $posAgr, NULL, NULL, $month->annum, $month->months);
         			if($data==0)
         			{
     					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";
@@ -473,6 +475,7 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$months = json_decode(self::getMonths($from, $to, $checklist->id));
+		$overAgr = [];
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -529,6 +532,7 @@ class ReportController extends Controller {
         				$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			else
         				$data = Sdp::find($fsdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$overAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
         			if($data==0)
         			{
     					$chart.= '0.00';
@@ -601,7 +605,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			$percent.="{name:"."'".$month->label.' '.$month->annum."'".", y:";
-        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, $sdp, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->overallAgreement($percentage, $overAgr, $month->annum, $month->months);
         			if($data==0)
         			{
     					$percent.= '0.00'.", drilldown:"."'".$percentage.'_'.$month->months.'_'.$month->annum."'"."}";

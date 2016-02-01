@@ -167,19 +167,15 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function overallAgreement($percentage, $kit, $fsdps, $sdp = null, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null, $point = null)
+	public function overallAgreement($percentage, $overAgr, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
 		$counter = 0;
 		$range = $this->corrRange($percentage);
 		$total_sites = 0;
-		foreach ($fsdps as $fsdp)
+		foreach ($overAgr as $agr)
 		{
-			$agreement = 0;
-			if($sdp || $site)
-				$agreement = FacilitySdp::find($fsdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			else
-				$agreement = Sdp::find($fsdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if($agreement == 0)
+			$agreement = $agr['agreement'];
+			if($agreement == 0 || $agr['year'] != $year || $agr['month'] != $month)
 			{
 				continue;
 			}
@@ -270,19 +266,15 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage
 	 */
-	public function positiveAgreement($percentage, $kit, $fsdps, $sdp = NULL, $site = NULL, $sub_county = NULL, $jimbo = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
+	public function positiveAgreement($percentage, $posAgr, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		$counter = 0;
 		$range = $this->corrRange($percentage);
 		$total_sites = 0;
-		foreach ($fsdps as $fsdp)
+		foreach ($posAgr as $agr)
 		{
-			$agreement = 0;
-			if($sdp || $site)
-				$agreement = FacilitySdp::find($fsdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			else
-				$agreement = Sdp::find($fsdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $year, $month);
-			if($agreement == 0)
+			$agreement = $agr['agreement'];
+			if($agreement == 0 || $agr['year'] != $year || $agr['month'] != $month)
 			{
 				continue;
 			}
