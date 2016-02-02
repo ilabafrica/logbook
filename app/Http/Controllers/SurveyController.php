@@ -580,19 +580,55 @@ class SurveyController extends Controller {
         //  Save the data to the database tables
         //	$this->htc($data);
         //	Get maximum date for the checklist data
-        arsort($data);
+        dd($data);
+        // arsort($data);
         $max = Carbon::parse(Checklist::find($checklist)->surveys->max('date_submitted'));
         // dd(Checklist::find($checklist)->surveys->max('date_submitted'));
         foreach ($data as $key => $value)
         {
+        	dd($this->first_number('test 7 Word'));
         	// dd($value);
         	$checklist_id = $checklist;
         	$facility_id = NULL;
+        	$sdp_id = NULL;
+        	$tier = NULL;
         	$facility = $value["mysites_facility"];
         	if(str_replace('_', ' ', $facility) === 'makandara health center')
 				$facility_id = Facility::idByName('Makadara Health Center');
 			else
 				$facility_id = Facility::idByName(str_replace('_', ' ', $facility));
+			//	Get sdp
+			if(isset($value['mysites']))
+			{
+				$string = $value['mysites'];
+				if (preg_match('#[0-9]#',$string))
+				{
+					if($string === '1' || $string === '2')
+					{
+						$sdpName = 'VCT';
+						$tierName = 'VCT '.$string;
+					}
+					else
+					{
+						$value = $this->first_number($value['mysites']);
+						$sdpName = 0;
+					}
+				}
+				else
+				{
+					if(stripos($string, '_') !==FALSE)
+					{
+	    				$split = explode('_', $string);
+	    				$sdpName = $split[0];
+	    				$tierName = $split[1];
+					}
+					else
+					{
+						$sdpName = $string;
+	    				$tierName = NULL;
+					}
+				}
+			}
         	$qa_officer = $value['nameoftheauditor'];
         	$comment = null;
         	/*
@@ -694,133 +730,130 @@ class SurveyController extends Controller {
 							$surveySdp->comment = $comment;
 							$surveySdp->save();
 							//	Proceed
-							if($surveySdp)
+							if($checklist_id == Checklist::idByName('HTC Lab Register (MOH 362)'))
 							{
-								if($checklist_id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+								if($pages)
 								{
-									if($pages)
+									$counter = 0;
+									foreach ($pages as $mike => $ross) 
 									{
-										$counter = 0;
-										foreach ($pages as $mike => $ross) 
+										$counter++;
+										$surveyPage = new HtcSurveyPage;
+										$surveyPage->survey_sdp_id = $surveySdp->id;
+										$surveyPage->page = $counter;
+										$surveyPage->save();
+										foreach ($ross as $harvey => $specter) 
 										{
-											$counter++;
-											$surveyPage = new HtcSurveyPage;
-											$surveyPage->survey_sdp_id = $surveySdp->id;
-											$surveyPage->page = $counter;
-											$surveyPage->save();
-											foreach ($ross as $harvey => $specter) 
-											{
-												$id = substr($harvey, strrpos($harvey, '/')+1);
-												if(($id === 'youdone') || ($id === 'newpage'))
-												{
-													continue;
-												}
-												else
-												{
-													$question_id = Question::idById($id);
-													$surveyPageQstn = new HtcSurveyPageQuestion;
-													$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
-													$surveyPageQstn->question_id = $question_id;
-													$surveyPageQstn->save();
-													//	htc-survey-page-data
-													if(count($surveyPageQstn->data) == 0)
-													{
-														$pageData = new HtcSurveyPageData;
-														$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
-														$pageData->answer = $specter;
-														$pageData->save();
-													}
-												}
-											}
-										}
-										//	Compare newest and oldest register-page start dates to get data month and update survey
-										$dates = json_decode($survey->dates());
-										$old = $dates->min;
-										$new = $dates->max;
-										$newest_date = Carbon::parse($new);
-										$date_submitted = Carbon::parse($survey->date_submitted);
-										if($date_submitted->month != $newest_date->month)
-										{
-											$data_month = $newest_date->firstOfMonth();
-											$survey->data_month = $data_month;
-											$survey->save();
-										}
-									}
-								}
-								else
-								{
-									foreach ($value as $mike => $ross)
-									{
-										if(strpos($mike,'/') !== false)
-										{
-											$id = substr($mike, strrpos($mike, '/')+1);
-											if(($id === 'yesthen') || 
-												($id === 'youdone') || 
-												($id === 'newpage') || 
-												($id === 'hh_testing_site') || 
-												($id === 'sec1percentage') || 
-												($id === 'sec2percentage') || 
-												($id === 'sec3percentage') || 
-												($id === 'sec4percentage') || 
-												($id === 'sec5percentage') || 
-												($id === 'sec6percentage') || 
-												($id === 'sec7percentage') || 
-												($id === 'sec8percentage') || 
-												($id === 'sec81percentage') ||
-												($id === 'sec9percentage') ||   
-												($id === 'sec91percentage') ||  
-												($id === 'sec1calc') || 
-												($id === 'sec2calc') || 
-												($id === 'sec3calc') || 
-												($id === 'sec4calc') || 
-												($id === 'sec5calc') || 
-												($id === 'sec6calc') || 
-												($id === 'sec7calc') || 
-												($id === 'sec8calc') || 
-												($id === 'sec81calc') || 
-												($id === 'sec9calc') ||
-												($id === 'sec91calc') || 
-												($id === 'opd') || 
-												($id === 'pmtct') || 
-												($id === 'othersdp') || 
-												($id === 'other_specify') || 
-												($id === 'ipd') || 
-												($id === 'otheripd') || 
-												($id === 'otheropd') || 
-												($id === 'pmctc1') || 
-												($id === 'otherpmtct1') || 
-												($id === 'repeat') || 
-												($id === 'uuid') || 
-												($id === 'instanceID'))
+											$id = substr($harvey, strrpos($harvey, '/')+1);
+											if(($id === 'youdone') || ($id === 'newpage'))
 											{
 												continue;
 											}
 											else
 											{
 												$question_id = Question::idById($id);
-												if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
+												$surveyPageQstn = new HtcSurveyPageQuestion;
+												$surveyPageQstn->htc_survey_page_id = $surveyPage->id;
+												$surveyPageQstn->question_id = $question_id;
+												$surveyPageQstn->save();
+												//	htc-survey-page-data
+												if(count($surveyPageQstn->data) == 0)
 												{
-													$surveyQstn = SurveyQuestion::find($sq->id);
-												}
-												else
-												{
-													$surveyQstn = new SurveyQuestion;
-													$surveyQstn->survey_sdp_id = $surveySdp->id;
-													$surveyQstn->question_id = $question_id;
-													$surveyQstn->save();
-												}
-												if(count($surveyQstn->sd) == 0)
-												{
-													$surveyData = new SurveyData;
-													$surveyData->survey_question_id = $surveyQstn->id;
-													$surveyData->answer = $ross;
-													$surveyData->save();
+													$pageData = new HtcSurveyPageData;
+													$pageData->htc_survey_page_question_id = $surveyPageQstn->id;
+													$pageData->answer = $specter;
+													$pageData->save();
 												}
 											}
 										}
 									}
+									//	Compare newest and oldest register-page start dates to get data month and update survey
+									$dates = json_decode($survey->dates());
+									$old = $dates->min;
+									$new = $dates->max;
+									$newest_date = Carbon::parse($new);
+									$date_submitted = Carbon::parse($survey->date_submitted);
+									if($date_submitted->month != $newest_date->month)
+									{
+										$data_month = $newest_date->firstOfMonth();
+										$survey->data_month = $data_month;
+										$survey->save();
+									}
 								}
 							}
+							else
+							{
+								foreach ($value as $mike => $ross)
+								{
+									if(strpos($mike,'/') !== false)
+									{
+										$id = substr($mike, strrpos($mike, '/')+1);
+										if(($id === 'yesthen') || 
+											($id === 'youdone') || 
+											($id === 'newpage') || 
+											($id === 'hh_testing_site') || 
+											($id === 'sec1percentage') || 
+											($id === 'sec2percentage') || 
+											($id === 'sec3percentage') || 
+											($id === 'sec4percentage') || 
+											($id === 'sec5percentage') || 
+											($id === 'sec6percentage') || 
+											($id === 'sec7percentage') || 
+											($id === 'sec8percentage') || 
+											($id === 'sec81percentage') ||
+											($id === 'sec9percentage') ||   
+											($id === 'sec91percentage') ||  
+											($id === 'sec1calc') || 
+											($id === 'sec2calc') || 
+											($id === 'sec3calc') || 
+											($id === 'sec4calc') || 
+											($id === 'sec5calc') || 
+											($id === 'sec6calc') || 
+											($id === 'sec7calc') || 
+											($id === 'sec8calc') || 
+											($id === 'sec81calc') || 
+											($id === 'sec9calc') ||
+											($id === 'sec91calc') || 
+											($id === 'opd') || 
+											($id === 'pmtct') || 
+											($id === 'othersdp') || 
+											($id === 'other_specify') || 
+											($id === 'ipd') || 
+											($id === 'otheripd') || 
+											($id === 'otheropd') || 
+											($id === 'pmctc1') || 
+											($id === 'otherpmtct1') || 
+											($id === 'repeat') || 
+											($id === 'uuid') || 
+											($id === 'instanceID'))
+										{
+											continue;
+										}
+										else
+										{
+											$question_id = Question::idById($id);
+											if($sq = SurveyQuestion::where('survey_sdp_id', $surveySdp->id)->where('question_id', $question_id)->first())
+											{
+												$surveyQstn = SurveyQuestion::find($sq->id);
+											}
+											else
+											{
+												$surveyQstn = new SurveyQuestion;
+												$surveyQstn->survey_sdp_id = $surveySdp->id;
+												$surveyQstn->question_id = $question_id;
+												$surveyQstn->save();
+											}
+											if(count($surveyQstn->sd) == 0)
+											{
+												$surveyData = new SurveyData;
+												$surveyData->survey_question_id = $surveyQstn->id;
+												$surveyData->answer = $ross;
+												$surveyData->save();
+											}
+										}
+									}
+								}
+							}							
 						}
 					}
 			    }
@@ -831,6 +864,23 @@ class SurveyController extends Controller {
 		$url = session('SOURCE_URL');
 		return redirect()->to($url)->with('message', Lang::choice('messages.data-successfully-imported', 1));
     }
+    /** 
+    *	Find the position of the first occurring of any number in string (php)
+    */
+    public function my_offset($text)
+    {
+	    preg_match('/\d/', $text, $m, PREG_OFFSET_CAPTURE);
+	    if (sizeof($m))
+	        return $m[0][1]; // 24 in your example
+
+	    // return anything you need for the case when there's no numbers in the string
+	    return strlen($text);
+	}
+	public function first_number($text)
+	{
+		list($before, $after) = array_filter(array_map('trim', preg_split('/(?=\d)/', $text, 2)), 'strlen');
+    		return $after;
+	}
     /**
 	 * Function to import pt-enrollment-tool data
 	 * @param  int  $id
