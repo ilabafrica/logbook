@@ -16,7 +16,7 @@
 @endif
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> 
-        {!! $page->survey->facilitySdp->facility->name.':<strong>'.App\Models\FacilitySdp::cojoinSdp($page->survey->facilitySdp->id).' for page '.$page->page.'</strong>' !!}
+        {!! $page->survey->facilitySdp->facility->name.':<strong>'.App\Models\FacilitySdp::cojoin($page->survey->facilitySdp->id).' for page '.$page->page.'</strong>' !!}
         <span class="panel-btn">
             <a href="{!! url('page/'.$page->id.'/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
         </span>

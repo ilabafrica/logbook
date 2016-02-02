@@ -76,7 +76,7 @@
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.sdp', 1) }}</td>
-                      <td>{!! App\Models\FacilitySdp::cojoinSdp($survey->facilitySdp->id) !!}</td>
+                      <td>{!! App\Models\FacilitySdp::cojoin($survey->facilitySdp->id) !!}</td>
                   </tr>
                   <tr>
                       <td>{{ Lang::choice('messages.gps', 1) }}</td>

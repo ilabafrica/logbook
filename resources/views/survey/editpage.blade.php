@@ -13,7 +13,7 @@
 </div>
 <div class="panel panel-primary">
     <div class="panel-heading"><i class="fa fa-tags"></i> 
-        {!! $page->survey->facilitySdp->facility->name.':<strong>'.App\Models\FacilitySdp::cojoinSdp($page->survey->facilitySdp->id).' for page '.$page->page.'</strong>' !!}
+        {!! $page->survey->facilitySdp->facility->name.':<strong>'.App\Models\FacilitySdp::cojoin($page->survey->facilitySdp->id).' for page '.$page->page.'</strong>' !!}
         <span class="panel-btn">
             <a href="{!! url('page/'.$page->id.'/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
         </span>
@@ -72,7 +72,7 @@
                                         @endif
                                     @elseif($question->question_type == App\Models\Question::SELECT)
                                         @if($question->name == 'Service Delivery Points (SDP)')
-                                            {!! Form::label('', App\Models\FacilitySdp::cojoinSdp($page->survey->facilitySdp->id), array('class' => 'control-label text-primary')) !!}
+                                            {!! Form::label('', App\Models\FacilitySdp::cojoin($page->survey->facilitySdp->id), array('class' => 'control-label text-primary')) !!}
                                         @elseif($question->name == 'Facility')
                                             {!! Form::label('', $page->survey->facilitySdp->facility->name, array('class' => 'control-label text-primary')) !!}
                                         @else
