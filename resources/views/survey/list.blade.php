@@ -100,7 +100,7 @@
                         </tr>
                         @empty
                         <tr>
-                          <td colspan="4">{{ Lang::choice('messages.no-records-found', 1) }}</td>
+                          <td colspan="6">{{ Lang::choice('messages.no-records-found', 1) }}</td>
                         </tr>
                         @endforelse
                     </tbody>

@@ -61,7 +61,7 @@
             <li class="dropdown">
 
                  <li class="dropdown">
-                        <a href="" role="button" aria-expanded="false">
+                        <a href="{!! url('home') !!}" role="button" aria-expanded="false">
                         <span class="fa fa-clipboard"></span> {!! Lang::choice('messages.home', 2) !!}
                     </a>
                     
@@ -77,7 +77,7 @@
                     </a>
                 </li>
 
-                <li class="dropdown">
+                <li class="dropdown" style="display:none">
                     <a class="dropdown-toggle" href="{!! url('overview') !!}" role="button" aria-expanded="false">
                         <span class="fa fa-circle-o-notch"></span> {!! Lang::choice('messages.summary', 1) !!}
                     </a>

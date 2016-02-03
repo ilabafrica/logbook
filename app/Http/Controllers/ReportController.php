@@ -74,9 +74,6 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -85,6 +82,9 @@ class ReportController extends Controller {
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
 		$months = json_decode(self::getMonths($from, $to, $checklist->id));
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$fsdps = $variables['sdps'];
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -232,15 +232,16 @@ class ReportController extends Controller {
 		if(Auth::user()->hasRole('Sub-County Lab Coordinator'))
 			$sub_county = SubCounty::find(Auth::user()->tier->tier);
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$fsdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to, $checklist->id));
 		$posAgr = [];
 		$chart = "{
@@ -465,15 +466,16 @@ class ReportController extends Controller {
 		//	Percentages
 		$percentages = array('<95%', '95-98%', '>98%');
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
+		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$fsdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to, $checklist->id));
 		$overAgr = [];
 		$chart = "{
@@ -708,7 +710,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$categories = array();
 		$options = array();
@@ -879,7 +881,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$chart = "{
 
@@ -1046,7 +1048,7 @@ class ReportController extends Controller {
 		}
 		$n = 0;
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
@@ -1176,7 +1178,7 @@ class ReportController extends Controller {
 		}
 		
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
@@ -1319,7 +1321,7 @@ class ReportController extends Controller {
 		}
 		
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		//	Get checklist
 		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
@@ -1407,7 +1409,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist_id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$categories = array();
 		$options = array();
@@ -1987,7 +1989,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, NULL);
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, NULL, $from, $toPlusOne);
 		$title = $variables['title'];
 		$fsdps = $variables['sdps'];
 		//	Colors to be used in the series
@@ -2559,9 +2561,6 @@ class ReportController extends Controller {
 		//	Get sdps
 		$sdps = array();
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$ssdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -2569,6 +2568,9 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$ssdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
 		$chart = "{
@@ -2714,9 +2716,6 @@ class ReportController extends Controller {
 		}
 		//	Set title
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -2724,6 +2723,9 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$fsdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
 		$chart = "{
@@ -2960,7 +2962,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$fsdps = $variables['sdps'];
 		//	Colors to be used in the series
@@ -3227,7 +3229,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
@@ -3383,7 +3385,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Get sdps
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
@@ -3520,7 +3522,7 @@ class ReportController extends Controller {
 			$subCounties = County::find($jimbo)->subCounties->lists('name', 'id');
 		}
 		//	Update chart title
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
+		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$ssdps = $variables['sdps'];
 		$chart = "{
@@ -3661,17 +3663,17 @@ class ReportController extends Controller {
 		$sdps = array();
 		//	Percentages
 		$percentages = array('<95%', '95-98%', '>98%');
-		$variables = $this->sdpsTitleN($jimbo, $sub_county, $site, $sdp);
-		$title = $variables['title'];
-		$fsdps = $variables['sdps'];
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
 		$to = Input::get('to');
 		if(!$to)
 			$to = date('Y-m-d');
-		$months = json_decode(self::getMonths($from, $to));
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
+		$variables = $this->sdpsTitleN($id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+		$title = $variables['title'];
+		$fsdps = $variables['sdps'];
+		$months = json_decode(self::getMonths($from, $to));
 	    //	Percent of sites
 	    $percent = "{
 	        chart: {
@@ -3768,19 +3770,6 @@ class ReportController extends Controller {
 		return view('report.htc.overtime', compact('checklist', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
 	}
-	/*function to return array of sdps including IPD, VMMC, Pediatric department, Youth centre, PITC, TB Clinic, ART Clinic*/
-	public function others()
-	{
-		$ipd = Sdp::idByName('IPD (Ward)');
-		$vmmc = Sdp::idByName('VMMC');
-		$pd = Sdp::idByName('Pediatric department');
-		$yc = Sdp::idByName('Youth Centre');
-		$pitc = Sdp::idByName('PITC');
-		$tb = Sdp::idByName('TB Clinic');
-		$art = Sdp::idByName('ART Clinic');
-		$sti = Sdp::idByName('STI Clinic');
-		return [$ipd, $vmmc, $pd, $yc, $pitc, $tb, $art, $sti];
-	}
 	/**
 	*
 	*	Function to load counties with data for select lists in views
@@ -3790,10 +3779,10 @@ class ReportController extends Controller {
 	{
 		$counties = [];
 		$cIds = [];
-		foreach (array_unique(Survey::lists('facility_id')) as $key)
+		foreach (array_filter(array_unique(Survey::lists('facility_sdp_id'))) as $key)
 		{
 			$scIds = [];
-			array_push($scIds, Facility::find($key)->subCounty->id);
+			array_push($scIds, Facility::find(FacilitySdp::find($key)->facility_id)->subCounty->id);
 			foreach (array_unique($scIds) as $sc)
 			{
 				array_push($cIds, SubCounty::find($sc)->county->id);
@@ -3807,11 +3796,12 @@ class ReportController extends Controller {
 	*	Function to return sdps, title of chart and value of N
 	*
 	*/
-	public function sdpsTitleN($jimbo = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL)
+	public function sdpsTitleN($chkId, $jimbo = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
 	{
 		$sdps = array();
 		$title = '';
 		$n = 0;
+		$fsdps = [];
 		if($jimbo || $sub_county || $site || $sdp)
 		{
 			if($sub_county || $site || $sdp)
@@ -3822,32 +3812,102 @@ class ReportController extends Controller {
 					if($sdp)
 					{
 						array_push($sdps, $sdp);
+						array_push($fsdps, $sdp);
 						$title = $facility->name.':<strong>'.FacilitySdp::cojoin($sdp).'</strong>';
 					}
 					else
 					{
 						$sdps = $facility->facilitySdp->lists('id');
 						$title = $facility->name;
+						$fsdps = $sdps;
 					}
 				}
 				else
 				{
 					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
 					$sdps = FacilitySdp::whereIn('facility_id', SubCounty::find($sub_county)->facilities->lists('id'))->lists('sdp_id');
+					$fsdps = FacilitySdp::whereIn('facility_id', SubCounty::find($sub_county)->facilities->lists('id'))->lists('id');
 				}
 			}
 			else
 			{
 				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
 				$sdps = FacilitySdp::whereIn('facility_id', Facility::whereIn('sub_county_id', County::find($jimbo)->subCounties->lists('id'))->lists('id'))->lists('sdp_id');
+				$fsdps = FacilitySdp::whereIn('facility_id', Facility::whereIn('sub_county_id', County::find($jimbo)->subCounties->lists('id'))->lists('id'))->lists('id');
 			}
 		}
 		else
 		{
 			$title = 'Kenya';
 			$sdps = FacilitySdp::lists('sdp_id');
+			$fsdps = FacilitySdp::lists('id');
 		}
+		$surveys = Survey::whereIn('facility_sdp_id', array_unique($fsdps))->whereBetween('date_submitted', [$from, $to])->where('checklist_id', $chkId)->lists('facility_sdp_id');
+		$n = count(array_unique($surveys));
 		$sdps = array_unique($sdps);
-		return ['sdps' => $sdps, 'title' => $title];
+		return ['sdps' => $sdps, 'title' => $title.'(N='.$n.')'];
 	}
+	public function getDateRange($quarter, $fin_year)
+    {
+        $temp = explode('-', $fin_year); //2012-2013
+        $start_date = date('');
+        $end_date = date('');
+        $range = array();
+
+        if( $quarter == 1 ){
+
+            if( $temp[0] == date('Y') ){
+                $start_date = date('Y-07-01 00:00:00');
+                $end_date = date('Y-09-30 23:59:59');
+
+            }elseif( $temp[1] == date('Y') ){
+                $start_date = date($temp[0] . '-07-01 00:00:00');
+                $end_date = date($temp[0] . '-09-30 23:59:59');
+            }
+
+        }elseif( $quarter == 2 ){
+
+            if( $temp[0] == date('Y') ){
+                $start_date = date('Y-10-01 00:00:00');
+                $end_date = date('Y-12-31 23:59:59');
+
+            }elseif( $temp[1] == date('Y') ){
+                $start_date = date($temp[0] . '-10-01 00:00:00');
+                $end_date = date($temp[0] . '-12-31 23:59:59');
+            }
+
+        }elseif( $quarter == 3 ){
+
+            if( $temp[0] == date('Y') ){
+                $start_date = date($temp[1] . '-01-01 00:00:00');
+                $end_date = date($temp[1] . '-03-31 23:59:59');
+
+            }elseif( $temp[1] == date('Y') ){
+                $start_date = date('Y-01-01 00:00:00');
+                $end_date = date('Y-03-31 23:59:59');
+            }
+
+        }elseif( $quarter == 4 ){
+
+            if( $temp[0] == date('Y') ){
+                $start_date = date('Y-04-01 00:00:00');
+                $end_date = date('Y-06-30 23:59:59');
+
+            }elseif( $temp[1] == date('Y') ){
+                $start_date = date($temp[0] . '-04-01 00:00:00 ');
+                $end_date = date($temp[0] . '-06-30 23:59:59');
+            }
+        }
+
+        $return['start_date'] = $start_date;
+        $return['end_date'] = $end_date;
+
+        return $return;
+    }
+    //	Function to return quarters given date range
+    public function quarters($from, $to)
+    {
+    	$from = '2015-03-01';
+    	$to = '2015-11-02';
+    }
 }

@@ -369,7 +369,10 @@ alter table survey_questions drop column survey_sdp_id;
 
 ALTER TABLE `survey_questions`
   ADD CONSTRAINT `survey_questions_survey_id_foreign` FOREIGN KEY (`survey_id`) REFERENCES `surveys` (`id`);
-  
+
+alter table surveys drop foreign key surveys_facility_id_foreign;
+alter table surveys drop column facility_id;
+
 DROP TABLE survey_spirt_info;
 DROP TABLE survey_sdps;
 ALTER TABLE surveys DROP COLUMN survey_sdp_id;

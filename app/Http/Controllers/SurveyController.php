@@ -707,7 +707,7 @@ class SurveyController extends Controller {
 	        	{
 	        		$survey = new Survey;        	
 	        		$survey->checklist_id = $checklist_id;
-	        		$survey->facility_id = $facility_id;
+	        		$survey->facility_sdp_id = $facility_sdp_id;
 	        		$survey->qa_officer = $qa_officer;
 	        		$survey->comment = $comment;
 	        		$survey->date_started = $date_started;

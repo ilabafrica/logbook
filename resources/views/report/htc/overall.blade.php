@@ -15,11 +15,11 @@
 @if(Session::has('message'))
 <div class="alert alert-info">{{Session::get('message')}}</div>
 @endif
-<div class="panel panel-default">
+<div class="panel panel-primary">
     <div class="panel-heading">
         <i class="fa fa-tags"></i> {!! $checklist->name !!}
         <span class="panel-btn">
-            <a class="btn btn-outline btn-primary btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
+            <a class="btn btn-info btn-sm" href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}">
                 <span class="glyphicon glyphicon-backward"></span> {{trans('messages.back')}}
             </a>
         </span>
