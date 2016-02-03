@@ -76,40 +76,23 @@ class FacilitySdp extends Model implements Revisionable {
     public function level($lvl, $from, $toPlusOne)
     {
         $level = Level::find($lvl);
+        $chkId = Checklist::idByName('SPI-RT Checklist');
         //  Define variables for use
         $counter = 0;
         $total_checklist_points = Checklist::find(Checklist::idByName('SPI-RT Checklist'))->sections->sum('total_points');
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
-        $surveys = $this->surveys()->whereBetween('date_submitted', [$from, $toPlusOne])->get();
+        $surveys = $this->surveys()->where('checklist_id', $chkId)->whereBetween('date_submitted', [$from, $toPlusOne])->lists('id');
         $total_counts = count($surveys);
+        $questions = SurveyQuestion::whereIn('survey_id', $surveys)->whereNotIn('question_id', $unwanted)->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->lists('id');
+        $dbs = SurveyQuestion::whereIn('survey_id', $surveys)->where('question_id', $notapplicable)->lists('id');
+        $na = SurveyData::whereIn('survey_question_id', $dbs)->where('answer', '0')->count();
+        $calculated_points = SurveyData::whereIn('survey_question_id', $questions)->whereIn('answer', Answer::lists('score'))->sum('answer');
         //  Begin processing
-        foreach ($surveys as $key => $value)
-        {
-            $reductions = 0;
-            $calculated_points = 0.00;
-            $percentage = 0.00;
-            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
-                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-                                  ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points+= $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
-            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
-            {
-                if($sq->sd->answer == '0')
-                    $reductions++;
-            }
-            if($reductions>0)
-                $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
-            else
-                $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
-            //  Check and increment counter
-            if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) || (($level->range_lower==0.00) && ($percentage==$level->range_lower)))
-                $counter++;
-        }        
-        if($reductions>0)
-            $percentage = round(($calculated_points*100)/($total_checklist_points-5)*$total_counts, 2);
+        if($na>0)
+            $percentage = round(($calculated_points*100)/(($total_checklist_points*$total_counts)-(5*$na)), 3);
         else
-            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 2);
+            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 3);
         if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) && ($percentage!=0))
             return $percentage;
         else

@@ -62,17 +62,6 @@
                         </div>
                     </div>
                     @endif
-                    @if((Auth::user()->hasRole('County Lab Coordinator') || Auth::user()->hasRole('Sub-County Lab Coordinator')) || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
-                    <div class="col-sm-4">
-                        <div class='form-group'>
-                            {!! Form::label(Lang::choice('messages.facility', 1), Lang::choice('messages.facility', 1), array('class' => 'col-sm-4 control-label')) !!}
-                            <div class="col-sm-8">
-                                {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, old($site)?old($site):$site, 
-                                    array('class' => 'form-control', 'id' => 'facility')) !!}
-                            </div>
-                        </div>
-                    </div>
-                    @endif
                 </div>
                 <hr />
                 <div class="row">

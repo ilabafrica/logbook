@@ -37,7 +37,7 @@ class ReportController extends Controller {
 		$checklist = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
 		
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -184,7 +184,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -419,7 +419,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -665,7 +665,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -837,7 +837,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -891,7 +891,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison for $title',
+	            text: 'SPI-RT Scores Comparison for '".$title."',
 	            x: -80
 	        },	        
 		    subtitle: {
@@ -965,8 +965,10 @@ class ReportController extends Controller {
 	 */
 	public function chart()
 	{
+		//	Get checklist
+		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = SubCounty::lists('name', 'id');
 		$jimbo = NULL;
@@ -975,8 +977,6 @@ class ReportController extends Controller {
 			$jimbo = Input::get('county');
 		else if(Input::get('county') && !(Input::get('sub_county')))
 			$sub_county = Input::get('sub_county');
-		//	Get checklist
-		$checklist = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$columns = array();
 		$options = array();
 		foreach ($checklist->sections as $section) 
@@ -1000,7 +1000,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1132,8 +1132,11 @@ class ReportController extends Controller {
 	 * @return Response
 	 */
 	public function snapshot()
-	{	//	Get counties
-		$counties = $this->countiesWithData();
+	{	
+		$id = Checklist::idByName('M & E Checklist');
+		$checklist = Checklist::find($id);
+		//	Get counties
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1154,7 +1157,6 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-		$id = Checklist::idByName('M & E Checklist');
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1275,8 +1277,11 @@ class ReportController extends Controller {
 	}
 
 	public function breakdown()
-	{	//	Get counties
-		$counties = $this->countiesWithData();
+	{	
+		$id = Checklist::idByName('M & E Checklist');
+		$checklist = Checklist::find($id);
+		//	Get counties
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1297,7 +1302,6 @@ class ReportController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-		$id = Checklist::idByName('M & E Checklist');
 		//	Get facility
 		//$facility = Facility::find(2);
 		if(Input::get('sdp'))
@@ -1364,7 +1368,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1679,7 +1683,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison',
+	            text: 'SPI-RT Scores Comparison ".$title.",
 	            x: -80
 	        },
 
@@ -1772,7 +1776,7 @@ class ReportController extends Controller {
 	            type: 'bar'
 	        },
 	        title: {
-	            text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	            text: '".Lang::choice('messages.percent-of-sites', 1).'-'.$title."'
 	        },
 	        subtitle: {
 	            text: 'Source: HIV-QA Kenya'
@@ -1951,7 +1955,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -1999,7 +2003,7 @@ class ReportController extends Controller {
 	            type: 'bar'
 	        },
 	        title: {
-	            text: '".Lang::choice('messages.percent-of-sites', 1)."'
+	            text: '".Lang::choice('messages.percent-of-sites', 1).'-'.$title."'
 	        },
 	        subtitle: {
 	            text: 'Source: HIV-QA Kenya'
@@ -2031,7 +2035,7 @@ class ReportController extends Controller {
 	            pointFormat: '<tr><td style=\"color:{series.color};padding:0\">{series.name}: </td>' +
 	                '<td style=\"padding:0\"><b>{point.y:.1f} %</b></td></tr>',
 	            footerFormat: '</table>',
-	            shared: true,
+	            shared: false,
 	            useHTML: true
 	        },
 	        plotOptions: {
@@ -2274,7 +2278,7 @@ class ReportController extends Controller {
 		$spi = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
 		$checklists = [$htc, $me, $spi];
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $me->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -2333,7 +2337,7 @@ class ReportController extends Controller {
 		            name: 'Total',
 		            colorByPoint: true,
 		            data: [";
-		            	foreach ($checklist->distCount($htc) as $key)
+		            	foreach ($checklist->countiesWithData() as $key)
 		            	{
 		            		$county = County::find($key);
 		            		$pie[$checklist->id].="{
@@ -2347,7 +2351,7 @@ class ReportController extends Controller {
 		        }],
 		        drilldown: {
 		            series: [";
-		            foreach ($checklist->distCount() as $key)
+		            foreach ($checklist->countiesWithData() as $key)
 	            	{
 	            		$county = County::find($key);
 	            		$pie[$checklist->id].="{
@@ -2365,7 +2369,7 @@ class ReportController extends Controller {
 			                $pie[$checklist->id].="]
 			            },";
 	            	}
-	            	foreach ($checklist->distCount() as $key)
+	            	foreach ($checklist->countiesWithData() as $key)
 	            	{
 	            		$county = County::find($key);
 		                foreach ($county->subCounties as $subCounty)
@@ -2386,7 +2390,7 @@ class ReportController extends Controller {
 				            },";
 		                }
 	            	}
-	            	foreach ($checklist->distCount() as $key)
+	            	foreach ($checklist->countiesWithData() as $key)
 	            	{
 	            		$county = County::find($key);
 		                foreach ($county->subCounties as $subCounty)
@@ -2516,7 +2520,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -2672,7 +2676,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties 
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -2920,7 +2924,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -2965,6 +2969,7 @@ class ReportController extends Controller {
 		$variables = $this->sdpsTitleN($checklist->id, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 		$title = $variables['title'];
 		$fsdps = $variables['sdps'];
+		$regions = $checklist->regions($jimbo, $sub_county);
 		//	Colors to be used in the series
 		$colors = array('#5cb85c', '#d6e9c6', '#f0ad4e', '#d9534f');
 		$chart = "{
@@ -2983,40 +2988,10 @@ class ReportController extends Controller {
 		    $chart.="},
 	        xAxis: {
 	            categories: [";
-	            if($jimbo || $sub_county || $site)
-	            {
-	            	if($sub_county || $site)
-	            	{
-	            		if($site)
-	            		{
-	            			foreach (Facility::find($site)->facilitySdp as $facSdp)
-	            			{
-	            				$chart.="'".FacilitySdp::cojoin($facSdp->id)."',";
-	            			}
-	            		}
-	            		else
-	            		{
-	            			foreach (SubCounty::find($sub_county)->facilities as $facility)
-	            			{
-	            				$chart.="'".$facility->name."',";
-	            			}
-	            		}
-	            	}
-	            	else
-	            	{
-	            		foreach (County::find($jimbo)->subCounties as $subCounty)
-	            		{
-	            			$chart.="'".$subCounty->name."',";
-	            		}
-	            	}
-	            }
-	            else
-	            {
-	            	foreach ($checklist->distCount() as $county)
-	            	{
-	            		$chart.="'".County::find($county)->name."',";
-	            	}
-	            }
+            	foreach ($regions as $key => $value)
+            	{
+            		$chart.="'".$value."',";
+            	}
 	            $chart.="]
 	        },
 	        yAxis: {
@@ -3052,114 +3027,40 @@ class ReportController extends Controller {
 		        foreach ($levels as $level)
 		        {
 		        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-		        	if($jimbo || $sub_county || $site)
-		        	{
-		        		if($sub_county || $site)
-		        		{
-		        			if($site)
-		        			{
-		        				$counter = count($fsdps);
-				        		foreach ($fsdps as $fsdp)
-				        		{
-				        			$data = FacilitySdp::find($fsdp)->level($level->id, $from, $toPlusOne);
-				        			if($data==0)
-				        			{
-		            					$chart.= '0.00';
-		            					if($counter==1)
-			            					$chart.="";
-			            				else
-			            					$chart.=",";
-			        				}
-			        				else
-			        				{
-			            				$chart.= $data;
-
-			            				if($counter==1)
-			            					$chart.="";
-			            				else
-			            					$chart.=",";
-			        				}
-			            			$counter--;
-			            		}
-		        			}
-		        			else
-		        			{
-		        				$counter = count(SubCounty::find($sub_county)->facilities);
-				        		foreach (SubCounty::find($sub_county)->facilities as $facility)
-				        		{
-				        			$data = $checklist->spirtLevel($level->id, NULL, $facility->id, NULL, NULL, 0, 0, 0, $from, $toPlusOne);
-				        			if($data==0)
-				        			{
-		            					$chart.= '0.00';
-		            					if($counter==1)
-			            					$chart.="";
-			            				else
-			            					$chart.=",";
-			        				}
-			        				else
-			        				{
-			            				$chart.= $data;
-
-			            				if($counter==1)
-			            					$chart.="";
-			            				else
-			            					$chart.=",";
-			        				}
-			            			$counter--;
-			            		}
-		        			}
-		        		}
-		        		else
-		        		{	
-			        		$counter = count(County::find($jimbo)->subCounties);
-			        		foreach (County::find($jimbo)->subCounties as $sub)
-			        		{
-			        			$data = $checklist->spirtLevel($level->id, NULL, NULL, $sub->id, NULL, 0, 0, 0, $from, $toPlusOne);
-			        			if($data==0){
-		            					$chart.= '0.00';
-		            					if($counter==1)
-			            					$chart.="";
-			            				else
-			            					$chart.=",";
-		        				}
-		        				else{
-		            				$chart.= $data;
-
-		            				if($counter==1)
-		            					$chart.="";
-		            				else
-		            					$chart.=",";
-		        				}
-		            			$counter--;
-		            		}
-		        		}
-	            	}
-	            	else
-	            	{
-	            		$counter = count($checklist->distCount());
-		        		foreach ($checklist->distCount() as $county)
-		        		{
-		        			$data = $checklist->spirtLevel($level->id, NULL, NULL, NULL, $county, 0, 0, 0, $from, $toPlusOne);
-		        			if($data==0)
-		        			{
-            					$chart.= '0.00';
-            					if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
-	        				}
+		        	$counter = count($regions);
+	        		foreach ($regions as $key => $value)
+	        		{
+	        			$data = 0.00;
+	        			if($jimbo || $sub_county)
+	        			{
+	        				if($sub_county)
+	        					$data = $checklist->level($level->id, NULL, NULL, $key, $from, $toPlusOne);
 	        				else
-	        				{
-	            				$chart.= $data;
+	        					$data = $checklist->level($level->id, NULL, $key, NULL, $from, $toPlusOne);
+	        			}
+	        			else
+	        			{
+	        				$data = $checklist->level($level->id, $key, NULL, NULL, $from, $toPlusOne);
+	        			}
+	        			if($data==0)
+	        			{
+        					$chart.= '0.00';
+        					if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+        				else
+        				{
+            				$chart.= $data;
 
-	            				if($counter==1)
-	            					$chart.="";
-	            				else
-	            					$chart.=",";
-	        				}
-	            			$counter--;
-	            		}
-	            	}
+            				if($counter==1)
+            					$chart.="";
+            				else
+            					$chart.=",";
+        				}
+            			$counter--;
+            		}
             		$chart.="]";
 	            	if($counts==1)
 						$chart.="}";
@@ -3186,7 +3087,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -3342,7 +3243,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -3443,7 +3344,7 @@ class ReportController extends Controller {
 	        foreach ($levels as $level)
 	        {
 	        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-	        	$data = $checklist->spirtLevel($level->id, $sdp, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
+	        	$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, $from, $toPlusOne);
     			if($data==0)
     				$chart.= '0.00';
 				else
@@ -3478,7 +3379,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -3533,7 +3434,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison for $title',
+	            text: 'SPI-RT Scores Comparison for ".$title."',
 	            x: -80
 	        },	        
 		    subtitle: {
@@ -3617,7 +3518,7 @@ class ReportController extends Controller {
 		//	Chart title
 		$title = '';
 		//	Get counties
-		$counties = $this->countiesWithData();
+		$counties = $checklist->countiesWithData();
 		//	Get all sub-counties
 		$subCounties = array();
 		if(Auth::user()->hasRole('County Lab Coordinator'))
@@ -3769,27 +3670,6 @@ class ReportController extends Controller {
 	    }";
 		return view('report.htc.overtime', compact('checklist', 'counties', 'subCounties', 'facilities', 'from', 'to', 'jimbo', 'sub_county', 'site', 'percent', 'sdps', 'sdp', 'kit'));
 
-	}
-	/**
-	*
-	*	Function to load counties with data for select lists in views
-	*
-	*/
-	public function countiesWithData()
-	{
-		$counties = [];
-		$cIds = [];
-		foreach (array_filter(array_unique(Survey::lists('facility_sdp_id'))) as $key)
-		{
-			$scIds = [];
-			array_push($scIds, Facility::find(FacilitySdp::find($key)->facility_id)->subCounty->id);
-			foreach (array_unique($scIds) as $sc)
-			{
-				array_push($cIds, SubCounty::find($sc)->county->id);
-			}
-		}
-		$counties = County::whereIn('id', array_unique($cIds))->lists('name', 'id');
-		return $counties;
 	}
 	/**
 	*

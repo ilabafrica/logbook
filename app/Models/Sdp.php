@@ -200,37 +200,17 @@ class Sdp extends Model implements Revisionable {
      */
     public function level($lvl, $county = null, $sub_county = null, $site = null, $sdp = null, $from = NULL, $to = NULL)
     {
-    	$fsdps = $this->facilitySdp->lists('id');
-    	$level = Level::find($lvl);
-    	$checklist = Checklist::idByName('SPI-RT Checklist');
-    	$surveys = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to)->whereIn('facility_sdp_id', $fsdps)->get();
+    	$fsdps = $this->facilitySdp;
     	//  Define variables for use
+    	$level = Level::find($lvl);
         $counter = 0;
-        $total_counts = count($surveys);
-        $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
-        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
-        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
+        $total_counts = count($fsdps);
         //  Begin processing
-        foreach ($surveys as $key => $value)
+        foreach ($fsdps as $fsdp)
         {
-            $reductions = 0;
-            $calculated_points = 0.00;
-            $percentage = 0.00;
-            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
-                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-                                  ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
-            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
-            {
-                if($sq->sd->answer == '0')
-                    $reductions++;
-            }
-            if($reductions>0)
-                $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
-            else
-                $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
+        	$percentage = $fsdp->level($lvl, $from, $to);
             //  Check and increment counter
-            if(($percentage>=$level->range_lower) && ($percentage<$level->range_upper+1) || (($level->range_lower==0.00) && ($percentage==$level->range_lower)))
+            if($percentage!=0)
                 $counter++;
         }
         return $total_counts > 0?round($counter*100/$total_counts, 2):0.00;

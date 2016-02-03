@@ -56,41 +56,6 @@ class Checklist extends Model implements Revisionable {
 		}
 	}
 	/**
-	 * Function to calculate level
-	 */
-	public function level($county = NULL, $sub_county = NULL, $site = NULL, $sdp, $from = NULL, $to = NULL)
-    {
-        //  Get data to be used
-        $fsdps = $this->fsdps($this->id, $county, $sub_county, $site, $sdp, $from, $to)->get();
-        //  Define variables for use
-        $counter = 0;
-        $total_counts = count($fsdps);
-        $total_checklist_points = $this->sections->sum('total_points');
-        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
-        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
-        //  Begin processing
-        $percentage = 0.00;
-        foreach ($fsdps as $key => $value)
-        {
-            $reductions = 0;
-            $calculated_points = 0.00;
-            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
-                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-                                  ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points = $sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
-            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
-            {
-                if($sq->sd->answer == '0')
-                    $reductions++;
-            }
-            if($reductions>0)
-                $percentage = round(($calculated_points*100)/($total_checklist_points-5), 2);
-            else
-                $percentage = round(($calculated_points*100)/$total_checklist_points, 2);
-        }
-        return $percentage;
-    }
-	/**
 	 * Count unique officers who participated in survey
 	 */
 	public function officers($county = null, $subCounty = null)
@@ -119,38 +84,25 @@ class Checklist extends Model implements Revisionable {
 		return $data->groupBy('qa_officer')->count();
 	}
 	/**
-	 * Return distinct facilities with submitted data in surveys
-	 */
-	public function distFac()
+	*
+	*	Function to load counties with data for select lists in views
+	*
+	*/
+	public function countiesWithData()
 	{
-		$facilities = $this->surveys->lists('facility_id');
-		return array_unique($facilities);
-	}
-	/**
-	 * Return distinct sub-counties with submitted data in surveys
-	 */
-	public function distSub()
-	{
-		$subs = array();
-		$facilities = $this->distFac();
-		foreach ($facilities as $facility)
+		$counties = [];
+		$cIds = [];
+		foreach (array_filter(array_unique($this->surveys()->lists('facility_sdp_id'))) as $key)
 		{
-			array_push($subs, Facility::find($facility)->subCounty->id);
+			$scIds = [];
+			array_push($scIds, Facility::find(FacilitySdp::find($key)->facility_id)->subCounty->id);
+			foreach (array_unique($scIds) as $sc)
+			{
+				array_push($cIds, SubCounty::find($sc)->county->id);
+			}
 		}
-		return array_unique($subs);
-	}
-	/**
-	 * Return counties with submitted data in surveys
-	 */
-	public function distCount()
-	{
-		$counties = array();
-		$subs = $this->distSub();
-		foreach ($subs as $sub)
-		{
-			array_push($counties, SubCounty::find($sub)->county->id);
-		}
-		return array_unique($counties);
+		$counties = County::whereIn('id', array_unique($cIds))->lists('name', 'id');
+		return $counties;
 	}
 	/**
 	 * Function to return level given the score
@@ -290,19 +242,20 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage - for spirt levels
 	 */
-	public function spirtLevel($lId, $sdp = NULL, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = NULL, $to = NULL)
+	public function level($lId, $county = NULL, $sub_county = NULL, $facility = NULL, $from = NULL, $to = NULL)
 	{
 		//	Get scores for each section
 		$level = Level::find($lId);
 		$counter = 0;
-		$fsdps = $this->fsdps($this->id, $jimbo, $sub_county, $site, $sdp, $from, $to)->get();
+		$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to)->lists('facility_sdp_id');
+		$fsdps = array_filter(array_unique($fsdps));
 		$total_sites = count($fsdps);
 		if($total_sites>0)
 		{
 			foreach ($fsdps as $fsdp)
 			{
-				$lvl = $fsdp->level();
-				if(($lvl>=$level->range_lower) && ($lvl<$level->range_upper+1) && ($lvl!=0))
+				$lvl = FacilitySdp::find($fsdp)->level($lId, $from, $to);
+				if($lvl!=0)
 					$counter++;
 			}
 		}
@@ -378,5 +331,24 @@ class Checklist extends Model implements Revisionable {
 	public function questionnaires($checklist, $officer, $from = NULL, $to = NULL)
 	{
 		return $this->fsdps($checklist, NULL, NULL, NULL, NULL, $from, $to)->where('qa_officer', $officer)->count();
+	}
+	/**
+	 * Define regions for use in the various reports
+	 */
+	public function regions($county = NULL, $sub_county = NULL)
+	{
+		$regions = [];
+		if($county || $sub_county)
+		{
+			if($sub_county)
+				$regions = SubCounty::find($sub_county)->facilities->lists('name', 'id');
+			else
+				$regions = County::find($county)->subCounties->lists('name', 'id');
+		}
+		else
+		{
+			$regions = $this->countiesWithData();
+		}
+		return $regions;
 	}
 }
