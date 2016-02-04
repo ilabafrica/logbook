@@ -230,7 +230,7 @@ Route::group(['middleware' => 'auth'], function(){
         "as"    =>  "survey.summary",
         "uses"  =>  "SurveyController@summary"
     ));
-    Route::get('survey/{id}/collection', array(
+    Route::any('survey/{id}/collection', array(
         "as"    =>  "survey.collection",
         "uses"  =>  "SurveyController@collection"
     ));

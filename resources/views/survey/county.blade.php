@@ -48,7 +48,7 @@
             {!! Form::open(array('url' => 'survey/'.$checklist->id.'/county', 'class'=>'form-inline', 'role'=>'form', 'method'=>'POST')) !!}
             <!-- Tab panes -->
             <div class="row">
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label('from', Lang::choice('messages.from', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                     <div class='form-group'>
                         {!! Form::label('to', Lang::choice('messages.to', 1), array('class' => 'col-sm-4 control-label', 'style' => 'text-align:left')) !!}
                         <div class="col-sm-8 form-group input-group input-append date datepicker" style="padding-left:15px;">
@@ -70,13 +70,13 @@
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
+                <div class="col-sm-2">
+                    {!! Form::button("<i class='fa fa-download'></i> ".Lang::choice('messages.download-summary', 1), 
+                                array('class' => 'btn btn-success', 'name' => 'download', 'id' => 'download', 'value' => 'download', 'type' => 'submit')) !!}
+                </div>
             </div>
             {!! Form::close() !!}
             <hr>
-            <p>
-                <a href="#" onclick="window.history.back();return false;" alt="{{trans('messages.back')}}" title="{{trans('messages.back')}}" class="btn btn-default"><i class="fa fa-chevron-left"></i> {!! Lang::choice('messages.back', 1) !!}</a>
-                <a href="{!! url('survey/'.$checklist->id.'/county/download') !!}" class="btn btn-success" target=""><i class="fa fa-download"></i> {!! Lang::choice('messages.download-summary', 1) !!}</a>
-            </p>
             <div class="row">
                 <div class="col-sm-12">
                     <table class="table table-striped table-bordered table-hover search-table">
@@ -87,11 +87,10 @@
                             </tr>
                         </thead>
                          <tbody>
-                            @foreach($counties as $county)
-                            <?php $cnty = App\Models\County::find($county); ?>
+                            @foreach($counties as $key => $value)
                             <tr>
-                                <td>{!! $cnty->name !!}</td>
-                                <td>{!! $checklist->fsdps($checklist->id, $county, NULL, NULL, NULL, $from, $toPlusOne)->count() !!}</td>
+                                <td>{!! $value !!}</td>
+                                <td>{!! $checklist->fsdps($checklist->id, $key, NULL, NULL, NULL, $from, $toPlusOne)->count() !!}</td>
                             </tr>
                             @endforeach
                         </tbody>

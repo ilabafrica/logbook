@@ -396,6 +396,7 @@ class SurveyController extends Controller {
 		//	Get specific checklist
 		$checklist = Checklist::find($id);
 		//	Get unique QA Officers
+		$fsdps = [];
 		$qa = Survey::select('qa_officer')
 					->where('checklist_id', $id)
 					->groupBy('qa_officer');
@@ -416,18 +417,28 @@ class SurveyController extends Controller {
 		{
 			if($subCounty)
 			{
-				$qa = $qa->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-						 ->where('facilities.sub_county_id', $subCounty->id);
+				$fsdps = FacilitySdp::whereIn('facility_id', $subCounty->facilities->lists('id'))->lists('id');
 			}
 			else
 			{
-				$qa = $qa->join('facilities', 'facilities.id', '=', 'surveys.facility_id')
-						 ->join('sub_counties', 'sub_counties.id', '=', 'facilities.sub_county_id')
-						 ->where('sub_counties.county_id', $county->id);
+				$facilities = Facility::whereIn('sub_county_id', $county->subCounties->lists('id'))->lists('id');
+				$fsdps = FacilitySdp::whereIn('facility_id', $facilities)->lists('id');
 			}
 		}
+		if($fsdps)
+			$qa = $qa->whereIn('facility_sdp_id', $fsdps);
+		if($from && $to)
+		{
+			if($id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+				$qa = $qa->whereBetween('data_month', [$from, $to]);
+			else	
+				$qa = $qa->whereBetween('date_submitted', [$from, $to]);
+		}
 		$qa = $qa->get();
-		return view('survey.collection', compact('checklist', 'qa', 'from', 'to', 'toPlusOne'));
+		if(Input::has('download'))
+			return $this->collectionDownload($id, $qa, $from, $toPlusOne);
+		else
+			return view('survey.collection', compact('checklist', 'qa', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Show participating facilities summaries as desired
@@ -464,7 +475,10 @@ class SurveyController extends Controller {
 				$facilities = $county->facilities();
 			}
 		}
-		return view('survey.participant', compact('checklist', 'facilities', 'from', 'to', 'toPlusOne'));
+		if(Input::has('download'))
+			return $this->facilityDownload($id, $facilities, $from, $toPlusOne);
+		else
+			return view('survey.participant', compact('checklist', 'facilities', 'from', 'to', 'toPlusOne'));
 	}
 
 	/**
@@ -504,7 +518,10 @@ class SurveyController extends Controller {
 		}
 		$surveys = array();
 		$total = array();
-		return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'total', 'from', 'to', 'toPlusOne'));
+		if(Input::has('download'))
+			return $this->sdpDownload($id, $facilities, $from, $toPlusOne);
+		else
+			return view('survey.sdp', compact('checklist', 'facilities', 'surveys', 'total', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Remove the specified begining of text to get Id alone.
@@ -896,7 +913,7 @@ class SurveyController extends Controller {
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get counties
-		$counties = $checklist->distCount();
+		$counties = $checklist->countiesWithData();
 		$from = Input::get('from');
 		if(!$from)
 			$from = date('Y-m-01');
@@ -904,7 +921,10 @@ class SurveyController extends Controller {
 		if(!$to)
 			$to = date('Y-m-d');
 		$toPlusOne = date_add(new DateTime($to), date_interval_create_from_date_string('1 day'));
-		return view('survey.county', compact('checklist', 'counties', 'from', 'to', 'toPlusOne'));
+		if(Input::has('download'))
+			return $this->countyDownload($id, $counties, $from, $toPlusOne);
+		else
+			return view('survey.county', compact('checklist', 'counties', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Return summary by sub-county
@@ -916,7 +936,13 @@ class SurveyController extends Controller {
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get sub-counties
-		$subCounties = SubCounty::whereIn('county_id', $checklist->distCount())->get();
+		$counties = [];
+		foreach($checklist->countiesWithData() as $key => $value)
+		{
+			$counties[] = $key;
+		}
+
+		$subCounties = SubCounty::whereIn('county_id', $counties)->get();
 		$county = null;
 		$subCounty = null;
 		$from = Input::get('from');
@@ -934,7 +960,10 @@ class SurveyController extends Controller {
 		{
 			$subCounties = $county->subCounties;
 		}
-		return view('survey.subcounty', compact('checklist', 'subCounties', 'from', 'to', 'toPlusOne'));
+		if(Input::has('download'))
+			return $this->subcountyDownload($id, $subCounties, $from, $toPlusOne);
+		else
+			return view('survey.subcounty', compact('checklist', 'subCounties', 'from', 'to', 'toPlusOne'));
 	}
 	/**
 	 * Display the specified resource.
@@ -1322,24 +1351,19 @@ class SurveyController extends Controller {
 	 * Function to download collection summary
 	 *
 	 */
-	public function collectionDownload($id)
+	public function collectionDownload($id, $qa, $from, $to)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		//	Get QA Officers
-		$qa = Survey::select('qa_officer')
-					->where('checklist_id', $checklist->id)
-					->groupBy('qa_officer')
-					->get();
-		Excel::create('QA Officer Collection Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($qa, $checklist)
+		Excel::create('QA Officer Collection Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($qa, $checklist, $from, $to)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($qa, $checklist)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($qa, $checklist, $from, $to)
 		    {
 		    	$sheet->appendRow(array(Lang::choice('messages.qa-officer', 1), Lang::choice('messages.no-of-questionnaire', 1)));
 		    	foreach ($qa as $officer)
 		    	{
-		    		$sheet->appendRow(array($officer->qa_officer, Survey::questionnaires($officer->qa_officer, $checklist->id)));
+		    		$sheet->appendRow(array($officer->qa_officer, $checklist->questionnaires($checklist->id, $officer->qa_officer, $from, $to)));
 		    	}
 		    });
 
@@ -1349,21 +1373,19 @@ class SurveyController extends Controller {
 	 * Function to download county submission summary 
 	 *
 	 */
-	public function countyDownload($id)
+	public function countyDownload($id, $counties, $from, $to)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
-		//	Get counties
-		$counties = County::all();
-		Excel::create('County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($counties, $checklist)
+		Excel::create('County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($counties, $checklist, $from, $to)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($counties, $checklist)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($counties, $checklist, $from, $to)
 		    {
 		    	$sheet->appendRow(array(Lang::choice('messages.county', 1), Lang::choice('messages.no-of-questionnaire', 1)));
-		    	foreach ($counties as $county)
+		    	foreach ($counties as $key => $value)
 		    	{
-		    		$sheet->appendRow(array($county->name, $county->submissions($checklist->id)));
+		    		$sheet->appendRow(array($value, $checklist->fsdps($checklist->id, $key, NULL, NULL, NULL, $from, $to)->count()));
 		    	}
 		    });
 
@@ -1373,21 +1395,20 @@ class SurveyController extends Controller {
 	 * Function to download sub-county submission summary 
 	 *
 	 */
-	public function subcountyDownload($id)
+	public function subcountyDownload($id, $subCounties, $from, $to)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get sub-counties
-		$subCounties = SubCounty::all();
-		Excel::create('Sub-County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($subCounties, $checklist)
+		Excel::create('Sub-County Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($subCounties, $checklist, $from, $to)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($subCounties, $checklist)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($subCounties, $checklist, $from, $to)
 		    {
 		    	$sheet->appendRow(array(Lang::choice('messages.sub-county', 1), Lang::choice('messages.no-of-questionnaire', 1)));
 		    	foreach ($subCounties as $subCounty)
 		    	{
-		    		$sheet->appendRow(array($subCounty->name, $subCounty->submissions($checklist->id)));
+		    		$sheet->appendRow(array($subCounty->name, $checklist->fsdps($checklist->id, NULL, $subCounty->id, NULL, NULL, $from, $to)->count()));
 		    	}
 		    });
 
@@ -1397,21 +1418,20 @@ class SurveyController extends Controller {
 	 * Function to download facility submission summary 
 	 *
 	 */
-	public function facilityDownload($id)
+	public function facilityDownload($id, $facilities, $from, $to)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get facilities
-		$facilities = Facility::all();
-		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist)
+		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist, $from, $to)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist, $from, $to)
 		    {
 		    	$sheet->appendRow(array(Lang::choice('messages.facility', 1), Lang::choice('messages.no-of-questionnaire', 1)));
 		    	foreach ($facilities as $facility)
 		    	{
-		    		$sheet->appendRow(array($facility->name, $facility->submissions($checklist->id)));
+		    		$sheet->appendRow(array($facility->name, $checklist->fsdps($checklist->id, NULL, NULL, $facility->id, NULL, $from, $to)->count()));
 		    	}
 		    });
 
@@ -1421,25 +1441,24 @@ class SurveyController extends Controller {
 	 * Function to download facility submission summary per sdp
 	 *
 	 */
-	public function sdpDownload($id)
+	public function sdpDownload($id, $facilities, $from, $to)
 	{
 		//	Get checklist
 		$checklist = Checklist::find($id);
 		//	Get facilities
-		$facilities = Facility::all();
-		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist)
+		Excel::create('Facility Submissions Summary for '.$checklist->name.' - '.date('d-m-Y H:i:s'), function($excel) use($facilities, $checklist, $from, $to)
 		{
 
-		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist)
+		    $excel->sheet('No. of Questionnaires completed', function($sheet) use($facilities, $checklist, $from, $to)
 		    {
 		    	$counter = 0;
 		    	$sheet->appendRow(array(Lang::choice('messages.count', 1), Lang::choice('messages.facility', 1), Lang::choice('messages.sdp', 1), Lang::choice('messages.no', 1)));
 		    	foreach ($facilities as $facility)
 		    	{
-		    		foreach ($facility->points() as $ssdp)
+		    		foreach ($facility->facilitySdp as $fsdp)
 	    			{	
 	    				$counter++;	    				
-	    				$sheet->appendRow(array($counter, $facility->name, $ssdp['name'], $facility->perSdp($ssdp['name'])));
+	    				$sheet->appendRow(array($counter, $facility->name, FacilitySdp::cojoin($fsdp->id), $checklist->fsdps($checklist->id, NULL, NULL, NULL, $fsdp->id, $from, $to)->count()));
 	    			}
 		    	}
 		    });
