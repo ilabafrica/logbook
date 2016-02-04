@@ -66,11 +66,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {!! Form::button("<span class='glyphicon glyphicon-filter'></span> ".trans('messages.view'), 
                                 array('class' => 'btn btn-danger', 'name' => 'view', 'id' => 'view', 'type' => 'submit')) !!}
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     {!! Form::button("<i class='fa fa-download'></i> ".Lang::choice('messages.download-summary', 1), 
                                 array('class' => 'btn btn-success', 'name' => 'download', 'id' => 'download', 'value' => 'download', 'type' => 'submit')) !!}
                 </div>

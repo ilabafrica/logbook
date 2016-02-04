@@ -5,6 +5,13 @@ use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
 
+use App\Http\Requests\SdpRequest;
+use App\Models\Sdp;
+use Response;
+use Auth;
+use Session;
+use Lang;
+
 class SdpController extends Controller {
 
 	/**
@@ -14,7 +21,9 @@ class SdpController extends Controller {
 	 */
 	public function index()
 	{
-		//
+		//	Get all facility types
+		$sdps = Sdp::all();
+		return view('sdp.index', compact('sdps'));
 	}
 
 	/**
@@ -24,7 +33,7 @@ class SdpController extends Controller {
 	 */
 	public function create()
 	{
-		//
+		return view('sdp.create');
 	}
 
 	/**
@@ -32,9 +41,16 @@ class SdpController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function store()
+	public function store(SdpRequest $request)
 	{
-		//
+		$sdp = new Sdp;
+        $sdp->name = $request->name;
+        $sdp->description = $request->description;
+        $sdp->user_id = Auth::user()->id;
+        $sdp->save();
+        $url = session('SOURCE_URL');
+
+        return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-saved', 1))->with('active_sdp', $sdp ->id);
 	}
 
 	/**
@@ -45,7 +61,10 @@ class SdpController extends Controller {
 	 */
 	public function show($id)
 	{
-		//
+		//show a Site type
+		$sdp = Sdp::find($id);
+		//show the view and pass the $facilityType to it
+		return view('sdp.show', compact('sdp'));
 	}
 
 	/**
@@ -56,7 +75,9 @@ class SdpController extends Controller {
 	 */
 	public function edit($id)
 	{
-		//
+		$sdp = Sdp::find($id);
+
+        return view('sdp.edit', compact('sdp'));
 	}
 
 	/**
@@ -65,9 +86,16 @@ class SdpController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	public function update($id)
+	public function update(SdpRequest $request, $id)
 	{
-		//
+		$sdp = Sdp::findOrFail($id);;
+        $sdp->name = $request->name;
+        $sdp->description = $request->description;
+        $sdp->user_id = Auth::user()->id;;
+        $sdp->save();
+		$url = session('SOURCE_URL');
+
+        return redirect()->to($url)->with('message', Lang::choice('messages.record-successfully-updated', 1))->with('active_sdp', $sdp ->id);
 	}
 
 	/**
@@ -76,9 +104,14 @@ class SdpController extends Controller {
 	 * @param  int  $id
 	 * @return Response
 	 */
+	public function delete($id)
+	{
+		$sdp= Sdp::find($id);
+		$sdp->delete();
+		return redirect('sdp')->with('message', Lang::choice('messages.record-successfully-deleted', 1));
+	}
 	public function destroy($id)
 	{
 		//
 	}
-
 }

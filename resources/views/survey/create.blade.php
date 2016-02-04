@@ -95,10 +95,10 @@
                             <div class="col-sm-6">
                                 @if($question->id == App\Models\Question::idByName('Facility', $question->section->checklist->id))
                                    {!! Form::select('facility', array(''=>trans('messages.select-facility'))+$facilities, '', 
-                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp()")) !!}
+                                array('class' => 'form-control', 'id' => 'facility', 'onchange' => "ssdp($checklist->id)")) !!}
                                 @elseif($question->id == App\Models\Question::idByName('Service Delivery Points (SDP)', $question->section->checklist->id))
-                                    {!! Form::select('sdp', array(''=>trans('messages.select-sdp')), '', 
-                                array('class' => 'form-control', 'id' => 'sdp')) !!}
+                                    {!! Form::select('fsdp', array(''=>trans('messages.select-sdp')), '', 
+                                array('class' => 'form-control', 'id' => 'fsdp')) !!}
                                 @endif
                                 @if($question->section->checklist->id == App\Models\Checklist::idByName('SPI-RT Checklist'))
                                     @if($question->id == App\Models\Question::idByName('Affilliation (Circle One)', $question->section->checklist->id))

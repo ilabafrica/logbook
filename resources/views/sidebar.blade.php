@@ -1,6 +1,6 @@
 @section("sidebar")
     <ul class="nav" id="side-menu">
-        <li class="sidebar-search">
+        <li class="sidebar-search" style="display:none">
             <div class="input-group custom-search-form">
                 <input type="text" class="form-control" placeholder="Search...">
                     <span class="input-group-btn">
@@ -11,10 +11,13 @@
             </div>
             <!-- /input-group -->
         </li>
+        <li>
+            <a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> <strong>{!! Lang::choice('messages.dashboard', 1) !!}</strong></a>
+        </li>
         @if(Entrust::can('access-checklist-config'))
         <!-- Checklist config -->
         <li>
-            <a href="#"><i class="fa fa-sliders"></i> {!! Lang::choice('messages.checklist-config', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-sliders"></i> <strong>{!! Lang::choice('messages.checklist-config', 1) !!}</strong><span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('checklist') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.checklist', 2) !!}</a></li>
                 <li><a href="{!! url('section') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.section', 2) !!}</a></li>
@@ -27,8 +30,8 @@
             </ul>
         </li>
         <!-- PT Program -->
-        <li>
-            <a href="#"><i class="fa fa-camera-retro"></i> {{ Lang::choice('messages.pt-config', 1) }}<span class="fa arrow"></span></a>
+        <li style="display:none">
+            <a href="#"><i class="fa fa-camera-retro"></i> <strong>{{ Lang::choice('messages.pt-config', 1) }}</strong><span class="fa arrow"></span></a>
             <ul class="nav nav-second-level">
                 <li><a href="{!! url('pt') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.pt-program', 2) !!}</a></li>
                 <li><a href="{!! url('designation') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.designation', 2) }}</a></li>
@@ -38,7 +41,7 @@
         @if(Entrust::can('access-facility-config'))
         <!-- Facility configuration -->
         <li>
-            <a href="#"><i class="fa fa-database"></i> {!! Lang::choice('messages.facility-configuration', 1) !!}<span class="fa arrow"></span></a>
+            <a href="#"><i class="fa fa-database"></i> <strong>{!! Lang::choice('messages.facility-configuration', 1) !!}</strong><span class="fa arrow"></span></a>
             <ul class="nav nav-second-level collapse">
                 <li><a href="{!! url('facility') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.facility', 2) !!}</a></li>
                 <li><a href="{!! url('facilityType') !!}"><i class="fa fa-tag"></i> {!! Lang::choice('messages.facility-type', 2) !!}</a></li>
@@ -51,25 +54,25 @@
         @if(Entrust::can('access-site-catalog'))
         <!-- Site catalog -->
         <li>
-            <a href="{!! url('sdp') !!}"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.sdp', 2) !!}</a>
+            <a href="{!! url('sdp') !!}"><i class="fa fa-stack-exchange"></i> <strong>{!! Lang::choice('messages.sdp', 2) !!}</strong></a>
         </li>
         @endif
         <!-- Test kits -->
         @if(Entrust::can('access-testkits'))
         <li>
-            <a href="{!! url('testKit') !!}"><i class="fa fa-book"></i> {!! Lang::choice('messages.test-kit', 2) !!}</a>
+            <a href="{!! url('testKit') !!}"><i class="fa fa-book"></i> <strong>{!! Lang::choice('messages.test-kit', 2) !!}</strong></a>
         </li>
          @endif
         
         @if(Entrust::can('access-users'))
         <!-- User management -->
         <li>
-        <a href="{!! url('user') !!}"><i class="fa fa-users"></i> {{ Lang::choice('messages.user', 2) }}</a>
+        <a href="{!! url('user') !!}"><i class="fa fa-users"></i> <strong>{{ Lang::choice('messages.user', 2) }}</strong></a>
         </li>
     @endif
     @if(Entrust::can('access-access-controls'))
     <li>
-        <a href="#"><i class="fa fa-database"></i> {{ Lang::choice('messages.access-controls', 1) }}<span class="fa arrow"></span></a>
+        <a href="#"><i class="fa fa-database"></i> <strong>{{ Lang::choice('messages.access-controls', 1) }}</strong><span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li><a href="{!! url('permission') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.permission', 2) }}</a></li>
             <li><a href="{!! url('role') !!}"><i class="fa fa-tag"></i> {{ Lang::choice('messages.role', 2) }}</a></li>
@@ -81,7 +84,7 @@
     @if(Entrust::can('access-data'))
         <!-- Data management -->
         <li>
-            <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> {!! Lang::choice('messages.data-management', 2) !!}</a>
+            <a href="{!! url('review') !!}"><i class="fa fa-files-o fa-fw"></i> <strong>{!! Lang::choice('messages.data-management', 2) !!}</strong></a>
         </li>
     @endif
     @if(Entrust::can('access-data-analysis'))

@@ -174,7 +174,7 @@ class Question extends Model implements Revisionable  {
 		foreach ($this->answers as $response)
 		{
 			if($response->score>0)
-				array_push($scorables, $response->id);
+				$scorables[] = $response->id;
 		}
 		if(count($scorables)>0)
 			return true;
@@ -289,5 +289,19 @@ class Question extends Model implements Revisionable  {
         if(count($fsdps)>0)
             $values = $values->whereIn('facility_sdp_id', $fsdps);
         return $values->get();
+    }
+    /**
+	 * Check if question has scorable answers
+	 */
+    public function answer($id)
+    {
+    	$answers = $this->answers;
+    	$returnable = NULL;
+    	foreach ($answers as $response)
+    	{
+    		if($id == $response->score)
+    			$returnable = $response->name;
+    	}
+    	return $returnable;
     }
 }

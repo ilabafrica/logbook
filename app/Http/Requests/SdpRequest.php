@@ -1,8 +1,8 @@
 <?php namespace App\Http\Requests;
 use App\Http\Requests\Request;
-use App\Models\SiteType;
+use App\Models\Sdp;
 
-class SiteTypeRequest extends Request {
+class SdpRequest extends Request {
 
 	/**
 	 * Determine if the user is authorized to make this request.
@@ -30,9 +30,9 @@ class SiteTypeRequest extends Request {
 	* @return \Illuminate\Routing\Route|null|string
 	*/
 	public function ingnoreId(){
-		$id = $this->route('siteType');
+		$id = $this->route('sdp');
 		$name = $this->input('name');
-		return SiteType::where(compact('id', 'name'))->exists() ? $id : '';
+		return Sdp::where(compact('id', 'name'))->exists() ? $id : '';
 	}
 
 }

@@ -8,9 +8,9 @@
                 <a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}</a>
             </li>
             <li>
-                <a href="{{ url('level') }}">{{ Lang::choice('messages.level', 1) }}</a>
+                <a href="{{ url('sdp') }}">{{ Lang::choice('messages.sdp', 1) }}</a>
             </li>
-            <li class="active">{{ Lang::choice('messages.edit-level', 1) }}</li>
+            <li class="active">{{ Lang::choice('messages.edit-sdp', 1) }}</li>
         </ol>
     </div>
 </div>
@@ -18,7 +18,7 @@
 <div class="alert alert-info">{{Session::get('message')}}</div>
 @endif
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-level', '1') }}</div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.edit-sdp', '1') }}</div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -28,8 +28,8 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::model($level, array('route' => array('level.update', $level->id), 
-        'method' => 'PUT', 'id' => 'form-edit-level', 'class' => 'form-horizontal')) !!}
+            {!! Form::model($sdp, array('route' => array('sdp.update', $sdp->id), 
+        'method' => 'PUT', 'id' => 'form-edit-sdp', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
@@ -44,18 +44,6 @@
                     <div class="col-sm-8">
                         {!! Form::textarea('description', old('description'), 
                             array('class' => 'form-control', 'rows' => '3')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('range-lower', Lang::choice('messages.range-lower', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::text('range_lower', old('range_lower'), array('class' => 'form-control')) !!}
-                    </div>
-                </div>
-                <div class="form-group">
-                    {!! Form::label('range-upper', Lang::choice('messages.range-upper', 1), array('class' => 'col-sm-4 control-label')) !!}
-                    <div class="col-sm-8">
-                        {!! Form::text('range_upper', old('range_upper'), array('class' => 'form-control')) !!}
                     </div>
                 </div>
                 <div class="form-group">

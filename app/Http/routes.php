@@ -105,8 +105,8 @@ Route::group(['middleware' => 'auth'], function(){
         "as"   => "site.delete",
         "uses" => "SiteController@delete"
     ));
-    //assign testkit
-    Route::resource('siteKit', 'SiteKitController');
+    //assign sdp
+    Route::resource('sdp', 'SdpController');
     //  Site Types controller
     Route::resource('siteType', 'SiteTypeController');
     Route::get("/siteType/{id}/delete", array(
@@ -457,26 +457,6 @@ Route::group(['middleware' => 'auth'], function(){
     *   Download summaries in excel.
     *
     */
-    Route::get('survey/{id}/collection/download', array(
-        "as"    =>  "survey.collection.download",
-        "uses"  =>  "SurveyController@collectionDownload"
-    ));
-    Route::get('survey/{id}/county/download', array(
-        "as"    =>  "survey.county.download",
-        "uses"  =>  "SurveyController@countyDownload"
-    ));
-    Route::get('survey/{id}/subcounty/download', array(
-        "as"    =>  "survey.subcounty.download",
-        "uses"  =>  "SurveyController@subcountyDownload"
-    ));
-    Route::get('survey/{id}/participant/download', array(
-        "as"    =>  "survey.participant.download",
-        "uses"  =>  "SurveyController@facilityDownload"
-    ));
-    Route::get('survey/{id}/sdp/download', array(
-        "as"    =>  "survey.sdp.download",
-        "uses"  =>  "SurveyController@sdpDownload"
-    ));
     Route::any('survey/month/{id?}', array(
         "as"    =>  "survey.sdp.data",
         "uses"  =>  "SurveyController@dataMonth"

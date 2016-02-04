@@ -136,7 +136,7 @@
               <?php $qstn = App\Models\Question::find($question->question_id); ?>
               <tr>
                   <td>{!! $qstn->name !!}</td>
-                  <td>{!! $question->sd->answer !!}</td>
+                  <td>{!! $qstn->isScorable()?$qstn->answer($question->sd->answer):$question->sd->answer !!}</td>
               </tr>
               @endforeach
           </tbody>

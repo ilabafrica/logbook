@@ -113,16 +113,15 @@ class SurveyController extends Controller {
 		$longitude = Input::get('longitude');
 		$latitude = Input::get('latitude');
 		$comments = Input::get('comments');
-		$sdp = Input::get('sdp');
+		$facility_sdp_id = Input::get('fsdp');
 		//	Check if survey exists
 		$survey = new Survey;
 		$survey->checklist_id = $checklist_id;
-		$survey->facility_id = $facility_id;
+		$survey->facility_sdp_id = $facility_sdp_id;
 		$survey->qa_officer = $qa_officer;
 		$survey->latitude = $latitude;
 		$survey->longitude = $longitude;
 		$survey->comment = $comments;
-		$survey->facility_sdp_id = FacilitySdp::splitSdp($facility, $sdp);
 		$survey->save();
 		foreach (Input::all() as $key => $value) {
 			if((stripos($key, 'token') !==FALSE) || (stripos($key, 'checklist') !==FALSE) || (stripos($key, 'qa') !==FALSE) || (stripos($key, 'audit') !==FALSE))

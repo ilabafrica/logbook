@@ -8,14 +8,14 @@
                 <a href="{{ url('home') }}"><i class="fa fa-dashboard"></i> {{ Lang::choice('messages.dashboard', 1) }}</a>
             </li>
             <li>
-                <a href="{{ url('designation') }}">{{ Lang::choice('messages.designation', 1) }}</a>
+                <a href="{{ url('sdp') }}">{{ Lang::choice('messages.sdp', 1) }}</a>
             </li>
-            <li class="active">{{ Lang::choice('messages.create-designation', 1) }}</li>
+            <li class="active">{{ Lang::choice('messages.create-sdp', 1) }}</li>
         </ol>
     </div>
 </div>
 <div class="panel panel-primary">
-    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.create-designation', 1) }} </div>
+    <div class="panel-heading"><i class="fa fa-tags"></i> {{ Lang::choice('messages.create-sdp', 1) }} </div>
     <div class="panel-body">
         <div class="col-lg-6 main">
             <!-- Begin form --> 
@@ -25,7 +25,7 @@
                 {!! HTML::ul($errors->all(), array('class'=>'list-unstyled')) !!}
             </div>
             @endif
-            {!! Form::open(array('route' => 'designation.store', 'id' => 'form-add-designation', 'class' => 'form-horizontal')) !!}
+            {!! Form::open(array('route' => 'sdp.store', 'id' => 'form-add-sdp', 'class' => 'form-horizontal')) !!}
                 <!-- CSRF Token -->
                 <input type="hidden" name="_token" value="{{{ csrf_token() }}}" />
                 <!-- ./ csrf token -->
