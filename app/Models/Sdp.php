@@ -163,35 +163,37 @@ class Sdp extends Model implements Revisionable {
 				$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
 		}
 		$surveys = $surveys->lists('id');
-		$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
-		//	Get pages with the screening question being answered by kit
-		$refinedPages = [];
-        $screen = Question::idById('screen');   //  Question whose response is either determine or khb
-        // work in reverse to get pages
-        $data = HtcSurveyPageData::where('answer', $kit)->lists('htc_survey_page_question_id');
-        $refinedIds = HtcSurveyPageQuestion::whereIn('id', $data)->where('question_id', $screen)->lists('htc_survey_page_id');
-        $refinedPages = array_intersect($pages, $refinedIds);
-		/*htc survey page questions*/
-		$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $refinedPages);
-		/*htc survey data*/
-	  	//	Get questions to be used in the math
-		$testOnePos = Question::idByName('Test-1 Total Positive');
-		$testOneNeg = Question::idByName('Test-1 Total Negative');
-		$testOneInv = Question::idByName('Test-1 Total Invalid');
-		$testTwoPos = Question::idByName('Test-2 Total Positive');
-		$testTwoNeg = Question::idByName('Test-2 Total Negative');
-		$testTwoInv = Question::idByName('Test-2 Total Invalid');
-		$totalTestOne = [$testOnePos, $testOneNeg, $testOneInv];
-		$invalids = [$testOneInv, $testTwoInv];
-		//	Math
-		$one = clone $quest; $two = clone $quest; $three = clone $quest; $four = clone $quest; $five = clone $quest; $six = clone $quest;
-		$total = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $one->whereIn('question_id', $totalTestOne)->lists('id'))->sum('answer');
-		$invalid = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $two->whereIn('question_id', $invalids)->lists('id'))->sum('answer');
-		$reactiveOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $three->where('question_id', $testOnePos)->lists('id'))->sum('answer');
-		$nonReactiveOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $four->where('question_id', $testOneNeg)->lists('id'))->sum('answer');
-		$reactiveTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $five->where('question_id', $testTwoPos)->lists('id'))->sum('answer');
-		$nonReactiveTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $six->where('question_id', $testTwoNeg)->lists('id'))->sum('answer');
-		
+		if(!empty($surveys))
+		{
+			$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
+			//	Get pages with the screening question being answered by kit
+			$refinedPages = [];
+	        $screen = Question::idById('screen');   //  Question whose response is either determine or khb
+	        // work in reverse to get pages
+	        $data = HtcSurveyPageData::where('answer', $kit)->lists('htc_survey_page_question_id');
+	        $refinedIds = HtcSurveyPageQuestion::whereIn('id', $data)->where('question_id', $screen)->lists('htc_survey_page_id');
+	        $refinedPages = array_intersect($pages, $refinedIds);
+			/*htc survey page questions*/
+			$quest = HtcSurveyPageQuestion::whereIn('htc_survey_page_id', $refinedPages);
+			/*htc survey data*/
+		  	//	Get questions to be used in the math
+			$testOnePos = Question::idByName('Test-1 Total Positive');
+			$testOneNeg = Question::idByName('Test-1 Total Negative');
+			$testOneInv = Question::idByName('Test-1 Total Invalid');
+			$testTwoPos = Question::idByName('Test-2 Total Positive');
+			$testTwoNeg = Question::idByName('Test-2 Total Negative');
+			$testTwoInv = Question::idByName('Test-2 Total Invalid');
+			$totalTestOne = [$testOnePos, $testOneNeg, $testOneInv];
+			$invalids = [$testOneInv, $testTwoInv];
+			//	Math
+			$one = clone $quest; $two = clone $quest; $three = clone $quest; $four = clone $quest; $five = clone $quest; $six = clone $quest;
+			$total = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $one->whereIn('question_id', $totalTestOne)->lists('id'))->sum('answer');
+			$invalid = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $two->whereIn('question_id', $invalids)->lists('id'))->sum('answer');
+			$reactiveOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $three->where('question_id', $testOnePos)->lists('id'))->sum('answer');
+			$nonReactiveOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $four->where('question_id', $testOneNeg)->lists('id'))->sum('answer');
+			$reactiveTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $five->where('question_id', $testTwoPos)->lists('id'))->sum('answer');
+			$nonReactiveTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $six->where('question_id', $testTwoNeg)->lists('id'))->sum('answer');
+		}
 		$absReactive = abs($reactiveTwo-$reactiveOne);
 		$absNonReactive = abs($nonReactiveTwo-$nonReactiveOne);
 		$percentage = 0.00;

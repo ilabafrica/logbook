@@ -891,7 +891,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison for '".$title."',
+	            text: 'SPI-RT Scores Comparison for $title',
 	            x: -80
 	        },	        
 		    subtitle: {
@@ -1683,7 +1683,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison ".$title.",
+	            text: 'SPI-RT Scores Comparison for $title',
 	            x: -80
 	        },
 
@@ -3119,7 +3119,7 @@ class ReportController extends Controller {
         		$counter = count($months);
         		foreach ($months as $month)
         		{
-        			$data = $checklist->spirtLevel($level->id, $sdp, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        			$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, NULL, $month->annum, $month->months);
         			if($data==0)
         			{
     					$chart.= '0.00';
@@ -3266,7 +3266,7 @@ class ReportController extends Controller {
 	        foreach ($levels as $level)
 	        {
 	        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-	        	$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, $from, $toPlusOne);
+	        	$data = $checklist->level($level->id, $jimbo, $sub_county, $site, $from, $toPlusOne);
     			if($data==0)
     				$chart.= '0.00';
 				else
@@ -3356,7 +3356,7 @@ class ReportController extends Controller {
 	        },
 
 	        title: {
-	            text: 'SPI-RT Scores Comparison for ".$title."',
+	            text: 'SPI-RT Scores Comparison for $title',
 	            x: -80
 	        },	        
 		    subtitle: {
@@ -3409,7 +3409,7 @@ class ReportController extends Controller {
     			$cats = count($categories);
     			foreach ($categories as $category)
     			{
-   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne, $month->annum, $month->months);
+   					$chart.=$category->spider($sdp, $site, $sub_county, $jimbo, NULL, NULL, $month->annum, $month->months);
    					if($cats==1)
 						$chart.="";
 					else

@@ -51,7 +51,7 @@
         @if(Entrust::can('access-site-catalog'))
         <!-- Site catalog -->
         <li>
-            <a href="{!! url('siteType') !!}"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.sdp', 2) !!}</a>
+            <a href="{!! url('sdp') !!}"><i class="fa fa-stack-exchange"></i> {!! Lang::choice('messages.sdp', 2) !!}</a>
         </li>
         @endif
         <!-- Test kits -->

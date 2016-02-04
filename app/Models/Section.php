@@ -63,32 +63,40 @@ class Section extends Model implements Revisionable {
 	 */
 	public function spider($sdp = NULL, $site = NULL, $sub_county = NULL, $county = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
-        $checklist = Checklist::idByName('SPI-RT Checklist');
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
+		$checklist = Checklist::idByName('SPI-RT Checklist');
         //  Check dates
-        $fsdps = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to, $year, $month, $date)->get();
+        $fsdps = Checklist::find($checklist)->fsdps($checklist, $county, $sub_county, $site, $sdp, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
+        $surveys = Survey::where('checklist_id', $checklist)->whereIn('facility_sdp_id', $fsdps);
+        if (strlen($theDate)>0 || ($from && $to))
+        {
+            if($from && $to)
+                $surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
+            else
+            	$surveys = $surveys->where('date_submitted', 'LIKE', $theDate."%");
+        }
+        $surveys = $surveys->lists('id');
         //  Define variables for use
         $counter = 0;
         $total_counts = count($fsdps);
         $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
-        $reductions = 0;
-        $calculated_points = 0.00;
         $percentage = 0.00;
         //  Begin processing
-        foreach ($fsdps as $key => $value)
-        {
-            $sqtns = $value->sqs()->whereNotIn('question_id', $unwanted)    //  remove non-contributive questions
-                                  ->join('survey_data', 'survey_questions.id', '=', 'survey_data.survey_question_id')
-                                  ->whereIn('question_id', $this->questions->lists('id'))
-                                  ->whereIn('survey_data.answer', Answer::lists('score'));
-            $calculated_points+=$sqtns->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->sum('answer');
-            if($sq = SurveyQuestion::where('survey_id', $value->id)->where('question_id', $notapplicable)->first())
-            {
-                if($sq->sd->answer == '0')
-                    $reductions++;
-            }
-        }
+        $questions = SurveyQuestion::whereIn('survey_id', $surveys)->whereNotIn('question_id', $unwanted)->whereIn('question_id', $this->questions->lists('id'))->lists('id');
+        $dbs = SurveyQuestion::whereIn('survey_id', $surveys)->where('question_id', $notapplicable)->lists('id');
+        $na = SurveyData::whereIn('survey_question_id', $dbs)->where('answer', '0')->count();
+        $calculated_points = SurveyData::whereIn('survey_question_id', $questions)->whereIn('answer', Answer::lists('score'))->sum('answer');
         return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
 		//	End optimization
 	}

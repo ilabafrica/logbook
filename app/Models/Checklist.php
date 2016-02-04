@@ -223,22 +223,30 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage - for spirt levels
 	 */
-	public function level($lId, $county = NULL, $sub_county = NULL, $facility = NULL, $from = NULL, $to = NULL)
+	public function level($lId, $county = NULL, $sub_county = NULL, $facility = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Get scores for each section
 		$level = Level::find($lId);
 		$counter = 0;
-		$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to)->lists('facility_sdp_id');
+		$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
 		$fsdps = array_filter(array_unique($fsdps));
 		$total_sites = count($fsdps);
-		if($total_sites>0)
+		foreach ($fsdps as $fsdp)
 		{
-			foreach ($fsdps as $fsdp)
-			{
-				$lvl = FacilitySdp::find($fsdp)->level($lId, $from, $to);
-				if($lvl!=0)
-					$counter++;
-			}
+			$lvl = FacilitySdp::find($fsdp)->level($lId, $from, $to, $theDate);
+			if($lvl>0)
+				$counter++;
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
@@ -383,7 +391,12 @@ class Checklist extends Model implements Revisionable {
 			$sdps = FacilitySdp::lists('sdp_id');
 			$fsdps = FacilitySdp::lists('id');
 		}
-		$surveys = $this->surveys()->whereIn('facility_sdp_id', array_unique($fsdps))->whereBetween('date_submitted', [$from, $to])->lists('facility_sdp_id');
+		$surveys = $this->surveys()->whereIn('facility_sdp_id', array_unique($fsdps));
+		if($this->id == Checklist::idByName('HTC Lab Register (MOH 362)'))
+			$surveys = $surveys->whereBetween('data_month', [$from, $to]);
+		else
+			$surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
+		$surveys = $surveys->lists('facility_sdp_id');
 		$n = count(array_unique($surveys));
 		$sdps = array_unique($sdps);
 		return ['sdps' => $sdps, 'title' => $title.'(N='.$n.')'];
@@ -396,19 +409,17 @@ class Checklist extends Model implements Revisionable {
 		//	Get scores for each section
 		$range = $this->corrRange($percentage);
 		$counter = 0;
+		//	Get fsdps for the fiven region
 		$fsdps = $this->sdpsTitleN($county, $sub_county, $facility, NULL, $from, $to)['sdps'];// fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to)->lists('facility_sdp_id');
 		$total_sites = count($fsdps);
-		if($total_sites>0)
+		foreach ($fsdps as $fsdp)
 		{
-			foreach ($fsdps as $fsdp)
-			{
-				if($facility)
-					$agreement = FacilitySdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
-				else
-					$agreement = Sdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
-				if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) && ($agreement!=0))
-					$counter++;
-			}
+			if($facility)
+				$agreement = FacilitySdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
+			else
+				$agreement = Sdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
+			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) && ($agreement!=0))
+				$counter++;
 		}
 		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
