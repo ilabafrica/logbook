@@ -5,6 +5,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Sofa\Revisionable\Laravel\RevisionableTrait; // trait
 use Sofa\Revisionable\Revisionable; // interface
 use DB;
+use Lang;
 
 class Checklist extends Model implements Revisionable {
     use SoftDeletes;
@@ -150,14 +151,13 @@ class Checklist extends Model implements Revisionable {
 		$counter = 0;
 		$range = $this->corrRange($percentage);
 		$total_sites = 0;
-		if($site || $sdp)
-			$surveys = $this->fsdps($this->id, $jimbo, $sub_county, $site, $sdp, $from, $to)->where('facility_sdp_id', $fsdp)->get();
+		if($sdp || $site)
+			$fsdps = [$fsdp];
 		else
-			$surveys = $this->fsdps($this->id, $jimbo, $sub_county, $site, $sdp, $from, $to)->whereIn('facility_sdp_id', Sdp::find($fsdp)->facilitySdp->lists('id'))->get();
-		foreach ($surveys as $survey)
+			$fsdps = Sdp::find($fsdp)->facilitySdp->lists('id');
+		foreach ($fsdps as $fsdp)
 		{
-			$agreement = 0;
-			$agreement = $survey->overallAgreement($kit);
+			$agreement = FacilitySdp::find($fsdp)->overallAgreement($kit, $year, $month, $date, $from, $to);
 			if($agreement == 0)
 			{
 				continue;
@@ -195,25 +195,6 @@ class Checklist extends Model implements Revisionable {
 			$range['upper'] = 100;
 		}
 		return $range;
-	}
-	/**
-	 * Function to return percent of sites in each range - percentage
-	 */
-	public function positivePercent($percentage, $sdps, $site = NULL, $sub_county = NULL, $jimbo = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
-	{
-		//	Get scores for each section
-		$counter = 0;
-		$range = $this->corrRange($percentage);
-		$total_sites = count($sdps);	
-		foreach ($sdps as $sdp)
-		{
-			$agreement = Sdp::find($sdp)->positivePercent($site, $sub_county, $jimbo, $year, $month);
-			if($agreement == 0)
-				$total_sites--;
-			if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) || (($range['lower']==0.00) && ($agreement==$range['lower'])))
-				$counter++;
-		}
-		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 	/**
 	 * Function to return percent of sites in each range - percentage
@@ -350,5 +331,85 @@ class Checklist extends Model implements Revisionable {
 			$regions = $this->countiesWithData();
 		}
 		return $regions;
+	}
+	/**
+	*
+	*	Function to return sdps, title of chart and value of N
+	*
+	*/
+	public function sdpsTitleN($jimbo = NULL, $sub_county = NULL, $site = NULL, $sdp = NULL, $from = NULL, $to = NULL)
+	{
+		$sdps = array();
+		$title = '';
+		$n = 0;
+		$fsdps = [];
+		if($jimbo || $sub_county || $site || $sdp)
+		{
+			if($sub_county || $site || $sdp)
+			{
+				if($site || $sdp)
+				{
+					$facility = Facility::find($site);
+					if($sdp)
+					{
+						array_push($sdps, $sdp);
+						array_push($fsdps, $sdp);
+						$title = $facility->name.':<strong>'.FacilitySdp::cojoin($sdp).'</strong>';
+					}
+					else
+					{
+						$sdps = $facility->facilitySdp->lists('id');
+						$title = $facility->name;
+						$fsdps = $sdps;
+					}
+				}
+				else
+				{
+					$title = SubCounty::find($sub_county)->name.' '.Lang::choice('messages.sub-county', 1);
+					$sdps = FacilitySdp::whereIn('facility_id', SubCounty::find($sub_county)->facilities->lists('id'))->lists('sdp_id');
+					$fsdps = FacilitySdp::whereIn('facility_id', SubCounty::find($sub_county)->facilities->lists('id'))->lists('id');
+				}
+			}
+			else
+			{
+				$title = County::find($jimbo)->name.' '.Lang::choice('messages.county', 1);
+				$sdps = FacilitySdp::whereIn('facility_id', Facility::whereIn('sub_county_id', County::find($jimbo)->subCounties->lists('id'))->lists('id'))->lists('sdp_id');
+				$fsdps = FacilitySdp::whereIn('facility_id', Facility::whereIn('sub_county_id', County::find($jimbo)->subCounties->lists('id'))->lists('id'))->lists('id');
+			}
+		}
+		else
+		{
+			$title = 'Kenya';
+			$sdps = FacilitySdp::lists('sdp_id');
+			$fsdps = FacilitySdp::lists('id');
+		}
+		$surveys = $this->surveys()->whereIn('facility_sdp_id', array_unique($fsdps))->whereBetween('date_submitted', [$from, $to])->lists('facility_sdp_id');
+		$n = count(array_unique($surveys));
+		$sdps = array_unique($sdps);
+		return ['sdps' => $sdps, 'title' => $title.'(N='.$n.')'];
+	}
+	/**
+	 * Function to return regional overall agreement
+	 */
+	public function regionalAgreement($percentage, $kit, $county = NULL, $sub_county = NULL, $facility = NULL, $from = NULL, $to = NULL)
+	{
+		//	Get scores for each section
+		$range = $this->corrRange($percentage);
+		$counter = 0;
+		$fsdps = $this->sdpsTitleN($county, $sub_county, $facility, NULL, $from, $to)['sdps'];// fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to)->lists('facility_sdp_id');
+		$total_sites = count($fsdps);
+		if($total_sites>0)
+		{
+			foreach ($fsdps as $fsdp)
+			{
+				if($facility)
+					$agreement = FacilitySdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
+				else
+					$agreement = Sdp::find($fsdp)->overallAgreement($kit, 0, 0, 0, $from, $to);
+				if(($agreement>=$range['lower']) && ($agreement<$range['upper']+1) && ($agreement!=0))
+					$counter++;
+			}
+		}
+		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 	}
 }

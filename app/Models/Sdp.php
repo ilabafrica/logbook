@@ -81,15 +81,34 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of positive agreement[ (Total Reactive Results from Test 2/Total Reactive Results from Test 1)*100 ]
 	*/
-	public function positiveAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
+	public function positiveAgreement($kit, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Initialize counts
 		$testOne = 0;
-		$testTwo = 0;		
+		$testTwo = 0;
 		/*pages*/
 		$fsdps = $this->facilitySdp->lists('id');
 		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
-        $surveys = Checklist::find($checklist)->fsdps($checklist, $county, $subCounty, NULL, NULL, $from, $to, $year, $month, $date)->whereIn('facility_sdp_id', $fsdps)->lists('id');
+		$surveys = Survey::where('checklist_id', $checklist)->whereIn('facility_sdp_id', $fsdps);
+		if (strlen($theDate)>0 || ($from && $to))
+		{
+			if($from && $to)
+				$surveys = $surveys->whereBetween('data_month', [$from, $to]);
+			else
+				$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
+		}
+		$surveys = $surveys->lists('id');
 		$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
 		//	Get pages with the screening question being answered by kit
 		$refinedPages = [];
@@ -112,8 +131,19 @@ class Sdp extends Model implements Revisionable {
 	/**
 	* Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]
 	*/
-	public function overallAgreement($kit, $facility = NULL, $subCounty = NULL, $county = NULL, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
+	public function overallAgreement($kit, $year = 0, $month = 0, $date = 0, $from = null, $to = null)
 	{
+		//	Check dates
+		$theDate = "";
+		if ($year > 0) {
+			$theDate .= $year;
+			if ($month > 0) {
+				$theDate .= "-".sprintf("%02d", $month);
+				if ($date > 0) {
+					$theDate .= "-".sprintf("%02d", $date);
+				}
+			}
+		}
 		//	Initialize variables
 		$total = 0;
 		$invalid = 0;
@@ -124,7 +154,15 @@ class Sdp extends Model implements Revisionable {
 		/*pages*/
 		$fsdps = $this->facilitySdp->lists('id');
 		$checklist = Checklist::idByName('HTC Lab Register (MOH 362)');
-        $surveys = Checklist::find($checklist)->fsdps($checklist, $county, $subCounty, NULL, NULL, $from, $to, $year, $month, $date)->whereIn('facility_sdp_id', $fsdps)->lists('id');
+        $surveys = Survey::where('checklist_id', $checklist)->whereIn('facility_sdp_id', $fsdps);
+		if (strlen($theDate)>0 || ($from && $to))
+		{
+			if($from && $to)
+				$surveys = $surveys->whereBetween('data_month', [$from, $to]);
+			else
+				$surveys = $surveys->where('data_month', 'LIKE', $theDate."%");
+		}
+		$surveys = $surveys->lists('id');
 		$pages =  HtcSurveyPage::whereIn('survey_id', $surveys)->lists('id');
 		//	Get pages with the screening question being answered by kit
 		$refinedPages = [];

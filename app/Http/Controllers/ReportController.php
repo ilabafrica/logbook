@@ -299,7 +299,7 @@ class ReportController extends Controller {
         			if($site || $sdp)
         				$data = $fsdp->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			else
-        				$data = Sdp::find($fsdp)->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        				$data = Sdp::find($fsdp)->positiveAgreement($kit, $month->annum, $month->months);
         			$posAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
         			if($data==0)
         			{
@@ -533,7 +533,7 @@ class ReportController extends Controller {
         			if($site || $sdp)
         				$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
         			else
-        				$data = Sdp::find($fsdp)->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        				$data = Sdp::find($fsdp)->overallAgreement($kit, $month->annum, $month->months);
         			$overAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
         			if($data==0)
         			{
@@ -2732,6 +2732,7 @@ class ReportController extends Controller {
 		$fsdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
+		$regions = $checklist->regions();
 		$chart = "{
 	        chart: {
 	            type: 'column'
@@ -2746,9 +2747,14 @@ class ReportController extends Controller {
 		        else
 		        	$chart.="'".trans('messages.from').' '.$from.' '.trans('messages.to').' '.$to."'";
 		    $chart.="},
-	        xAxis:{
-		    	type: 'category'
-		    },
+	        xAxis: {
+	            categories: [";
+            	foreach ($regions as $key => $value)
+            	{
+            		$chart.="'".$value."',";
+            	}
+	            $chart.="]
+	        },
 	        yAxis: {
 	            title: {
 	                text: '".Lang::choice('messages.percent-of-sites', 1)."'
@@ -2777,127 +2783,44 @@ class ReportController extends Controller {
 			    enabled: false
 			},
 	        series: [";
-	        $counts = count($percentages);
+        	$counts = count($percentages);
 	        foreach ($percentages as $percentage)
 	        {
-	        	$chart.="{name:"."'".$percentage."'".", data:[";
-	        	if($jimbo || $sub_county || $site)
-	        	{
-	        		if($sub_county || $site)
-	        		{
-	        			if($site)
-	        			{
-	        				$facility = Facility::find($site);
-	        				$counter = $facility->facilitySdp->count();
-			        		foreach ($facility->facilitySdp as $fsdp)
-			        		{
-			        			$chart.="{name:"."'".FacilitySdp::cojoin($fsdp->id)."'".", y:";
-			        			$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
-			        			if($data==0)
-			        			{
-			    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-			    					if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			    				else
-			    				{
-			        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
+	        	$chart.="{colorByPoint: false,name:"."'".$percentage."'".", data:[";
+	        	$counter = count($regions);
+        		foreach ($regions as $key => $value)
+        		{
+        			$data = 0.00;
+        			if($jimbo || $sub_county)
+        			{
+        				if($sub_county)
+        					$data = $checklist->regionalAgreement($percentage, $kit, NULL, NULL, $key, $from, $toPlusOne);
+        				else
+        					$data = $checklist->regionalAgreement($percentage, $kit, NULL, $key, NULL, $from, $toPlusOne);
+        			}
+        			else
+        			{
+        				$data = $checklist->regionalAgreement($percentage, $kit, $key, NULL, NULL, $from, $toPlusOne);
+        			}
+        			if($data==0)
+        			{
+    					$chart.= '0.00';
+    					if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
+    				}
+    				else
+    				{
+        				$chart.= $data;
 
-			        				if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			        			$counter--;
-			        		}
-	        			}
-	        			else
-	        			{
-	        				$subCounty = SubCounty::find($sub_county);
-	        				$counter = $subCounty->facilities->count();
-			        		foreach ($subCounty->facilities as $facility)
-			        		{
-			        			$chart.="{name:"."'".$facility->name."'".", y:";
-			        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, $site, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
-			        			if($data==0)
-			        			{
-			    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-			    					if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			    				else
-			    				{
-			        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-
-			        				if($counter==1)
-			        					$chart.="";
-			        				else
-			        					$chart.=",";
-			    				}
-			        			$counter--;
-			        		}
-	        			}
-	        		}
-	        		else
-	        		{
-	        			$county = County::find($jimbo);
-	        			$counter = $county->subCounties->count();
-		        		foreach ($county->subCounties as $subCounty)
-		        		{
-		        			$chart.="{name:"."'".$subCounty->name."'".", y:";
-		        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, null, $sub_county, $jimbo, 0, 0, 0, $from, $toPlusOne);
-		        			if($data==0)
-		        			{
-		    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-		    					if($counter==1)
-		        					$chart.="";
-		        				else
-		        					$chart.=",";
-		    				}
-		    				else
-		    				{
-		        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$county."'"."}";
-
-		        				if($counter==1)
-		        					$chart.="";
-		        				else
-		        					$chart.=",";
-		    				}
-		        			$counter--;
-		        		}
-	        		}
-	        	}
-	        	else
-	        	{
-	        		$counter = count($counties);
-	        		foreach ($counties as $key => $value)
-	        		{
-	        			$chart.="{name:"."'".$value."'".", y:";
-	        			$data = $checklist->overallAgreement($percentage, $kit, $fsdps, null, null, null, $key, 0, 0, 0, $from, $toPlusOne);
-	        			if($data==0)
-	        			{
-	    					$chart.= '0.00'.", drilldown:"."'".$percentage.'_'.$value."'"."}";
-	    					if($counter==1)
-	        					$chart.="";
-	        				else
-	        					$chart.=",";
-	    				}
-	    				else
-	    				{
-	        				$chart.= $data.", drilldown:"."'".$percentage.'_'.$value."'"."}";
-
-	        				if($counter==1)
-	        					$chart.="";
-	        				else
-	        					$chart.=",";
-	    				}
-	        			$counter--;
-	        		}
-	        	}
+        				if($counter==1)
+        					$chart.="";
+        				else
+        					$chart.=",";
+    				}
+        			$counter--;
+        		}
         		$chart.="]";
             	if($counts==1)
 					$chart.="}";
@@ -2905,9 +2828,9 @@ class ReportController extends Controller {
 					$chart.="},";
 				$counts--;
 	        }
-	        $chart.="]
+	        $chart.="],
 	    }";
-		return view('report.htc.geographic', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'from', 'to','sdps', 'sdp', 'kit'));
+		return view('report.htc.geographic', compact('checklist', 'chart', 'counties', 'jimbo', 'subCounties', 'sub_county', 'facilities', 'from', 'to','sdps', 'sdp', 'kit'));
 	}
 	/**
 	 * Return partner sdp report across regions

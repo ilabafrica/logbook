@@ -1,8 +1,7 @@
 @extends("layout")
 @section("content")
 <br />
-<div cla
-="row">
+<div class="row">
     <div class="col-lg-12">
         <ol class="breadcrumb">
             <li>
@@ -39,6 +38,31 @@
         <!-- Tab panes -->
         <div class="tab-content">
             <br />
+            <div class="row">
+                @if(!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator')))
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(trans('messages.select-county'), Lang::choice('messages.county', 1), array('class' => 'col-sm-6 control-label')) !!}
+                        <div class="col-sm-6">
+                            {!! Form::select('county', array(''=>Lang::choice('messages.county', 1))+$counties, old($jimbo)?old($jimbo):$jimbo, 
+                                array('class' => 'form-control', 'id' => 'county', 'onchange' => "dyn()")) !!}
+                        </div>
+                    </div>
+                </div>
+                @endif
+                @if(Auth::user()->hasRole('County Lab Coordinator') || (!(Auth::user()->hasRole('County Lab Coordinator')) && !(Auth::user()->hasRole('Sub-County Lab Coordinator'))))
+                <div class="col-sm-6">
+                    <div class='form-group'>
+                        {!! Form::label(Lang::choice('messages.sub-county', 1), Lang::choice('messages.sub-county', 1), array('class' => 'col-sm-4 control-label')) !!}
+                        <div class="col-sm-8">
+                            {!! Form::select('sub_county', array(''=>Lang::choice('messages.sub-county', 1))+$subCounties, old($sub_county)?old($sub_county):$sub_county, 
+                                array('class' => 'form-control', 'id' => 'sub_county', 'onchange' => "drop()")) !!}
+                        </div>
+                    </div>
+                </div>
+                @endif
+            </div>
+            <hr />
             <div class="row">
                 <div class="col-sm-4">
                     <div class='form-group'>
