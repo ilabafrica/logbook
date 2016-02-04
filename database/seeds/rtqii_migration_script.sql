@@ -373,6 +373,8 @@ ALTER TABLE `survey_questions`
 alter table surveys drop foreign key surveys_facility_id_foreign;
 alter table surveys drop column facility_id;
 
+TRUNCATE TABLE revisions;
+
 DROP TABLE survey_spirt_info;
 DROP TABLE survey_sdps;
 ALTER TABLE surveys DROP COLUMN survey_sdp_id;

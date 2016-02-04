@@ -215,8 +215,13 @@ class SurveyController extends Controller {
 		}
 		else
 		{
-			$counties = $checklist->distCount();
-			$subCounties = SubCounty::whereIn('county_id', $counties)->lists('id');
+			$counties = $checklist->countiesWithData();
+			$cnts = [];
+			foreach ($counties as $key => $value)
+			{
+				array_push($cnts, $key);
+			}
+			$subCounties = SubCounty::whereIn('county_id', $cnts)->lists('id');
 			$facilities = Facility::whereIn('sub_county_id', $subCounties)->lists('id');
 			$fsdps = FacilitySdp::whereIn('facility_id', $facilities)->lists('id');
 		}

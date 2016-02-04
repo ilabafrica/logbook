@@ -2272,7 +2272,6 @@ class ReportController extends Controller {
 	{
 		//	Get complete sites
 		$counter = 0;
-		$facilities = Survey::lists('facility_id');
 		$htc = Checklist::find(Checklist::idByName('HTC Lab Register (MOH 362)'));
 		$me = Checklist::find(Checklist::idByName('M & E Checklist'));
 		$spi = Checklist::find(Checklist::idByName('SPI-RT Checklist'));
@@ -2337,11 +2336,11 @@ class ReportController extends Controller {
 		            name: 'Total',
 		            colorByPoint: true,
 		            data: [";
-		            	foreach ($checklist->countiesWithData() as $key)
+		            	foreach ($checklist->countiesWithData() as $key => $value)
 		            	{
 		            		$county = County::find($key);
 		            		$pie[$checklist->id].="{
-				                name: '".$county->name."',
+				                name: '".$value."',
 				                y: ".$checklist->fsdps($checklist->id, $county->id, NULL, NULL, NULL, $from, $toPlusOne)->count().",
 				                drilldown: '".$county->id."'
 				            },";
@@ -2351,11 +2350,11 @@ class ReportController extends Controller {
 		        }],
 		        drilldown: {
 		            series: [";
-		            foreach ($checklist->countiesWithData() as $key)
+		            foreach ($checklist->countiesWithData() as $key => $value)
 	            	{
 	            		$county = County::find($key);
 	            		$pie[$checklist->id].="{
-			                id: '".$county->id."',
+			                id: '".$key."',
 			                name: 'Total',
 			                data: [";
 			                foreach ($county->subCounties as $subCounty)
@@ -2369,7 +2368,7 @@ class ReportController extends Controller {
 			                $pie[$checklist->id].="]
 			            },";
 	            	}
-	            	foreach ($checklist->countiesWithData() as $key)
+	            	foreach ($checklist->countiesWithData() as $key => $value)
 	            	{
 	            		$county = County::find($key);
 		                foreach ($county->subCounties as $subCounty)
@@ -2390,7 +2389,7 @@ class ReportController extends Controller {
 				            },";
 		                }
 	            	}
-	            	foreach ($checklist->countiesWithData() as $key)
+	            	foreach ($checklist->countiesWithData() as $key => $value)
 	            	{
 	            		$county = County::find($key);
 		                foreach ($county->subCounties as $subCounty)
