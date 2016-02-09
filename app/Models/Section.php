@@ -285,7 +285,7 @@ class Section extends Model implements Revisionable {
                 {                                
                     if($sdp)
                     {
-                        $fsdps = $sdp;
+                        $fsdps = [$sdp];
                     }
                     else
                     {

@@ -1034,7 +1034,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps = Facility::find($site)->points($id, $site);
+		    $sdps = Facility::find($site)->points($checklist->id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
@@ -1400,7 +1400,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps = Facility::find($site)->points($id, $site);
+		    $sdps = Facility::find($site)->points($checklist_id, $site);
 		}
 		if(Input::get('sub_county'))
 		{
