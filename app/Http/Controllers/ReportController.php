@@ -954,7 +954,7 @@ class ReportController extends Controller {
 	    	$data[$category->id] = $category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
 
-	    $score = $checklist->level($jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
+	    $score = $checklist->level(NULL, $jimbo, $sub_county, $site, $from, $toPlusOne);
 	    $level = $checklist->levelCheck($score);
 	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'score', 'level'));
 	}
@@ -3332,7 +3332,7 @@ class ReportController extends Controller {
 		if(Input::get('facility'))
 		{
 			$site = Input::get('facility');
-		    $sdps = Facility::find($site)->points($id, $site);
+		    $sdps = Facility::find($site)->points($checklist->id, $site);
 		}
 		if(Input::get('sub_county'))
 		{

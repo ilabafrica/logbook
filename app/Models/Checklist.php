@@ -236,19 +236,49 @@ class Checklist extends Model implements Revisionable {
 				}
 			}
 		}
-		//	Get scores for each section
-		$level = Level::find($lId);
-		$counter = 0;
-		$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
-		$fsdps = array_filter(array_unique($fsdps));
-		$total_sites = count($fsdps);
-		foreach ($fsdps as $fsdp)
+		if($lId)
 		{
-			$lvl = FacilitySdp::find($fsdp)->level($lId, $from, $to, $theDate);
-			if($lvl>0)
-				$counter++;
+			//	Get scores for each section
+			$level = Level::find($lId);
+			$counter = 0;
+			$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
+			$fsdps = array_filter(array_unique($fsdps));
+			$total_sites = count($fsdps);
+			foreach ($fsdps as $fsdp)
+			{
+				$lvl = FacilitySdp::find($fsdp)->level($lId, $from, $to, $theDate);
+				if($lvl>0)
+					$counter++;
+			}
+			return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
 		}
-		return $total_sites>0?round($counter*100/$total_sites, 2):0.00;
+		else
+		{
+			$counter = 0;
+			$total_checklist_points = $this->sections->sum('total_points');
+	        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
+	        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
+	        $surveys = $this->surveys();
+	        if (strlen($theDate)>0 || ($from && $to))
+	        {
+	            if($from && $to)
+	                $surveys = $surveys->whereBetween('date_submitted', [$from, $to]);
+	            else
+	                $surveys = $surveys->where('date_submitted', 'LIKE', $theDate."%");
+	        }
+	        $surveys = $surveys->lists('id');
+	        $total_counts = count($surveys);
+	        $questions = SurveyQuestion::whereIn('survey_id', $surveys)->whereNotIn('question_id', $unwanted)->whereIn('question_id', array_unique(DB::table('question_responses')->lists('question_id')))->lists('id');
+	        $dbs = SurveyQuestion::whereIn('survey_id', $surveys)->where('question_id', $notapplicable)->lists('id');
+	        $na = SurveyData::whereIn('survey_question_id', $dbs)->where('answer', '0')->count();
+	        $calculated_points = SurveyData::whereIn('survey_question_id', $questions)->whereIn('answer', Answer::lists('score'))->sum('answer');
+	        //  Begin processing
+	        if($na>0)
+	            $percentage = round(($calculated_points*100)/(($total_checklist_points*$total_counts)-(5*$na)), 3);
+	        else
+	            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 3);
+	        return $percentage;
+		}
 	}
     /**
      * Function to load fsdps given the different variables
