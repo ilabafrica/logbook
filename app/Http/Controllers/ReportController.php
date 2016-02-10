@@ -954,7 +954,7 @@ class ReportController extends Controller {
 	    	$data[$category->id] = $category->spider($sdp, $site, $sub_county, $jimbo, $from, $toPlusOne);
 	    }
 
-	    $score = $checklist->level(NULL, $jimbo, $sub_county, $site, $from, $toPlusOne);
+	    $score = $checklist->level(NULL, $jimbo, $sub_county, $site, $sdp, $from, $toPlusOne);
 	    $level = $checklist->levelCheck($score);
 	    return view('report.spirt.spider', compact('checklist', 'chart', 'counties', 'subCounties', 'facilities', 'categories', 'data', 'title', 'from', 'to', 'jimbo', 'sub_county', 'site','sdps', 'sdp', 'score', 'level'));
 	}
@@ -2956,13 +2956,13 @@ class ReportController extends Controller {
 	        			if($jimbo || $sub_county)
 	        			{
 	        				if($sub_county)
-	        					$data = $checklist->level($level->id, NULL, NULL, $key, $from, $toPlusOne);
+	        					$data = $checklist->level($level->id, NULL, NULL, $key, NULL, $from, $toPlusOne);
 	        				else
-	        					$data = $checklist->level($level->id, NULL, $key, NULL, $from, $toPlusOne);
+	        					$data = $checklist->level($level->id, NULL, $key, NULL, NULL, $from, $toPlusOne);
 	        			}
 	        			else
 	        			{
-	        				$data = $checklist->level($level->id, $key, NULL, NULL, $from, $toPlusOne);
+	        				$data = $checklist->level($level->id, $key, NULL, NULL, NULL, $from, $toPlusOne);
 	        			}
 	        			if($data==0)
 	        			{
@@ -3119,7 +3119,7 @@ class ReportController extends Controller {
         		$counter = count($months);
         		foreach ($months as $month)
         		{
-        			$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, NULL, $month->annum, $month->months);
+        			$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, NULL, NULL, $month->annum, $month->months);
         			if($data==0)
         			{
     					$chart.= '0.00';
@@ -3266,7 +3266,7 @@ class ReportController extends Controller {
 	        foreach ($levels as $level)
 	        {
 	        	$chart.="{colorByPoint: false,name:"."'".$level->name.' ('.$level->range_lower.'-'.$level->range_upper.'%)'."'".", data:[";
-	        	$data = $checklist->level($level->id, $jimbo, $sub_county, $site, $from, $toPlusOne);
+	        	$data = $checklist->level($level->id, $jimbo, $sub_county, $site, NULL, $from, $toPlusOne);
     			if($data==0)
     				$chart.= '0.00';
 				else

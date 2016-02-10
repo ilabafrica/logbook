@@ -223,7 +223,7 @@ class Checklist extends Model implements Revisionable {
 	/**
 	 * Function to return percent of sites in each range - percentage - for spirt levels
 	 */
-	public function level($lId, $county = NULL, $sub_county = NULL, $facility = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
+	public function level($lId, $county = NULL, $sub_county = NULL, $facility = NULL, $fsdp = NULL, $from = NULL, $to = NULL, $year = 0, $month = 0, $date = 0)
 	{
 		//	Check dates
 		$theDate = "";
@@ -236,13 +236,13 @@ class Checklist extends Model implements Revisionable {
 				}
 			}
 		}
+		//	Get scores for each section
+		$level = Level::find($lId);
+		$counter = 0;
+		$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, $fsdp, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
+		$fsdps = array_filter(array_unique($fsdps));		
 		if($lId)
 		{
-			//	Get scores for each section
-			$level = Level::find($lId);
-			$counter = 0;
-			$fsdps = $this->fsdps($this->id, $county, $sub_county, $facility, NULL, $from, $to, $year, $month, $date)->lists('facility_sdp_id');
-			$fsdps = array_filter(array_unique($fsdps));
 			$total_sites = count($fsdps);
 			foreach ($fsdps as $fsdp)
 			{
@@ -258,7 +258,7 @@ class Checklist extends Model implements Revisionable {
 			$total_checklist_points = $this->sections->sum('total_points');
 	        $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
 	        $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
-	        $surveys = $this->surveys();
+	        $surveys = $this->surveys()->whereIn('facility_sdp_id', $fsdps);
 	        if (strlen($theDate)>0 || ($from && $to))
 	        {
 	            if($from && $to)
@@ -274,9 +274,9 @@ class Checklist extends Model implements Revisionable {
 	        $calculated_points = SurveyData::whereIn('survey_question_id', $questions)->whereIn('answer', Answer::lists('score'))->sum('answer');
 	        //  Begin processing
 	        if($na>0)
-	            $percentage = round(($calculated_points*100)/(($total_checklist_points*$total_counts)-(5*$na)), 3);
+	            $percentage = round(($calculated_points*100)/(($total_checklist_points*$total_counts)-(5*$na)), 2);
 	        else
-	            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 3);
+	            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 2);
 	        return $percentage;
 		}
 	}

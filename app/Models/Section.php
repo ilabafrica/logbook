@@ -88,7 +88,6 @@ class Section extends Model implements Revisionable {
         //  Define variables for use
         $counter = 0;
         $total_counts = count($fsdps);
-        $total_checklist_points = Checklist::find($checklist)->sections->sum('total_points');
         $unwanted = array(Question::idById('providersenrolled'), Question::idById('correctiveactionproviders')); //  do not contribute to total score
         $notapplicable = Question::idById('dbsapply');  //  dbsapply will reduce total points to 65 if corresponding answer = 0
         $percentage = 0.00;
@@ -97,8 +96,14 @@ class Section extends Model implements Revisionable {
         $dbs = SurveyQuestion::whereIn('survey_id', $surveys)->where('question_id', $notapplicable)->lists('id');
         $na = SurveyData::whereIn('survey_question_id', $dbs)->where('answer', '0')->count();
         $calculated_points = SurveyData::whereIn('survey_question_id', $questions)->whereIn('answer', Answer::lists('score'))->sum('answer');
-        return $total_counts>0?round(($calculated_points*100)/($this->total_points*$total_counts), 2):$percentage;
-		//	End optimization
+        if($total_counts>0)
+        {
+	        if($na>0 && in_array($notapplicable, $this->questions->lists('id')))
+	            $percentage = round(($calculated_points*100)/(($this->total_points*$total_counts)-(5*$na)), 2);
+	        else
+	            $percentage = round(($calculated_points*100)/$this->total_points*$total_counts, 2);
+	    }
+        return $percentage;
 	}
 	/**
 	 * Function to calculate the snapshot given section
