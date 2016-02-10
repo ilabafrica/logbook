@@ -195,7 +195,7 @@ class FacilitySdp extends Model implements Revisionable {
         $one = clone $quest; $two = clone $quest;
         $testOne = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $one->where('question_id', $posOne)->lists('id'))->sum('answer');
         $testTwo = HtcSurveyPageData::whereIn('htc_survey_page_question_id', $two->where('question_id', $posTwo)->lists('id'))->sum('answer');
-        return $testOne>0?round((int)$testTwo*100/(int)$testOne, 2):0.00;
+        return $testOne>0?(round((int)$testTwo*100/(int)$testOne, 2)>100?100:round((int)$testTwo*100/(int)$testOne, 2)):0.00;
     }
     /**
     * Calculation of overall agreement[ ((Total Tested - Total # of Invalids on Test 1 and Test 2) – (ABS[Reactives from Test 2 –Reactives from Test 1] +ABS [ Non-reactive from Test 2- Non-reactive  from Test 1)/Total Tested – Total Number of Invalids)*100 ]

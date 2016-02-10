@@ -297,7 +297,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			if($site || $sdp)
-        				$data = $fsdp->positiveAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        				$data = FacilitySdp::find($fsdp)->positiveAgreement($kit, $sdp, $site, NULL, NULL, $month->annum, $month->months);
         			else
         				$data = Sdp::find($fsdp)->positiveAgreement($kit, $month->annum, $month->months);
         			$posAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
@@ -531,7 +531,7 @@ class ReportController extends Controller {
         		foreach ($months as $month)
         		{
         			if($site || $sdp)
-        				$data = $fsdp->overallAgreement($kit, $site, $sub_county, $jimbo, $month->annum, $month->months);
+        				$data = FacilitySdp::find($fsdp)->overallAgreement($kit, $month->annum, $month->months);
         			else
         				$data = Sdp::find($fsdp)->overallAgreement($kit, $month->annum, $month->months);
         			$overAgr[] = array('year' => $month->annum, 'month' => $month->months, 'fsdp' => $fsdp, 'agreement' => $data);
@@ -2731,7 +2731,7 @@ class ReportController extends Controller {
 		$fsdps = $variables['sdps'];
 		$months = json_decode(self::getMonths($from, $to));
 		$percentages = array('<95%', '95-98%', '>98%');
-		$regions = $checklist->regions();
+		$regions = $checklist->regions($jimbo, $sub_county);
 		$chart = "{
 	        chart: {
 	            type: 'column'
