@@ -132,7 +132,7 @@
               </tr>
           </thead>
           <tbody>
-              @foreach($survey->questions as $question)
+              @foreach($survey->questions()->orderBy('question_id', 'ASC')->get() as $question)
               <?php $qstn = App\Models\Question::find($question->question_id); ?>
               <tr>
                   <td>{!! $qstn->name !!}</td>
