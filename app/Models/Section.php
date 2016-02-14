@@ -101,7 +101,7 @@ class Section extends Model implements Revisionable {
 	        if($na>0 && in_array($notapplicable, $this->questions->lists('id')))
 	            $percentage = round(($calculated_points*100)/(($this->total_points*$total_counts)-(5*$na)), 2);
 	        else
-	            $percentage = round(($calculated_points*100)/$this->total_points*$total_counts, 2);
+	            $percentage = round(($calculated_points*100)/($this->total_points*$total_counts), 2);
 	    }
         return $percentage;
 	}

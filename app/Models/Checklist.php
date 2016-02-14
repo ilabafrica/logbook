@@ -276,7 +276,7 @@ class Checklist extends Model implements Revisionable {
 	        if($na>0)
 	            $percentage = round(($calculated_points*100)/(($total_checklist_points*$total_counts)-(5*$na)), 2);
 	        else
-	            $percentage = round(($calculated_points*100)/$total_checklist_points*$total_counts, 2);
+	            $percentage = round(($calculated_points*100)/($total_checklist_points*$total_counts), 2);
 	        return $percentage;
 		}
 	}
