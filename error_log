@@ -1,0 +1,144 @@
+[10-Feb-2016 10:36:39 Africa/Nairobi] PHP Fatal error:  Call to a member function points() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/FacilityController.php on line 207
+[10-Feb-2016 10:59:34 Africa/Nairobi] PHP Fatal error:  Call to a member function surveys() on a non-object in /home/h1vqak3nya/public_html/app/Models/Facility.php on line 294
+[10-Feb-2016 15:47:40 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 15:47:40 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 15:47:46 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 15:47:46 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:07:21 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:07:21 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:29 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:29 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:45 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:45 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:55 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:09:55 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:30:28 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[10-Feb-2016 17:30:28 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[11-Feb-2016 11:53:15 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[11-Feb-2016 11:53:15 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[17-Feb-2016 08:35:57 Africa/Nairobi] PHP Warning:  Uncaught exception 'ErrorException' with message 'Undefined variable: sdps' in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b:38
+Stack trace:
+#0 /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b(38): Illuminate\Foundation\Bootstrap\HandleExceptions->handleError(8, 'Undefined varia...', '/home/h1vqak3ny...', 38, Array)
+#1 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/PhpEngine.php(39): include('/home/h1vqak3ny...')
+#2 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/Engines/CompilerEngine.php(57): Illuminate\View\Engines\PhpEngine->evaluatePath('/home/h1vqak3ny...', Array)
+#3 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(136): Illuminate\View\Engines\CompilerEngine->get('/home/h1vqak3ny...', Array)
+#4 /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/View/View.php(104): Illuminate\View\View->getContents()
+#5 /home/h1vqak3 in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[17-Feb-2016 08:35:57 Africa/Nairobi] PHP Fatal error:  Call to a member function isEmpty() on a non-object in /home/h1vqak3nya/public_html/storage/framework/views/e06ef0ed83f8629e8634f0d98720903b on line 38
+[17-Feb-2016 14:34:43 Africa/Nairobi] PHP Fatal error:  Call to a member function points() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/FacilityController.php on line 207
+[22-Feb-2016 06:48:15 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[22-Feb-2016 06:48:15 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[22-Feb-2016 07:08:01 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[10-Mar-2016 10:46:25 Africa/Nairobi] PHP Parse error:  syntax error, unexpected '}' in /home/h1vqak3nya/public_html/app/Models/Checklist.php on line 281
+[10-Mar-2016 10:46:33 Africa/Nairobi] PHP Parse error:  syntax error, unexpected '}' in /home/h1vqak3nya/public_html/app/Models/Checklist.php on line 281
+[10-Mar-2016 10:54:28 Africa/Nairobi] PHP Parse error:  syntax error, unexpected '}' in /home/h1vqak3nya/public_html/app/Models/Checklist.php on line 281
+[14-Mar-2016 17:40:22 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[14-Mar-2016 17:40:22 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[14-Mar-2016 10:42:30 America/New_York] PHP Fatal error:  Out of memory (allocated 786432) (tried to allocate 12288 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php on line 176
+[14-Mar-2016 17:42:30 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 8126464) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Contracts/Auth/UserProvider.php on line 29
+[14-Mar-2016 17:42:30 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 8650752) (tried to allocate 64 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/debug/Symfony/Component/Debug/Exception/FlattenException.php on line 257
+[14-Mar-2016 17:42:30 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 3407872) (tried to allocate 12288 bytes) in /home/h1vqak3nya/public_html/vendor/monolog/monolog/src/Monolog/Formatter/LineFormatter.php on line 93
+[14-Mar-2016 10:42:30 America/New_York] PHP Fatal error:  Out of memory (allocated 786432) (tried to allocate 2560 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Foundation/helpers.php on line 209
+[14-Mar-2016 10:42:42 America/New_York] PHP Fatal error:  Out of memory (allocated 1048576) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 503
+[14-Mar-2016 17:42:48 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 9175040) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Response.php on line 1118
+[14-Mar-2016 17:42:48 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 4980736) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Translation/Translator.php on line 339
+[14-Mar-2016 10:42:51 America/New_York] PHP Fatal error:  Out of memory (allocated 1310720) (tried to allocate 12288 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Events/Dispatcher.php on line 235
+[14-Mar-2016 17:42:51 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 7864320) (tried to allocate 72 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/routing/Symfony/Component/Routing/RouteCompiler.php on line 167
+[14-Mar-2016 17:42:51 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 10485760) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/Response.php on line 525
+[14-Mar-2016 10:42:51 America/New_York] PHP Fatal error:  Out of memory (allocated 2621440) (tried to allocate 3072 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/finder/Symfony/Component/Finder/Adapter/AdapterInterface.php on line 66
+[14-Mar-2016 17:45:10 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 4980736) (tried to allocate 1280 bytes) in /home/h1vqak3nya/public_html/vendor/laravel/framework/src/Illuminate/Support/NamespacedItemResolver.php on line 35
+[14-Mar-2016 17:45:21 Africa/Nairobi] PHP Fatal error:  Out of memory (allocated 3407872) (tried to allocate 12288 bytes) in /home/h1vqak3nya/public_html/vendor/monolog/monolog/src/Monolog/Formatter/LineFormatter.php on line 93
+[14-Mar-2016 10:45:21 America/New_York] PHP Fatal error:  Out of memory (allocated 2097152) (tried to allocate 3200 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ParameterBag.php on line 135
+[14-Mar-2016 10:45:21 America/New_York] PHP Fatal error:  Out of memory (allocated 2097152) (tried to allocate 12288 bytes) in /home/h1vqak3nya/public_html/vendor/symfony/http-foundation/Symfony/Component/HttpFoundation/ParameterBag.php on line 121
+[14-Mar-2016 17:45:27 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[14-Mar-2016 17:48:06 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on a non-object in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[25-Aug-2016 14:40:51 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[23-Sep-2016 10:47:04 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[12-Oct-2016 08:52:15 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[12-Oct-2016 14:58:26 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[17-Oct-2016 09:49:31 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[17-Oct-2016 13:44:20 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[17-Oct-2016 13:44:35 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[17-Oct-2016 13:44:39 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[19-Oct-2016 14:52:29 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[25-Oct-2016 09:13:30 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[25-Jan-2017 10:06:00 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[25-Jan-2017 10:10:29 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[25-Jan-2017 10:10:43 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[26-Jan-2017 09:45:33 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[26-Jan-2017 16:11:34 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[27-Jan-2017 10:13:23 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[27-Jan-2017 10:13:30 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[02-Jun-2017 08:12:58 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[02-Jun-2017 08:13:06 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[02-Jun-2017 08:46:38 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[05-Jun-2017 10:47:59 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[05-Jun-2017 10:51:37 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[06-Jun-2017 09:25:32 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[19-Jun-2017 10:08:11 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[21-Jun-2017 08:42:20 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[22-Jun-2017 09:34:56 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[29-Jun-2017 08:36:51 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[03-Jul-2017 08:42:05 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[03-Jul-2017 10:53:21 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[05-Jul-2017 12:40:24 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[05-Jul-2017 12:41:00 Africa/Nairobi] PHP Fatal error:  Call to a member function hasRole() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 2283
+[16-Aug-2017 09:55:30 Africa/Nairobi] PHP Fatal error:  Call to a member function countiesWithData() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 40
+[16-Aug-2017 10:12:54 Africa/Nairobi] PHP Fatal error:  Call to a member function countiesWithData() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 40
+[16-Aug-2017 10:46:05 Africa/Nairobi] PHP Fatal error:  Call to a member function countiesWithData() on null in /home/h1vqak3nya/public_html/app/Http/Controllers/ReportController.php on line 40
